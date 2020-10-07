@@ -7,9 +7,9 @@ declare namespace SystemEntities {
     gender?: string
     phoneNumber?: string
     emailAddress?: string
-    accountNonExpired?: number
-    accountNonLocked?: number
-    credentialsNonExpired?: number
+    accountExpired?: number
+    accountLocked?: number
+    credentialsExpired?: number
     enabled?: number
   }
 

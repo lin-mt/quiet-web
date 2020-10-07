@@ -39,18 +39,18 @@ const TableList: React.FC<{}> = () => {
       hideInForm: true,
     },
     {
-      title: '账号未到期',
-      dataIndex: 'accountNonExpired',
+      title: '账号是否到期',
+      dataIndex: 'accountExpired',
       valueEnum: Weather,
     },
     {
-      title: '账号未被锁',
-      dataIndex: 'accountNonLocked',
+      title: '账号是否被锁',
+      dataIndex: 'accountLocked',
       valueEnum: Weather,
     },
     {
-      title: '密码未过期',
-      dataIndex: 'credentialsNonExpired',
+      title: '密码是否过期',
+      dataIndex: 'credentialsExpired',
       valueEnum: Weather,
     },
     {
