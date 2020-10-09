@@ -1,19 +1,18 @@
 import React from 'react';
 import { Modal } from 'antd';
 
-interface CreateFormProps {
+interface UserFormProps {
   modalVisible: boolean;
+  type: 'create' | 'update';
   onCancel: () => void;
 }
 
-const CreateForm: React.FC<CreateFormProps> = (props) => {
-  const { modalVisible, onCancel } = props;
-  console.log(props.children)
+const UserForm: React.FC<UserFormProps> = (props) => {
+  const { modalVisible, onCancel, type } = props;
   return (
     <Modal
-      width={1000}
       destroyOnClose
-      title="新建用户"
+      title={type === 'create' ? '创建用户' : '更新用户信息'}
       visible={modalVisible}
       onCancel={() => onCancel()}
       footer={null}
@@ -23,4 +22,4 @@ const CreateForm: React.FC<CreateFormProps> = (props) => {
   );
 };
 
-export default CreateForm;
+export default UserForm;
