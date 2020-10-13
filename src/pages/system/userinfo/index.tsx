@@ -63,9 +63,6 @@ const TableList: React.FC<{}> = () => {
       renderText: (accountExpired) => {
         return accountExpired?.value;
       },
-      valueEnum: {
-
-      },
       hideInForm: true,
     },
     {
