@@ -1,16 +1,21 @@
 declare namespace SystemEntities {
 
+  interface Dictionary {
+    code: string,
+    value: string
+  }
+
   export interface QuiteUser {
     id: string;
     username: string
     avatar?: string
-    gender?: string
+    gender?: Dictionary
     phoneNumber?: string
     emailAddress?: string
-    accountExpired?: number
-    accountLocked?: number
-    credentialsExpired?: number
-    enabled?: number
+    accountExpired?: Dictionary
+    accountLocked?: Dictionary
+    credentialsExpired?: Dictionary
+    enabled: Dictionary
   }
 
   export interface LoginStateType {

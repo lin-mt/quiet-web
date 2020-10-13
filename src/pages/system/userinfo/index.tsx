@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
-import { Button } from 'antd';
+import React, { useRef, useState } from 'react';
+import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProTable, { ProColumns } from '@ant-design/pro-table';
-import { queryUser } from '@/services/system/QuiteUser';
-import { Gender, Weather } from '@/services/system/Dictionary';
-import CreateForm from './components/CreateForm';
+import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import { queryUser, registeredUser } from '@/services/system/QuiteUser';
+import UserForm from './components/UserForm';
+
+const { Option } = Select;
 
 const TableList: React.FC<{}> = () => {
-  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
+  const [userForm] = Form.useForm();
+  const [userModalVisible, handleUserModalVisible] = useState<boolean>(true);
+  const [userModalType, handleUserModalType] = useState<'create' | 'update'>('create');
+  const userModalActionRef = useRef<ActionType>();
   const columns: ProColumns<SystemEntities.QuiteUser>[] = [
     {
       title: 'ID',
@@ -38,7 +42,9 @@ const TableList: React.FC<{}> = () => {
     {
       title: '性别',
       dataIndex: 'gender',
-      valueEnum: Gender,
+      renderText: (gender) => {
+        return gender?.value;
+      },
     },
     {
       title: '电话号码',
@@ -46,25 +52,35 @@ const TableList: React.FC<{}> = () => {
       valueType: 'text',
     },
     {
-      title: '邮箱地址',
+      title: '邮箱',
       dataIndex: 'emailAddress',
       valueType: 'text',
     },
     {
       title: '账号是否到期',
+      filters: true,
       dataIndex: 'accountExpired',
-      valueEnum: Weather,
+      renderText: (accountExpired) => {
+        return accountExpired?.value;
+      },
+      valueEnum: {
+
+      },
       hideInForm: true,
     },
     {
       title: '账号是否被锁',
       dataIndex: 'accountLocked',
-      valueEnum: Weather,
+      renderText: (accountLocked) => {
+        return accountLocked?.value;
+      },
     },
     {
       title: '密码是否过期',
       dataIndex: 'credentialsExpired',
-      valueEnum: Weather,
+      renderText: (credentialsExpired) => {
+        return credentialsExpired?.value;
+      },
     },
     {
       title: '创建时间',
@@ -83,32 +99,149 @@ const TableList: React.FC<{}> = () => {
     {
       title: '账号是否启用',
       dataIndex: 'enabled',
-      valueEnum: Weather,
+      renderText: (enabled) => {
+        return enabled.value;
+      },
     },
   ];
+
+  const handleSubmit = async () => {
+    const values = await userForm.validateFields();
+    if (await registeredUser(values)) {
+      handleUserModalVisible(false);
+      if (typeof userModalActionRef.current !== 'undefined') {
+        userModalActionRef.current.reload();
+      }
+    }
+  };
+
+  const handleUserModal = (type: 'create' | 'update') => {
+    handleUserModalType(type);
+    handleUserModalVisible(true);
+  };
 
   return (
     <PageContainer>
       <ProTable<SystemEntities.QuiteUser>
+        actionRef={userModalActionRef}
         rowKey={record => record.id}
         request={(params, sorter, filter) =>
           queryUser({ params, sorter, filter })}
         toolBarRender={() => [
-          <Button type="primary" key="create" onClick={() => handleModalVisible(true)}>
-            <PlusOutlined /> 新建
+          <Button type="primary" key="create" onClick={() => handleUserModal('create')}>
+            <PlusOutlined /> 新建用户
           </Button>,
         ]}
         columns={columns}
       />
-      <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
-        <ProTable<SystemEntities.QuiteUser, SystemEntities.QuiteUser>
-          rowKey="key"
-          type="form"
-          form={{ labelCol: { span: 4 }, wrapperCol: { span: 8 }, layout: 'inline' }}
-          onSubmit={values => console.log(values)}
-          columns={columns}
-        />
-      </CreateForm>
+      <UserForm onSubmit={() => handleSubmit()} onCancel={() => handleUserModalVisible(false)}
+                modalVisible={userModalVisible} type={userModalType}>
+        <Form form={userForm} name='createUser' labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
+          <Row gutter={20}>
+            <Col span={12}>
+              <Form.Item label='用户名' name='username' rules={[{ required: true }]}>
+                <Input placeholder='请输入用户名' />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label='性别' name='gender' rules={[{ required: true, message: '请选择性别' }]}>
+                <Select
+                  placeholder="请选择"
+                  allowClear
+                >
+                  <Option value="MALE">男</Option>
+                  <Option value="FEMALE">女</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={20}>
+            <Col span={12}>
+              <Form.Item label='密码' name='secretCode' rules={[{ required: true }]}>
+                <Input.Password placeholder='请输入密码' />
+              </Form.Item>
+            </Col>
+
+            <Col span={12}>
+              <Form.Item label='确认密码' name='confirmSecretCode'
+                         rules={[
+                           { required: true, message: '请确认密码' },
+                           ({ getFieldValue }) => ({
+                             validator(rule, value) {
+                               if (!value || getFieldValue('secretCode') === value) {
+                                 return Promise.resolve();
+                               }
+                               return Promise.reject(new Error('两次输入的密码不匹配！'));
+                             },
+                           }),
+                         ]}>
+                <Input.Password placeholder='请确认密码' />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={20}>
+            <Col span={12}>
+              <Form.Item label='电话号码' name='phoneNumber'>
+                <Input placeholder="请输入电话号码" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label='邮箱' name='emailAddress' rules={[{ type: 'email' }]}>
+                <Input placeholder="请输入邮箱" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={20}>
+            <Col span={12}>
+              <Form.Item label='是否锁定' name='accountLocked'>
+                <Select
+                  placeholder="请选择"
+                  allowClear
+                >
+                  <Option value="YES">是</Option>
+                  <Option value="NO">否</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label='账号是否到期' name='accountExpired'>
+                <Select
+                  placeholder="请选择"
+                  allowClear
+                >
+                  <Option value="YES">是</Option>
+                  <Option value="NO">否</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={20}>
+            <Col span={12}>
+              <Form.Item label='账号是否启用' name='enabled'>
+                <Select
+                  placeholder="请选择"
+                  allowClear
+                >
+                  <Option value="YES">是</Option>
+                  <Option value="NO">否</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label='密码是否过期' name='credentialsExpired'>
+                <Select
+                  placeholder="请选择"
+                  allowClear
+                >
+                  <Option value="YES">是</Option>
+                  <Option value="NO">否</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </UserForm>
     </PageContainer>
   );
 };

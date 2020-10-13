@@ -110,10 +110,10 @@ export const request: RequestConfig = {
               message.warning(data.message);
               break;
             case ResultType.FAILURE:
-              message.error(`错误码：${data.code} 错误信息：${data.message}`);
+              message.error(`${data.code ? `错误码：${data.code} ` : ` `} ${data.message}`);
               break;
             case ResultType.EXCEPTION:
-              message.error(`异常码：${data.code} 异常信息：${data.message}`);
+              message.error(`${data.code ? `异常码：${data.code} ` : ` `} ${data.message}`);
               break;
             default:
           }

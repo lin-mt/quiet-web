@@ -16,6 +16,15 @@ export async function queryUser(params?: any) {
   });
 }
 
+export async function registeredUser(params?: any) {
+  return request('/api/system/user/registered', {
+    data: { save: params },
+    method: 'POST',
+  }).then(() => {
+    return true;
+  });
+}
+
 export async function queryCurrent() {
   return request<Result<SystemEntities.QuiteUser>>('/api/system/user/currentUserInfo').then(res => {
     if (res && res.data && !res.data.avatar) {
