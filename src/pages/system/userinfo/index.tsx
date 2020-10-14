@@ -209,8 +209,17 @@ const TableList: React.FC<{}> = () => {
 
           <Row gutter={20}>
             <Col span={12}>
-              <Form.Item label='电话号码' name='phoneNumber'>
-                <Input placeholder="请输入电话号码" />
+              <Form.Item label='手机号' name='phoneNumber' rules={[
+                {
+                  required: true,
+                  message: '请输入手机号！',
+                },
+                {
+                  pattern: /^1\d{10}$/,
+                  message: '手机号格式错误！',
+                },
+              ]}>
+                <Input placeholder="请输入手机号" />
               </Form.Item>
             </Col>
             <Col span={12}>
