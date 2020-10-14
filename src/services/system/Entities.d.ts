@@ -15,12 +15,8 @@ declare namespace SystemEntities {
     accountExpired?: Dictionary
     accountLocked?: Dictionary
     credentialsExpired?: Dictionary
-    enabled: Dictionary
-  }
-
-  export interface LoginStateType {
-    status?: 'ok' | 'error';
-    type?: string;
+    enabled: Dictionary,
+    unreadCount: number
   }
 
   export interface NoticeIconData {
