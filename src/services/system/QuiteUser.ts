@@ -6,12 +6,10 @@ export async function query() {
 }
 
 export async function queryUser(params?: any) {
-  console.log(params);
   return request('/api/system/user/page', {
     data: params,
     method: 'POST',
   }).then(resData => {
-    console.log(resData);
     return { ...resData.data, data: resData.data.results };
   });
 }
