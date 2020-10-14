@@ -18,8 +18,13 @@ export async function registeredUser(params?: any) {
   return request('/api/system/user/registered', {
     data: { save: params },
     method: 'POST',
-  }).then(() => {
-    return true;
+  });
+}
+
+export async function updateUser(params?: any) {
+  return request('/api/system/user/update', {
+    data: { update: params },
+    method: 'PUT',
   });
 }
 

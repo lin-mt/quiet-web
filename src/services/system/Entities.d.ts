@@ -9,13 +9,13 @@ declare namespace SystemEntities {
     id: string;
     username: string
     avatar?: string
-    gender?: Dictionary
+    gender?: any
     phoneNumber?: string
     emailAddress?: string
-    accountExpired?: Dictionary
-    accountLocked?: Dictionary
-    credentialsExpired?: Dictionary
-    enabled: Dictionary,
+    accountExpired?: any
+    accountLocked?: any
+    credentialsExpired?: any
+    enabled: any
     unreadCount: number
   }
 

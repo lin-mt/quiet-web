@@ -3,14 +3,15 @@ import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { queryUser, registeredUser } from '@/services/system/QuiteUser';
+import { queryUser, registeredUser, updateUser } from '@/services/system/QuiteUser';
 import UserForm from './components/UserForm';
 
 const { Option } = Select;
 
 const TableList: React.FC<{}> = () => {
   const [userForm] = Form.useForm();
-  const [userModalVisible, handleUserModalVisible] = useState<boolean>(true);
+  const [backUpdateUser, setBackUpdateUser] = useState<SystemEntities.QuiteUser>();
+  const [userModalVisible, handleUserModalVisible] = useState<boolean>(false);
   const [userModalType, handleUserModalType] = useState<'create' | 'update'>('create');
   const userModalActionRef = useRef<ActionType>();
   const columns: ProColumns<SystemEntities.QuiteUser>[] = [
@@ -100,15 +101,44 @@ const TableList: React.FC<{}> = () => {
         return enabled.value;
       },
     },
+    {
+      title: '操作',
+      dataIndex: 'id',
+      valueType: 'option',
+      render: (_, record) => {
+        return <a key='update' onClick={() => {
+          const updateUserInfo = {
+            ...record,
+            gender: record.gender?.code,
+            accountExpired: record.accountExpired?.code,
+            accountLocked: record.accountLocked?.code,
+            credentialsExpired: record.credentialsExpired?.code,
+            enabled: record.enabled?.code,
+          };
+          setBackUpdateUser(updateUserInfo);
+          userForm.setFieldsValue(updateUserInfo);
+          handleUserModalType('update');
+          handleUserModalVisible(true);
+        }}>修改</a>;
+      },
+    },
   ];
 
   const handleSubmit = async () => {
     const values = await userForm.validateFields();
-    if (await registeredUser(values)) {
-      handleUserModalVisible(false);
-      if (typeof userModalActionRef.current !== 'undefined') {
-        userModalActionRef.current.reload();
-      }
+    switch (userModalType) {
+      case 'create':
+        await registeredUser(values);
+        break;
+      case 'update':
+        await updateUser({ ...backUpdateUser, ...values });
+        break;
+      default:
+        break;
+    }
+    handleUserModalVisible(false);
+    if (typeof userModalActionRef.current !== 'undefined') {
+      userModalActionRef.current.reload();
     }
   };
 

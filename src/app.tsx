@@ -85,12 +85,6 @@ const errorHandler = (error: ResponseError) => {
       description: `错误码 ${status}：${errorText} ${url}`,
     });
   }
-  if (!response) {
-    notification.error({
-      message: '网络异常',
-      description: '您的网络发生异常，无法连接服务器',
-    });
-  }
   throw error;
 };
 
@@ -111,10 +105,14 @@ export const request: RequestConfig = {
               break;
             case ResultType.FAILURE:
               message.error(`${data.code ? `错误码：${data.code} ` : ` `} ${data.message}`);
-              break;
+              // eslint-disable-next-line no-console
+              console.error(data);
+              throw new Error();
             case ResultType.EXCEPTION:
               message.error(`${data.code ? `异常码：${data.code} ` : ` `} ${data.message}`);
-              break;
+              // eslint-disable-next-line no-console
+              console.error(data);
+              throw new Error();
             default:
           }
         }
