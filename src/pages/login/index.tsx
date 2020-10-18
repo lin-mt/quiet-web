@@ -89,7 +89,7 @@ const Login: React.FC<{}> = () => {
               <Password
                 name="secretCode"
                 placeholder="密码"
-                defaultValue="password"
+                defaultValue="quite"
                 rules={[
                   {
                     required: true,

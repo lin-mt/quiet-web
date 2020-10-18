@@ -1,19 +1,18 @@
 import React, { useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Select } from 'antd';
+import { Button, Form } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { queryUser, registeredUser, updateUser } from '@/services/system/QuiteUser';
-import UserForm from './components/UserForm';
+import { queryUser } from '@/services/system/QuiteUser';
+import { Gender, Weather } from '@/services/system/Dictionary';
+import UserForm, { UserFormType } from './components/UserForm';
 
-const { Option } = Select;
-
-const TableList: React.FC<{}> = () => {
-  const [userForm] = Form.useForm();
-  const [backUpdateUser, setBackUpdateUser] = useState<SystemEntities.QuiteUser>();
-  const [userModalVisible, handleUserModalVisible] = useState<boolean>(false);
-  const [userModalType, handleUserModalType] = useState<'create' | 'update'>('create');
+const TableList: React.FC<any> = () => {
+  const [updateUserInfo, setUpdateUserInfo] = useState<SystemEntities.QuiteUser>();
+  const [userFormVisible, setUserModalVisible] = useState<boolean>(false);
+  const [userFormType, setUserModalType] = useState<UserFormType>();
   const userModalActionRef = useRef<ActionType>();
+  const [userForm] = Form.useForm();
   const columns: ProColumns<SystemEntities.QuiteUser>[] = [
     {
       title: 'ID',
@@ -43,6 +42,7 @@ const TableList: React.FC<{}> = () => {
     {
       title: '性别',
       dataIndex: 'gender',
+      valueEnum: Gender,
       renderText: (gender) => {
         return gender?.value;
       },
@@ -61,6 +61,7 @@ const TableList: React.FC<{}> = () => {
       title: '账号是否到期',
       filters: true,
       dataIndex: 'accountExpired',
+      valueEnum: Weather,
       renderText: (accountExpired) => {
         return accountExpired?.value;
       },
@@ -69,6 +70,7 @@ const TableList: React.FC<{}> = () => {
     {
       title: '账号是否被锁',
       dataIndex: 'accountLocked',
+      valueEnum: Weather,
       renderText: (accountLocked) => {
         return accountLocked?.value;
       },
@@ -76,6 +78,7 @@ const TableList: React.FC<{}> = () => {
     {
       title: '密码是否过期',
       dataIndex: 'credentialsExpired',
+      valueEnum: Weather,
       renderText: (credentialsExpired) => {
         return credentialsExpired?.value;
       },
@@ -97,6 +100,7 @@ const TableList: React.FC<{}> = () => {
     {
       title: '账号是否启用',
       dataIndex: 'enabled',
+      valueEnum: Weather,
       renderText: (enabled) => {
         return enabled.value;
       },
@@ -106,8 +110,8 @@ const TableList: React.FC<{}> = () => {
       dataIndex: 'id',
       valueType: 'option',
       render: (_, record) => {
-        return <a key='update' onClick={() => {
-          const updateUserInfo = {
+        return [<a key='update' onClick={() => {
+          const userInfo = {
             ...record,
             gender: record.gender?.code,
             accountExpired: record.accountExpired?.code,
@@ -115,37 +119,24 @@ const TableList: React.FC<{}> = () => {
             credentialsExpired: record.credentialsExpired?.code,
             enabled: record.enabled?.code,
           };
-          setBackUpdateUser(updateUserInfo);
-          userForm.setFieldsValue(updateUserInfo);
-          handleUserModalType('update');
-          handleUserModalVisible(true);
-        }}>修改</a>;
+          userForm.setFieldsValue(userInfo);
+          setUpdateUserInfo(userInfo);
+          setUserModalType(UserFormType.UPDATE);
+          setUserModalVisible(true);
+        }}>修改</a>,
+          <a key='delete'>删除</a>];
       },
     },
   ];
 
-  const handleSubmit = async () => {
-    const values = await userForm.validateFields();
-    switch (userModalType) {
-      case 'create':
-        await registeredUser(values);
-        break;
-      case 'update':
-        await updateUser({ ...backUpdateUser, ...values });
-        break;
-      default:
-        break;
-    }
-    handleUserModalVisible(false);
-    if (typeof userModalActionRef.current !== 'undefined') {
-      userModalActionRef.current.reload();
-    }
-  };
+  function createUser() {
+    setUserModalType(UserFormType.CREATE);
+    setUserModalVisible(true);
+  }
 
-  const handleUserModal = (type: 'create' | 'update') => {
-    handleUserModalType(type);
-    handleUserModalVisible(true);
-  };
+  function handleUserFormCancel() {
+    setUserModalVisible(false);
+  }
 
   return (
     <PageContainer>
@@ -155,129 +146,17 @@ const TableList: React.FC<{}> = () => {
         request={(params, sorter, filter) =>
           queryUser({ params, sorter, filter })}
         toolBarRender={() => [
-          <Button type="primary" key="create" onClick={() => handleUserModal('create')}>
+          <Button type="primary" key="create" onClick={createUser}>
             <PlusOutlined /> 新建用户
           </Button>,
         ]}
         columns={columns}
       />
-      <UserForm onSubmit={() => handleSubmit()} onCancel={() => handleUserModalVisible(false)}
-                modalVisible={userModalVisible} type={userModalType}>
-        <Form form={userForm} name='createUser' labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
-          <Row gutter={20}>
-            <Col span={12}>
-              <Form.Item label='用户名' name='username' rules={[{ required: true }]}>
-                <Input placeholder='请输入用户名' />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label='性别' name='gender' rules={[{ required: true, message: '请选择性别' }]}>
-                <Select
-                  placeholder="请选择"
-                  allowClear
-                >
-                  <Option value="MALE">男</Option>
-                  <Option value="FEMALE">女</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={20}>
-            <Col span={12}>
-              <Form.Item label='密码' name='secretCode' rules={[{ required: true }]}>
-                <Input.Password placeholder='请输入密码' />
-              </Form.Item>
-            </Col>
+      {userFormVisible &&
+      <UserForm visible={userFormVisible} onCancel={handleUserFormCancel} userFormType={userFormType} form={userForm}
+                updateUserInfo={updateUserInfo} />
+      }
 
-            <Col span={12}>
-              <Form.Item label='确认密码' name='confirmSecretCode'
-                         rules={[
-                           { required: true, message: '请确认密码' },
-                           ({ getFieldValue }) => ({
-                             validator(rule, value) {
-                               if (!value || getFieldValue('secretCode') === value) {
-                                 return Promise.resolve();
-                               }
-                               return Promise.reject(new Error('两次输入的密码不匹配！'));
-                             },
-                           }),
-                         ]}>
-                <Input.Password placeholder='请确认密码' />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={20}>
-            <Col span={12}>
-              <Form.Item label='手机号' name='phoneNumber' rules={[
-                {
-                  required: true,
-                  message: '请输入手机号！',
-                },
-                {
-                  pattern: /^1\d{10}$/,
-                  message: '手机号格式错误！',
-                },
-              ]}>
-                <Input placeholder="请输入手机号" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label='邮箱' name='emailAddress' rules={[{ type: 'email' }]}>
-                <Input placeholder="请输入邮箱" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={20}>
-            <Col span={12}>
-              <Form.Item label='是否锁定' name='accountLocked'>
-                <Select
-                  placeholder="请选择"
-                  allowClear
-                >
-                  <Option value="YES">是</Option>
-                  <Option value="NO">否</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label='账号是否到期' name='accountExpired'>
-                <Select
-                  placeholder="请选择"
-                  allowClear
-                >
-                  <Option value="YES">是</Option>
-                  <Option value="NO">否</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={20}>
-            <Col span={12}>
-              <Form.Item label='账号是否启用' name='enabled'>
-                <Select
-                  placeholder="请选择"
-                  allowClear
-                >
-                  <Option value="YES">是</Option>
-                  <Option value="NO">否</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label='密码是否过期' name='credentialsExpired'>
-                <Select
-                  placeholder="请选择"
-                  allowClear
-                >
-                  <Option value="YES">是</Option>
-                  <Option value="NO">否</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </UserForm>
     </PageContainer>
   );
 };
