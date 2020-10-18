@@ -59,7 +59,6 @@ const TableList: React.FC<any> = () => {
     },
     {
       title: '账号是否到期',
-      filters: true,
       dataIndex: 'accountExpired',
       valueEnum: Weather,
       renderText: (accountExpired) => {

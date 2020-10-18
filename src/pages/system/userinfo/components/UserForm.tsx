@@ -21,14 +21,15 @@ interface UserFormProps {
 
 const UserForm: React.FC<UserFormProps> = (props) => {
   const { visible, onCancel, userFormType, updateUserInfo, form } = props;
-  const [submitButtonLoading, setSubmitButtonLoading] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const nonsupportMsg = 'nonsupport UserFormType';
 
   async function handleSubmit() {
     const values = await form.validateFields();
-    setSubmitButtonLoading(true);
+    setSubmitting(true);
     switch (userFormType) {
       case UserFormType.CREATE:
+      case UserFormType.REGISTERED:
         await registeredUser(values);
         break;
       case UserFormType.UPDATE:
@@ -38,7 +39,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
         throw Error(nonsupportMsg);
     }
     form.resetFields();
-    setSubmitButtonLoading(false);
+    setSubmitting(false);
     onCancel();
   }
 
@@ -84,7 +85,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
         <Button key="back" onClick={() => handleModalCancel()}>
           取消
         </Button>,
-        <Button loading={submitButtonLoading} key="submit" type="primary" htmlType="submit" onClick={handleSubmit}>
+        <Button loading={submitting} key="submit" type="primary" htmlType="submit" onClick={handleSubmit}>
           {getSubmitButtonName()}
         </Button>,
       ]}
@@ -154,54 +155,58 @@ const UserForm: React.FC<UserFormProps> = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        <Row gutter={20}>
-          <Col span={12}>
-            <Form.Item label='是否锁定' name='accountLocked'>
-              <Select
-                placeholder="请选择"
-                allowClear
-              >
-                <Option value="YES">是</Option>
-                <Option value="NO">否</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item label='账号是否到期' name='accountExpired'>
-              <Select
-                placeholder="请选择"
-                allowClear
-              >
-                <Option value="YES">是</Option>
-                <Option value="NO">否</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={20}>
-          <Col span={12}>
-            <Form.Item label='账号是否启用' name='enabled'>
-              <Select
-                placeholder="请选择"
-                allowClear
-              >
-                <Option value="YES">是</Option>
-                <Option value="NO">否</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item label='密码是否过期' name='credentialsExpired'>
-              <Select
-                placeholder="请选择"
-                allowClear
-              >
-                <Option value="YES">是</Option>
-                <Option value="NO">否</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
+        {userFormType !== UserFormType.REGISTERED &&
+        <>
+          <Row gutter={20}>
+            <Col span={12}>
+              <Form.Item label='是否锁定' name='accountLocked'>
+                <Select
+                  placeholder="请选择"
+                  allowClear
+                >
+                  <Option value="YES">是</Option>
+                  <Option value="NO">否</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label='账号是否到期' name='accountExpired'>
+                <Select
+                  placeholder="请选择"
+                  allowClear
+                >
+                  <Option value="YES">是</Option>
+                  <Option value="NO">否</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={20}>
+            <Col span={12}>
+              <Form.Item label='账号是否启用' name='enabled'>
+                <Select
+                  placeholder="请选择"
+                  allowClear
+                >
+                  <Option value="YES">是</Option>
+                  <Option value="NO">否</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label='密码是否过期' name='credentialsExpired'>
+                <Select
+                  placeholder="请选择"
+                  allowClear
+                >
+                  <Option value="YES">是</Option>
+                  <Option value="NO">否</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+        </>
+        }
       </Form>
     </Modal>
   );

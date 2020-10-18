@@ -1,11 +1,12 @@
 import { AlipayCircleOutlined, TaobaoCircleOutlined, WeiboCircleOutlined } from '@ant-design/icons';
-import { Checkbox, message } from 'antd';
+import { Checkbox, Form, message } from 'antd';
 import React, { useState } from 'react';
 import { Link, SelectLang, useModel } from 'umi';
 import { ResultType } from '@/types/Result';
 import { getPageQuery } from '@/utils/utils';
 import { accountLogin, LoginParams } from '@/services/system/Login';
 import Footer from '@/components/Footer';
+import UserForm, { UserFormType } from '@/pages/system/userinfo/components/UserForm';
 import LoginFrom from './components/Login';
 import styles from './style.less';
 
@@ -35,10 +36,11 @@ const replaceGoto = () => {
 
 const Login: React.FC<{}> = () => {
   const [submitting, setSubmitting] = useState(false);
-
+  const [userFormVisible, setUserFormVisible] = useState(false);
   const { refresh } = useModel('@@initialState');
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState<string>('account');
+  const [userForm] = Form.useForm();
 
   const handleSubmit = async (values: LoginParams) => {
     setSubmitting(true);
@@ -145,14 +147,18 @@ const Login: React.FC<{}> = () => {
               <AlipayCircleOutlined className={styles.icon} />
               <TaobaoCircleOutlined className={styles.icon} />
               <WeiboCircleOutlined className={styles.icon} />
-              <Link className={styles.register} to="/user/register">
+              <a className={styles.register} onClick={() => setUserFormVisible(true)}>
                 注册账户
-              </Link>
+              </a>
             </div>
           </LoginFrom>
         </div>
       </div>
       <Footer />
+      {userFormVisible &&
+      <UserForm userFormType={UserFormType.REGISTERED} visible={userFormVisible} form={userForm}
+                onCancel={() => setUserFormVisible(false)} />
+      }
     </div>
   );
 };
