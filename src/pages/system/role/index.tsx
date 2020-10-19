@@ -34,6 +34,7 @@ const RoleManagement: React.FC<any> = () => {
       title: '父角色名',
       dataIndex: 'parentRoleName',
       valueType: 'text',
+      search: false,
     },
     {
       title: '备注',
