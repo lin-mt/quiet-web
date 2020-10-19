@@ -16,11 +16,6 @@ const RoleManagement: React.FC<any> = () => {
       hideInForm: true,
     },
     {
-      title: '父角色 ID',
-      dataIndex: 'parentId',
-      valueType: 'text',
-    },
-    {
       title: '角色名',
       dataIndex: 'roleName',
       valueType: 'text',
@@ -28,6 +23,16 @@ const RoleManagement: React.FC<any> = () => {
     {
       title: '角色中文名',
       dataIndex: 'roleCnName',
+      valueType: 'text',
+    },
+    {
+      title: '父角色 ID',
+      dataIndex: 'parentId',
+      valueType: 'text',
+    },
+    {
+      title: '父角色名',
+      dataIndex: 'parentRoleName',
       valueType: 'text',
     },
     {
