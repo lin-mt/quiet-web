@@ -55,6 +55,11 @@ export default defineConfig({
           component: './system/userinfo',
         },
         {
+          path: '/system/role',
+          name: 'role',
+          component: './system/role',
+        },
+        {
           path: '/system/setting',
           name: 'setting',
           component: './system/setting',

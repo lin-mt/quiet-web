@@ -7,7 +7,7 @@ import { queryUser } from '@/services/system/QuiteUser';
 import { Gender, Weather } from '@/services/system/Dictionary';
 import UserForm, { UserFormType } from './components/UserForm';
 
-const TableList: React.FC<any> = () => {
+const UserInfo: React.FC<any> = () => {
   const [updateUserInfo, setUpdateUserInfo] = useState<SystemEntities.QuiteUser>();
   const [userFormVisible, setUserModalVisible] = useState<boolean>(false);
   const [userFormType, setUserModalType] = useState<UserFormType>();
@@ -160,4 +160,4 @@ const TableList: React.FC<any> = () => {
   );
 };
 
-export default TableList;
+export default UserInfo;
