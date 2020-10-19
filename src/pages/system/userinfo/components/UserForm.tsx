@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
 import { registeredUser, updateUser } from '@/services/system/QuiteUser';
 import { FormInstance } from 'antd/lib/form';
+import { OperationType } from '@/types/Type';
 
 const { Option } = Select;
 
@@ -9,7 +10,7 @@ interface UserFormProps {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
-  userFormType?: Types.Operation;
+  userFormType?: OperationType;
   updateUserInfo?: SystemEntities.QuiteUser;
 }
 
@@ -22,11 +23,12 @@ const UserForm: React.FC<UserFormProps> = (props) => {
     const values = await form.validateFields();
     setSubmitting(true);
     switch (userFormType) {
-      case Types.Operation.CREATE:
-      case Types.Operation.REGISTERED:
+      case OperationType.CREATE:
+      case OperationType.REGISTERED:
+        values.avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
         await registeredUser(values);
         break;
-      case Types.Operation.UPDATE:
+      case OperationType.UPDATE:
         await updateUser({ ...updateUserInfo, ...values });
         break;
       default:
@@ -39,11 +41,11 @@ const UserForm: React.FC<UserFormProps> = (props) => {
 
   function getTitle() {
     switch (userFormType) {
-      case Types.Operation.CREATE:
+      case OperationType.CREATE:
         return '新建用户';
-      case Types.Operation.UPDATE:
+      case OperationType.UPDATE:
         return '更新用户';
-      case Types.Operation.REGISTERED:
+      case OperationType.REGISTERED:
         return '注册';
       default:
         throw Error(nonsupportMsg);
@@ -52,11 +54,11 @@ const UserForm: React.FC<UserFormProps> = (props) => {
 
   function getSubmitButtonName() {
     switch (userFormType) {
-      case Types.Operation.CREATE:
+      case OperationType.CREATE:
         return '保存';
-      case Types.Operation.UPDATE:
+      case OperationType.UPDATE:
         return '更新';
-      case Types.Operation.REGISTERED:
+      case OperationType.REGISTERED:
         return '注册';
       default:
         throw Error(nonsupportMsg);
@@ -149,7 +151,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        {userFormType !== Types.Operation.REGISTERED &&
+        {userFormType !== OperationType.REGISTERED &&
         <>
           <Row gutter={20}>
             <Col span={12}>

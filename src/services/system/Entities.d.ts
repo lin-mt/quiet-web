@@ -19,6 +19,14 @@ declare namespace SystemEntities {
     unreadCount: number
   }
 
+  export interface QuiteRole {
+    id: string;
+    parentId?: string,
+    roleName: string,
+    roleCnName?: string,
+    remarks?: string,
+  }
+
   export interface NoticeIconData {
     id: string;
     key: string;

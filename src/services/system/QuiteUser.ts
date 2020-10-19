@@ -1,10 +1,6 @@
 import { request } from 'umi';
 import { Result } from '@/types/Result';
 
-export async function query() {
-  return request<SystemEntities.QuiteUser[]>('/api/users');
-}
-
 export async function queryUser(params?: any) {
   return request('/api/system/user/page', {
     data: params,

@@ -5,12 +5,13 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { queryUser } from '@/services/system/QuiteUser';
 import { Gender, Weather } from '@/services/system/Dictionary';
+import { OperationType } from '@/types/Type';
 import UserForm from './components/UserForm';
 
 const UserInfo: React.FC<any> = () => {
   const [updateUserInfo, setUpdateUserInfo] = useState<SystemEntities.QuiteUser>();
   const [userFormVisible, setUserModalVisible] = useState<boolean>(false);
-  const [userFormType, setUserModalType] = useState<Types.Operation>();
+  const [userFormType, setUserModalType] = useState<OperationType>();
   const userModalActionRef = useRef<ActionType>();
   const [userForm] = Form.useForm();
   const columns: ProColumns<SystemEntities.QuiteUser>[] = [
@@ -18,7 +19,6 @@ const UserInfo: React.FC<any> = () => {
       title: 'ID',
       dataIndex: 'id',
       valueType: 'text',
-      hideInForm: true,
     },
     {
       title: '用户名',
@@ -37,7 +37,6 @@ const UserInfo: React.FC<any> = () => {
       dataIndex: 'avatar',
       valueType: 'avatar',
       search: false,
-      hideInForm: true,
     },
     {
       title: '性别',
@@ -64,7 +63,6 @@ const UserInfo: React.FC<any> = () => {
       renderText: (accountExpired) => {
         return accountExpired?.value;
       },
-      hideInForm: true,
     },
     {
       title: '账号是否被锁',
@@ -87,14 +85,12 @@ const UserInfo: React.FC<any> = () => {
       dataIndex: 'gmtCreate',
       valueType: 'dateTime',
       search: false,
-      hideInForm: true,
     },
     {
       title: '更新时间',
       dataIndex: 'gmtUpdate',
       valueType: 'dateTime',
       search: false,
-      hideInForm: true,
     },
     {
       title: '账号是否启用',
@@ -120,7 +116,7 @@ const UserInfo: React.FC<any> = () => {
           };
           userForm.setFieldsValue(userInfo);
           setUpdateUserInfo(userInfo);
-          setUserModalType(Types.Operation.UPDATE);
+          setUserModalType(OperationType.UPDATE);
           setUserModalVisible(true);
         }}>修改</a>,
           <a key='delete'>删除</a>];
@@ -129,7 +125,7 @@ const UserInfo: React.FC<any> = () => {
   ];
 
   function createUser() {
-    setUserModalType(Types.Operation.CREATE);
+    setUserModalType(OperationType.CREATE);
     setUserModalVisible(true);
   }
 
