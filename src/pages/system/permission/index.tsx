@@ -34,6 +34,7 @@ const PermissionConfig: React.FC<any> = () => {
       valueType: 'text',
       ellipsis: true,
       copyable: true,
+      search: false,
     },
     {
       title: 'preFilterFilterTarget',
@@ -41,6 +42,7 @@ const PermissionConfig: React.FC<any> = () => {
       valueType: 'text',
       ellipsis: true,
       copyable: true,
+      search: false,
     },
     {
       title: 'preAuthorizeValue',
@@ -48,6 +50,7 @@ const PermissionConfig: React.FC<any> = () => {
       valueType: 'text',
       ellipsis: true,
       copyable: true,
+      search: false,
     },
     {
       title: 'postFilterValue',
@@ -55,6 +58,7 @@ const PermissionConfig: React.FC<any> = () => {
       valueType: 'text',
       ellipsis: true,
       copyable: true,
+      search: false,
     },
     {
       title: 'postAuthorizeValue',
@@ -62,6 +66,7 @@ const PermissionConfig: React.FC<any> = () => {
       valueType: 'text',
       ellipsis: true,
       copyable: true,
+      search: false,
     },
     {
       title: '创建时间',
