@@ -5,17 +5,11 @@ import { FormInstance } from 'antd/lib/form';
 
 const { Option } = Select;
 
-export enum UserFormType {
-  CREATE = 'create',
-  UPDATE = 'update',
-  REGISTERED = 'registered'
-}
-
 interface UserFormProps {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
-  userFormType?: UserFormType;
+  userFormType?: Types.Operation;
   updateUserInfo?: SystemEntities.QuiteUser;
 }
 
@@ -28,11 +22,11 @@ const UserForm: React.FC<UserFormProps> = (props) => {
     const values = await form.validateFields();
     setSubmitting(true);
     switch (userFormType) {
-      case UserFormType.CREATE:
-      case UserFormType.REGISTERED:
+      case Types.Operation.CREATE:
+      case Types.Operation.REGISTERED:
         await registeredUser(values);
         break;
-      case UserFormType.UPDATE:
+      case Types.Operation.UPDATE:
         await updateUser({ ...updateUserInfo, ...values });
         break;
       default:
@@ -45,11 +39,11 @@ const UserForm: React.FC<UserFormProps> = (props) => {
 
   function getTitle() {
     switch (userFormType) {
-      case UserFormType.CREATE:
+      case Types.Operation.CREATE:
         return '新建用户';
-      case UserFormType.UPDATE:
+      case Types.Operation.UPDATE:
         return '更新用户';
-      case UserFormType.REGISTERED:
+      case Types.Operation.REGISTERED:
         return '注册';
       default:
         throw Error(nonsupportMsg);
@@ -58,11 +52,11 @@ const UserForm: React.FC<UserFormProps> = (props) => {
 
   function getSubmitButtonName() {
     switch (userFormType) {
-      case UserFormType.CREATE:
+      case Types.Operation.CREATE:
         return '保存';
-      case UserFormType.UPDATE:
+      case Types.Operation.UPDATE:
         return '更新';
-      case UserFormType.REGISTERED:
+      case Types.Operation.REGISTERED:
         return '注册';
       default:
         throw Error(nonsupportMsg);
@@ -155,7 +149,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        {userFormType !== UserFormType.REGISTERED &&
+        {userFormType !== Types.Operation.REGISTERED &&
         <>
           <Row gutter={20}>
             <Col span={12}>

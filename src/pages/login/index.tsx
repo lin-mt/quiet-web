@@ -6,7 +6,7 @@ import { ResultType } from '@/types/Result';
 import { getPageQuery } from '@/utils/utils';
 import { accountLogin, LoginParams } from '@/services/system/Login';
 import Footer from '@/components/Footer';
-import UserForm, { UserFormType } from '@/pages/system/userinfo/components/UserForm';
+import UserForm from '@/pages/system/userinfo/components/UserForm';
 import LoginFrom from './components/Login';
 import styles from './style.less';
 
@@ -156,7 +156,7 @@ const Login: React.FC<{}> = () => {
       </div>
       <Footer />
       {userFormVisible &&
-      <UserForm userFormType={UserFormType.REGISTERED} visible={userFormVisible} form={userForm}
+      <UserForm userFormType={Types.Operation.REGISTERED} visible={userFormVisible} form={userForm}
                 onCancel={() => setUserFormVisible(false)} />
       }
     </div>

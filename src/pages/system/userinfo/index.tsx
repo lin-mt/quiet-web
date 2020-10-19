@@ -5,12 +5,12 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { queryUser } from '@/services/system/QuiteUser';
 import { Gender, Weather } from '@/services/system/Dictionary';
-import UserForm, { UserFormType } from './components/UserForm';
+import UserForm from './components/UserForm';
 
 const UserInfo: React.FC<any> = () => {
   const [updateUserInfo, setUpdateUserInfo] = useState<SystemEntities.QuiteUser>();
   const [userFormVisible, setUserModalVisible] = useState<boolean>(false);
-  const [userFormType, setUserModalType] = useState<UserFormType>();
+  const [userFormType, setUserModalType] = useState<Types.Operation>();
   const userModalActionRef = useRef<ActionType>();
   const [userForm] = Form.useForm();
   const columns: ProColumns<SystemEntities.QuiteUser>[] = [
@@ -120,7 +120,7 @@ const UserInfo: React.FC<any> = () => {
           };
           userForm.setFieldsValue(userInfo);
           setUpdateUserInfo(userInfo);
-          setUserModalType(UserFormType.UPDATE);
+          setUserModalType(Types.Operation.UPDATE);
           setUserModalVisible(true);
         }}>修改</a>,
           <a key='delete'>删除</a>];
@@ -129,7 +129,7 @@ const UserInfo: React.FC<any> = () => {
   ];
 
   function createUser() {
-    setUserModalType(UserFormType.CREATE);
+    setUserModalType(Types.Operation.CREATE);
     setUserModalVisible(true);
   }
 
