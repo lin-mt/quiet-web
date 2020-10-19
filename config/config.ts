@@ -60,6 +60,11 @@ export default defineConfig({
           component: './system/role',
         },
         {
+          path: '/system/permission',
+          name: 'permission',
+          component: './system/permission',
+        },
+        {
           path: '/system/setting',
           name: 'setting',
           component: './system/setting',

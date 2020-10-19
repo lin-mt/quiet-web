@@ -1,6 +1,6 @@
 declare namespace SystemEntities {
 
-  interface Dictionary {
+  export interface Dictionary {
     code: string,
     value: string
   }
@@ -25,6 +25,17 @@ declare namespace SystemEntities {
     roleName: string,
     roleCnName?: string,
     remarks?: string,
+  }
+
+  export interface QuitePermission {
+    id: string;
+    applicationName: string,
+    urlPattern: string,
+    preFilterValue?: string,
+    preFilterFilterTarget?: string,
+    preAuthorizeValue?: string,
+    postFilterValue?: string,
+    postAuthorizeValue?: string,
   }
 
   export interface NoticeIconData {
