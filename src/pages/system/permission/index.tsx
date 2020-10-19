@@ -108,7 +108,7 @@ const PermissionConfig: React.FC<any> = () => {
   });
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuitePermission, { keyWord?: string }>
+      <ProTable<SystemEntities.QuitePermission>
         actionRef={permissionModalActionRef}
         rowKey={record => record.id}
         request={(params, sorter, filter) =>
