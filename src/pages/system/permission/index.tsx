@@ -29,44 +29,21 @@ const PermissionConfig: React.FC<any> = () => {
       copyable: true,
     },
     {
-      title: 'preFilterValue',
-      dataIndex: 'preFilterValue',
+      title: 'reqMethod',
+      dataIndex: 'requestMethod',
       valueType: 'text',
-      ellipsis: true,
-      copyable: true,
-      search: false,
     },
     {
-      title: 'preFilterFilterTarget',
-      dataIndex: 'preFilterFilterTarget',
+      title: 'roleId',
+      dataIndex: 'roleId',
       valueType: 'text',
-      ellipsis: true,
       copyable: true,
-      search: false,
     },
     {
-      title: 'preAuthorizeValue',
-      dataIndex: 'preAuthorizeValue',
+      title: 'remark',
+      dataIndex: 'remark',
       valueType: 'text',
       ellipsis: true,
-      copyable: true,
-      search: false,
-    },
-    {
-      title: 'postFilterValue',
-      dataIndex: 'postFilterValue',
-      valueType: 'text',
-      ellipsis: true,
-      copyable: true,
-      search: false,
-    },
-    {
-      title: 'postAuthorizeValue',
-      dataIndex: 'postAuthorizeValue',
-      valueType: 'text',
-      ellipsis: true,
-      copyable: true,
-      search: false,
     },
     {
       title: '创建时间',
@@ -98,14 +75,7 @@ const PermissionConfig: React.FC<any> = () => {
 
   const [columnsStateMap, setColumnsStateMap] = useState<{
     [key: string]: ColumnsState;
-  }>({
-    gmtCreate: {
-      show: false,
-    },
-    gmtUpdate: {
-      show: false,
-    }
-  });
+  }>({});
   return (
     <PageContainer>
       <ProTable<SystemEntities.QuitePermission>
