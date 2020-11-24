@@ -133,6 +133,10 @@ const UserInfo: React.FC<any> = () => {
     setUserModalVisible(false);
   }
 
+  function refreshPageInfo() {
+    userModalActionRef?.current?.reload();
+  }
+
   return (
     <PageContainer>
       <ProTable<SystemEntities.QuiteUser>
@@ -148,8 +152,8 @@ const UserInfo: React.FC<any> = () => {
         columns={columns}
       />
       {userFormVisible &&
-      <UserForm visible={userFormVisible} onCancel={handleUserFormCancel} userFormType={userFormType} form={userForm}
-                updateUserInfo={updateUserInfo} />
+      <UserForm visible={userFormVisible} onCancel={handleUserFormCancel} operationType={userFormType} form={userForm}
+                updateInfo={updateUserInfo} afterAction={refreshPageInfo} />
       }
 
     </PageContainer>

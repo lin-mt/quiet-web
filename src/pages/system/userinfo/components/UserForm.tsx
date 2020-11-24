@@ -10,26 +10,27 @@ interface UserFormProps {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
-  userFormType?: OperationType;
-  updateUserInfo?: SystemEntities.QuiteUser;
+  operationType?: OperationType;
+  updateInfo?: SystemEntities.QuiteUser;
+  afterAction?: () => void;
 }
 
 const UserForm: React.FC<UserFormProps> = (props) => {
-  const { visible, onCancel, userFormType, updateUserInfo, form } = props;
+  const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const nonsupportMsg = 'nonsupport UserFormType';
+  const nonsupportMsg = 'nonsupport operationType';
 
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
-    switch (userFormType) {
+    switch (operationType) {
       case OperationType.CREATE:
       case OperationType.REGISTERED:
         values.avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
         await registeredUser(values);
         break;
       case OperationType.UPDATE:
-        await updateUser({ ...updateUserInfo, ...values });
+        await updateUser({ ...updateInfo, ...values });
         break;
       default:
         throw Error(nonsupportMsg);
@@ -37,10 +38,13 @@ const UserForm: React.FC<UserFormProps> = (props) => {
     form.resetFields();
     setSubmitting(false);
     onCancel();
+    if (afterAction) {
+      afterAction();
+    }
   }
 
   function getTitle() {
-    switch (userFormType) {
+    switch (operationType) {
       case OperationType.CREATE:
         return '新建用户';
       case OperationType.UPDATE:
@@ -53,7 +57,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
   }
 
   function getSubmitButtonName() {
-    switch (userFormType) {
+    switch (operationType) {
       case OperationType.CREATE:
         return '保存';
       case OperationType.UPDATE:
@@ -151,7 +155,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        {userFormType !== OperationType.REGISTERED &&
+        {operationType !== OperationType.REGISTERED &&
         <>
           <Row gutter={20}>
             <Col span={12}>

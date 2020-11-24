@@ -1,11 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, Form } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { queryRole } from '@/services/system/QuiteRole';
 import { PageContainer } from '@ant-design/pro-layout';
+import { OperationType } from '@/types/Type';
+import RoleForm from './components/RoleForm';
 
 const RoleManagement: React.FC<any> = () => {
+  const [updateRoleInfo, setUpdateRoleInfo] = useState<SystemEntities.QuiteRole>();
+  const [roleFormVisible, setRoleModalVisible] = useState<boolean>(false);
+  const [roleFormType, setRoleOperationType] = useState<OperationType>();
   const roleModalActionRef = useRef<ActionType>();
   const [roleForm] = Form.useForm();
   const columns: ProColumns<SystemEntities.QuiteRole>[] = [
@@ -57,15 +62,31 @@ const RoleManagement: React.FC<any> = () => {
       title: '操作',
       dataIndex: 'id',
       valueType: 'option',
-      render: () => {
+      render: (_, record) => {
         return [<a key='update' onClick={() => {
-          const role = {};
+          const role = { ...record };
           roleForm.setFieldsValue(role);
+          setUpdateRoleInfo(role);
+          setRoleOperationType(OperationType.UPDATE);
+          setRoleModalVisible(true);
         }}>修改</a>,
           <a key='delete'>删除</a>];
       },
     },
   ];
+
+  function createRole() {
+    setRoleOperationType(OperationType.CREATE);
+    setRoleModalVisible(true);
+  }
+
+  function handleRoleFormCancel() {
+    setRoleModalVisible(false);
+  }
+
+  function refreshPageInfo() {
+    roleModalActionRef?.current?.reload();
+  }
 
   return (
     <PageContainer>
@@ -75,12 +96,16 @@ const RoleManagement: React.FC<any> = () => {
         request={(params, sorter, filter) =>
           queryRole({ params, sorter, filter })}
         toolBarRender={() => [
-          <Button type="primary" key="create">
+          <Button type="primary" key="create" onClick={createRole}>
             <PlusOutlined /> 新建角色
           </Button>,
         ]}
         columns={columns}
       />
+      {roleFormVisible &&
+      <RoleForm visible={roleFormVisible} onCancel={handleRoleFormCancel} operationType={roleFormType} form={roleForm}
+                updateInfo={updateRoleInfo} afterAction={refreshPageInfo} />
+      }
     </PageContainer>
   );
 };

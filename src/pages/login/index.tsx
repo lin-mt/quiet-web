@@ -157,7 +157,7 @@ const Login: React.FC<{}> = () => {
       </div>
       <Footer />
       {userFormVisible &&
-      <UserForm userFormType={OperationType.REGISTERED} visible={userFormVisible} form={userForm}
+      <UserForm operationType={OperationType.REGISTERED} visible={userFormVisible} form={userForm}
                 onCancel={() => setUserFormVisible(false)} />
       }
     </div>
