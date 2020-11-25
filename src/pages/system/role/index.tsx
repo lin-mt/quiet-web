@@ -72,6 +72,7 @@ const RoleManagement: React.FC<any> = () => {
             setRoleModalVisible(true);
           }}>修改</a>,
           <Popconfirm
+            key='delete'
             placement='topLeft'
             title='确认删除该角色吗？'
             onConfirm={() => {

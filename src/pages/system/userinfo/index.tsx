@@ -121,6 +121,7 @@ const UserInfo: React.FC<any> = () => {
             setUserModalVisible(true);
           }}>修改</a>,
           <Popconfirm
+            key='delete'
             placement='topLeft'
             title='确认删除该用户及该用户的相关信息吗？'
             onConfirm={() => {

@@ -1,11 +1,16 @@
 import React, { useRef, useState } from 'react';
-import { Button, Form } from 'antd';
+import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable, { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
-import { queryPermission } from '@/services/system/QuitePermission';
+import { deletePermission, queryPermission } from '@/services/system/QuitePermission';
 import { PageContainer } from '@ant-design/pro-layout';
+import { OperationType } from '@/types/Type';
+import PermissionForm from '@/pages/system/permission/components/PermissionForm';
 
 const PermissionConfig: React.FC<any> = () => {
+  const [updatePermissionInfo, setUpdatePermissionInfo] = useState<SystemEntities.QuitePermission>();
+  const [permissionFormVisible, setPermissionModalVisible] = useState<boolean>(false);
+  const [permissionFormType, setPermissionOperationType] = useState<OperationType>();
   const permissionModalActionRef = useRef<ActionType>();
   const [permissionForm] = Form.useForm();
   const columns: ProColumns<SystemEntities.QuitePermission>[] = [
@@ -63,19 +68,47 @@ const PermissionConfig: React.FC<any> = () => {
       title: '操作',
       dataIndex: 'id',
       valueType: 'option',
-      render: () => {
-        return [<a key='update' onClick={() => {
-          const role = {};
-          permissionForm.setFieldsValue(role);
-        }}>修改</a>,
-          <a key='delete'>删除</a>];
+      render: (_, record) => {
+        return [
+          <a key='update' onClick={() => {
+            const role = { ...record };
+            permissionForm.setFieldsValue(role);
+            setUpdatePermissionInfo(role);
+            setPermissionOperationType(OperationType.UPDATE);
+            setPermissionModalVisible(true);
+          }}>修改</a>,
+          <Popconfirm
+            key='delete'
+            placement='topLeft'
+            title='确认删除该配置信息吗？'
+            onConfirm={() => {
+              deletePermission(record.id).then(() => refreshPageInfo());
+            }}
+          >
+            <a key='delete'>删除</a>
+          </Popconfirm>,
+        ];
       },
     },
   ];
 
+  function refreshPageInfo() {
+    permissionModalActionRef?.current?.reload();
+  }
+
+  function handlePermissionFormCancel() {
+    setPermissionModalVisible(false);
+  }
+
   const [columnsStateMap, setColumnsStateMap] = useState<{
     [key: string]: ColumnsState;
   }>({});
+
+  function createPermission() {
+    setPermissionOperationType(OperationType.CREATE);
+    setPermissionModalVisible(true);
+  }
+
   return (
     <PageContainer>
       <ProTable<SystemEntities.QuitePermission>
@@ -84,7 +117,7 @@ const PermissionConfig: React.FC<any> = () => {
         request={(params, sorter, filter) =>
           queryPermission({ params, sorter, filter })}
         toolBarRender={() => [
-          <Button type="primary" key="create">
+          <Button type="primary" key="create" onClick={createPermission}>
             <PlusOutlined /> 新增配置
           </Button>,
         ]}
@@ -92,6 +125,11 @@ const PermissionConfig: React.FC<any> = () => {
         columnsStateMap={columnsStateMap}
         onColumnsStateChange={(map) => setColumnsStateMap(map)}
       />
+      {permissionFormVisible &&
+      <PermissionForm visible={permissionFormVisible} onCancel={handlePermissionFormCancel} form={permissionForm}
+                      operationType={permissionFormType} updateInfo={updatePermissionInfo}
+                      afterAction={refreshPageInfo} />
+      }
     </PageContainer>
   );
 };
