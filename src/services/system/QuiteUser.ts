@@ -17,6 +17,13 @@ export async function registeredUser(params?: any) {
   });
 }
 
+export async function deleteUser(params?: any) {
+  request('/api/system/user/delete', {
+    data: { deleteId: params },
+    method: 'DELETE',
+  });
+}
+
 export async function updateUser(params?: any) {
   return request('/api/system/user/update', {
     data: { update: params },

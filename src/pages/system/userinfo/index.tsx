@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { Button, Form } from 'antd';
+import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { queryUser } from '@/services/system/QuiteUser';
+import { queryUser, deleteUser } from '@/services/system/QuiteUser';
 import { Gender, Weather } from '@/services/system/Dictionary';
 import { OperationType } from '@/types/Type';
 import UserForm from './components/UserForm';
@@ -105,21 +105,31 @@ const UserInfo: React.FC<any> = () => {
       dataIndex: 'id',
       valueType: 'option',
       render: (_, record) => {
-        return [<a key='update' onClick={() => {
-          const userInfo = {
-            ...record,
-            gender: record.gender?.code,
-            accountExpired: record.accountExpired?.code,
-            accountLocked: record.accountLocked?.code,
-            credentialsExpired: record.credentialsExpired?.code,
-            enabled: record.enabled?.code,
-          };
-          userForm.setFieldsValue(userInfo);
-          setUpdateUserInfo(userInfo);
-          setUserModalType(OperationType.UPDATE);
-          setUserModalVisible(true);
-        }}>修改</a>,
-          <a key='delete'>删除</a>];
+        return [
+          <a key='update' onClick={() => {
+            const userInfo = {
+              ...record,
+              gender: record.gender?.code,
+              accountExpired: record.accountExpired?.code,
+              accountLocked: record.accountLocked?.code,
+              credentialsExpired: record.credentialsExpired?.code,
+              enabled: record.enabled?.code,
+            };
+            userForm.setFieldsValue(userInfo);
+            setUpdateUserInfo(userInfo);
+            setUserModalType(OperationType.UPDATE);
+            setUserModalVisible(true);
+          }}>修改</a>,
+          <Popconfirm
+            placement='topLeft'
+            title='确认删除该用户及该用户的相关信息吗？'
+            onConfirm={() => {
+              deleteUser(record.id).then(() => refreshPageInfo());
+            }}
+          >
+            <a key='delete'>删除</a>
+          </Popconfirm>,
+        ];
       },
     },
   ];

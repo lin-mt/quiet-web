@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { Button, Form } from 'antd';
+import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { queryRole } from '@/services/system/QuiteRole';
+import { queryRole, deleteRole } from '@/services/system/QuiteRole';
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import RoleForm from './components/RoleForm';
@@ -63,14 +63,24 @@ const RoleManagement: React.FC<any> = () => {
       dataIndex: 'id',
       valueType: 'option',
       render: (_, record) => {
-        return [<a key='update' onClick={() => {
-          const role = { ...record };
-          roleForm.setFieldsValue(role);
-          setUpdateRoleInfo(role);
-          setRoleOperationType(OperationType.UPDATE);
-          setRoleModalVisible(true);
-        }}>修改</a>,
-          <a key='delete'>删除</a>];
+        return [
+          <a key='update' onClick={() => {
+            const role = { ...record };
+            roleForm.setFieldsValue(role);
+            setUpdateRoleInfo(role);
+            setRoleOperationType(OperationType.UPDATE);
+            setRoleModalVisible(true);
+          }}>修改</a>,
+          <Popconfirm
+            placement='topLeft'
+            title='确认删除该角色吗？'
+            onConfirm={() => {
+              deleteRole(record.id).then(() => refreshPageInfo());
+            }}
+          >
+            <a key='delete'>删除</a>
+          </Popconfirm>,
+        ];
       },
     },
   ];

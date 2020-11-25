@@ -22,3 +22,10 @@ export async function updateRole(params?: any) {
     method: 'PUT',
   });
 }
+
+export async function deleteRole(params?: any) {
+  return request('/api/system/role/delete', {
+    data: { deleteId: params },
+    method: 'DELETE',
+  });
+}
