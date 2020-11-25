@@ -19,6 +19,7 @@ const RoleManagement: React.FC<any> = () => {
       dataIndex: 'id',
       valueType: 'text',
       hideInForm: true,
+      copyable: true,
     },
     {
       title: '角色名',
@@ -34,6 +35,7 @@ const RoleManagement: React.FC<any> = () => {
       title: '父角色 ID',
       dataIndex: 'parentId',
       valueType: 'text',
+      copyable: true,
     },
     {
       title: '父角色名',
