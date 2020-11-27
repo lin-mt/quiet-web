@@ -65,6 +65,11 @@ export default defineConfig({
           component: './system/permission',
         },
         {
+          path: '/system/department',
+          name: 'department',
+          component: './system/department',
+        },
+        {
           path: '/system/setting',
           name: 'setting',
           component: './system/setting',

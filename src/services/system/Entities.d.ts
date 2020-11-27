@@ -38,6 +38,13 @@ declare namespace SystemEntities {
     postAuthorizeValue?: string,
   }
 
+  export interface QuiteDepartment {
+    id: string;
+    departmentName: string,
+    parentId?: string,
+    remark?: string,
+  }
+
   export interface NoticeIconData {
     id: string;
     key: string;
