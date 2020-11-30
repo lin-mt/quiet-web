@@ -93,7 +93,8 @@ const UserForm: React.FC<UserFormProps> = (props) => {
       <Form form={form} name='userForm' labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
         <Row gutter={20}>
           <Col span={12}>
-            <Form.Item label='用户名' name='username' rules={[{ required: true }]}>
+            <Form.Item label='用户名' name='username'
+                       rules={[{ required: true, message: '请输入用户名' }, { max: 10, message: '用户名的长度不能超过 10' }]}>
               <Input placeholder='请输入用户名' />
             </Form.Item>
           </Col>
@@ -111,7 +112,8 @@ const UserForm: React.FC<UserFormProps> = (props) => {
         </Row>
         <Row gutter={20}>
           <Col span={12}>
-            <Form.Item label='密码' name='secretCode' rules={[{ required: true }]}>
+            <Form.Item label='密码' name='secretCode'
+                       rules={[{ required: true, message: '请输入密码' }, { min: 8, max: 16, message: '密码长度要在 8 - 16 之间' }]}>
               <Input.Password placeholder='请输入密码' />
             </Form.Item>
           </Col>
@@ -150,7 +152,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label='邮箱' name='emailAddress' rules={[{ type: 'email' }]}>
+            <Form.Item label='邮箱' name='emailAddress' rules={[{ type: 'email', message: '邮箱格式不正确' }]}>
               <Input placeholder="请输入邮箱" />
             </Form.Item>
           </Col>

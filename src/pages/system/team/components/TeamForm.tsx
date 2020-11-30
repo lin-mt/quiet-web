@@ -90,7 +90,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label='标语' name='slogan' rules={[{ max: 15, message: '团队标语长度不能超过 15' }]}>
+          <Form.Item label='标语' name='slogan' rules={[{ max: 15, message: '团队标语的长度不能超过 15' }]}>
             <Input placeholder='请输入团队标语' />
           </Form.Item>
         </Col>

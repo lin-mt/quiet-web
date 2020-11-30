@@ -84,7 +84,8 @@ const DepartmentForm: React.FC<DepartmentFormProps> = (props) => {
     >
       <Form form={form} name='departmentForm' labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
         <Col>
-          <Form.Item label='部门名称' name='departmentName' rules={[{ required: true, message: '请输入部门名称' }]}>
+          <Form.Item label='部门名称' name='departmentName'
+                     rules={[{ required: true, message: '请输入部门名称' }, { max: 10, message: '部门名称长度不能超过 10' }]}>
             <Input placeholder='请输入部门名称' />
           </Form.Item>
         </Col>
@@ -94,7 +95,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = (props) => {
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label='备注' name='remark'>
+          <Form.Item label='备注' name='remark' rules={[{ max: 100, message: '部门备注信息长度不能超过 100' }]}>
             <Input placeholder='请输入备注信息' />
           </Form.Item>
         </Col>
