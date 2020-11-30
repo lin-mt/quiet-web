@@ -113,7 +113,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
         <Row gutter={20}>
           <Col span={12}>
             <Form.Item label='密码' name='secretCode'
-                       rules={[{ required: true, message: '请输入密码' }, { min: 8, max: 16, message: '密码长度要在 8 - 16 之间' }]}>
+                       rules={[{ required: true, message: '请输入密码' }, { min: 5, max: 16, message: '密码长度要在 5 - 16 之间' }]}>
               <Input.Password placeholder='请输入密码' />
             </Form.Item>
           </Col>
