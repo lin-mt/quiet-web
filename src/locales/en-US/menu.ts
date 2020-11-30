@@ -8,4 +8,5 @@ export default {
   'menu.system.setting': 'System Settings',
   'menu.system.info': 'System Information',
   'menu.system.department': 'Department Management',
+  'menu.system.team': 'Team Management',
 };

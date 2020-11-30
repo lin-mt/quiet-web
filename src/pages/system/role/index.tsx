@@ -45,7 +45,7 @@ const RoleManagement: React.FC<any> = () => {
     },
     {
       title: '备注',
-      dataIndex: 'remarks',
+      dataIndex: 'remark',
       valueType: 'text',
     },
     {

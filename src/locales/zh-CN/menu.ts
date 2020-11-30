@@ -8,4 +8,5 @@ export default {
   'menu.system.setting': '系统设置',
   'menu.system.info': '系统信息',
   'menu.system.department': '部门管理',
+  'menu.system.team': '团队管理',
 };

@@ -24,7 +24,13 @@ declare namespace SystemEntities {
     parentId?: string,
     roleName: string,
     roleCnName?: string,
-    remarks?: string,
+    remark?: string,
+  }
+
+  export interface QuiteTeam {
+    id: string;
+    teamName: string,
+    slogan?: string,
   }
 
   export interface QuitePermission {

@@ -70,6 +70,11 @@ export default defineConfig({
           component: './system/department',
         },
         {
+          path: '/system/team',
+          name: 'team',
+          component: './system/team',
+        },
+        {
           path: '/system/setting',
           name: 'setting',
           component: './system/setting',
