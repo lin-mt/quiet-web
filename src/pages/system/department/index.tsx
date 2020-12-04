@@ -6,10 +6,12 @@ import { deleteDepartment, queryDepartment } from '@/services/system/QuiteDepart
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import DepartmentForm from '@/pages/system/department/components/DepartmentForm';
+import DepartmentTree from '@/pages/system/department/components/DepartmentTree';
 
 const PermissionConfig: React.FC<any> = () => {
   const [updateDepartmentInfo, setUpdateDepartmentInfo] = useState<SystemEntities.QuiteDepartment>();
   const [departmentFormVisible, setDepartmentModalVisible] = useState<boolean>(false);
+  const [departmentTreeVisible, setDepartmentTreeVisible] = useState<boolean>(false);
   const [departmentFormType, setDepartmentOperationType] = useState<OperationType>();
   const departmentModalActionRef = useRef<ActionType>();
   const [departmentForm] = Form.useForm();
@@ -18,7 +20,7 @@ const PermissionConfig: React.FC<any> = () => {
       title: 'ID',
       dataIndex: 'id',
       valueType: 'text',
-      hideInForm: true,
+      copyable: true,
     },
     {
       title: '部门名称',
@@ -97,6 +99,10 @@ const PermissionConfig: React.FC<any> = () => {
     setDepartmentModalVisible(true);
   }
 
+  function showAllDepartmentByTree() {
+    setDepartmentTreeVisible(true);
+  }
+
   return (
     <PageContainer>
       <ProTable<SystemEntities.QuiteDepartment>
@@ -105,6 +111,9 @@ const PermissionConfig: React.FC<any> = () => {
         request={(params, sorter, filter) =>
           queryDepartment({ params, sorter, filter })}
         toolBarRender={() => [
+          <Button type="primary" key="tree" onClick={showAllDepartmentByTree}>
+            所有部门
+          </Button>,
           <Button type="primary" key="create" onClick={createDepartment}>
             <PlusOutlined /> 新增部门
           </Button>,
@@ -116,8 +125,12 @@ const PermissionConfig: React.FC<any> = () => {
       {departmentFormVisible &&
       <DepartmentForm visible={departmentFormVisible} onCancel={handlePermissionFormCancel} form={departmentForm}
                       operationType={departmentFormType} updateInfo={updateDepartmentInfo}
-                      afterAction={refreshPageInfo} />
-      }
+                      afterAction={refreshPageInfo} />}
+      {departmentTreeVisible &&
+      <DepartmentTree visible={departmentTreeVisible}
+                      multiple
+                      onCancel={() => setDepartmentTreeVisible(false)}
+                      onOk={() => setDepartmentTreeVisible(false)} />}
     </PageContainer>
   );
 };

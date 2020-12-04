@@ -1,5 +1,13 @@
 import { request } from 'umi';
 
+export async function treeDepartment() {
+  return request('/api/system/department/tree', {
+    method: 'GET',
+  }).then(resData => {
+    return resData.data;
+  });
+}
+
 export async function queryDepartment(params?: any) {
   return request('/api/system/department/page', {
     data: params,

@@ -45,7 +45,7 @@ const PermissionConfig: React.FC<any> = () => {
       copyable: true,
     },
     {
-      title: 'remark',
+      title: '备注',
       dataIndex: 'remark',
       valueType: 'text',
       ellipsis: true,
