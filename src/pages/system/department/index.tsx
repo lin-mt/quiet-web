@@ -127,8 +127,8 @@ const PermissionConfig: React.FC<any> = () => {
                       operationType={departmentFormType} updateInfo={updateDepartmentInfo}
                       afterAction={refreshPageInfo} />}
       {departmentTreeVisible &&
-      <DepartmentTree visible={departmentTreeVisible}
-                      multiple
+      <DepartmentTree multiple
+                      visible={departmentTreeVisible}
                       onCancel={() => setDepartmentTreeVisible(false)}
                       onOk={() => setDepartmentTreeVisible(false)} />}
     </PageContainer>

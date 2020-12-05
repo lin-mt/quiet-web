@@ -43,13 +43,21 @@ const DepartmentTree: React.FC<DepartmentTree> = (props) => {
     }
   }
 
+  function handleOnCancel() {
+    onCancel();
+  }
+
+  function handleOnOk() {
+    onOk();
+  }
+
   return (
     <Modal
       destroyOnClose
       title='部门信息'
       visible={visible}
-      onCancel={() => onCancel()}
-      onOk={() => onOk()}
+      onCancel={handleOnCancel}
+      onOk={handleOnOk}
     >
       <Tree.DirectoryTree
         multiple={multiple}
