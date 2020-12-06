@@ -1,5 +1,13 @@
 import { request } from 'umi';
 
+export async function treeRole() {
+  return request('/api/system/role/tree', {
+    method: 'GET',
+  }).then(resData => {
+    return resData.data;
+  });
+}
+
 export async function queryRole(params?: any) {
   return request('/api/system/role/page', {
     data: params,

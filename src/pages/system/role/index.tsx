@@ -5,11 +5,14 @@ import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { queryRole, deleteRole } from '@/services/system/QuiteRole';
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
-import RoleForm from './components/RoleForm';
+import RoleTree from '@/pages/system/role/components/RoleTree';
+import RoleForm from '@/pages/system/role/components/RoleForm';
 
 const RoleManagement: React.FC<any> = () => {
   const [updateRoleInfo, setUpdateRoleInfo] = useState<SystemEntities.QuiteRole>();
   const [roleFormVisible, setRoleModalVisible] = useState<boolean>(false);
+  const [roleTreeVisible, setRoleTreeVisible] = useState<boolean>(false);
+
   const [roleFormType, setRoleOperationType] = useState<OperationType>();
   const roleModalActionRef = useRef<ActionType>();
   const [roleForm] = Form.useForm();
@@ -101,6 +104,10 @@ const RoleManagement: React.FC<any> = () => {
     roleModalActionRef?.current?.reload();
   }
 
+  function showAllRoleByTree() {
+    setRoleTreeVisible(true);
+  }
+
   return (
     <PageContainer>
       <ProTable<SystemEntities.QuiteRole>
@@ -109,6 +116,10 @@ const RoleManagement: React.FC<any> = () => {
         request={(params, sorter, filter) =>
           queryRole({ params, sorter, filter })}
         toolBarRender={() => [
+
+          <Button type="primary" key="tree" onClick={showAllRoleByTree}>
+            所有角色
+          </Button>,
           <Button type="primary" key="create" onClick={createRole}>
             <PlusOutlined /> 新建角色
           </Button>,
@@ -117,8 +128,12 @@ const RoleManagement: React.FC<any> = () => {
       />
       {roleFormVisible &&
       <RoleForm visible={roleFormVisible} onCancel={handleRoleFormCancel} operationType={roleFormType} form={roleForm}
-                updateInfo={updateRoleInfo} afterAction={refreshPageInfo} />
-      }
+                updateInfo={updateRoleInfo} afterAction={refreshPageInfo} />}
+      {roleTreeVisible &&
+      <RoleTree multiple
+                visible={roleTreeVisible}
+                onCancel={() => setRoleTreeVisible(false)}
+                onOk={() => setRoleTreeVisible(false)} />}
     </PageContainer>
   );
 };
