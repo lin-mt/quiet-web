@@ -3,21 +3,21 @@ import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { queryRole, deleteRole } from '@/services/system/QuiteRole';
+import { queryRole, deleteRole } from '@/services/system/QuietRole';
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import RoleTree from '@/pages/system/role/components/RoleTree';
 import RoleForm from '@/pages/system/role/components/RoleForm';
 
 const RoleManagement: React.FC<any> = () => {
-  const [updateRoleInfo, setUpdateRoleInfo] = useState<SystemEntities.QuiteRole>();
+  const [updateRoleInfo, setUpdateRoleInfo] = useState<SystemEntities.QuietRole>();
   const [roleFormVisible, setRoleModalVisible] = useState<boolean>(false);
   const [roleTreeVisible, setRoleTreeVisible] = useState<boolean>(false);
 
   const [roleFormType, setRoleOperationType] = useState<OperationType>();
   const roleModalActionRef = useRef<ActionType>();
   const [roleForm] = Form.useForm();
-  const columns: ProColumns<SystemEntities.QuiteRole>[] = [
+  const columns: ProColumns<SystemEntities.QuietRole>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -122,7 +122,7 @@ const RoleManagement: React.FC<any> = () => {
 
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuiteRole>
+      <ProTable<SystemEntities.QuietRole>
         actionRef={roleModalActionRef}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => queryRole({ params, sorter, filter })}

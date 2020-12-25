@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Input, Modal } from 'antd';
-import { saveTeam, updateTeam } from '@/services/system/QuiteTeam';
+import { saveTeam, updateTeam } from '@/services/system/QuietTeam';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
 
@@ -9,7 +9,7 @@ type TeamFormProps = {
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
-  updateInfo?: SystemEntities.QuiteTeam;
+  updateInfo?: SystemEntities.QuietTeam;
   afterAction?: () => void;
 };
 

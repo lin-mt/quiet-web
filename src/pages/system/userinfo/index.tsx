@@ -4,18 +4,18 @@ import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { queryUser, deleteUser } from '@/services/system/QuiteUser';
+import { queryUser, deleteUser } from '@/services/system/QuietUser';
 import { Gender, Weather } from '@/services/system/Dictionary';
 import { OperationType } from '@/types/Type';
 import UserForm from './components/UserForm';
 
 const UserInfo: React.FC<any> = () => {
-  const [updateUserInfo, setUpdateUserInfo] = useState<SystemEntities.QuiteUser>();
+  const [updateUserInfo, setUpdateUserInfo] = useState<SystemEntities.QuietUser>();
   const [userFormVisible, setUserModalVisible] = useState<boolean>(false);
   const [userFormType, setUserModalType] = useState<OperationType>();
   const userModalActionRef = useRef<ActionType>();
   const [userForm] = Form.useForm();
-  const columns: ProColumns<SystemEntities.QuiteUser>[] = [
+  const columns: ProColumns<SystemEntities.QuietUser>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -161,7 +161,7 @@ const UserInfo: React.FC<any> = () => {
 
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuiteUser>
+      <ProTable<SystemEntities.QuietUser>
         actionRef={userModalActionRef}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => queryUser({ params, sorter, filter })}

@@ -3,18 +3,18 @@ import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { queryTeam, deleteTeam } from '@/services/system/QuiteTeam';
+import { queryTeam, deleteTeam } from '@/services/system/QuietTeam';
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import TeamForm from './components/TeamForm';
 
 const TeamManagement: React.FC<any> = () => {
-  const [updateTeamInfo, setUpdateTeamInfo] = useState<SystemEntities.QuiteTeam>();
+  const [updateTeamInfo, setUpdateTeamInfo] = useState<SystemEntities.QuietTeam>();
   const [roleFormVisible, setTeamModalVisible] = useState<boolean>(false);
   const [roleFormType, setTeamOperationType] = useState<OperationType>();
   const teamModalActionRef = useRef<ActionType>();
   const [teamForm] = Form.useForm();
-  const columns: ProColumns<SystemEntities.QuiteTeam>[] = [
+  const columns: ProColumns<SystemEntities.QuietTeam>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -97,7 +97,7 @@ const TeamManagement: React.FC<any> = () => {
 
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuiteTeam>
+      <ProTable<SystemEntities.QuietTeam>
         actionRef={teamModalActionRef}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => queryTeam({ params, sorter, filter })}

@@ -176,7 +176,7 @@ const Login: React.FC = () => {
                 />
                 <ProFormText.Password
                   name="secretCode"
-                  initialValue={'quite'}
+                  initialValue={'quiet'}
                   fieldProps={{
                     size: 'large',
                     prefix: <LockTwoTone className={styles.prefixIcon} />,

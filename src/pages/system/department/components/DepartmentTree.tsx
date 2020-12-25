@@ -1,7 +1,7 @@
 import type { ReactText } from 'react';
 import React, { useEffect, useState } from 'react';
 import { Tree, Modal } from 'antd';
-import { treeDepartment } from '@/services/system/QuiteDepartment';
+import { treeDepartment } from '@/services/system/QuietDepartment';
 import type { DataNode } from 'antd/lib/tree';
 
 type DepartmentTreeProps = {

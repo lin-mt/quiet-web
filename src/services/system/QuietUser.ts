@@ -1,11 +1,11 @@
 import { request } from 'umi';
-import { Result } from '@/types/Result';
+import type { Result } from '@/types/Result';
 
 export async function queryUser(params?: any) {
   return request('/api/system/user/page', {
     data: params,
     method: 'POST',
-  }).then(resData => {
+  }).then((resData) => {
     return { ...resData.data, data: resData.data.results };
   });
 }
@@ -32,12 +32,15 @@ export async function updateUser(params?: any) {
 }
 
 export async function queryCurrent() {
-  return request<Result<SystemEntities.QuiteUser>>('/api/system/user/currentUserInfo').then(res => {
-    if (res && res.data && !res.data.avatar) {
-      res.data.avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
-    }
-    return res;
-  });
+  return request<Result<SystemEntities.QuietUser>>('/api/system/user/currentUserInfo').then(
+    (res) => {
+      if (res && res.data && !res.data.avatar) {
+        res.data.avatar =
+          'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
+      }
+      return res;
+    },
+  );
 }
 
 export async function queryNotices(): Promise<any> {

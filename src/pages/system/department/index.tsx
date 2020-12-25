@@ -3,7 +3,7 @@ import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { deleteDepartment, queryDepartment } from '@/services/system/QuiteDepartment';
+import { deleteDepartment, queryDepartment } from '@/services/system/QuietDepartment';
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import DepartmentForm from '@/pages/system/department/components/DepartmentForm';
@@ -13,13 +13,13 @@ const PermissionConfig: React.FC<any> = () => {
   const [
     updateDepartmentInfo,
     setUpdateDepartmentInfo,
-  ] = useState<SystemEntities.QuiteDepartment>();
+  ] = useState<SystemEntities.QuietDepartment>();
   const [departmentFormVisible, setDepartmentModalVisible] = useState<boolean>(false);
   const [departmentTreeVisible, setDepartmentTreeVisible] = useState<boolean>(false);
   const [departmentFormType, setDepartmentOperationType] = useState<OperationType>();
   const departmentModalActionRef = useRef<ActionType>();
   const [departmentForm] = Form.useForm();
-  const columns: ProColumns<SystemEntities.QuiteDepartment>[] = [
+  const columns: ProColumns<SystemEntities.QuietDepartment>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -114,7 +114,7 @@ const PermissionConfig: React.FC<any> = () => {
 
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuiteDepartment>
+      <ProTable<SystemEntities.QuietDepartment>
         actionRef={departmentModalActionRef}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => queryDepartment({ params, sorter, filter })}

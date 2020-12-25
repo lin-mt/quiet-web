@@ -4,7 +4,7 @@ export async function queryTeam(params?: any) {
   return request('/api/system/team/page', {
     data: params,
     method: 'POST',
-  }).then(resData => {
+  }).then((resData) => {
     return { ...resData.data, data: resData.data.results };
   });
 }

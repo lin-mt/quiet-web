@@ -1,7 +1,7 @@
 import type { ReactText } from 'react';
 import React, { useEffect, useState } from 'react';
 import { Tree, Modal } from 'antd';
-import { treeRole } from '@/services/system/QuiteRole';
+import { treeRole } from '@/services/system/QuietRole';
 import type { DataNode } from 'antd/lib/tree';
 
 type RoleTreeProps = {

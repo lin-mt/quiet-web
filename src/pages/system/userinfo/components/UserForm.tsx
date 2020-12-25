@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
-import { registeredUser, updateUser } from '@/services/system/QuiteUser';
+import { registeredUser, updateUser } from '@/services/system/QuietUser';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
 
@@ -11,7 +11,7 @@ type UserFormProps = {
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
-  updateInfo?: SystemEntities.QuiteUser;
+  updateInfo?: SystemEntities.QuietUser;
   afterAction?: () => void;
 };
 

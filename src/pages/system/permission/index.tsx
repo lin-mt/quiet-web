@@ -3,7 +3,7 @@ import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { deletePermission, queryPermission } from '@/services/system/QuitePermission';
+import { deletePermission, queryPermission } from '@/services/system/QuietPermission';
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import PermissionForm from '@/pages/system/permission/components/PermissionForm';
@@ -12,12 +12,12 @@ const PermissionConfig: React.FC<any> = () => {
   const [
     updatePermissionInfo,
     setUpdatePermissionInfo,
-  ] = useState<SystemEntities.QuitePermission>();
+  ] = useState<SystemEntities.QuietPermission>();
   const [permissionFormVisible, setPermissionModalVisible] = useState<boolean>(false);
   const [permissionFormType, setPermissionOperationType] = useState<OperationType>();
   const permissionModalActionRef = useRef<ActionType>();
   const [permissionForm] = Form.useForm();
-  const columns: ProColumns<SystemEntities.QuitePermission>[] = [
+  const columns: ProColumns<SystemEntities.QuietPermission>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -121,7 +121,7 @@ const PermissionConfig: React.FC<any> = () => {
 
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuitePermission>
+      <ProTable<SystemEntities.QuietPermission>
         actionRef={permissionModalActionRef}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => queryPermission({ params, sorter, filter })}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Input, Modal } from 'antd';
-import { saveDepartment, updateDepartment } from '@/services/system/QuiteDepartment';
+import { saveDepartment, updateDepartment } from '@/services/system/QuietDepartment';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
 
@@ -9,7 +9,7 @@ type DepartmentFormProps = {
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
-  updateInfo?: SystemEntities.QuiteDepartment;
+  updateInfo?: SystemEntities.QuietDepartment;
   afterAction?: () => void;
 };
 

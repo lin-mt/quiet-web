@@ -1,57 +1,56 @@
 declare namespace SystemEntities {
+  export type Dictionary = {
+    code: string;
+    value: string;
+  };
 
-  export interface Dictionary {
-    code: string,
-    value: string
-  }
-
-  export interface QuiteUser {
+  export type QuietUser = {
     id: string;
-    username: string
-    avatar?: string
-    gender?: any
-    phoneNumber?: string
-    emailAddress?: string
-    accountExpired?: any
-    accountLocked?: any
-    credentialsExpired?: any
-    enabled: any
-    unreadCount: number
-  }
+    username: string;
+    avatar?: string;
+    gender?: any;
+    phoneNumber?: string;
+    emailAddress?: string;
+    accountExpired?: any;
+    accountLocked?: any;
+    credentialsExpired?: any;
+    enabled: any;
+    unreadCount: number;
+  };
 
-  export interface QuiteRole {
+  export type QuietRole = {
     id: string;
-    parentId?: string,
-    roleName: string,
-    roleCnName?: string,
-    remark?: string,
-  }
+    parentId?: string;
+    roleName: string;
+    roleCnName?: string;
+    remark?: string;
+  };
 
-  export interface QuiteTeam {
+  export type QuietTeam = {
     id: string;
-    teamName: string,
-    slogan?: string,
-  }
+    teamName: string;
+    slogan?: string;
+  };
 
-  export interface QuitePermission {
+  export type QuietPermission = {
     id: string;
-    applicationName: string,
-    urlPattern: string,
-    preFilterValue?: string,
-    preFilterFilterTarget?: string,
-    preAuthorizeValue?: string,
-    postFilterValue?: string,
-    postAuthorizeValue?: string,
-  }
+    applicationName: string;
+    urlPattern: string;
+    preFilterValue?: string;
+    preFilterFilterTarget?: string;
+    preAuthorizeValue?: string;
+    postFilterValue?: string;
+    postAuthorizeValue?: string;
+  };
 
-  export interface QuiteDepartment {
+  export type QuietDepartment = {
     id: string;
-    departmentName: string,
-    parentId?: string,
-    remark?: string,
-  }
+    departmentName: string;
+    parentId?: string;
+    remark?: string;
+  };
 
-  export interface NoticeIconData {
+  export type NoticeIconData = {
     id: string;
     key: string;
     avatar: string;
@@ -63,5 +62,5 @@ declare namespace SystemEntities {
     clickClose?: boolean;
     extra: any;
     status: string;
-  }
+  };
 }

@@ -7,7 +7,7 @@ import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import type { ResponseError } from 'umi-request';
-import { queryCurrent } from './services/system/QuiteUser';
+import { queryCurrent } from './services/system/QuietUser';
 import defaultSettings from '../config/defaultSettings';
 import type { Result } from '@/types/Result';
 import { ResultType } from '@/types/Result';
@@ -23,8 +23,8 @@ export const initialStateConfig = {
 
 export async function getInitialState(): Promise<{
   settings?: LayoutSettings;
-  currentUser?: SystemEntities.QuiteUser;
-  fetchUserInfo?: () => Promise<Result<SystemEntities.QuiteUser> | undefined>;
+  currentUser?: SystemEntities.QuietUser;
+  fetchUserInfo?: () => Promise<Result<SystemEntities.QuietUser> | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
