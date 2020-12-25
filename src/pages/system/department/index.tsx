@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import ProTable, { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
+import type { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { deleteDepartment, queryDepartment } from '@/services/system/QuiteDepartment';
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
@@ -9,7 +10,10 @@ import DepartmentForm from '@/pages/system/department/components/DepartmentForm'
 import DepartmentTree from '@/pages/system/department/components/DepartmentTree';
 
 const PermissionConfig: React.FC<any> = () => {
-  const [updateDepartmentInfo, setUpdateDepartmentInfo] = useState<SystemEntities.QuiteDepartment>();
+  const [
+    updateDepartmentInfo,
+    setUpdateDepartmentInfo,
+  ] = useState<SystemEntities.QuiteDepartment>();
   const [departmentFormVisible, setDepartmentModalVisible] = useState<boolean>(false);
   const [departmentTreeVisible, setDepartmentTreeVisible] = useState<boolean>(false);
   const [departmentFormType, setDepartmentOperationType] = useState<OperationType>();
@@ -60,22 +64,27 @@ const PermissionConfig: React.FC<any> = () => {
       valueType: 'option',
       render: (_, record) => {
         return [
-          <a key='update' onClick={() => {
-            const role = { ...record };
-            departmentForm.setFieldsValue(role);
-            setUpdateDepartmentInfo(role);
-            setDepartmentOperationType(OperationType.UPDATE);
-            setDepartmentModalVisible(true);
-          }}>修改</a>,
+          <a
+            key="update"
+            onClick={() => {
+              const role = { ...record };
+              departmentForm.setFieldsValue(role);
+              setUpdateDepartmentInfo(role);
+              setDepartmentOperationType(OperationType.UPDATE);
+              setDepartmentModalVisible(true);
+            }}
+          >
+            修改
+          </a>,
           <Popconfirm
-            key='delete'
-            placement='topLeft'
-            title='确认删除该部门信息吗？'
+            key="delete"
+            placement="topLeft"
+            title="确认删除该部门信息吗？"
             onConfirm={() => {
               deleteDepartment(record.id).then(() => refreshPageInfo());
             }}
           >
-            <a key='delete'>删除</a>
+            <a key="delete">删除</a>
           </Popconfirm>,
         ];
       },
@@ -90,10 +99,10 @@ const PermissionConfig: React.FC<any> = () => {
     setDepartmentModalVisible(false);
   }
 
-  const [columnsStateMap, setColumnsStateMap] = useState<{
-    [key: string]: ColumnsState;
-  }>({});
-
+  const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
+    gmtCreate: { show: false },
+    gmtUpdate: { show: false },
+  });
   function createDepartment() {
     setDepartmentOperationType(OperationType.CREATE);
     setDepartmentModalVisible(true);
@@ -107,9 +116,8 @@ const PermissionConfig: React.FC<any> = () => {
     <PageContainer>
       <ProTable<SystemEntities.QuiteDepartment>
         actionRef={departmentModalActionRef}
-        rowKey={record => record.id}
-        request={(params, sorter, filter) =>
-          queryDepartment({ params, sorter, filter })}
+        rowKey={(record) => record.id}
+        request={(params, sorter, filter) => queryDepartment({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="tree" onClick={showAllDepartmentByTree}>
             所有部门
@@ -122,15 +130,24 @@ const PermissionConfig: React.FC<any> = () => {
         columnsStateMap={columnsStateMap}
         onColumnsStateChange={(map) => setColumnsStateMap(map)}
       />
-      {departmentFormVisible &&
-      <DepartmentForm visible={departmentFormVisible} onCancel={handlePermissionFormCancel} form={departmentForm}
-                      operationType={departmentFormType} updateInfo={updateDepartmentInfo}
-                      afterAction={refreshPageInfo} />}
-      {departmentTreeVisible &&
-      <DepartmentTree multiple
-                      visible={departmentTreeVisible}
-                      onCancel={() => setDepartmentTreeVisible(false)}
-                      onOk={() => setDepartmentTreeVisible(false)} />}
+      {departmentFormVisible && (
+        <DepartmentForm
+          visible={departmentFormVisible}
+          onCancel={handlePermissionFormCancel}
+          form={departmentForm}
+          operationType={departmentFormType}
+          updateInfo={updateDepartmentInfo}
+          afterAction={refreshPageInfo}
+        />
+      )}
+      {departmentTreeVisible && (
+        <DepartmentTree
+          multiple
+          visible={departmentTreeVisible}
+          onCancel={() => setDepartmentTreeVisible(false)}
+          onOk={() => setDepartmentTreeVisible(false)}
+        />
+      )}
     </PageContainer>
   );
 };

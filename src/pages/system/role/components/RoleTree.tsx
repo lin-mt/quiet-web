@@ -1,41 +1,42 @@
-import React, { ReactText, useEffect, useState } from 'react';
+import type { ReactText } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tree, Modal } from 'antd';
 import { treeRole } from '@/services/system/QuiteRole';
+import type { DataNode } from 'antd/lib/tree';
 
-interface RoleTree {
-  visible: boolean,
+type RoleTreeProps = {
+  visible: boolean;
   onCancel: () => void;
   onOk: () => void;
   multiple?: boolean;
   onSelect?: (keys: ReactText[]) => void;
-}
+};
 
-const RoleTree: React.FC<RoleTree> = (props) => {
+const RoleTree: React.FC<RoleTreeProps> = (props) => {
   const { visible, onCancel, onOk, multiple, onSelect } = props;
 
-  const [treeData, setTreeData] = useState<import('antd/lib/tree').DataNode[] | undefined>([]);
+  const [treeData, setTreeData] = useState<DataNode[] | undefined>([]);
 
   useEffect(() => {
-    treeRole().then(resp => {
+    const buildRoleTreeNodes = (data: any) => {
+      const buildResult = JSON.parse(JSON.stringify(data));
+      if (data) {
+        for (let i = 0; i < data.length; i += 1) {
+          buildResult[i].key = data[i].id;
+          buildResult[i].title = data[i].roleName;
+          if (data[i].children) {
+            buildResult[i].children = buildRoleTreeNodes(data[i].children);
+          } else {
+            buildResult[i].isLeaf = true;
+          }
+        }
+      }
+      return buildResult;
+    };
+    treeRole().then((resp) => {
       setTreeData(buildRoleTreeNodes(resp));
     });
   }, []);
-
-  function buildRoleTreeNodes(data: any) {
-    const buildResult = JSON.parse(JSON.stringify(data));
-    if (data) {
-      for (let i = 0; i < data.length; i += 1) {
-        buildResult[i].key = data[i].id;
-        buildResult[i].title = data[i].roleName;
-        if (data[i].children) {
-          buildResult[i].children = buildRoleTreeNodes(data[i].children);
-        } else {
-          buildResult[i].isLeaf = true;
-        }
-      }
-    }
-    return buildResult;
-  }
 
   function handleOnSelect(keys: ReactText[]) {
     if (onSelect) {
@@ -54,7 +55,7 @@ const RoleTree: React.FC<RoleTree> = (props) => {
   return (
     <Modal
       destroyOnClose
-      title='角色信息'
+      title="角色信息"
       visible={visible}
       onCancel={handleOnCancel}
       onOk={handleOnOk}
@@ -63,7 +64,8 @@ const RoleTree: React.FC<RoleTree> = (props) => {
         multiple={multiple}
         onSelect={handleOnSelect}
         treeData={treeData}
-        blockNode />
+        blockNode
+      />
     </Modal>
   );
 };

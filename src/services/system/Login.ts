@@ -1,13 +1,13 @@
 import { request } from 'umi';
-import { Result } from '@/types/Result';
+import type { Result } from '@/types/Result';
 
-export interface LoginParams {
+export type LoginParams = {
   username: string;
   secret_code: string;
   mobile: string;
   captcha: string;
   type: string;
-}
+};
 
 export async function accountLogin(params: LoginParams) {
   return request<Result<any>>('/api/system/login/account', {

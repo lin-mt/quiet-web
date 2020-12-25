@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Input, Modal } from 'antd';
 import { savePermission, updatePermission } from '@/services/system/QuitePermission';
-import { FormInstance } from 'antd/lib/form';
+import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
 
-interface PermissionFormProps {
+type PermissionFormProps = {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
   updateInfo?: SystemEntities.QuitePermission;
   afterAction?: () => void;
-}
+};
 
 const RoleForm: React.FC<PermissionFormProps> = (props) => {
   const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
@@ -77,36 +77,60 @@ const RoleForm: React.FC<PermissionFormProps> = (props) => {
         <Button key="back" onClick={() => handleModalCancel()}>
           取消
         </Button>,
-        <Button loading={submitting} key="submit" type="primary" htmlType="submit" onClick={handleSubmit}>
+        <Button
+          loading={submitting}
+          key="submit"
+          type="primary"
+          htmlType="submit"
+          onClick={handleSubmit}
+        >
           {getSubmitButtonName()}
         </Button>,
       ]}
     >
-      <Form form={form} name='permissionForm' labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
+      <Form form={form} name="permissionForm" labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
         <Col>
-          <Form.Item label='应用名称' name='applicationName' rules={[{ required: true, message: '请输入应用名称' }]}>
-            <Input placeholder='请输入应用名称' />
+          <Form.Item
+            label="应用名称"
+            name="applicationName"
+            rules={[{ required: true, message: '请输入应用名称' }]}
+          >
+            <Input placeholder="请输入应用名称" />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label='urlPattern' name='urlPattern'
-                     rules={[{ required: true, message: '请输入urlPattern' }, { max: 100, message: 'url匹配规则长度不能超过 100' }]}>
-            <Input placeholder='请输入urlPattern' />
+          <Form.Item
+            label="urlPattern"
+            name="urlPattern"
+            rules={[
+              { required: true, message: '请输入urlPattern' },
+              { max: 100, message: 'url匹配规则长度不能超过 100' },
+            ]}
+          >
+            <Input placeholder="请输入urlPattern" />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label='requestMethod' name='requestMethod'>
-            <Input placeholder='请输入请求方法' />
+          <Form.Item label="requestMethod" name="requestMethod">
+            <Input placeholder="请输入请求方法" />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label='角色 ID' name='roleId' rules={[{ required: true, message: '请输入角色ID' }]}>
-            <Input placeholder='请输入角色 ID' />
+          <Form.Item
+            label="角色 ID"
+            name="roleId"
+            rules={[{ required: true, message: '请输入角色ID' }]}
+          >
+            <Input placeholder="请输入角色 ID" />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label='备注' name='remark' rules={[{ max: 100, message: '权限的备注信息长度不能超过 100' }]}>
-            <Input placeholder='请输入备注信息' />
+          <Form.Item
+            label="备注"
+            name="remark"
+            rules={[{ max: 100, message: '权限的备注信息长度不能超过 100' }]}
+          >
+            <Input placeholder="请输入备注信息" />
           </Form.Item>
         </Col>
       </Form>

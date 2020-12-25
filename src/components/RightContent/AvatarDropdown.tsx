@@ -2,29 +2,29 @@ import React, { useCallback } from 'react';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import { history, useModel } from 'umi';
-import { getPageQuery } from '@/utils/utils';
-import { Constant as RU } from '@/constant/RouteUrl';
 import { outLogin } from '@/services/system/Login';
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
-export interface GlobalHeaderRightProps {
+export type GlobalHeaderRightProps = {
   menu?: boolean;
-}
+};
 
 /**
  * 退出登录，并且将当前的 url 保存
  */
 const loginOut = async () => {
   await outLogin();
-  const { redirect } = getPageQuery();
+  const { query, pathname } = history.location;
+  // @ts-ignore
+  const { redirect } = query;
   // Note: There may be security issues, please note
-  if (window.location.pathname !== RU.LOGIN && !redirect) {
+  if (window.location.pathname !== '/user/login' && !redirect) {
     history.replace({
-      pathname: RU.LOGIN,
+      pathname: '/user/login',
       search: stringify({
-        redirect: window.location.href,
+        redirect: pathname,
       }),
     });
   }
@@ -41,14 +41,14 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       domEvent: React.MouseEvent<HTMLElement>;
     }) => {
       const { key } = event;
-      if (key === 'logout') {
+      if (key === 'logout' && initialState) {
         setInitialState({ ...initialState, currentUser: undefined });
         loginOut();
         return;
       }
       history.push(`/account/${key}`);
     },
-    [],
+    [initialState, setInitialState],
   );
 
   const loading = (

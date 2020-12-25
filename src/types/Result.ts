@@ -2,12 +2,12 @@ export enum ResultType {
   SUCCESS = 'SUCCESS',
   WARNING = 'WARNING',
   FAILURE = 'FAILURE',
-  EXCEPTION = 'EXCEPTION'
+  EXCEPTION = 'EXCEPTION',
 }
 
-export interface Result<T> {
-  result?: ResultType,
-  code?: string,
-  message?: string,
-  data?: T
-}
+export type Result<T> = {
+  result?: ResultType;
+  code?: string;
+  message?: string;
+  data?: T;
+};

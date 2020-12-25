@@ -2,7 +2,8 @@ import React, { useRef, useState } from 'react';
 import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { queryUser, deleteUser } from '@/services/system/QuiteUser';
 import { Gender, Weather } from '@/services/system/Dictionary';
 import { OperationType } from '@/types/Type';
@@ -43,7 +44,7 @@ const UserInfo: React.FC<any> = () => {
       dataIndex: 'gender',
       valueEnum: Gender,
       renderText: (gender) => {
-        return gender?.value;
+        return gender?.code;
       },
     },
     {
@@ -61,7 +62,7 @@ const UserInfo: React.FC<any> = () => {
       dataIndex: 'accountExpired',
       valueEnum: Weather,
       renderText: (accountExpired) => {
-        return accountExpired?.value;
+        return accountExpired?.code;
       },
     },
     {
@@ -69,7 +70,7 @@ const UserInfo: React.FC<any> = () => {
       dataIndex: 'accountLocked',
       valueEnum: Weather,
       renderText: (accountLocked) => {
-        return accountLocked?.value;
+        return accountLocked?.code;
       },
     },
     {
@@ -77,7 +78,7 @@ const UserInfo: React.FC<any> = () => {
       dataIndex: 'credentialsExpired',
       valueEnum: Weather,
       renderText: (credentialsExpired) => {
-        return credentialsExpired?.value;
+        return credentialsExpired?.code;
       },
     },
     {
@@ -97,7 +98,7 @@ const UserInfo: React.FC<any> = () => {
       dataIndex: 'enabled',
       valueEnum: Weather,
       renderText: (enabled) => {
-        return enabled.value;
+        return enabled.code;
       },
     },
     {
@@ -106,34 +107,44 @@ const UserInfo: React.FC<any> = () => {
       valueType: 'option',
       render: (_, record) => {
         return [
-          <a key='update' onClick={() => {
-            const userInfo = {
-              ...record,
-              gender: record.gender?.code,
-              accountExpired: record.accountExpired?.code,
-              accountLocked: record.accountLocked?.code,
-              credentialsExpired: record.credentialsExpired?.code,
-              enabled: record.enabled?.code,
-            };
-            userForm.setFieldsValue(userInfo);
-            setUpdateUserInfo(userInfo);
-            setUserModalType(OperationType.UPDATE);
-            setUserModalVisible(true);
-          }}>修改</a>,
+          <a
+            key="update"
+            onClick={() => {
+              const userInfo = {
+                ...record,
+                gender: record.gender?.code,
+                accountExpired: record.accountExpired?.code,
+                accountLocked: record.accountLocked?.code,
+                credentialsExpired: record.credentialsExpired?.code,
+                enabled: record.enabled?.code,
+              };
+              userForm.setFieldsValue(userInfo);
+              setUpdateUserInfo(userInfo);
+              setUserModalType(OperationType.UPDATE);
+              setUserModalVisible(true);
+            }}
+          >
+            修改
+          </a>,
           <Popconfirm
-            key='delete'
-            placement='topLeft'
-            title='确认删除该用户及该用户的相关信息吗？'
+            key="delete"
+            placement="topLeft"
+            title="确认删除该用户及该用户的相关信息吗？"
             onConfirm={() => {
               deleteUser(record.id).then(() => refreshPageInfo());
             }}
           >
-            <a key='delete'>删除</a>
+            <a key="delete">删除</a>
           </Popconfirm>,
         ];
       },
     },
   ];
+
+  const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
+    gmtCreate: { show: false },
+    gmtUpdate: { show: false },
+  });
 
   function createUser() {
     setUserModalType(OperationType.CREATE);
@@ -152,21 +163,27 @@ const UserInfo: React.FC<any> = () => {
     <PageContainer>
       <ProTable<SystemEntities.QuiteUser>
         actionRef={userModalActionRef}
-        rowKey={record => record.id}
-        request={(params, sorter, filter) =>
-          queryUser({ params, sorter, filter })}
+        rowKey={(record) => record.id}
+        request={(params, sorter, filter) => queryUser({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createUser}>
             <PlusOutlined /> 新建用户
           </Button>,
         ]}
         columns={columns}
+        columnsStateMap={columnsStateMap}
+        onColumnsStateChange={(map) => setColumnsStateMap(map)}
       />
-      {userFormVisible &&
-      <UserForm visible={userFormVisible} onCancel={handleUserFormCancel} operationType={userFormType} form={userForm}
-                updateInfo={updateUserInfo} afterAction={refreshPageInfo} />
-      }
-
+      {userFormVisible && (
+        <UserForm
+          visible={userFormVisible}
+          onCancel={handleUserFormCancel}
+          operationType={userFormType}
+          form={userForm}
+          updateInfo={updateUserInfo}
+          afterAction={refreshPageInfo}
+        />
+      )}
     </PageContainer>
   );
 };

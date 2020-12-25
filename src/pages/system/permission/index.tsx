@@ -1,14 +1,18 @@
 import React, { useRef, useState } from 'react';
 import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import ProTable, { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
+import type { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { deletePermission, queryPermission } from '@/services/system/QuitePermission';
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import PermissionForm from '@/pages/system/permission/components/PermissionForm';
 
 const PermissionConfig: React.FC<any> = () => {
-  const [updatePermissionInfo, setUpdatePermissionInfo] = useState<SystemEntities.QuitePermission>();
+  const [
+    updatePermissionInfo,
+    setUpdatePermissionInfo,
+  ] = useState<SystemEntities.QuitePermission>();
   const [permissionFormVisible, setPermissionModalVisible] = useState<boolean>(false);
   const [permissionFormType, setPermissionOperationType] = useState<OperationType>();
   const permissionModalActionRef = useRef<ActionType>();
@@ -70,22 +74,27 @@ const PermissionConfig: React.FC<any> = () => {
       valueType: 'option',
       render: (_, record) => {
         return [
-          <a key='update' onClick={() => {
-            const role = { ...record };
-            permissionForm.setFieldsValue(role);
-            setUpdatePermissionInfo(role);
-            setPermissionOperationType(OperationType.UPDATE);
-            setPermissionModalVisible(true);
-          }}>修改</a>,
+          <a
+            key="update"
+            onClick={() => {
+              const role = { ...record };
+              permissionForm.setFieldsValue(role);
+              setUpdatePermissionInfo(role);
+              setPermissionOperationType(OperationType.UPDATE);
+              setPermissionModalVisible(true);
+            }}
+          >
+            修改
+          </a>,
           <Popconfirm
-            key='delete'
-            placement='topLeft'
-            title='确认删除该配置信息吗？'
+            key="delete"
+            placement="topLeft"
+            title="确认删除该配置信息吗？"
             onConfirm={() => {
               deletePermission(record.id).then(() => refreshPageInfo());
             }}
           >
-            <a key='delete'>删除</a>
+            <a key="delete">删除</a>
           </Popconfirm>,
         ];
       },
@@ -100,9 +109,10 @@ const PermissionConfig: React.FC<any> = () => {
     setPermissionModalVisible(false);
   }
 
-  const [columnsStateMap, setColumnsStateMap] = useState<{
-    [key: string]: ColumnsState;
-  }>({});
+  const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
+    gmtCreate: { show: false },
+    gmtUpdate: { show: false },
+  });
 
   function createPermission() {
     setPermissionOperationType(OperationType.CREATE);
@@ -113,9 +123,8 @@ const PermissionConfig: React.FC<any> = () => {
     <PageContainer>
       <ProTable<SystemEntities.QuitePermission>
         actionRef={permissionModalActionRef}
-        rowKey={record => record.id}
-        request={(params, sorter, filter) =>
-          queryPermission({ params, sorter, filter })}
+        rowKey={(record) => record.id}
+        request={(params, sorter, filter) => queryPermission({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createPermission}>
             <PlusOutlined /> 新增配置
@@ -125,11 +134,16 @@ const PermissionConfig: React.FC<any> = () => {
         columnsStateMap={columnsStateMap}
         onColumnsStateChange={(map) => setColumnsStateMap(map)}
       />
-      {permissionFormVisible &&
-      <PermissionForm visible={permissionFormVisible} onCancel={handlePermissionFormCancel} form={permissionForm}
-                      operationType={permissionFormType} updateInfo={updatePermissionInfo}
-                      afterAction={refreshPageInfo} />
-      }
+      {permissionFormVisible && (
+        <PermissionForm
+          visible={permissionFormVisible}
+          onCancel={handlePermissionFormCancel}
+          form={permissionForm}
+          operationType={permissionFormType}
+          updateInfo={updatePermissionInfo}
+          afterAction={refreshPageInfo}
+        />
+      )}
     </PageContainer>
   );
 };

@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { queryTeam, deleteTeam } from '@/services/system/QuiteTeam';
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
@@ -49,27 +50,37 @@ const TeamManagement: React.FC<any> = () => {
       valueType: 'option',
       render: (_, record) => {
         return [
-          <a key='update' onClick={() => {
-            const team = { ...record };
-            teamForm.setFieldsValue(team);
-            setUpdateTeamInfo(team);
-            setTeamOperationType(OperationType.UPDATE);
-            setTeamModalVisible(true);
-          }}>修改</a>,
+          <a
+            key="update"
+            onClick={() => {
+              const team = { ...record };
+              teamForm.setFieldsValue(team);
+              setUpdateTeamInfo(team);
+              setTeamOperationType(OperationType.UPDATE);
+              setTeamModalVisible(true);
+            }}
+          >
+            修改
+          </a>,
           <Popconfirm
-            key='delete'
-            placement='topLeft'
-            title='确认删除该团队以及队员信息吗？'
+            key="delete"
+            placement="topLeft"
+            title="确认删除该团队以及队员信息吗？"
             onConfirm={() => {
               deleteTeam(record.id).then(() => refreshPageInfo());
             }}
           >
-            <a key='delete'>删除</a>
+            <a key="delete">删除</a>
           </Popconfirm>,
         ];
       },
     },
   ];
+
+  const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
+    gmtCreate: { show: false },
+    gmtUpdate: { show: false },
+  });
 
   function createTeam() {
     setTeamOperationType(OperationType.CREATE);
@@ -88,20 +99,27 @@ const TeamManagement: React.FC<any> = () => {
     <PageContainer>
       <ProTable<SystemEntities.QuiteTeam>
         actionRef={teamModalActionRef}
-        rowKey={record => record.id}
-        request={(params, sorter, filter) =>
-          queryTeam({ params, sorter, filter })}
+        rowKey={(record) => record.id}
+        request={(params, sorter, filter) => queryTeam({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createTeam}>
             <PlusOutlined /> 新建团队
           </Button>,
         ]}
         columns={columns}
+        columnsStateMap={columnsStateMap}
+        onColumnsStateChange={(map) => setColumnsStateMap(map)}
       />
-      {roleFormVisible &&
-      <TeamForm visible={roleFormVisible} onCancel={handleTeamFormCancel} operationType={roleFormType} form={teamForm}
-                updateInfo={updateTeamInfo} afterAction={refreshPageInfo} />
-      }
+      {roleFormVisible && (
+        <TeamForm
+          visible={roleFormVisible}
+          onCancel={handleTeamFormCancel}
+          operationType={roleFormType}
+          form={teamForm}
+          updateInfo={updateTeamInfo}
+          afterAction={refreshPageInfo}
+        />
+      )}
     </PageContainer>
   );
 };

@@ -1,24 +1,24 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { AutoComplete, Input } from 'antd';
 import useMergeValue from 'use-merge-value';
-import { AutoCompleteProps } from 'antd/es/auto-complete';
+import type { AutoCompleteProps } from 'antd/es/auto-complete';
 import React, { useRef } from 'react';
 
 import classNames from 'classnames';
 import styles from './index.less';
 
-export interface HeaderSearchProps {
+export type HeaderSearchProps = {
   onSearch?: (value?: string) => void;
   onChange?: (value?: string) => void;
   onVisibleChange?: (b: boolean) => void;
   className?: string;
   placeholder?: string;
   options: AutoCompleteProps['options'];
-  defaultOpen?: boolean;
-  open?: boolean;
+  defaultVisible?: boolean;
+  visible?: boolean;
   defaultValue?: string;
   value?: string;
-}
+};
 
 const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
   const {
@@ -26,8 +26,8 @@ const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
     defaultValue,
     onVisibleChange,
     placeholder,
-    open,
-    defaultOpen,
+    visible,
+    defaultVisible,
     ...restProps
   } = props;
 
@@ -38,15 +38,14 @@ const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
     onChange: props.onChange,
   });
 
-  const [searchMode, setSearchMode] = useMergeValue(defaultOpen || false, {
-    value: props.open,
+  const [searchMode, setSearchMode] = useMergeValue(defaultVisible ?? false, {
+    value: props.visible,
     onChange: onVisibleChange,
   });
 
   const inputClass = classNames(styles.input, {
     [styles.show]: searchMode,
   });
-
   return (
     <div
       className={classNames(className, styles.headerSearch)}

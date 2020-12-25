@@ -1,53 +1,70 @@
 import React from 'react';
-import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { notification, message } from 'antd';
-import { history, RequestConfig } from 'umi';
-import { Result, ResultType } from '@/types/Result';
+import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { PageLoading } from '@ant-design/pro-layout';
+import { message, notification } from 'antd';
+import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
+import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { ResponseError } from 'umi-request';
-import { Constant as RU } from '@/constant/RouteUrl';
-import { Constant as RC } from '@/constant/ResultCode';
+import type { ResponseError } from 'umi-request';
 import { queryCurrent } from './services/system/QuiteUser';
 import defaultSettings from '../config/defaultSettings';
+import type { Result } from '@/types/Result';
+import { ResultType } from '@/types/Result';
+import { Constant as RC } from '@/constant/ResultCode';
+import { Constant as RU } from '@/constant/RouteUrl';
+
+/**
+ * 获取用户信息比较慢的时候会展示一个 loading
+ */
+export const initialStateConfig = {
+  loading: <PageLoading />,
+};
 
 export async function getInitialState(): Promise<{
-  currentUser?: SystemEntities.QuiteUser;
   settings?: LayoutSettings;
+  currentUser?: SystemEntities.QuiteUser;
+  fetchUserInfo?: () => Promise<Result<SystemEntities.QuiteUser> | undefined>;
 }> {
-  // 如果是登录页面，不执行
-  if (history.location.pathname !== RU.LOGIN) {
+  const fetchUserInfo = async () => {
     try {
-      const result = await queryCurrent();
-      return {
-        currentUser: result.data,
-        settings: defaultSettings,
-      };
+      return await queryCurrent();
     } catch (error) {
-      history.push(RU.LOGIN);
+      history.push('/login');
     }
+    return undefined;
+  };
+  // 如果是登录页面，不执行
+  if (history.location.pathname !== '/login') {
+    const result = await fetchUserInfo();
+    const currentUser = result?.data;
+    return {
+      fetchUserInfo,
+      currentUser,
+      settings: defaultSettings,
+    };
   }
   return {
+    fetchUserInfo,
     settings: defaultSettings,
   };
 }
 
-export const layout = ({
-                         initialState,
-                       }: {
-  initialState: { settings?: LayoutSettings; currentUser?: SystemEntities.QuiteUser };
-}): BasicLayoutProps => {
+export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     footerRender: () => <Footer />,
     onPageChange: () => {
+      const { location } = history;
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser?.id && history.location.pathname !== RU.LOGIN) {
-        history.push(RU.LOGIN);
+      if (!initialState?.currentUser && location.pathname !== '/login') {
+        history.push('/login');
       }
     },
     menuHeaderRender: undefined,
+    // 自定义 403 页面
+    // unAccessible: <div>unAccessible</div>,
     ...initialState?.settings,
   };
 };
@@ -87,7 +104,6 @@ const errorHandler = (error: ResponseError) => {
   }
   throw error;
 };
-
 
 export const request: RequestConfig = {
   errorHandler,

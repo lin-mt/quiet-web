@@ -2,6 +2,7 @@
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
+import routes from './routes';
 
 const { REACT_APP_ENV } = process.env;
 
@@ -12,15 +13,16 @@ export default defineConfig({
     hmr: true,
   },
   layout: {
-    name: 'Quite',
+    name: 'Quiet',
     locale: true,
     siderWidth: 208,
+    ...defaultSettings,
   },
   locale: {
     // default zh-CN
     default: 'zh-CN',
-    // default true, when it is true, will use `navigator.language` overwrite default
     antd: true,
+    // default true, when it is true, will use `navigator.language` overwrite default
     baseNavigator: true,
   },
   dynamicImport: {
@@ -30,80 +32,27 @@ export default defineConfig({
     ie: 11,
   },
   // umi routes: https://umijs.org/docs/routing
-  routes: [
-    {
-      path: '/login',
-      name: 'login',
-      layout: false,
-      component: './login',
-      hideInMenu: true,
-    },
-    {
-      path: '/index',
-      name: 'index',
-      component: './index',
-      hideInMenu: true,
-    },
-    {
-      path: '/system',
-      name: 'system',
-      icon: 'setting',
-      routes: [
-        {
-          path: '/system/userinfo',
-          name: 'userinfo',
-          component: './system/userinfo',
-        },
-        {
-          path: '/system/role',
-          name: 'role',
-          component: './system/role',
-        },
-        {
-          path: '/system/permission',
-          name: 'permission',
-          component: './system/permission',
-        },
-        {
-          path: '/system/department',
-          name: 'department',
-          component: './system/department',
-        },
-        {
-          path: '/system/team',
-          name: 'team',
-          component: './system/team',
-        },
-        {
-          path: '/system/setting',
-          name: 'setting',
-          component: './system/setting',
-        },
-        {
-          path: '/system/info',
-          name: 'info',
-          component: './system/info',
-        },
-      ],
-    },
-    {
-      path: '/',
-      redirect: '/index',
-    },
-    {
-      component: './404',
-    },
-  ],
+  routes,
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
-    // ...darkTheme,
     'primary-color': defaultSettings.primaryColor,
   },
-  // @ts-ignore
+  esbuild: {},
   title: false,
   ignoreMomentLocale: true,
   proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
     basePath: '/',
+  },
+  // https://github.com/zthxxx/react-dev-inspector
+  plugins: ['react-dev-inspector/plugins/umi/react-inspector'],
+  inspectorConfig: {
+    // loader options type and docs see below
+    exclude: [],
+    babelPlugins: [],
+    babelOptions: {},
+  },
+  resolve: {
+    includes: ['src/components'],
   },
 });

@@ -4,7 +4,6 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  margin: -24px;
   overflow: auto;
   background: @layout-body-background;
 }
@@ -72,10 +71,18 @@
 }
 
 .main {
-  width: 368px;
+  width: 328px;
   margin: 0 auto;
   @media screen and (max-width: @screen-sm) {
     width: 95%;
+    max-width: 328px;
+  }
+
+  :global {
+    .@{ant-prefix}-tabs-nav-list {
+      margin: auto;
+      font-size: 16px;
+    }
   }
 
   .icon {
@@ -95,16 +102,13 @@
     margin-top: 24px;
     line-height: 22px;
     text-align: left;
-
     .register {
       float: right;
     }
   }
 
-  :global {
-    .antd-pro-login-submit {
-      width: 100%;
-      margin-top: 24px;
-    }
+  .prefixIcon {
+    color: @primary-color;
+    font-size: @font-size-base;
   }
 }

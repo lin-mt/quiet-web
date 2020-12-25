@@ -1,41 +1,42 @@
-import React, { ReactText, useEffect, useState } from 'react';
+import type { ReactText } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tree, Modal } from 'antd';
 import { treeDepartment } from '@/services/system/QuiteDepartment';
+import type { DataNode } from 'antd/lib/tree';
 
-interface DepartmentTree {
-  visible: boolean,
+type DepartmentTreeProps = {
+  visible: boolean;
   onCancel: () => void;
   onOk: () => void;
   multiple?: boolean;
   onSelect?: (keys: ReactText[]) => void;
-}
+};
 
-const DepartmentTree: React.FC<DepartmentTree> = (props) => {
+const DepartmentTree: React.FC<DepartmentTreeProps> = (props) => {
   const { visible, onCancel, onOk, multiple, onSelect } = props;
 
-  const [treeData, setTreeData] = useState<import('antd/lib/tree').DataNode[] | undefined>([]);
+  const [treeData, setTreeData] = useState<DataNode[] | undefined>([]);
 
   useEffect(() => {
-    treeDepartment().then(resp => {
+    const buildDepartmentTreeNodes = (data: any) => {
+      const buildResult = JSON.parse(JSON.stringify(data));
+      if (data) {
+        for (let i = 0; i < data.length; i += 1) {
+          buildResult[i].key = data[i].id;
+          buildResult[i].title = data[i].departmentName;
+          if (data[i].children) {
+            buildResult[i].children = buildDepartmentTreeNodes(data[i].children);
+          } else {
+            buildResult[i].isLeaf = true;
+          }
+        }
+      }
+      return buildResult;
+    };
+    treeDepartment().then((resp) => {
       setTreeData(buildDepartmentTreeNodes(resp));
     });
   }, []);
-
-  function buildDepartmentTreeNodes(data: any) {
-    const buildResult = JSON.parse(JSON.stringify(data));
-    if (data) {
-      for (let i = 0; i < data.length; i += 1) {
-        buildResult[i].key = data[i].id;
-        buildResult[i].title = data[i].departmentName;
-        if (data[i].children) {
-          buildResult[i].children = buildDepartmentTreeNodes(data[i].children);
-        } else {
-          buildResult[i].isLeaf = true;
-        }
-      }
-    }
-    return buildResult;
-  }
 
   function handleOnSelect(keys: ReactText[]) {
     if (onSelect) {
@@ -54,7 +55,7 @@ const DepartmentTree: React.FC<DepartmentTree> = (props) => {
   return (
     <Modal
       destroyOnClose
-      title='部门信息'
+      title="部门信息"
       visible={visible}
       onCancel={handleOnCancel}
       onOk={handleOnOk}
@@ -63,7 +64,8 @@ const DepartmentTree: React.FC<DepartmentTree> = (props) => {
         multiple={multiple}
         onSelect={handleOnSelect}
         treeData={treeData}
-        blockNode />
+        blockNode
+      />
     </Modal>
   );
 };

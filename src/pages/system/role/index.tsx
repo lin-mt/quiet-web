@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { queryRole, deleteRole } from '@/services/system/QuiteRole';
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
@@ -66,30 +67,41 @@ const RoleManagement: React.FC<any> = () => {
     {
       title: '操作',
       dataIndex: 'id',
+      width: 120,
       valueType: 'option',
       render: (_, record) => {
         return [
-          <a key='update' onClick={() => {
-            const role = { ...record };
-            roleForm.setFieldsValue(role);
-            setUpdateRoleInfo(role);
-            setRoleOperationType(OperationType.UPDATE);
-            setRoleModalVisible(true);
-          }}>修改</a>,
+          <a
+            key="update"
+            onClick={() => {
+              const role = { ...record };
+              roleForm.setFieldsValue(role);
+              setUpdateRoleInfo(role);
+              setRoleOperationType(OperationType.UPDATE);
+              setRoleModalVisible(true);
+            }}
+          >
+            修改
+          </a>,
           <Popconfirm
-            key='delete'
-            placement='topLeft'
-            title='确认删除该角色吗？'
+            key="delete"
+            placement="topLeft"
+            title="确认删除该角色吗？"
             onConfirm={() => {
               deleteRole(record.id).then(() => refreshPageInfo());
             }}
           >
-            <a key='delete'>删除</a>
+            <a key="delete">删除</a>
           </Popconfirm>,
         ];
       },
     },
   ];
+
+  const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
+    gmtCreate: { show: false },
+    gmtUpdate: { show: false },
+  });
 
   function createRole() {
     setRoleOperationType(OperationType.CREATE);
@@ -112,11 +124,9 @@ const RoleManagement: React.FC<any> = () => {
     <PageContainer>
       <ProTable<SystemEntities.QuiteRole>
         actionRef={roleModalActionRef}
-        rowKey={record => record.id}
-        request={(params, sorter, filter) =>
-          queryRole({ params, sorter, filter })}
+        rowKey={(record) => record.id}
+        request={(params, sorter, filter) => queryRole({ params, sorter, filter })}
         toolBarRender={() => [
-
           <Button type="primary" key="tree" onClick={showAllRoleByTree}>
             所有角色
           </Button>,
@@ -125,15 +135,27 @@ const RoleManagement: React.FC<any> = () => {
           </Button>,
         ]}
         columns={columns}
+        columnsStateMap={columnsStateMap}
+        onColumnsStateChange={(map) => setColumnsStateMap(map)}
       />
-      {roleFormVisible &&
-      <RoleForm visible={roleFormVisible} onCancel={handleRoleFormCancel} operationType={roleFormType} form={roleForm}
-                updateInfo={updateRoleInfo} afterAction={refreshPageInfo} />}
-      {roleTreeVisible &&
-      <RoleTree multiple
-                visible={roleTreeVisible}
-                onCancel={() => setRoleTreeVisible(false)}
-                onOk={() => setRoleTreeVisible(false)} />}
+      {roleFormVisible && (
+        <RoleForm
+          visible={roleFormVisible}
+          onCancel={handleRoleFormCancel}
+          operationType={roleFormType}
+          form={roleForm}
+          updateInfo={updateRoleInfo}
+          afterAction={refreshPageInfo}
+        />
+      )}
+      {roleTreeVisible && (
+        <RoleTree
+          multiple
+          visible={roleTreeVisible}
+          onCancel={() => setRoleTreeVisible(false)}
+          onOk={() => setRoleTreeVisible(false)}
+        />
+      )}
     </PageContainer>
   );
 };

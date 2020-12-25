@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Input, Modal } from 'antd';
 import { saveTeam, updateTeam } from '@/services/system/QuiteTeam';
-import { FormInstance } from 'antd/lib/form';
+import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
 
-interface TeamFormProps {
+type TeamFormProps = {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
   updateInfo?: SystemEntities.QuiteTeam;
   afterAction?: () => void;
-}
+};
 
 const RoleForm: React.FC<TeamFormProps> = (props) => {
   const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
@@ -77,21 +77,37 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
         <Button key="back" onClick={() => handleModalCancel()}>
           取消
         </Button>,
-        <Button loading={submitting} key="submit" type="primary" htmlType="submit" onClick={handleSubmit}>
+        <Button
+          loading={submitting}
+          key="submit"
+          type="primary"
+          htmlType="submit"
+          onClick={handleSubmit}
+        >
           {getSubmitButtonName()}
         </Button>,
       ]}
     >
-      <Form form={form} name='teamForm' labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
+      <Form form={form} name="teamForm" labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
         <Col>
-          <Form.Item label='团队名称' name='teamName'
-                     rules={[{ required: true, message: '请输入团队名称' }, { max: 16, message: '团队名称长度不能超过 16' }]}>
-            <Input placeholder='请输入团队名称' />
+          <Form.Item
+            label="团队名称"
+            name="teamName"
+            rules={[
+              { required: true, message: '请输入团队名称' },
+              { max: 16, message: '团队名称长度不能超过 16' },
+            ]}
+          >
+            <Input placeholder="请输入团队名称" />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label='标语' name='slogan' rules={[{ max: 30, message: '团队标语的长度不能超过 30' }]}>
-            <Input placeholder='请输入团队标语' />
+          <Form.Item
+            label="标语"
+            name="slogan"
+            rules={[{ max: 30, message: '团队标语的长度不能超过 30' }]}
+          >
+            <Input placeholder="请输入团队标语" />
           </Form.Item>
         </Col>
       </Form>
