@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Tag, message } from 'antd';
 import { groupBy } from 'lodash';
 import moment from 'moment';
+// @ts-ignore
 import { useModel } from 'umi';
 import { queryNotices } from '@/services/system/QuietUser';
 

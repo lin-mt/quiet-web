@@ -1,6 +1,7 @@
 import { Tag, Space, Menu } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
+// @ts-ignore
 import { useModel, SelectLang } from 'umi';
 import Avatar from './AvatarDropdown';
 import HeaderDropdown from '../HeaderDropdown';
