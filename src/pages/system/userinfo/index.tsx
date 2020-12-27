@@ -84,12 +84,14 @@ const UserInfo: React.FC<any> = () => {
     {
       title: '创建时间',
       dataIndex: 'gmtCreate',
+      key: 'gmtCreate',
       valueType: 'dateTime',
       search: false,
     },
     {
       title: '更新时间',
       dataIndex: 'gmtUpdate',
+      key: 'gmtUpdate',
       valueType: 'dateTime',
       search: false,
     },
