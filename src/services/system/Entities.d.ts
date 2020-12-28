@@ -16,6 +16,7 @@ declare namespace SystemEntities {
     credentialsExpired?: any;
     enabled: any;
     unreadCount: number;
+    authorities: [];
   };
 
   export type QuietRole = {

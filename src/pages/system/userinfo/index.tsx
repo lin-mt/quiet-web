@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Button, Form, Popconfirm } from 'antd';
+import { Button, Form, Popconfirm, Space, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
@@ -8,6 +8,7 @@ import { queryUser, deleteUser } from '@/services/system/QuietUser';
 import { Gender, Weather } from '@/services/system/Dictionary';
 import { OperationType } from '@/types/Type';
 import UserForm from './components/UserForm';
+import { Tooltip } from 'antd';
 
 const UserInfo: React.FC<any> = () => {
   const [updateUserInfo, setUpdateUserInfo] = useState<SystemEntities.QuietUser>();
@@ -20,6 +21,7 @@ const UserInfo: React.FC<any> = () => {
       title: 'ID',
       dataIndex: 'id',
       valueType: 'text',
+      copyable: true,
     },
     {
       title: '用户名',
@@ -48,17 +50,35 @@ const UserInfo: React.FC<any> = () => {
       },
     },
     {
+      title: '角色',
+      dataIndex: 'authorities',
+      search: false,
+      render: (_, record) => (
+        <Space>
+          {record.authorities.map(({ roleName, roleCnName }) => (
+            <Tooltip title={roleCnName}>
+              <Tag color={'#108EE9'} key={roleName}>
+                {roleName}
+              </Tag>
+            </Tooltip>
+          ))}
+        </Space>
+      ),
+    },
+    {
       title: '电话号码',
       dataIndex: 'phoneNumber',
       valueType: 'text',
+      copyable: true,
     },
     {
       title: '邮箱',
       dataIndex: 'emailAddress',
       valueType: 'text',
+      copyable: true,
     },
     {
-      title: '账号是否到期',
+      title: '账号到期',
       dataIndex: 'accountExpired',
       valueEnum: Weather,
       renderText: (accountExpired) => {
@@ -66,7 +86,7 @@ const UserInfo: React.FC<any> = () => {
       },
     },
     {
-      title: '账号是否被锁',
+      title: '账号被锁',
       dataIndex: 'accountLocked',
       valueEnum: Weather,
       renderText: (accountLocked) => {
@@ -74,7 +94,7 @@ const UserInfo: React.FC<any> = () => {
       },
     },
     {
-      title: '密码是否过期',
+      title: '密码过期',
       dataIndex: 'credentialsExpired',
       valueEnum: Weather,
       renderText: (credentialsExpired) => {
@@ -96,7 +116,7 @@ const UserInfo: React.FC<any> = () => {
       search: false,
     },
     {
-      title: '账号是否启用',
+      title: '账号启用',
       dataIndex: 'enabled',
       valueEnum: Weather,
       renderText: (enabled) => {
@@ -109,6 +129,7 @@ const UserInfo: React.FC<any> = () => {
       valueType: 'option',
       render: (_, record) => {
         return [
+          <a key="roleInfo">添加角色</a>,
           <a
             key="update"
             onClick={() => {
