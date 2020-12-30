@@ -19,13 +19,13 @@ export async function saveTeam(params?: any) {
 export async function updateTeam(params?: any) {
   return request('/api/system/team/update', {
     data: { update: params },
-    method: 'PUT',
+    method: 'POST',
   });
 }
 
 export async function deleteTeam(params?: any) {
   return request('/api/system/team/delete', {
     data: { deleteId: params },
-    method: 'DELETE',
+    method: 'POST',
   });
 }

@@ -19,13 +19,13 @@ export async function savePermission(params?: any) {
 export async function updatePermission(params?: any) {
   return request('/api/system/permission/update', {
     data: { update: params },
-    method: 'PUT',
+    method: 'POST',
   });
 }
 
 export async function deletePermission(params?: any) {
   return request('/api/system/permission/delete', {
     data: { deleteId: params },
-    method: 'DELETE',
+    method: 'POST',
   });
 }

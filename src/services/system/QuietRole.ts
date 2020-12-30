@@ -2,7 +2,7 @@ import { request } from 'umi';
 
 export async function treeRole() {
   return request('/api/system/role/tree', {
-    method: 'GET',
+    method: 'POST',
   }).then((resData) => {
     return resData.data;
   });
@@ -27,13 +27,13 @@ export async function saveRole(params?: any) {
 export async function updateRole(params?: any) {
   return request('/api/system/role/update', {
     data: { update: params },
-    method: 'PUT',
+    method: 'POST',
   });
 }
 
 export async function deleteRole(params?: any) {
   return request('/api/system/role/delete', {
     data: { deleteId: params },
-    method: 'DELETE',
+    method: 'POST',
   });
 }

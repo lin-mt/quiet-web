@@ -20,27 +20,34 @@ export async function registeredUser(params?: any) {
 export async function deleteUser(params?: any) {
   request('/api/system/user/delete', {
     data: { deleteId: params },
-    method: 'DELETE',
+    method: 'POST',
   });
 }
 
 export async function updateUser(params?: any) {
   return request('/api/system/user/update', {
     data: { update: params },
-    method: 'PUT',
+    method: 'POST',
   });
 }
 
 export async function queryCurrent() {
-  return request<Result<SystemEntities.QuietUser>>('/api/system/user/currentUserInfo').then(
-    (res) => {
-      if (res && res.data && !res.data.avatar) {
-        res.data.avatar =
-          'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
-      }
-      return res;
-    },
-  );
+  return request<Result<SystemEntities.QuietUser>>('/api/system/user/currentUserInfo', {
+    method: 'POSt',
+  }).then((res) => {
+    if (res && res.data && !res.data.avatar) {
+      res.data.avatar =
+        'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
+    }
+    return res;
+  });
+}
+
+export async function removeRole(userId: string, roleId: string) {
+  return request('/api/system/user/removeRole', {
+    data: { params: { userId, roleId } },
+    method: 'POST',
+  });
 }
 
 export async function queryNotices(): Promise<any> {
