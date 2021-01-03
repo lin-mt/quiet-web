@@ -1,18 +1,22 @@
+import type { ReactText } from 'react';
 import React, { useRef, useState } from 'react';
 import { Button, Form, Popconfirm, Space, Tag } from 'antd';
 import { CloseOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { queryUser, deleteUser, removeRole } from '@/services/system/QuietUser';
+import { queryUser, deleteUser, removeRole, addRoles } from '@/services/system/QuietUser';
 import { Gender, Weather } from '@/services/system/Dictionary';
 import { OperationType } from '@/types/Type';
 import UserForm from './components/UserForm';
 import { Tooltip } from 'antd';
+import RoleTree from '@/pages/system/role/components/RoleTree';
 
 const UserInfo: React.FC<any> = () => {
   const [updateUserInfo, setUpdateUserInfo] = useState<SystemEntities.QuietUser>();
   const [userFormVisible, setUserModalVisible] = useState<boolean>(false);
+  const [roleTreeVisible, setRoleTreeVisible] = useState<boolean>(false);
+  const [addRoleUserId, setAddRoleUserId] = useState<string | null>(null);
   const [userFormType, setUserModalType] = useState<OperationType>();
   const userModalActionRef = useRef<ActionType>();
   const [userForm] = Form.useForm();
@@ -20,6 +24,11 @@ const UserInfo: React.FC<any> = () => {
   async function confirmRemoveUserRole(userId: string, roleId: string) {
     await removeRole(userId, roleId);
     refreshPageInfo();
+  }
+
+  function addUserRole(userId: string) {
+    setAddRoleUserId(userId);
+    setRoleTreeVisible(true);
   }
 
   const columns: ProColumns<SystemEntities.QuietUser>[] = [
@@ -152,7 +161,10 @@ const UserInfo: React.FC<any> = () => {
       valueType: 'option',
       render: (_, record) => {
         return [
-          <a key="roleInfo">添加角色</a>,
+          /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
+          <a key="roleInfo" onClick={addUserRole.bind(this, record.id)}>
+            添加角色
+          </a>,
           <a
             key="update"
             onClick={() => {
@@ -205,6 +217,24 @@ const UserInfo: React.FC<any> = () => {
     userModalActionRef.current?.reload();
   }
 
+  function handleRoleTreeOnCancel() {
+    setAddRoleUserId(null);
+    setRoleTreeVisible(false);
+  }
+
+  async function handleRoleTreeOnOk(keys?: ReactText[]) {
+    const addEntities: { userId: string | null; roleId: ReactText }[] = [];
+    if (keys) {
+      keys.forEach((key) => {
+        addEntities.push({ userId: addRoleUserId, roleId: key });
+      });
+      await addRoles(addEntities);
+      refreshPageInfo();
+      setAddRoleUserId(null);
+      setRoleTreeVisible(false);
+    }
+  }
+
   return (
     <PageContainer>
       <ProTable<SystemEntities.QuietUser>
@@ -228,6 +258,16 @@ const UserInfo: React.FC<any> = () => {
           form={userForm}
           updateInfo={updateUserInfo}
           afterAction={refreshPageInfo}
+        />
+      )}
+      {roleTreeVisible && (
+        <RoleTree
+          visible={roleTreeVisible}
+          maskClosable={false}
+          closable={false}
+          multiple={true}
+          onCancel={handleRoleTreeOnCancel}
+          onOk={handleRoleTreeOnOk}
         />
       )}
     </PageContainer>

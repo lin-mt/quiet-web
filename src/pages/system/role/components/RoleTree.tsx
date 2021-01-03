@@ -6,16 +6,19 @@ import type { DataNode } from 'antd/lib/tree';
 
 type RoleTreeProps = {
   visible: boolean;
+  maskClosable?: boolean;
+  closable?: boolean;
   onCancel: () => void;
-  onOk: () => void;
+  onOk: (keys?: ReactText[]) => void;
   multiple?: boolean;
   onSelect?: (keys: ReactText[]) => void;
 };
 
 const RoleTree: React.FC<RoleTreeProps> = (props) => {
-  const { visible, onCancel, onOk, multiple, onSelect } = props;
+  const { visible, maskClosable, closable, onCancel, onOk, multiple, onSelect } = props;
 
   const [treeData, setTreeData] = useState<DataNode[] | undefined>([]);
+  const [selectedKeys, setSelectedKeys] = useState<ReactText[]>([]);
 
   useEffect(() => {
     const buildRoleTreeNodes = (data: any) => {
@@ -39,6 +42,7 @@ const RoleTree: React.FC<RoleTreeProps> = (props) => {
   }, []);
 
   function handleOnSelect(keys: ReactText[]) {
+    setSelectedKeys(keys);
     if (onSelect) {
       onSelect(keys);
     }
@@ -49,12 +53,14 @@ const RoleTree: React.FC<RoleTreeProps> = (props) => {
   }
 
   function handleOnOk() {
-    onOk();
+    onOk(selectedKeys);
   }
 
   return (
     <Modal
       destroyOnClose
+      closable={closable}
+      maskClosable={maskClosable}
       title="角色信息"
       visible={visible}
       onCancel={handleOnCancel}

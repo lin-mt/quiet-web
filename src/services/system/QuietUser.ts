@@ -1,5 +1,6 @@
 import { request } from 'umi';
 import type { Result } from '@/types/Result';
+import type { ReactText } from 'react';
 
 export async function queryUser(params?: any) {
   return request('/api/system/user/page', {
@@ -46,6 +47,13 @@ export async function queryCurrent() {
 export async function removeRole(userId: string, roleId: string) {
   return request('/api/system/user/removeRole', {
     data: { params: { userId, roleId } },
+    method: 'POST',
+  });
+}
+
+export async function addRoles(userRoles: { userId: string | null; roleId: ReactText }[]) {
+  return request('/api/system/user/addRoles', {
+    data: { saveBatch: userRoles },
     method: 'POST',
   });
 }
