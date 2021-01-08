@@ -31,6 +31,9 @@ declare namespace SystemEntities {
     id: string;
     teamName: string;
     slogan?: string;
+    productOwners?: QuietUser[];
+    scrumMasters?: QuietUser[];
+    members?: QuietUser[];
   };
 
   export type QuietPermission = {
