@@ -12,10 +12,11 @@ type RoleTreeProps = {
   onOk: (keys?: ReactText[]) => void;
   multiple?: boolean;
   onSelect?: (keys: ReactText[]) => void;
+  afterClose?: () => void;
 };
 
 const RoleTree: React.FC<RoleTreeProps> = (props) => {
-  const { visible, maskClosable, closable, onCancel, onOk, multiple, onSelect } = props;
+  const { visible, maskClosable, closable, onCancel, onOk, multiple, onSelect, afterClose } = props;
 
   const [treeData, setTreeData] = useState<DataNode[] | undefined>([]);
   const [selectedKeys, setSelectedKeys] = useState<ReactText[]>([]);
@@ -63,6 +64,7 @@ const RoleTree: React.FC<RoleTreeProps> = (props) => {
       maskClosable={maskClosable}
       title="角色信息"
       visible={visible}
+      afterClose={afterClose}
       onCancel={handleOnCancel}
       onOk={handleOnOk}
     >

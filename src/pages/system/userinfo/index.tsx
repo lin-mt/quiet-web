@@ -253,6 +253,7 @@ const UserInfo: React.FC<any> = () => {
           multiple={true}
           onCancel={handleRoleTreeOnCancel}
           onOk={handleRoleTreeOnOk}
+          afterClose={handleRoleTreeOnCancel}
         />
       )}
     </PageContainer>
