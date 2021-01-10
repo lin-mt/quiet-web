@@ -51,6 +51,7 @@ const RoleManagement: React.FC<any> = () => {
       title: '备注',
       dataIndex: 'remark',
       valueType: 'text',
+      ellipsis: true,
     },
     {
       title: '创建时间',

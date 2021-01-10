@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Button, Form, Popconfirm, Space, Tag } from 'antd';
-import { CloseOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { queryTeam, deleteTeam } from '@/services/system/QuietTeam';
@@ -30,26 +30,12 @@ const TeamManagement: React.FC<any> = () => {
     {
       title: 'ProductOwner',
       dataIndex: 'productOwners',
+      search: false,
       render: (_, record) => (
         <Space>
           {record.productOwners
             ? record.productOwners.map(({ id, username }) => (
-                <Tag
-                  color={'#108EE9'}
-                  key={id}
-                  closable={true}
-                  onClose={(e) => e.preventDefault()}
-                  closeIcon={
-                    <Popconfirm
-                      title={`确定移除团队成员 ${username} 吗？`}
-                      icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-                      /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
-                      // onConfirm={confirmRemoveUserRole.bind(this, record.id, id)}
-                    >
-                      <CloseOutlined />
-                    </Popconfirm>
-                  }
-                >
+                <Tag color={'#108EE9'} key={id}>
                   {username}
                 </Tag>
               ))
@@ -60,26 +46,12 @@ const TeamManagement: React.FC<any> = () => {
     {
       title: 'ScrumMaster',
       dataIndex: 'scrumMasters',
+      search: false,
       render: (_, record) => (
         <Space>
           {record.scrumMasters
             ? record.scrumMasters.map(({ id, username }) => (
-                <Tag
-                  color={'#108EE9'}
-                  key={id}
-                  closable={true}
-                  onClose={(e) => e.preventDefault()}
-                  closeIcon={
-                    <Popconfirm
-                      title={`确定移除团队成员 ${username} 吗？`}
-                      icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-                      /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
-                      // onConfirm={confirmRemoveUserRole.bind(this, record.id, id)}
-                    >
-                      <CloseOutlined />
-                    </Popconfirm>
-                  }
-                >
+                <Tag color={'#108EE9'} key={id}>
                   {username}
                 </Tag>
               ))
@@ -90,26 +62,12 @@ const TeamManagement: React.FC<any> = () => {
     {
       title: '团队成员',
       dataIndex: 'members',
+      search: false,
       render: (_, record) => (
         <Space>
           {record.members
             ? record.members.map(({ id, username }) => (
-                <Tag
-                  color={'#108EE9'}
-                  key={id}
-                  closable={true}
-                  onClose={(e) => e.preventDefault()}
-                  closeIcon={
-                    <Popconfirm
-                      title={`确定移除团队成员 ${username} 吗？`}
-                      icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-                      /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
-                      // onConfirm={confirmRemoveUserRole.bind(this, record.id, id)}
-                    >
-                      <CloseOutlined />
-                    </Popconfirm>
-                  }
-                >
+                <Tag color={'#108EE9'} key={id}>
                   {username}
                 </Tag>
               ))
@@ -121,6 +79,7 @@ const TeamManagement: React.FC<any> = () => {
       title: '标语',
       dataIndex: 'slogan',
       valueType: 'text',
+      ellipsis: true,
     },
     {
       title: '创建时间',
