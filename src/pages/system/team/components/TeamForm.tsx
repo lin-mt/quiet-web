@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Col, Form, Input, Modal } from 'antd';
+import { Button, Col, Form, Input, Modal, Select, Spin, Tag } from 'antd';
 import { saveTeam, updateTeam } from '@/services/system/QuietTeam';
+import { listUsersByUsername } from '@/services/system/QuietUser';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
+import type { CustomTagProps } from 'rc-select/lib/interface/generator';
+
+const { Option } = Select;
 
 type TeamFormProps = {
   visible: boolean;
@@ -16,6 +20,23 @@ type TeamFormProps = {
 const RoleForm: React.FC<TeamFormProps> = (props) => {
   const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [fetchUsers, setFetchUsers] = useState<SystemEntities.QuietUser[] | undefined>([]);
+  const [productOwners, setProductOwners] = useState<any[]>(
+    form.getFieldValue('productOwners')?.map((user: SystemEntities.QuietUser) => {
+      return { value: user.id, label: user.username };
+    }),
+  );
+  const [scrumMasters, setScrumMasters] = useState<any[]>(
+    form.getFieldValue('scrumMasters')?.map((user: SystemEntities.QuietUser) => {
+      return { value: user.id, label: user.username };
+    }),
+  );
+  const [members, setMembers] = useState<any[]>(
+    form.getFieldValue('members')?.map((user: SystemEntities.QuietUser) => {
+      return { value: user.id, label: user.username };
+    }),
+  );
+  const [fetching, setFetching] = useState<boolean>(false);
   const nonsupportMsg = 'nonsupport FormType';
 
   async function handleSubmit() {
@@ -26,7 +47,19 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
         await saveTeam(values);
         break;
       case OperationType.UPDATE:
-        await updateTeam({ ...updateInfo, ...values });
+        await updateTeam({
+          ...updateInfo,
+          ...values,
+          productOwners: productOwners?.map((user) => {
+            return { id: user.value };
+          }),
+          scrumMasters: scrumMasters?.map((user) => {
+            return { id: user.value };
+          }),
+          members: members?.map((user) => {
+            return { id: user.value };
+          }),
+        });
         break;
       default:
         throw Error(nonsupportMsg);
@@ -66,6 +99,38 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
     onCancel();
   }
 
+  function findUserByUserName(username: string) {
+    setFetching(true);
+    listUsersByUsername(username).then((resp) => {
+      setFetchUsers(resp.data);
+      setFetching(false);
+    });
+  }
+
+  function handleProductOwnersChange(value: any) {
+    setProductOwners(value);
+    setFetchUsers([]);
+  }
+
+  function handleScrumMastersChange(value: any) {
+    setScrumMasters(value);
+    setFetchUsers([]);
+  }
+
+  function handleMembersChange(value: any) {
+    setMembers(value);
+    setFetchUsers([]);
+  }
+
+  function tagRender(tagProps: CustomTagProps) {
+    const { label, closable, onClose } = tagProps;
+    return (
+      <Tag color={'#108EE9'} closable={closable} onClose={onClose}>
+        {label}
+      </Tag>
+    );
+  }
+
   return (
     <Modal
       destroyOnClose
@@ -99,6 +164,72 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
             ]}
           >
             <Input placeholder="请输入团队名称" />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label="ProductOwner">
+            <Select
+              mode="multiple"
+              labelInValue
+              value={productOwners}
+              tagRender={tagRender}
+              placeholder="请输入 ProductOwner 用户名"
+              notFoundContent={fetching ? <Spin size="small" /> : null}
+              filterOption={false}
+              onSearch={findUserByUserName}
+              onChange={handleProductOwnersChange}
+              onBlur={() => setFetchUsers([])}
+            >
+              {fetchUsers?.map((user) => (
+                <Option key={user.id} value={user.id}>
+                  {user.username}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label="ScrumMaster">
+            <Select
+              mode="multiple"
+              labelInValue
+              value={scrumMasters}
+              tagRender={tagRender}
+              placeholder="请输入 ScrumMaster 用户名"
+              notFoundContent={fetching ? <Spin size="small" /> : null}
+              filterOption={false}
+              onSearch={findUserByUserName}
+              onChange={handleScrumMastersChange}
+              onBlur={() => setFetchUsers([])}
+            >
+              {fetchUsers?.map((user) => (
+                <Option key={user.id} value={user.id}>
+                  {user.username}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label="团队成员">
+            <Select
+              mode="multiple"
+              labelInValue
+              value={members}
+              tagRender={tagRender}
+              placeholder="请输入团队成员用户名"
+              notFoundContent={fetching ? <Spin size="small" /> : null}
+              filterOption={false}
+              onSearch={findUserByUserName}
+              onChange={handleMembersChange}
+              onBlur={() => setFetchUsers([])}
+            >
+              {fetchUsers?.map((user) => (
+                <Option key={user.id} value={user.id}>
+                  {user.username}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
         </Col>
         <Col>

@@ -60,9 +60,6 @@ const UserInfo: React.FC<any> = () => {
       title: '性别',
       dataIndex: 'gender',
       valueEnum: Gender,
-      renderText: (gender) => {
-        return gender?.code;
-      },
     },
     {
       title: '角色',
@@ -113,25 +110,16 @@ const UserInfo: React.FC<any> = () => {
       title: '账号到期',
       dataIndex: 'accountExpired',
       valueEnum: Weather,
-      renderText: (accountExpired) => {
-        return accountExpired?.code;
-      },
     },
     {
       title: '账号被锁',
       dataIndex: 'accountLocked',
       valueEnum: Weather,
-      renderText: (accountLocked) => {
-        return accountLocked?.code;
-      },
     },
     {
       title: '密码过期',
       dataIndex: 'credentialsExpired',
       valueEnum: Weather,
-      renderText: (credentialsExpired) => {
-        return credentialsExpired?.code;
-      },
     },
     {
       title: '创建时间',
@@ -151,9 +139,6 @@ const UserInfo: React.FC<any> = () => {
       title: '账号启用',
       dataIndex: 'enabled',
       valueEnum: Weather,
-      renderText: (enabled) => {
-        return enabled.code;
-      },
     },
     {
       title: '操作',
