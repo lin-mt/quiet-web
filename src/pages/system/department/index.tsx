@@ -8,6 +8,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import DepartmentForm from '@/pages/system/department/components/DepartmentForm';
 import DepartmentTree from '@/pages/system/department/components/DepartmentTree';
+import DepartmentUser from '@/pages/system/department/components/DepartmentUser';
 
 const PermissionConfig: React.FC<any> = () => {
   const [
@@ -16,6 +17,8 @@ const PermissionConfig: React.FC<any> = () => {
   ] = useState<SystemEntities.QuietDepartment>();
   const [departmentFormVisible, setDepartmentModalVisible] = useState<boolean>(false);
   const [departmentTreeVisible, setDepartmentTreeVisible] = useState<boolean>(false);
+  const [departmentUserVisible, setDepartmentUserVisible] = useState<boolean>(false);
+  const [selectedDepartment, setSelectedDepartment] = useState<SystemEntities.QuietDepartment>();
   const [departmentFormType, setDepartmentOperationType] = useState<OperationType>();
   const departmentModalActionRef = useRef<ActionType>();
   const [departmentForm] = Form.useForm();
@@ -65,6 +68,15 @@ const PermissionConfig: React.FC<any> = () => {
       render: (_, record) => {
         return [
           <a
+            key="departmentUsers"
+            onClick={() => {
+              setDepartmentUserVisible(true);
+              setSelectedDepartment(record);
+            }}
+          >
+            部门成员
+          </a>,
+          <a
             key="update"
             onClick={() => {
               const role = { ...record };
@@ -103,6 +115,7 @@ const PermissionConfig: React.FC<any> = () => {
     gmtCreate: { show: false },
     gmtUpdate: { show: false },
   });
+
   function createDepartment() {
     setDepartmentOperationType(OperationType.CREATE);
     setDepartmentModalVisible(true);
@@ -146,6 +159,14 @@ const PermissionConfig: React.FC<any> = () => {
           visible={departmentTreeVisible}
           onCancel={() => setDepartmentTreeVisible(false)}
           onOk={() => setDepartmentTreeVisible(false)}
+        />
+      )}
+      {departmentUserVisible && (
+        <DepartmentUser
+          department={selectedDepartment}
+          visible={departmentUserVisible}
+          onCancel={() => setDepartmentUserVisible(false)}
+          onOk={() => setDepartmentUserVisible(false)}
         />
       )}
     </PageContainer>

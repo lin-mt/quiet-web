@@ -1,5 +1,14 @@
 import { request } from 'umi';
 
+export function pageUser(params?: any) {
+  return request('/api/system/department/pageUser', {
+    data: params,
+    method: 'POST',
+  }).then((resData) => {
+    return { ...resData.data, data: resData.data.results };
+  });
+}
+
 export async function treeDepartment() {
   return request('/api/system/department/tree', {
     method: 'POST',
