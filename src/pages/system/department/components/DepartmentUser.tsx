@@ -1,9 +1,10 @@
+import type { ReactText } from 'react';
 import React, { useRef, useState } from 'react';
-import { Button, Modal, Popconfirm } from 'antd';
+import { Button, message, Modal, Popconfirm } from 'antd';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { pageUser, addUsers } from '@/services/system/QuietDepartment';
-import { PlusOutlined } from '@ant-design/icons';
+import { pageUser, addUsers, removeUsers } from '@/services/system/QuietDepartment';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Gender, Weather } from '@/services/system/Dictionary';
 import UserSelect from '@/pages/system/userinfo/components/UserSelect';
 
@@ -18,6 +19,8 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
   const { department, visible, onCancel, onOk } = props;
   const userModalActionRef = useRef<ActionType>();
   const [addDepartmentUserVisible, setAddDepartmentUserVisible] = useState<boolean>(false);
+  const [confirmRemoveUsersVisible, setConfirmRemoveUsersVisible] = useState<boolean>(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<ReactText[]>([]);
 
   function handleOnCancel() {
     onCancel();
@@ -86,13 +89,18 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
       title: '操作',
       dataIndex: 'id',
       valueType: 'option',
-      render: () => {
+      render: (_, record) => {
         return [
           <Popconfirm
             key="delete"
             placement="top"
             title="确认在该部门移除该用户吗？"
-            onConfirm={() => {}}
+            onConfirm={async () => {
+              if (department) {
+                await removeUsers(department.id, [record.id]);
+                userModalActionRef.current?.reload();
+              }
+            }}
           >
             <a key="delete">移除</a>
           </Popconfirm>,
@@ -110,6 +118,24 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
     }
   }
 
+  async function confirmRemoveUsers() {
+    if (department) {
+      const userIds: string[] = [];
+      selectedRowKeys.forEach((v) => userIds.push(v.toString()));
+      await removeUsers(department.id, userIds);
+      setConfirmRemoveUsersVisible(false);
+      userModalActionRef.current?.reload();
+    }
+  }
+
+  function handleConfirmRemoveUsers() {
+    if (selectedRowKeys.length > 0) {
+      setConfirmRemoveUsersVisible(true);
+    } else {
+      message.info('请选择要移除的部门成员');
+    }
+  }
+
   return (
     <Modal
       destroyOnClose
@@ -122,11 +148,29 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
     >
       <ProTable<SystemEntities.QuietUser>
         actionRef={userModalActionRef}
+        rowSelection={{ onChange: (keys) => setSelectedRowKeys(keys) }}
+        tableAlertRender={false}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) =>
           pageUser({ departmentId: department?.id, ...params, params, sorter, filter })
         }
         toolBarRender={() => [
+          <span>已选 {selectedRowKeys.length} 项</span>,
+          <Popconfirm
+            placement={'top'}
+            visible={confirmRemoveUsersVisible}
+            title={`确认在该部门中移除所选的 ${selectedRowKeys.length} 名成员吗？`}
+            onConfirm={confirmRemoveUsers}
+          >
+            <Button
+              type={'primary'}
+              danger={true}
+              key={'remove'}
+              onClick={handleConfirmRemoveUsers}
+            >
+              <DeleteOutlined /> 批量移除
+            </Button>
+          </Popconfirm>,
           <Button type="primary" key="create" onClick={() => setAddDepartmentUserVisible(true)}>
             <PlusOutlined /> 添加部门成员
           </Button>,
