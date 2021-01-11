@@ -1,10 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, Modal, Popconfirm } from 'antd';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { pageUser } from '@/services/system/QuietDepartment';
+import { pageUser, addUsers } from '@/services/system/QuietDepartment';
 import { PlusOutlined } from '@ant-design/icons';
 import { Gender, Weather } from '@/services/system/Dictionary';
+import UserSelect from '@/pages/system/userinfo/components/UserSelect';
 
 type DepartmentUserProps = {
   department: SystemEntities.QuietDepartment | undefined;
@@ -16,6 +17,7 @@ type DepartmentUserProps = {
 const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
   const { department, visible, onCancel, onOk } = props;
   const userModalActionRef = useRef<ActionType>();
+  const [addDepartmentUserVisible, setAddDepartmentUserVisible] = useState<boolean>(false);
 
   function handleOnCancel() {
     onCancel();
@@ -99,6 +101,15 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
     },
   ];
 
+  async function handleAddUserOk(value: any) {
+    const userIds = value?.map((u: { value: string }) => u.value);
+    if (department) {
+      await addUsers(department.id, userIds);
+      userModalActionRef.current?.reload();
+      setAddDepartmentUserVisible(false);
+    }
+  }
+
   return (
     <Modal
       destroyOnClose
@@ -116,12 +127,21 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
           pageUser({ departmentId: department?.id, ...params, params, sorter, filter })
         }
         toolBarRender={() => [
-          <Button type="primary" key="create">
+          <Button type="primary" key="create" onClick={() => setAddDepartmentUserVisible(true)}>
             <PlusOutlined /> 添加部门成员
           </Button>,
         ]}
         columns={columns}
       />
+      {addDepartmentUserVisible && (
+        <UserSelect
+          modalTitle={'添加部门成员'}
+          okText={'添加'}
+          visible={addDepartmentUserVisible}
+          onCancel={() => setAddDepartmentUserVisible(false)}
+          onOk={handleAddUserOk}
+        />
+      )}
     </Modal>
   );
 };

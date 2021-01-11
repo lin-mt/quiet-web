@@ -1,5 +1,12 @@
 import { request } from 'umi';
 
+export function addUsers(departmentId: string, userIds: string[]) {
+  return request('/api/system/department/addUsers', {
+    data: { id: departmentId, userIds },
+    method: 'POST',
+  });
+}
+
 export function pageUser(params?: any) {
   return request('/api/system/department/pageUser', {
     data: params,
