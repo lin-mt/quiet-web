@@ -16,6 +16,7 @@
     path: '/system',
     name: 'system',
     icon: 'setting',
+    access: 'SystemAdmin',
     routes: [
       {
         path: '/system/userinfo',
