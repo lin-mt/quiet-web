@@ -43,16 +43,6 @@
         name: 'team',
         component: './system/team',
       },
-      {
-        path: '/system/setting',
-        name: 'setting',
-        component: './system/setting',
-      },
-      {
-        path: '/system/info',
-        name: 'info',
-        component: './system/info',
-      },
     ],
   },
   {
