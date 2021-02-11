@@ -24,6 +24,7 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
   settings?: LayoutSettings;
   currentUser?: SystemEntities.QuietUser;
+  tokenInfo?: SystemEntities.TokenInfo;
   fetchUserInfo?: () => Promise<Result<SystemEntities.QuietUser> | undefined>;
 }> {
   const fetchUserInfo = async () => {
@@ -107,6 +108,26 @@ const errorHandler = (error: ResponseError) => {
 
 export const request: RequestConfig = {
   errorHandler,
+  requestInterceptors: [
+    (url, options) => {
+      if (url !== '/api/system/oauth/token') {
+        const tokenInfoItem = localStorage.getItem('tokenInfo');
+        if (tokenInfoItem) {
+          const tokenInfo = JSON.parse(tokenInfoItem);
+          return {
+            url,
+            options: {
+              ...options,
+              headers: {
+                Authorization: `${tokenInfo.token_type} ${tokenInfo.access_token}`,
+              },
+            },
+          };
+        }
+      }
+      return { url, options };
+    },
+  ],
   responseInterceptors: [
     async (response) => {
       const data: Result<any> = await response.clone().json();

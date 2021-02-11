@@ -13,9 +13,8 @@ import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-desi
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import type { LoginParams } from '@/services/system/Login';
-import { accountLogin, getFakeCaptcha } from '@/services/system/Login';
+import { oauthToken, getFakeCaptcha } from '@/services/system/Login';
 import { OperationType } from '@/types/Type';
-import { ResultType } from '@/types/Result';
 import UserForm from '@/pages/system/userinfo/components/UserForm';
 import styles from './index.less';
 
@@ -68,8 +67,14 @@ const Login: React.FC = () => {
     setSubmitting(true);
     try {
       // 登录
-      const loginResult = await accountLogin({ ...values, type });
-      if (loginResult.result === ResultType.SUCCESS) {
+      const tokenInfo = await oauthToken({ ...values, type });
+      if (tokenInfo) {
+        localStorage.setItem('tokenInfo', JSON.stringify(tokenInfo));
+        setInitialState({
+          ...initialState,
+          // @ts-ignore
+          tokenInfo,
+        });
         await fetchUserInfo();
         goto();
         return;
