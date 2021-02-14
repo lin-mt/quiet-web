@@ -1,26 +1,26 @@
 declare namespace SystemEntities {
   export type BaseEntity = {
-    id: string,
-    creator: string,
-    updater: string,
-    gmtCreate: string,
-    gmtUpdate: string,
+    id: string;
+    creator: string;
+    updater: string;
+    gmtCreate: string;
+    gmtUpdate: string;
   };
 
   export type QuietClient = BaseEntity & {
-    clientId: string,
-    clientName: string,
-    resourceIds: string[],
-    secretRequired: string,
-    clientSecret: string,
-    scoped: string,
-    scope: string[],
-    authorizedGrantTypes: string[],
-    registeredRedirectUri: string[],
-    accessTokenValiditySeconds: number,
-    refreshTokenValiditySeconds: number,
-    autoApprove: string
-    remake: string,
+    clientId: string;
+    clientName: string;
+    resourceIds: string[];
+    secretRequired: string;
+    clientSecret: string;
+    scoped: string;
+    scope: string[];
+    authorizedGrantTypes: string[];
+    registeredRedirectUri: string[];
+    accessTokenValiditySeconds: number;
+    refreshTokenValiditySeconds: number;
+    autoApprove: string;
+    remake: string;
   };
 
   export type TokenInfo = BaseEntity & {

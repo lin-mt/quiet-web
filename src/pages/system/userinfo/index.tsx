@@ -1,16 +1,16 @@
-import type {ReactText} from 'react';
-import React, {useRef, useState} from 'react';
-import {Button, Form, Popconfirm, Space, Tag} from 'antd';
-import {CloseOutlined, PlusOutlined, QuestionCircleOutlined} from '@ant-design/icons';
-import {PageContainer} from '@ant-design/pro-layout';
-import type {ActionType, ProColumns, ColumnsState} from '@ant-design/pro-table';
+import type { ReactText } from 'react';
+import React, { useRef, useState } from 'react';
+import { Button, Form, Popconfirm, Space, Tag } from 'antd';
+import { CloseOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import {queryUser, deleteUser, removeRole, addRoles} from '@/services/system/QuietUser';
-import {OperationType} from '@/types/Type';
+import { queryUser, deleteUser, removeRole, addRoles } from '@/services/system/QuietUser';
+import { OperationType } from '@/types/Type';
 import UserForm from './components/UserForm';
-import {Tooltip} from 'antd';
+import { Tooltip } from 'antd';
 import RoleTree from '@/pages/system/role/components/RoleTree';
-import {Gender, Weather} from "@/services/system/Enums";
+import { Gender, Weather } from '@/services/system/Enums';
 
 const UserInfo: React.FC<any> = () => {
   const [updateUserInfo, setUpdateUserInfo] = useState<SystemEntities.QuietUser>();
@@ -68,28 +68,28 @@ const UserInfo: React.FC<any> = () => {
       render: (_, record) => (
         <Space>
           {record.authorities
-            ? record.authorities.map(({id, roleName, roleCnName}) => (
-              <Tooltip placement="bottom" title={roleCnName} key={roleName}>
-                <Tag
-                  color={'#108EE9'}
-                  key={roleName}
-                  closable={true}
-                  onClose={(e) => e.preventDefault()}
-                  closeIcon={
-                    <Popconfirm
-                      title={`确定删除用户 ${record.username} 的 ${roleCnName} 角色吗？`}
-                      icon={<QuestionCircleOutlined style={{color: 'red'}}/>}
-                      /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
-                      onConfirm={confirmRemoveUserRole.bind(this, record.id, id)}
-                    >
-                      <CloseOutlined/>
-                    </Popconfirm>
-                  }
-                >
-                  {roleName}
-                </Tag>
-              </Tooltip>
-            ))
+            ? record.authorities.map(({ id, roleName, roleCnName }) => (
+                <Tooltip placement="bottom" title={roleCnName} key={roleName}>
+                  <Tag
+                    color={'#108EE9'}
+                    key={roleName}
+                    closable={true}
+                    onClose={(e) => e.preventDefault()}
+                    closeIcon={
+                      <Popconfirm
+                        title={`确定删除用户 ${record.username} 的 ${roleCnName} 角色吗？`}
+                        icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                        /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
+                        onConfirm={confirmRemoveUserRole.bind(this, record.id, id)}
+                      >
+                        <CloseOutlined />
+                      </Popconfirm>
+                    }
+                  >
+                    {roleName}
+                  </Tag>
+                </Tooltip>
+              ))
             : '-'}
         </Space>
       ),
@@ -185,8 +185,8 @@ const UserInfo: React.FC<any> = () => {
   ];
 
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
-    gmtCreate: {show: false},
-    gmtUpdate: {show: false},
+    gmtCreate: { show: false },
+    gmtUpdate: { show: false },
   });
 
   function createUser() {
@@ -211,7 +211,7 @@ const UserInfo: React.FC<any> = () => {
     const addEntities: { userId: string | null; roleId: ReactText }[] = [];
     if (keys) {
       keys.forEach((key) => {
-        addEntities.push({userId: addRoleUserId, roleId: key});
+        addEntities.push({ userId: addRoleUserId, roleId: key });
       });
       await addRoles(addEntities);
       refreshPageInfo();
@@ -225,10 +225,10 @@ const UserInfo: React.FC<any> = () => {
       <ProTable<SystemEntities.QuietUser>
         actionRef={userModalActionRef}
         rowKey={(record) => record.id}
-        request={(params, sorter, filter) => queryUser({params, sorter, filter})}
+        request={(params, sorter, filter) => queryUser({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createUser}>
-            <PlusOutlined/> 新建用户
+            <PlusOutlined /> 新建用户
           </Button>,
         ]}
         columns={columns}

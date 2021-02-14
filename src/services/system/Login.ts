@@ -1,5 +1,5 @@
-import {request} from 'umi';
-import type {Result} from '@/types/Result';
+import { request } from 'umi';
+import type { Result } from '@/types/Result';
 
 export type LoginParams = {
   username: string;
@@ -17,7 +17,7 @@ export async function accountLogin(params: LoginParams) {
 }
 
 export async function oauthToken(params: LoginParams) {
-  const oauthData = {...params, password: params.secretCode, grant_type: 'password'};
+  const oauthData = { ...params, password: params.secretCode, grant_type: 'password' };
   return request<SystemEntities.TokenInfo>('/api/system/oauth/token', {
     method: 'POST',
     params: oauthData,
@@ -38,8 +38,8 @@ export async function outLogin() {
     return request('/api/system/oauth/logout', {
       method: 'POST',
       params: {
-        access_token: tokenInfo.access_token
-      }
+        access_token: tokenInfo.access_token,
+      },
     });
   }
   return null;
