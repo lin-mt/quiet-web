@@ -100,9 +100,7 @@ const Login: React.FC = () => {
               <span className={styles.title}>Quiet</span>
             </Link>
           </div>
-          <div className={styles.desc}>Quiet System</div>
         </div>
-
         <div className={styles.main}>
           <ProForm
             initialValues={{

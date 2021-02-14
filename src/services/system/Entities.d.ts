@@ -1,5 +1,29 @@
 declare namespace SystemEntities {
-  export type TokenInfo = {
+  export type BaseEntity = {
+    id: string,
+    creator: string,
+    updater: string,
+    gmtCreate: string,
+    gmtUpdate: string,
+  };
+
+  export type QuietClient = BaseEntity & {
+    clientId: string,
+    clientName: string,
+    resourceIds: string[],
+    secretRequired: string,
+    clientSecret: string,
+    scoped: string,
+    scope: string[],
+    authorizedGrantTypes: string[],
+    registeredRedirectUri: string[],
+    accessTokenValiditySeconds: number,
+    refreshTokenValiditySeconds: number,
+    autoApprove: string
+    remake: string,
+  };
+
+  export type TokenInfo = BaseEntity & {
     access_token: string;
     expires_in: number;
     refresh_token: string;
@@ -7,36 +31,28 @@ declare namespace SystemEntities {
     token_type: string;
   };
 
-  export type Dictionary = {
-    code: string;
-    value: string;
-  };
-
-  export type QuietUser = {
-    id: string;
+  export type QuietUser = BaseEntity & {
     username: string;
     avatar?: string;
-    gender?: any;
+    gender?: string;
     phoneNumber?: string;
     emailAddress?: string;
-    accountExpired?: any;
-    accountLocked?: any;
-    credentialsExpired?: any;
-    enabled: any;
+    accountExpired?: string;
+    accountLocked?: string;
+    credentialsExpired?: string;
+    enabled: string;
     unreadCount: number;
-    authorities: [];
+    authorities: QuietRole[];
   };
 
-  export type QuietRole = {
-    id: string;
+  export type QuietRole = BaseEntity & {
     parentId?: string;
     roleName: string;
     roleCnName?: string;
     remark?: string;
   };
 
-  export type QuietTeam = {
-    id: string;
+  export type QuietTeam = BaseEntity & {
     teamName: string;
     slogan?: string;
     productOwners?: QuietUser[];
@@ -44,8 +60,7 @@ declare namespace SystemEntities {
     members?: QuietUser[];
   };
 
-  export type QuietPermission = {
-    id: string;
+  export type QuietPermission = BaseEntity & {
     applicationName: string;
     urlPattern: string;
     preFilterValue?: string;
@@ -55,15 +70,13 @@ declare namespace SystemEntities {
     postAuthorizeValue?: string;
   };
 
-  export type QuietDepartment = {
-    id: string;
+  export type QuietDepartment = BaseEntity & {
     departmentName: string;
     parentId?: string;
     remark?: string;
   };
 
-  export type NoticeIconData = {
-    id: string;
+  export type NoticeIconData = BaseEntity & {
     key: string;
     avatar: string;
     title: string;

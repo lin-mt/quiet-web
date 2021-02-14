@@ -1,12 +1,12 @@
-import type { ReactText } from 'react';
-import React, { useRef, useState } from 'react';
-import { Button, message, Modal, Popconfirm } from 'antd';
-import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import type {ReactText} from 'react';
+import React, {useRef, useState} from 'react';
+import {Button, message, Modal, Popconfirm} from 'antd';
+import type {ActionType, ProColumns} from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { pageUser, addUsers, removeUsers } from '@/services/system/QuietDepartment';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { Gender, Weather } from '@/services/system/Dictionary';
+import {pageUser, addUsers, removeUsers} from '@/services/system/QuietDepartment';
+import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import UserSelect from '@/pages/system/userinfo/components/UserSelect';
+import {Gender, Weather} from "@/services/system/Enums";
 
 type DepartmentUserProps = {
   department: SystemEntities.QuietDepartment | undefined;
@@ -16,7 +16,7 @@ type DepartmentUserProps = {
 };
 
 const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
-  const { department, visible, onCancel, onOk } = props;
+  const {department, visible, onCancel, onOk} = props;
   const userModalActionRef = useRef<ActionType>();
   const [addDepartmentUserVisible, setAddDepartmentUserVisible] = useState<boolean>(false);
   const [confirmRemoveUsersVisible, setConfirmRemoveUsersVisible] = useState<boolean>(false);
@@ -148,11 +148,11 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
     >
       <ProTable<SystemEntities.QuietUser>
         actionRef={userModalActionRef}
-        rowSelection={{ onChange: (keys) => setSelectedRowKeys(keys) }}
+        rowSelection={{onChange: (keys) => setSelectedRowKeys(keys)}}
         tableAlertRender={false}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) =>
-          pageUser({ departmentId: department?.id, ...params, params, sorter, filter })
+          pageUser({departmentId: department?.id, ...params, params, sorter, filter})
         }
         toolBarRender={() => [
           <span>已选 {selectedRowKeys.length} 项</span>,
@@ -161,6 +161,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
             visible={confirmRemoveUsersVisible}
             title={`确认在该部门中移除所选的 ${selectedRowKeys.length} 名成员吗？`}
             onConfirm={confirmRemoveUsers}
+            onCancel={() => setConfirmRemoveUsersVisible(false)}
           >
             <Button
               type={'primary'}
@@ -168,11 +169,11 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
               key={'remove'}
               onClick={handleConfirmRemoveUsers}
             >
-              <DeleteOutlined /> 批量移除
+              <DeleteOutlined/> 批量移除
             </Button>
           </Popconfirm>,
           <Button type="primary" key="create" onClick={() => setAddDepartmentUserVisible(true)}>
-            <PlusOutlined /> 添加部门成员
+            <PlusOutlined/> 添加部门成员
           </Button>,
         ]}
         columns={columns}

@@ -16,22 +16,12 @@
     path: '/system',
     name: 'system',
     icon: 'setting',
-    access: 'SystemAdmin',
+    access: 'ROLE_SystemAdmin',
     routes: [
       {
-        path: '/system/userinfo',
-        name: 'userinfo',
-        component: './system/userinfo',
-      },
-      {
-        path: '/system/role',
-        name: 'role',
-        component: './system/role',
-      },
-      {
-        path: '/system/permission',
-        name: 'permission',
-        component: './system/permission',
+        path: '/system/client',
+        name: 'client',
+        component: './system/client',
       },
       {
         path: '/system/department',
@@ -39,9 +29,24 @@
         component: './system/department',
       },
       {
+        path: '/system/permission',
+        name: 'permission',
+        component: './system/permission',
+      },
+      {
+        path: '/system/role',
+        name: 'role',
+        component: './system/role',
+      },
+      {
         path: '/system/team',
         name: 'team',
         component: './system/team',
+      },
+      {
+        path: '/system/userinfo',
+        name: 'userinfo',
+        component: './system/userinfo',
       },
     ],
   },

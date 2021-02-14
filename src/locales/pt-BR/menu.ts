@@ -8,6 +8,7 @@ export default {
   'menu.system.info': 'Informação do sistema',
   'menu.system.department': 'Gestão de departamento',
   'menu.system.team': 'Gerenciamento de equipe',
+  'menu.system.client': '应用授权',
 
   'menu.welcome': 'Welcome',
   'menu.more-blocks': 'More Blocks',

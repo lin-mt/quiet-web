@@ -8,6 +8,7 @@ export default {
   'menu.system.info': 'System Information',
   'menu.system.department': 'Department Management',
   'menu.system.team': 'Team Management',
+  'menu.system.client': '应用授权',
 
   'menu.welcome': 'Selamat Datang',
   'menu.more-blocks': 'Blocks Lainnya',
