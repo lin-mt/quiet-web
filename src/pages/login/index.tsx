@@ -17,6 +17,7 @@ import { oauthToken, getFakeCaptcha } from '@/services/system/Login';
 import { OperationType } from '@/types/Type';
 import UserForm from '@/pages/system/userinfo/components/UserForm';
 import styles from './index.less';
+import { LocalStorage } from '@/constant';
 
 const LoginMessage: React.FC<{
   content: string;
@@ -69,7 +70,7 @@ const Login: React.FC = () => {
       // 登录
       const tokenInfo = await oauthToken({ ...values, type });
       if (tokenInfo) {
-        localStorage.setItem('tokenInfo', JSON.stringify(tokenInfo));
+        localStorage.setItem(LocalStorage.TOKEN_INFO, JSON.stringify(tokenInfo));
         setInitialState({
           ...initialState,
           // @ts-ignore

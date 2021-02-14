@@ -1,5 +1,6 @@
 import { request } from 'umi';
 import type { Result } from '@/types/Result';
+import { LocalStorage } from '@/constant';
 
 export type LoginParams = {
   username: string;
@@ -32,7 +33,7 @@ export async function getFakeCaptcha(mobile: string) {
 }
 
 export async function outLogin() {
-  const tokenInfoItem = localStorage.getItem('tokenInfo');
+  const tokenInfoItem = localStorage.getItem(LocalStorage.TOKEN_INFO);
   if (tokenInfoItem) {
     const tokenInfo = JSON.parse(tokenInfoItem);
     return request('/api/system/oauth/logout', {

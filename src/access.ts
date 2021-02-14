@@ -4,7 +4,7 @@ export default function access(initialState: {
 }) {
   const { currentUser } = initialState || {};
   return {
-    ROLE_SystemAdmin: currentUser && hasRole(currentUser.authorities, 'ROLE_SystemAdmin'),
+    ROLE_SystemAdmin: currentUser && hasRole(currentUser.authorities, 'SystemAdmin'),
   };
 }
 

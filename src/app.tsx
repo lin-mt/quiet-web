@@ -11,8 +11,7 @@ import { queryCurrent } from './services/system/QuietUser';
 import defaultSettings from '../config/defaultSettings';
 import type { Result } from '@/types/Result';
 import { ResultType } from '@/types/Result';
-import { Constant as RC } from '@/constant/ResultCode';
-import { Constant as RU } from '@/constant/RouteUrl';
+import { ResultCode, ResultUrl } from '@/constant';
 
 /**
  * 获取用户信息比较慢的时候会展示一个 loading
@@ -154,8 +153,8 @@ export const request: RequestConfig = {
           }
         }
         if (data.code) {
-          if (RC.NO_LOGIN === data.code && history.location.pathname !== RU.LOGIN) {
-            history.push(RU.LOGIN);
+          if (ResultCode.NO_LOGIN === data.code && history.location.pathname !== ResultUrl.LOGIN) {
+            history.push(ResultUrl.LOGIN);
           }
         }
       }
