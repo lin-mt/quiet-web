@@ -143,12 +143,14 @@ const ClientManagement: React.FC<any> = () => {
     },
     {
       title: '资源ID',
+      key: 'resourceIds',
       dataIndex: 'resourceIds',
       valueType: 'text',
       search: false,
     },
     {
       title: '重定向Uri',
+      key: 'registeredRedirectUri',
       dataIndex: 'registeredRedirectUri',
       valueType: 'text',
       search: false,
@@ -208,6 +210,8 @@ const ClientManagement: React.FC<any> = () => {
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
     gmtCreate: { show: false },
     gmtUpdate: { show: false },
+    resourceIds: { show: false },
+    registeredRedirectUri: { show: false },
   });
 
   function createClient() {

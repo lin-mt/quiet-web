@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
+import { Button, Col, Form, Input, Modal, Row, Select, Tag } from 'antd';
 import { saveClient, updateClient } from '@/services/system/QuietClient';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
+import type { CustomTagProps } from 'rc-select/lib/interface/generator';
 
 type ClientFormProps = {
   visible: boolean;
@@ -16,6 +17,19 @@ type ClientFormProps = {
 const ClientForm: React.FC<ClientFormProps> = (props) => {
   const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [inputForSelectValues, setInputForSelectValues] = useState<string[]>();
+  const [scope, setScope] = useState<{ key: string; value: string; label: string }[]>(
+    form.getFieldValue('scope')?.map((scopeValue: string) => {
+      return { value: scopeValue, label: scopeValue };
+    }),
+  );
+  const [authorizedGrantTypes, setAuthorizedGrantTypes] = useState<
+    { key: string; value: string; label: string }[]
+  >(
+    form.getFieldValue('authorizedGrantTypes')?.map((authorizedGrantType: string) => {
+      return { value: authorizedGrantType, label: authorizedGrantType };
+    }),
+  );
   const nonsupportMsg = 'nonsupport FormType';
 
   async function handleSubmit() {
@@ -26,7 +40,16 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
         await saveClient(values);
         break;
       case OperationType.UPDATE:
-        await updateClient({ ...updateInfo, ...values });
+        await updateClient({
+          ...updateInfo,
+          ...values,
+          scope: scope?.map((scopeValue) => {
+            return scopeValue.key;
+          }),
+          authorizedGrantTypes: authorizedGrantTypes?.map((authorizedGrantType) => {
+            return authorizedGrantType.key;
+          }),
+        });
         break;
       default:
         throw Error(nonsupportMsg);
@@ -66,6 +89,29 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
     onCancel();
   }
 
+  function tagRender(tagProps: CustomTagProps) {
+    const { label, closable, onClose } = tagProps;
+    return (
+      <Tag color={'#108EE9'} closable={closable} onClose={onClose}>
+        {label}
+      </Tag>
+    );
+  }
+
+  function buildOptionByInputValue(value: string) {
+    setInputForSelectValues([value]);
+  }
+
+  function handleScopeChange(value: any) {
+    setScope(value);
+  }
+
+  function handleAuthorizedGrantTypesChange(value: any) {
+    setAuthorizedGrantTypes(value);
+  }
+
+  // @ts-ignore
+  // @ts-ignore
   return (
     <Modal
       destroyOnClose
@@ -145,6 +191,50 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
               ]}
             >
               <Input.Password placeholder="请确认密码" />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={20}>
+          <Col span={12}>
+            <Form.Item label="授权范围">
+              <Select
+                mode="multiple"
+                labelInValue
+                value={scope}
+                tagRender={tagRender}
+                placeholder="请输入授权范围"
+                filterOption={false}
+                onSearch={buildOptionByInputValue}
+                onChange={handleScopeChange}
+                onBlur={() => setInputForSelectValues([])}
+              >
+                {inputForSelectValues?.map((value) => (
+                  <Select.Option key={value} value={value}>
+                    {value}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="授权类型">
+              <Select
+                mode="multiple"
+                labelInValue
+                value={authorizedGrantTypes}
+                tagRender={tagRender}
+                placeholder="请输入授权范围"
+                filterOption={false}
+                onSearch={buildOptionByInputValue}
+                onChange={handleAuthorizedGrantTypesChange}
+                onBlur={() => setInputForSelectValues([])}
+              >
+                {inputForSelectValues?.map((value) => (
+                  <Select.Option key={value} value={value}>
+                    {value}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </Col>
         </Row>
