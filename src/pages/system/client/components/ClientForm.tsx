@@ -44,10 +44,10 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
           ...updateInfo,
           ...values,
           scope: scope?.map((scopeValue) => {
-            return scopeValue.key;
+            return scopeValue.value;
           }),
           authorizedGrantTypes: authorizedGrantTypes?.map((authorizedGrantType) => {
-            return authorizedGrantType.key;
+            return authorizedGrantType.value;
           }),
         });
         break;
@@ -104,14 +104,14 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
 
   function handleScopeChange(value: any) {
     setScope(value);
+    setInputForSelectValues([]);
   }
 
   function handleAuthorizedGrantTypesChange(value: any) {
     setAuthorizedGrantTypes(value);
+    setInputForSelectValues([]);
   }
 
-  // @ts-ignore
-  // @ts-ignore
   return (
     <Modal
       destroyOnClose

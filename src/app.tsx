@@ -11,7 +11,7 @@ import { queryCurrent } from './services/system/QuietUser';
 import defaultSettings from '../config/defaultSettings';
 import type { Result } from '@/types/Result';
 import { ResultType } from '@/types/Result';
-import { ResultCode, ResultUrl } from '@/constant';
+import { LocalStorage, ResultCode, ResultUrl } from '@/constant';
 
 /**
  * 获取用户信息比较慢的时候会展示一个 loading
@@ -110,7 +110,7 @@ export const request: RequestConfig = {
   requestInterceptors: [
     (url, options) => {
       if (url !== '/api/system/oauth/token') {
-        const tokenInfoItem = localStorage.getItem('tokenInfo');
+        const tokenInfoItem = localStorage.getItem(LocalStorage.TOKEN_INFO);
         if (tokenInfoItem) {
           const tokenInfo = JSON.parse(tokenInfoItem);
           return {
