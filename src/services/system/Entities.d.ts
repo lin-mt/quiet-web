@@ -29,6 +29,7 @@ declare namespace SystemEntities {
     refresh_token: string;
     scope: string;
     token_type: string;
+    token_expire_time: number;
   };
 
   export type QuietUser = BaseEntity & {

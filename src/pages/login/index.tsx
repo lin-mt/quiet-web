@@ -70,7 +70,9 @@ const Login: React.FC = () => {
       // 登录
       const tokenInfo = await oauthToken({ ...values, type });
       if (tokenInfo) {
-        localStorage.setItem(LocalStorage.TOKEN_INFO, JSON.stringify(tokenInfo));
+        tokenInfo.token_expire_time =
+          Date.parse(new Date().toString()) + tokenInfo.expires_in * 1000;
+        localStorage.setItem(LocalStorage.TokenInfo, JSON.stringify(tokenInfo));
         setInitialState({
           ...initialState,
           // @ts-ignore

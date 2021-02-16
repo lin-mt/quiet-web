@@ -1,14 +1,22 @@
 export const LocalStorage = {
-  TOKEN_INFO: 'token_info',
+  TokenInfo: 'token_info',
 };
 
 export const ResultCode = {
-  NO_LOGIN: 'NO_LOGIN',
-  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
-  LOGIN_FAILURE: 'LOGIN_FAILURE',
-  NO_PERMISSION: 'NO_PERMISSION',
+  NoLogin: 'NO_LOGIN',
+  LoginSuccess: 'LOGIN_SUCCESS',
+  LoginFailure: 'LOGIN_FAILURE',
+  NoPermission: 'NO_PERMISSION',
 };
 
 export const ResultUrl = {
-  LOGIN: '/login',
+  Login: '/login',
+};
+
+export const System = {
+  BasicCode: 'Basic cXVpZXQtd2ViOnF1aWV0',
+  GrantType: {
+    Password: 'password',
+    RefreshToken: 'refresh_token',
+  },
 };

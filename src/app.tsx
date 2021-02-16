@@ -11,7 +11,9 @@ import { queryCurrent } from './services/system/QuietUser';
 import defaultSettings from '../config/defaultSettings';
 import type { Result } from '@/types/Result';
 import { ResultType } from '@/types/Result';
-import { LocalStorage, ResultCode, ResultUrl } from '@/constant';
+import { LocalStorage, ResultCode, ResultUrl, System } from '@/constant';
+import type { RequestOptionsInit } from 'umi-request';
+import { request as umiReq } from 'umi';
 
 /**
  * 获取用户信息比较慢的时候会展示一个 loading
@@ -88,6 +90,29 @@ const codeMessage = {
   504: '网关超时。',
 };
 
+const retry = (response: Response, options: RequestOptionsInit) => {
+  return umiReq(response.url, options);
+};
+
+const refreshToken = () => {
+  const tokenInfoItem = localStorage.getItem(LocalStorage.TokenInfo);
+  if (tokenInfoItem) {
+    const tokenInfo = JSON.parse(tokenInfoItem);
+    const refreshTokenData = {
+      grant_type: System.GrantType.RefreshToken,
+      refresh_token: tokenInfo.refresh_token,
+    };
+    return umiReq<SystemEntities.TokenInfo>('/api/system/oauth/token', {
+      method: 'POST',
+      params: refreshTokenData,
+      headers: {
+        Authorization: System.BasicCode,
+      },
+    });
+  }
+  return null;
+};
+
 /**
  * 异常处理程序
  */
@@ -95,11 +120,10 @@ const errorHandler = (error: ResponseError) => {
   const { response } = error;
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
-    const { status, url } = response;
-
+    const { status } = response;
     notification.error({
       message: `请求出错`,
-      description: `错误码 ${status}：${errorText} ${url}`,
+      description: `错误码 ${status}：${errorText}`,
     });
   }
   throw error;
@@ -110,7 +134,7 @@ export const request: RequestConfig = {
   requestInterceptors: [
     (url, options) => {
       if (url !== '/api/system/oauth/token') {
-        const tokenInfoItem = localStorage.getItem(LocalStorage.TOKEN_INFO);
+        const tokenInfoItem = localStorage.getItem(LocalStorage.TokenInfo);
         if (tokenInfoItem) {
           const tokenInfo = JSON.parse(tokenInfoItem);
           return {
@@ -128,33 +152,52 @@ export const request: RequestConfig = {
     },
   ],
   responseInterceptors: [
-    async (response) => {
-      const data: Result<any> = await response.clone().json();
-      if (data) {
-        if (data.result && data.message) {
-          switch (data.result) {
-            case ResultType.SUCCESS:
-              message.success(data.message);
-              break;
-            case ResultType.WARNING:
-              message.warning(data.message);
-              break;
-            case ResultType.FAILURE:
-              message.error(`${data.code ? `错误码：${data.code} ` : ` `} ${data.message}`);
-              // eslint-disable-next-line no-console
-              console.error(data);
-              throw new Error();
-            case ResultType.EXCEPTION:
-              message.error(`${data.code ? `异常码：${data.code} ` : ` `} ${data.message}`);
-              // eslint-disable-next-line no-console
-              console.error(data);
-              throw new Error();
-            default:
+    async (response, options) => {
+      if (response.status === 401) {
+        const tokenInfoItem = localStorage.getItem(LocalStorage.TokenInfo);
+        if (tokenInfoItem) {
+          const tokenInfo = JSON.parse(tokenInfoItem);
+          const needRefreshToken =
+            tokenInfo.refresh_token &&
+            tokenInfo.token_expire_time < Date.parse(new Date().toString());
+          if (needRefreshToken) {
+            const newTokenInfo = await refreshToken();
+            if (newTokenInfo) {
+              newTokenInfo.token_expire_time =
+                Date.parse(new Date().toString()) + tokenInfo.expires_in * 1000;
+              localStorage.setItem(LocalStorage.TokenInfo, JSON.stringify(newTokenInfo));
+              return retry(response, options);
+            }
           }
         }
-        if (data.code) {
-          if (ResultCode.NO_LOGIN === data.code && history.location.pathname !== ResultUrl.LOGIN) {
-            history.push(ResultUrl.LOGIN);
+      }
+      return response;
+    },
+    async (response) => {
+      if (response.status === 200) {
+        const data: Result<any> = await response.clone().json();
+        if (data) {
+          if (data.result && data.message) {
+            switch (data.result) {
+              case ResultType.SUCCESS:
+                message.success(data.message);
+                break;
+              case ResultType.WARNING:
+                message.warning(data.message);
+                break;
+              case ResultType.FAILURE:
+                message.error(`${data.code ? `错误码：${data.code} ` : ` `} ${data.message}`);
+                throw new Error();
+              case ResultType.EXCEPTION:
+                message.error(`${data.code ? `异常码：${data.code} ` : ` `} ${data.message}`);
+                throw new Error();
+              default:
+            }
+          }
+          if (data.code) {
+            if (ResultCode.NoLogin === data.code && history.location.pathname !== ResultUrl.Login) {
+              history.push(ResultUrl.Login);
+            }
           }
         }
       }
