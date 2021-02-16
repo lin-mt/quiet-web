@@ -44,7 +44,18 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
     setSubmitting(true);
     switch (operationType) {
       case OperationType.CREATE:
-        await saveTeam(values);
+        await saveTeam({
+          ...values,
+          productOwners: productOwners?.map((user) => {
+            return { id: user.value };
+          }),
+          scrumMasters: scrumMasters?.map((user) => {
+            return { id: user.value };
+          }),
+          members: members?.map((user) => {
+            return { id: user.value };
+          }),
+        });
         break;
       case OperationType.UPDATE:
         await updateTeam({

@@ -37,7 +37,15 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
     setSubmitting(true);
     switch (operationType) {
       case OperationType.CREATE:
-        await saveClient(values);
+        await saveClient({
+          ...values,
+          scope: scope?.map((scopeValue) => {
+            return scopeValue.value;
+          }),
+          authorizedGrantTypes: authorizedGrantTypes?.map((authorizedGrantType) => {
+            return authorizedGrantType.value;
+          }),
+        });
         break;
       case OperationType.UPDATE:
         await updateClient({
