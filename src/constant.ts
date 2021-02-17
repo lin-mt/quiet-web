@@ -18,5 +18,6 @@ export const System = {
   GrantType: {
     Password: 'password',
     RefreshToken: 'refresh_token',
+    InvalidRefreshTokenError: 'invalid_grant',
   },
 };

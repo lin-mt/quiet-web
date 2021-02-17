@@ -152,6 +152,23 @@ export const request: RequestConfig = {
     },
   ],
   responseInterceptors: [
+    async (response) => {
+      if (response.status === 400) {
+        const errorResp = await response.clone().json();
+        if (
+          errorResp &&
+          errorResp.error &&
+          errorResp.error === System.GrantType.InvalidRefreshTokenError
+        ) {
+          history.push('/login');
+          notification.warn({
+            message: '请重新登陆',
+          });
+          throw new Error();
+        }
+      }
+      return response;
+    },
     async (response, options) => {
       if (response.status === 401) {
         const tokenInfoItem = localStorage.getItem(LocalStorage.TokenInfo);
