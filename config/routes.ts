@@ -29,6 +29,11 @@
         component: './system/department',
       },
       {
+        path: '/system/dataDictionary',
+        name: 'data-dictionary',
+        component: './system/dataDictionary',
+      },
+      {
         path: '/system/permission',
         name: 'permission',
         component: './system/permission',

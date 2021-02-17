@@ -9,6 +9,7 @@ export default {
   'menu.system.department': 'Department Management',
   'menu.system.team': 'Team Management',
   'menu.system.client': '应用授权',
+  'menu.system.data-dictionary': '数据字典',
 
   'menu.welcome': 'ようこそ',
   'menu.more-blocks': 'その他のブロック',
