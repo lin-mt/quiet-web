@@ -1,10 +1,11 @@
-import component from './en-US/component';
-import globalHeader from './en-US/globalHeader';
-import menu from './en-US/menu';
-import pwa from './en-US/pwa';
-import settingDrawer from './en-US/settingDrawer';
-import settings from './en-US/settings';
-import pages from './en-US/pages';
+import component from '@/locales/en-US/component';
+import globalHeader from '@/locales/en-US/globalHeader';
+import menu from '@/locales/en-US/menu';
+import pwa from '@/locales/en-US/pwa';
+import settingDrawer from '@/locales/en-US/settingDrawer';
+import settings from '@/locales/en-US/settings';
+import pages from '@/locales/en-US/pages';
+import dataDictionary from '@/locales/en-US/dataDictionary';
 
 export default {
   'navBar.lang': 'Languages',
@@ -21,4 +22,5 @@ export default {
   ...pwa,
   ...component,
   ...pages,
+  ...dataDictionary,
 };

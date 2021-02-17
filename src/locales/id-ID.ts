@@ -1,10 +1,11 @@
-import component from './id-ID/component';
-import globalHeader from './id-ID/globalHeader';
-import menu from './id-ID/menu';
-import pwa from './id-ID/pwa';
-import settingDrawer from './id-ID/settingDrawer';
-import settings from './id-ID/settings';
-import pages from './id-ID/pages';
+import component from '@/locales/id-ID/component';
+import globalHeader from '@/locales/id-ID/globalHeader';
+import menu from '@/locales/id-ID/menu';
+import pwa from '@/locales/id-ID/pwa';
+import settingDrawer from '@/locales/id-ID/settingDrawer';
+import settings from '@/locales/id-ID/settings';
+import pages from '@/locales/id-ID/pages';
+import dataDictionary from '@/locales/id-ID/dataDictionary';
 
 export default {
   'navbar.lang': 'Bahasa',
@@ -22,4 +23,5 @@ export default {
   ...pwa,
   ...component,
   ...pages,
+  ...dataDictionary,
 };

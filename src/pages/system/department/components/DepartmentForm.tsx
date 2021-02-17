@@ -74,7 +74,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = (props) => {
       visible={visible}
       onCancel={() => handleModalCancel()}
       footer={[
-        <Button key="back" onClick={() => handleModalCancel()}>
+        <Button key="cancel" onClick={() => handleModalCancel()}>
           取消
         </Button>,
         <Button

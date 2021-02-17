@@ -1,9 +1,10 @@
-import component from './zh-TW/component';
-import globalHeader from './zh-TW/globalHeader';
-import menu from './zh-TW/menu';
-import pwa from './zh-TW/pwa';
-import settingDrawer from './zh-TW/settingDrawer';
-import settings from './zh-TW/settings';
+import component from '@/locales/zh-TW/component';
+import globalHeader from '@/locales/zh-TW/globalHeader';
+import menu from '@/locales/zh-TW/menu';
+import pwa from '@/locales/zh-TW/pwa';
+import settingDrawer from '@/locales/zh-TW/settingDrawer';
+import settings from '@/locales/zh-TW/settings';
+import dataDictionary from '@/locales/zh-TW/dataDictionary';
 
 export default {
   'navBar.lang': '語言',
@@ -17,4 +18,5 @@ export default {
   ...settings,
   ...pwa,
   ...component,
+  ...dataDictionary,
 };

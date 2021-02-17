@@ -66,7 +66,7 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
       visible={visible}
       onCancel={() => handleModalCancel()}
       footer={[
-        <Button key="back" onClick={() => handleModalCancel()}>
+        <Button key="cancel" onClick={() => handleModalCancel()}>
           {cancelText || '取消'}
         </Button>,
         <Button

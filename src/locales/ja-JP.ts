@@ -1,10 +1,11 @@
-import globalHeader from './ja-JP/globalHeader';
-import menu from './ja-JP/menu';
-import settingDrawer from './ja-JP/settingDrawer';
-import settings from './ja-JP/settings';
-import pwa from './ja-JP/pwa';
-import component from './ja-JP/component';
-import pages from './ja-JP/pages';
+import globalHeader from '@/locales/ja-JP/globalHeader';
+import menu from '@/locales/ja-JP/menu';
+import settingDrawer from '@/locales/ja-JP/settingDrawer';
+import settings from '@/locales/ja-JP/settings';
+import pwa from '@/locales/ja-JP/pwa';
+import component from '@/locales/ja-JP/component';
+import pages from '@/locales/ja-JP/pages';
+import dataDictionary from '@/locales/ja-JP/dataDictionary';
 
 export default {
   'navBar.lang': '言語',
@@ -21,4 +22,5 @@ export default {
   ...pwa,
   ...component,
   ...pages,
+  ...dataDictionary,
 };
