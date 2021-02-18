@@ -1,3 +1,4 @@
+import type { BaseSyntheticEvent } from 'react';
 import React, { useState } from 'react';
 import { Button, Col, Form, Input, Modal } from 'antd';
 import { saveDataDictionary, updateDataDictionary } from '@/services/system/QuietDataDictionary';
@@ -16,6 +17,7 @@ type DataDictionaryFormProps = {
 const DataDictionaryForm: React.FC<DataDictionaryFormProps> = (props) => {
   const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [keyAndParentIdRequired, setKeyAndParentIdRequired] = useState<boolean>(false);
   const nonsupportMsg = 'nonsupport FormType';
 
   async function handleSubmit() {
@@ -66,6 +68,11 @@ const DataDictionaryForm: React.FC<DataDictionaryFormProps> = (props) => {
     onCancel();
   }
 
+  function keyAndParentIdOnChange(e: BaseSyntheticEvent) {
+    const { value } = e.target;
+    setKeyAndParentIdRequired(value && value.length > 0);
+  }
+
   return (
     <Modal
       destroyOnClose
@@ -106,11 +113,11 @@ const DataDictionaryForm: React.FC<DataDictionaryFormProps> = (props) => {
             label="key"
             name="key"
             rules={[
-              { required: true, message: '请输入key' },
-              { max: 30, message: 'key长度不能超过 30' },
+              { required: keyAndParentIdRequired, message: '请输入key' },
+              { type: 'string', max: 30, message: 'key长度不能超过 30' },
             ]}
           >
-            <Input placeholder="请输入key" />
+            <Input placeholder="请输入key" onChange={keyAndParentIdOnChange} />
           </Form.Item>
         </Col>
         <Col>
@@ -119,15 +126,19 @@ const DataDictionaryForm: React.FC<DataDictionaryFormProps> = (props) => {
             name="value"
             rules={[
               { required: true, message: '请输入value' },
-              { max: 30, message: 'value长度不能超过 30' },
+              { type: 'string', max: 30, message: 'value长度不能超过 30' },
             ]}
           >
             <Input placeholder="请输入key" />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label="父数据字典 ID" name="parentId">
-            <Input placeholder="请输入父数据字典 ID" />
+          <Form.Item
+            label="父数据字典 ID"
+            name="parentId"
+            rules={[{ required: keyAndParentIdRequired, message: '请输入父数据字典ID' }]}
+          >
+            <Input placeholder="请输入父数据字典 ID" onChange={keyAndParentIdOnChange} />
           </Form.Item>
         </Col>
         <Col>
