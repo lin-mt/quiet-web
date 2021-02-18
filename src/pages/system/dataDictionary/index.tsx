@@ -32,7 +32,7 @@ const DataDictionary: React.FC<any> = () => {
       copyable: true,
     },
     {
-      title: '类型',
+      title: '字典类型',
       dataIndex: 'type',
       valueType: 'text',
     },

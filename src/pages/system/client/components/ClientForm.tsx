@@ -142,8 +142,8 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
         </Button>,
       ]}
     >
-      <Form form={form} name={'clientForm'} labelCol={{ span: 8 }} wrapperCol={{ span: 17 }}>
-        <Row gutter={20}>
+      <Form form={form} name={'clientForm'} labelCol={{ span: 9 }}>
+        <Row>
           <Col span={12}>
             <Form.Item
               label={'客户端ID'}
@@ -169,7 +169,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        <Row gutter={20}>
+        <Row>
           <Col span={12}>
             <Form.Item
               label="客户端密码"
@@ -202,7 +202,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        <Row gutter={20}>
+        <Row>
           <Col span={12}>
             <Form.Item label="授权范围">
               <Select
@@ -246,7 +246,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        <Row gutter={20}>
+        <Row>
           <Col span={12}>
             <Form.Item
               label={'是否需要认证'}
@@ -272,7 +272,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        <Row gutter={20}>
+        <Row>
           <Col span={12}>
             <Form.Item
               label={'是否限制授权范围'}
@@ -295,7 +295,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        <Row gutter={20}>
+        <Row>
           <Col span={12}>
             <Form.Item
               label={'刷新token的有效期'}
