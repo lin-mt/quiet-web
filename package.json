@@ -1,8 +1,8 @@
 {
   "name": "quiet-web",
-  "version": "5.0.0-beta.2",
+  "version": "1.0.0",
   "private": true,
-  "description": "An out-of-box UI solution for enterprise applications",
+  "description": "The Web side of the Quiet system",
   "scripts": {
     "analyze": "cross-env ANALYZE=1 umi build",
     "build": "umi build",
