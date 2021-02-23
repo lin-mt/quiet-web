@@ -13,6 +13,18 @@
     hideInMenu: true,
   },
   {
+    path: '/scrum',
+    name: 'scrum',
+    icon: 'appstore',
+    routes: [
+      {
+        path: '/scrum/project',
+        name: 'project',
+        component: './scrum/project',
+      },
+    ],
+  },
+  {
     path: '/system',
     name: 'system',
     icon: 'setting',

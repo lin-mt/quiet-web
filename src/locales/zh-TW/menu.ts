@@ -10,6 +10,8 @@ export default {
   'menu.system.team': '團隊管理',
   'menu.system.client': '应用授权',
   'menu.system.data-dictionary': '数据字典',
+  'menu.scrum': '敏捷管理',
+  'menu.scrum.project': '项目管理',
 
   'menu.welcome': '歡迎',
   'menu.more-blocks': '更多區塊',
