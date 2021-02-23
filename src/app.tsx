@@ -204,10 +204,10 @@ export const request: RequestConfig = {
                 break;
               case ResultType.FAILURE:
                 message.error(`${data.code ? `错误码：${data.code} ` : ` `} ${data.message}`);
-                throw new Error();
+                break;
               case ResultType.EXCEPTION:
                 message.error(`${data.code ? `异常码：${data.code} ` : ` `} ${data.message}`);
-                throw new Error();
+                break;
               default:
             }
           }
