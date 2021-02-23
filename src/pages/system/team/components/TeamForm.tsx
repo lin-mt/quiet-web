@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Col, Form, Input, Modal, Select, Spin, Tag } from 'antd';
+import { Button, Col, Form, Input, Modal, Select, Spin } from 'antd';
 import { saveTeam, updateTeam } from '@/services/system/QuietTeam';
 import { listUsersByUsername } from '@/services/system/QuietUser';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
-import type { CustomTagProps } from 'rc-select/lib/interface/generator';
+import multipleSelectTagRender from '@/utils/RenderUtils';
 
 const { Option } = Select;
 
@@ -133,15 +133,6 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
     setFetchUsers([]);
   }
 
-  function tagRender(tagProps: CustomTagProps) {
-    const { label, closable, onClose } = tagProps;
-    return (
-      <Tag color={'#108EE9'} closable={closable} onClose={onClose}>
-        {label}
-      </Tag>
-    );
-  }
-
   return (
     <Modal
       destroyOnClose
@@ -183,7 +174,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
               mode="multiple"
               labelInValue
               value={productOwners}
-              tagRender={tagRender}
+              tagRender={multipleSelectTagRender}
               placeholder="请输入 ProductOwner 用户名"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               filterOption={false}
@@ -205,7 +196,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
               mode="multiple"
               labelInValue
               value={scrumMasters}
-              tagRender={tagRender}
+              tagRender={multipleSelectTagRender}
               placeholder="请输入 ScrumMaster 用户名"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               filterOption={false}
@@ -227,7 +218,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
               mode="multiple"
               labelInValue
               value={members}
-              tagRender={tagRender}
+              tagRender={multipleSelectTagRender}
               placeholder="请输入团队成员用户名"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               filterOption={false}
