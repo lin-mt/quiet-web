@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Col, Form, Input, Modal, Row, Select, Tag } from 'antd';
+import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
 import { saveClient, updateClient } from '@/services/system/QuietClient';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
-import type { CustomTagProps } from 'rc-select/lib/interface/generator';
+import multipleSelectTagRender from '@/utils/RenderUtils';
 
 type ClientFormProps = {
   visible: boolean;
@@ -95,15 +95,6 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
   function handleModalCancel() {
     form.resetFields();
     onCancel();
-  }
-
-  function tagRender(tagProps: CustomTagProps) {
-    const { label, closable, onClose } = tagProps;
-    return (
-      <Tag color={'#108EE9'} closable={closable} onClose={onClose}>
-        {label}
-      </Tag>
-    );
   }
 
   function buildOptionByInputValue(value: string) {
@@ -209,7 +200,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
                 mode="multiple"
                 labelInValue
                 value={scope}
-                tagRender={tagRender}
+                tagRender={multipleSelectTagRender}
                 placeholder="请输入授权范围"
                 filterOption={false}
                 onSearch={buildOptionByInputValue}
@@ -230,7 +221,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
                 mode="multiple"
                 labelInValue
                 value={authorizedGrantTypes}
-                tagRender={tagRender}
+                tagRender={multipleSelectTagRender}
                 placeholder="请输入授权范围"
                 filterOption={false}
                 onSearch={buildOptionByInputValue}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Modal, Select, Spin, Tag } from 'antd';
+import { Button, Modal, Select, Spin } from 'antd';
 import { listUsersByUsername } from '@/services/system/QuietUser';
-import type { CustomTagProps } from 'rc-select/lib/interface/generator';
+import multipleSelectTagRender from '@/utils/RenderUtils';
 
 const { Option } = Select;
 
@@ -49,15 +49,6 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
     setFetchUsers([]);
   }
 
-  function tagRender(tagProps: CustomTagProps) {
-    const { label, closable, onClose } = tagProps;
-    return (
-      <Tag color={'#108EE9'} closable={closable} onClose={onClose}>
-        {label}
-      </Tag>
-    );
-  }
-
   return (
     <Modal
       destroyOnClose
@@ -85,7 +76,7 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
         mode="multiple"
         labelInValue
         value={selectedUsers}
-        tagRender={tagRender}
+        tagRender={multipleSelectTagRender}
         placeholder="请输入用户名"
         notFoundContent={fetching ? <Spin size="small" /> : null}
         filterOption={false}
