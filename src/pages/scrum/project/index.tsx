@@ -1,12 +1,18 @@
 import type { CSSProperties } from 'react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProCard from '@ant-design/pro-card';
-import { AppstoreAddOutlined } from '@ant-design/icons';
+import {
+  AppstoreAddOutlined,
+  EditOutlined,
+  EllipsisOutlined,
+  SettingOutlined,
+} from '@ant-design/icons';
 import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
-import { Form } from 'antd';
+import { Form, Space, Typography } from 'antd';
 import { OperationType } from '@/types/Type';
+import { allMyProjects } from '@/services/scrum/ScrumProject';
 
-export default () => {
+const Project: React.FC<any> = () => {
   const addIconDefaultStyle = { fontSize: '36px' };
 
   const addIconOverStyle = {
@@ -18,6 +24,20 @@ export default () => {
   const [addIconStyle, setAddIconStyle] = useState<CSSProperties>(addIconDefaultStyle);
   const [projectFormVisible, setProjectFormVisible] = useState<boolean>(false);
   const [projectFormOperationType, setProjectFormOperationType] = useState<OperationType>();
+  const [cardProjects, setCardProjects] = useState<any[]>([]);
+
+  useEffect(() => {
+    allMyProjects().then((resp) => {
+      let buildCardProject: React.SetStateAction<any[]> = [];
+      buildCardProject = buildCardProject.concat(resp.managedProjects, resp.projects);
+      buildCardProject.unshift({ key: 'empty' });
+      const addEmptyProject = 5 - (buildCardProject.length % 5);
+      for (let i = 0; i < addEmptyProject; i += 1) {
+        buildCardProject.push({ key: `empty${i}` });
+      }
+      setCardProjects(buildCardProject);
+    });
+  }, []);
 
   function handleMouseOver() {
     setAddIconStyle(addIconOverStyle);
@@ -35,29 +55,51 @@ export default () => {
   return (
     <>
       <ProCard gutter={24} ghost style={{ marginBottom: '24px' }}>
-        <ProCard
-          layout={'center'}
-          bordered={true}
-          hoverable={true}
-          style={{ height: '150px' }}
-          onMouseOver={handleMouseOver}
-          onMouseLeave={handleMouseLeave}
-          onClick={handleNewProjectClick}
-        >
-          <AppstoreAddOutlined style={addIconStyle} />
-        </ProCard>
-        <ProCard bordered={true} hoverable={true}>
-          Responsive
-        </ProCard>
-        <ProCard bordered={true} hoverable={true}>
-          Responsive
-        </ProCard>
-        <ProCard bordered={true} hoverable={true}>
-          Responsive
-        </ProCard>
-        <ProCard bordered={true} hoverable={true}>
-          Responsive
-        </ProCard>
+        {cardProjects.map((project, index) => {
+          if (index === 0) {
+            return (
+              <ProCard
+                key={project.key}
+                layout={'center'}
+                hoverable={true}
+                onMouseOver={handleMouseOver}
+                onMouseLeave={handleMouseLeave}
+                onClick={handleNewProjectClick}
+              >
+                <AppstoreAddOutlined style={addIconStyle} />
+              </ProCard>
+            );
+          }
+          return project.id ? (
+            <ProCard
+              hoverable={true}
+              key={project.id}
+              title={project.name}
+              size={'small'}
+              actions={[
+                <SettingOutlined key="setting" />,
+                <EditOutlined key="edit" />,
+                <EllipsisOutlined key="ellipsis" />,
+              ]}
+            >
+              <Space direction={'vertical'}>
+                <Typography.Text style={{ color: '#108EE9' }}>
+                  {project.managerName}
+                </Typography.Text>
+                <Typography.Paragraph
+                  type={'secondary'}
+                  ellipsis={{
+                    rows: 2,
+                  }}
+                >
+                  {project.description}
+                </Typography.Paragraph>
+              </Space>
+            </ProCard>
+          ) : (
+            <ProCard key={project.key} style={{ backgroundColor: '#f0f2f5' }} />
+          );
+        })}
       </ProCard>
       {projectFormVisible && (
         <ProjectForm
@@ -70,3 +112,5 @@ export default () => {
     </>
   );
 };
+
+export default Project;

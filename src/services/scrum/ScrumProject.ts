@@ -13,3 +13,11 @@ export async function updateProject(params?: any) {
     method: 'POST',
   });
 }
+
+export async function allMyProjects() {
+  return request('/api/scrum/project/allMyProjects', {
+    method: 'POST',
+  }).then((resData) => {
+    return resData.data;
+  });
+}

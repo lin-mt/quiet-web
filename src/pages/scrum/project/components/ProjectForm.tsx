@@ -17,13 +17,13 @@ type ProjectFormProps = {
 };
 
 const ProjectForm: React.FC<ProjectFormProps> = (props) => {
+  const nonsupportMsg = 'nonsupport FormType';
+
   const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [fetchUsers, setFetchUsers] = useState<SystemEntities.QuietUser[] | undefined>([]);
   const [fetchTeams, setFetchTeams] = useState<SystemEntities.QuietTeam[] | undefined>([]);
   const [fetching, setFetching] = useState<boolean>(false);
-
-  const nonsupportMsg = 'nonsupport FormType';
 
   async function handleSubmit() {
     const values = await form.validateFields();
