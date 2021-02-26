@@ -1,4 +1,6 @@
 declare namespace ScrumEntities {
+  import QuietTeam = SystemEntities.QuietTeam;
+
   export type ScrumProject = SystemEntities.BaseEntity & {
     name: string;
     manager: string;
@@ -8,5 +10,6 @@ declare namespace ScrumEntities {
     taskTemplateId?: string;
     buildTool?: string;
     managerName?: string;
+    teams?: QuietTeam[];
   };
 }

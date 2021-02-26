@@ -1,16 +1,12 @@
 import type { CSSProperties } from 'react';
 import React, { useEffect, useState } from 'react';
 import ProCard from '@ant-design/pro-card';
-import {
-  AppstoreAddOutlined,
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { AppstoreAddOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
 import { Form, Space, Typography } from 'antd';
 import { OperationType } from '@/types/Type';
 import { allMyProjects } from '@/services/scrum/ScrumProject';
+import ProjectSetting from '@/pages/scrum/project/components/ProjectSetting';
 
 const Project: React.FC<any> = () => {
   const addIconDefaultStyle = { fontSize: '36px' };
@@ -19,24 +15,30 @@ const Project: React.FC<any> = () => {
     fontSize: '39px',
     color: '#1890ff',
   };
-  const [projectForm] = Form.useForm();
+  const [form] = Form.useForm();
+  const [settingForm] = Form.useForm();
 
   const [addIconStyle, setAddIconStyle] = useState<CSSProperties>(addIconDefaultStyle);
   const [projectFormVisible, setProjectFormVisible] = useState<boolean>(false);
   const [projectFormOperationType, setProjectFormOperationType] = useState<OperationType>();
   const [cardProjects, setCardProjects] = useState<any[]>([]);
+  const [updateInfo, setUpdateInfo] = useState<ScrumEntities.ScrumProject>();
 
-  useEffect(() => {
+  function loadAllMyProject() {
     allMyProjects().then((resp) => {
       let buildCardProject: React.SetStateAction<any[]> = [];
+      buildCardProject.push({ key: 'newProjectKey' });
       buildCardProject = buildCardProject.concat(resp.managedProjects, resp.projects);
-      buildCardProject.unshift({ key: 'empty' });
       const addEmptyProject = 5 - (buildCardProject.length % 5);
       for (let i = 0; i < addEmptyProject; i += 1) {
         buildCardProject.push({ key: `empty${i}` });
       }
       setCardProjects(buildCardProject);
     });
+  }
+
+  useEffect(() => {
+    loadAllMyProject();
   }, []);
 
   function handleMouseOver() {
@@ -50,6 +52,20 @@ const Project: React.FC<any> = () => {
   function handleNewProjectClick() {
     setProjectFormVisible(true);
     setProjectFormOperationType(OperationType.CREATE);
+    loadAllMyProject();
+  }
+
+  function handleEditClick(project: ScrumEntities.ScrumProject) {
+    form.setFieldsValue({
+      ...project,
+      manager: { value: project.manager, label: project.managerName },
+      selectTeams: project.teams?.map((team) => {
+        return { value: team.id, label: team.teamName };
+      }),
+    });
+    setUpdateInfo(project);
+    setProjectFormOperationType(OperationType.UPDATE);
+    setProjectFormVisible(true);
   }
 
   return (
@@ -62,6 +78,8 @@ const Project: React.FC<any> = () => {
                 key={project.key}
                 layout={'center'}
                 hoverable={true}
+                size={'small'}
+                style={{ minHeight: '168' }}
                 onMouseOver={handleMouseOver}
                 onMouseLeave={handleMouseLeave}
                 onClick={handleNewProjectClick}
@@ -77,9 +95,14 @@ const Project: React.FC<any> = () => {
               title={project.name}
               size={'small'}
               actions={[
-                <SettingOutlined key="setting" />,
-                <EditOutlined key="edit" />,
-                <EllipsisOutlined key="ellipsis" />,
+                <ProjectSetting
+                  key={'setting'}
+                  projectInfo={project}
+                  form={settingForm}
+                  afterSettingUpdate={loadAllMyProject}
+                />,
+                <EditOutlined key={'edit'} onClick={() => handleEditClick(project)} />,
+                <DeleteOutlined />,
               ]}
             >
               <Space direction={'vertical'}>
@@ -104,9 +127,11 @@ const Project: React.FC<any> = () => {
       {projectFormVisible && (
         <ProjectForm
           visible={projectFormVisible}
-          form={projectForm}
+          form={form}
+          updateInfo={updateInfo}
           operationType={projectFormOperationType}
           onCancel={() => setProjectFormVisible(false)}
+          afterAction={loadAllMyProject}
         />
       )}
     </>

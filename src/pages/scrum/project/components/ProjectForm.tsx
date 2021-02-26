@@ -33,7 +33,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
         await saveProject({
           ...values,
           manager: values.manager.value,
-          teamIds: values.teams.map((v: { value: any }) => v.value),
+          teamIds: values.selectTeams.map((v: { value: any }) => v.value),
         });
         break;
       case OperationType.UPDATE:
@@ -41,7 +41,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
           ...updateInfo,
           ...values,
           manager: values.manager.value,
-          teamIds: values.teams.map((v: { value: any }) => v.value),
+          teamIds: values.selectTeams.map((v: { value: any }) => v.value),
         });
         break;
       default:
@@ -104,7 +104,9 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
       .finally(() => setFetching(false));
   }
 
-  function handleTeamsChange() {}
+  function handleTeamsChange() {
+    setFetchTeams([]);
+  }
 
   return (
     <Modal
@@ -163,7 +165,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
         </Form.Item>
         <Form.Item
           label={'负责团队'}
-          name={'teams'}
+          name={'selectTeams'}
           rules={[{ required: true, message: '请选择负责该项目的团队' }]}
         >
           <Select
@@ -184,29 +186,6 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
               </Select.Option>
             ))}
           </Select>
-        </Form.Item>
-        <Form.Item label={'构建工具'} name={'buildTool'}>
-          <Select placeholder={'请选择'} allowClear>
-            <Select.Option value={'MAVEN'}>Maven</Select.Option>
-            <Select.Option value={'GRADLE'}>Gradle</Select.Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          label={'需求前缀'}
-          name={'demandPrefix'}
-          rules={[{ max: 6, message: '需求前缀长度不能超过 6' }]}
-        >
-          <Input placeholder="请输入" />
-        </Form.Item>
-        <Form.Item
-          label={'任务前缀'}
-          name={'taskPrefix'}
-          rules={[{ max: 6, message: '任务前缀长度不能超过 6' }]}
-        >
-          <Input placeholder="请输入" />
-        </Form.Item>
-        <Form.Item label={'任务模版'} name={'taskTemplateId'}>
-          <Input placeholder="请选择" />
         </Form.Item>
         <Form.Item
           label={'项目描述'}
