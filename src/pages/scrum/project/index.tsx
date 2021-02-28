@@ -79,7 +79,7 @@ const Project: React.FC<any> = () => {
                 layout={'center'}
                 hoverable={true}
                 size={'small'}
-                style={{ minHeight: '168' }}
+                style={{ minHeight: '168px' }}
                 onMouseOver={handleMouseOver}
                 onMouseLeave={handleMouseLeave}
                 onClick={handleNewProjectClick}
@@ -112,7 +112,7 @@ const Project: React.FC<any> = () => {
                 <Typography.Paragraph
                   type={'secondary'}
                   ellipsis={{
-                    rows: 2,
+                    rows: 1,
                   }}
                 >
                   {project.description}
