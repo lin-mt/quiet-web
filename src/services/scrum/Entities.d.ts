@@ -12,4 +12,9 @@ declare namespace ScrumEntities {
     managerName?: string;
     teams?: QuietTeam[];
   };
+
+  export type ScrumTemplate = SystemEntities.BaseEntity & {
+    name: string;
+    description?: string;
+  };
 }

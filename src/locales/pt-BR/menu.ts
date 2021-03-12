@@ -12,6 +12,7 @@ export default {
   'menu.system.data-dictionary': '数据字典',
   'menu.scrum': '敏捷管理',
   'menu.scrum.project': '项目管理',
+  'menu.scrum.template': '模板管理',
 
   'menu.welcome': 'Welcome',
   'menu.more-blocks': 'More Blocks',

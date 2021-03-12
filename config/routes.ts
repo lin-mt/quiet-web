@@ -22,6 +22,11 @@
         name: 'project',
         component: './scrum/project',
       },
+      {
+        path: '/scrum/template',
+        name: 'template',
+        component: './scrum/template',
+      },
     ],
   },
   {
