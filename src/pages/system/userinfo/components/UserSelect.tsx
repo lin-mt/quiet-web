@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, Select, Spin } from 'antd';
-import { listUsersByUsername } from '@/services/system/QuietUser';
+import { listUsersByName } from '@/services/system/QuietUser';
 import multipleSelectTagRender from '@/utils/RenderUtils';
 
 const { Option } = Select;
@@ -36,9 +36,9 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
     onCancel();
   }
 
-  function findUserByUserName(username: string) {
+  function findUserByName(name: string) {
     setFetching(true);
-    listUsersByUsername(username).then((resp) => {
+    listUsersByName(name).then((resp) => {
       setFetchUsers(resp.data);
       setFetching(false);
     });
@@ -77,16 +77,16 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
         labelInValue
         value={selectedUsers}
         tagRender={multipleSelectTagRender}
-        placeholder="请输入用户名"
+        placeholder="请输入用户名/昵称"
         notFoundContent={fetching ? <Spin size="small" /> : null}
         filterOption={false}
-        onSearch={findUserByUserName}
+        onSearch={findUserByName}
         onChange={handleSelectedChange}
         onBlur={() => setFetchUsers([])}
       >
         {fetchUsers?.map((user) => (
           <Option key={user.id} value={user.id}>
-            {user.username}
+            {user.nickname}
           </Option>
         ))}
       </Select>

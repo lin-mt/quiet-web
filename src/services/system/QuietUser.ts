@@ -2,9 +2,9 @@ import { request } from 'umi';
 import type { Result } from '@/types/Result';
 import type { ReactText } from 'react';
 
-export function listUsersByUsername(username: string) {
-  return request<Result<SystemEntities.QuietUser[]>>('/api/system/user/listUsersByUsername', {
-    data: { params: { username } },
+export function listUsersByName(name: string) {
+  return request<Result<SystemEntities.QuietUser[]>>('/api/system/user/listUsersByName', {
+    data: { name },
     method: 'POST',
   });
 }

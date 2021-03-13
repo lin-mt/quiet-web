@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Input, Modal, Select, Spin } from 'antd';
 import { saveTeam, updateTeam } from '@/services/system/QuietTeam';
-import { listUsersByUsername } from '@/services/system/QuietUser';
+import { listUsersByName } from '@/services/system/QuietUser';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
 import multipleSelectTagRender from '@/utils/RenderUtils';
@@ -23,17 +23,17 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
   const [fetchUsers, setFetchUsers] = useState<SystemEntities.QuietUser[] | undefined>([]);
   const [productOwners, setProductOwners] = useState<any[]>(
     form.getFieldValue('productOwners')?.map((user: SystemEntities.QuietUser) => {
-      return { value: user.id, label: user.username };
+      return { value: user.id, label: user.nickname };
     }),
   );
   const [scrumMasters, setScrumMasters] = useState<any[]>(
     form.getFieldValue('scrumMasters')?.map((user: SystemEntities.QuietUser) => {
-      return { value: user.id, label: user.username };
+      return { value: user.id, label: user.nickname };
     }),
   );
   const [members, setMembers] = useState<any[]>(
     form.getFieldValue('members')?.map((user: SystemEntities.QuietUser) => {
-      return { value: user.id, label: user.username };
+      return { value: user.id, label: user.nickname };
     }),
   );
   const [fetching, setFetching] = useState<boolean>(false);
@@ -110,9 +110,9 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
     onCancel();
   }
 
-  function findUserByUserName(username: string) {
+  function findUserByName(name: string) {
     setFetching(true);
-    listUsersByUsername(username).then((resp) => {
+    listUsersByName(name).then((resp) => {
       setFetchUsers(resp.data);
       setFetching(false);
     });
@@ -175,16 +175,16 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
               labelInValue
               value={productOwners}
               tagRender={multipleSelectTagRender}
-              placeholder="请输入 ProductOwner 用户名"
+              placeholder="请输入 ProductOwner 用户名/昵称"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               filterOption={false}
-              onSearch={findUserByUserName}
+              onSearch={findUserByName}
               onChange={handleProductOwnersChange}
               onBlur={() => setFetchUsers([])}
             >
               {fetchUsers?.map((user) => (
                 <Option key={user.id} value={user.id}>
-                  {user.username}
+                  {user.nickname}
                 </Option>
               ))}
             </Select>
@@ -197,16 +197,16 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
               labelInValue
               value={scrumMasters}
               tagRender={multipleSelectTagRender}
-              placeholder="请输入 ScrumMaster 用户名"
+              placeholder="请输入 ScrumMaster 用户名/昵称"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               filterOption={false}
-              onSearch={findUserByUserName}
+              onSearch={findUserByName}
               onChange={handleScrumMastersChange}
               onBlur={() => setFetchUsers([])}
             >
               {fetchUsers?.map((user) => (
                 <Option key={user.id} value={user.id}>
-                  {user.username}
+                  {user.nickname}
                 </Option>
               ))}
             </Select>
@@ -222,13 +222,13 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
               placeholder="请输入团队成员用户名"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               filterOption={false}
-              onSearch={findUserByUserName}
+              onSearch={findUserByName}
               onChange={handleMembersChange}
               onBlur={() => setFetchUsers([])}
             >
               {fetchUsers?.map((user) => (
                 <Option key={user.id} value={user.id}>
-                  {user.username}
+                  {user.nickname}
                 </Option>
               ))}
             </Select>
