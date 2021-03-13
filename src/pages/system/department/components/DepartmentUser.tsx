@@ -43,6 +43,11 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
       valueType: 'text',
     },
     {
+      title: '昵称',
+      dataIndex: 'nickname',
+      valueType: 'text',
+    },
+    {
       title: '头像',
       dataIndex: 'avatar',
       valueType: 'avatar',

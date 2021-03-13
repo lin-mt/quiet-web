@@ -34,9 +34,9 @@ const TeamManagement: React.FC<any> = () => {
       render: (_, record) => (
         <Space>
           {record.productOwners
-            ? record.productOwners.map(({ id, username }) => (
+            ? record.productOwners.map(({ id, nickname }) => (
                 <Tag color={'#108EE9'} key={id}>
-                  {username}
+                  {nickname}
                 </Tag>
               ))
             : '-'}
@@ -50,9 +50,9 @@ const TeamManagement: React.FC<any> = () => {
       render: (_, record) => (
         <Space>
           {record.scrumMasters
-            ? record.scrumMasters.map(({ id, username }) => (
+            ? record.scrumMasters.map(({ id, nickname }) => (
                 <Tag color={'#108EE9'} key={id}>
-                  {username}
+                  {nickname}
                 </Tag>
               ))
             : '-'}
@@ -66,9 +66,9 @@ const TeamManagement: React.FC<any> = () => {
       render: (_, record) => (
         <Space>
           {record.members
-            ? record.members.map(({ id, username }) => (
+            ? record.members.map(({ id, nickname }) => (
                 <Tag color={'#108EE9'} key={id}>
-                  {username}
+                  {nickname}
                 </Tag>
               ))
             : '-'}

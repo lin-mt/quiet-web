@@ -44,6 +44,11 @@ const UserInfo: React.FC<any> = () => {
       valueType: 'text',
     },
     {
+      title: '昵称',
+      dataIndex: 'nickname',
+      valueType: 'text',
+    },
+    {
       title: '密码',
       dataIndex: 'secretCode',
       valueType: 'text',
@@ -77,7 +82,7 @@ const UserInfo: React.FC<any> = () => {
                     onClose={(e) => e.preventDefault()}
                     closeIcon={
                       <Popconfirm
-                        title={`确定删除用户 ${record.username} 的 ${roleCnName} 角色吗？`}
+                        title={`确定删除用户 ${record.nickname} 的 ${roleCnName} 角色吗？`}
                         icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                         /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
                         onConfirm={confirmRemoveUserRole.bind(this, record.id, id)}
