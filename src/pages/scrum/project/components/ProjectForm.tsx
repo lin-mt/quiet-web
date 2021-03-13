@@ -3,7 +3,7 @@ import { Button, Form, Input, Modal, Select, Spin } from 'antd';
 import { saveProject, updateProject } from '@/services/scrum/ScrumProject';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
-import { listUsersByUsername } from '@/services/system/QuietUser';
+import { listUsersByName } from '@/services/system/QuietUser';
 import { listTeamsByTeamName } from '@/services/system/QuietTeam';
 import multipleSelectTagRender from '@/utils/RenderUtils';
 
@@ -82,9 +82,9 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
     onCancel();
   }
 
-  function findUserByUserName(username: string) {
+  function findUserByName(name: string) {
     setFetching(true);
-    listUsersByUsername(username)
+    listUsersByName(name)
       .then((resp) => {
         setFetchUsers(resp.data);
       })
@@ -149,16 +149,16 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
           <Select
             showSearch={true}
             labelInValue={true}
-            placeholder={'请输入项目用户名'}
+            placeholder={'请输入项目经理用户名/昵称'}
             notFoundContent={fetching ? <Spin size="small" /> : null}
             filterOption={false}
-            onSearch={findUserByUserName}
+            onSearch={findUserByName}
             onChange={handleManagerChange}
             onBlur={() => setFetchUsers([])}
           >
             {fetchUsers?.map((user) => (
               <Select.Option key={user.id} value={user.id}>
-                {user.username}
+                {user.nickname}
               </Select.Option>
             ))}
           </Select>
