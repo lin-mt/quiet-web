@@ -77,7 +77,7 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
         labelInValue
         value={selectedUsers}
         tagRender={multipleSelectTagRender}
-        placeholder="请输入用户名/昵称"
+        placeholder="请输入用户名/姓名"
         notFoundContent={fetching ? <Spin size="small" /> : null}
         filterOption={false}
         onSearch={findUserByName}
@@ -86,7 +86,7 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
       >
         {fetchUsers?.map((user) => (
           <Option key={user.id} value={user.id}>
-            {user.nickname}
+            {user.fullName}
           </Option>
         ))}
       </Select>

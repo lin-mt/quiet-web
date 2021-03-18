@@ -23,17 +23,17 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
   const [fetchUsers, setFetchUsers] = useState<SystemEntities.QuietUser[] | undefined>([]);
   const [productOwners, setProductOwners] = useState<any[]>(
     form.getFieldValue('productOwners')?.map((user: SystemEntities.QuietUser) => {
-      return { value: user.id, label: user.nickname };
+      return { value: user.id, label: user.fullName };
     }),
   );
   const [scrumMasters, setScrumMasters] = useState<any[]>(
     form.getFieldValue('scrumMasters')?.map((user: SystemEntities.QuietUser) => {
-      return { value: user.id, label: user.nickname };
+      return { value: user.id, label: user.fullName };
     }),
   );
   const [members, setMembers] = useState<any[]>(
     form.getFieldValue('members')?.map((user: SystemEntities.QuietUser) => {
-      return { value: user.id, label: user.nickname };
+      return { value: user.id, label: user.fullName };
     }),
   );
   const [fetching, setFetching] = useState<boolean>(false);
@@ -175,7 +175,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
               labelInValue
               value={productOwners}
               tagRender={multipleSelectTagRender}
-              placeholder="请输入 ProductOwner 用户名/昵称"
+              placeholder="请输入 ProductOwner 用户名/姓名"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               filterOption={false}
               onSearch={findUserByName}
@@ -184,7 +184,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
             >
               {fetchUsers?.map((user) => (
                 <Option key={user.id} value={user.id}>
-                  {user.nickname}
+                  {user.fullName}
                 </Option>
               ))}
             </Select>
@@ -197,7 +197,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
               labelInValue
               value={scrumMasters}
               tagRender={multipleSelectTagRender}
-              placeholder="请输入 ScrumMaster 用户名/昵称"
+              placeholder="请输入 ScrumMaster 用户名/姓名"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               filterOption={false}
               onSearch={findUserByName}
@@ -206,7 +206,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
             >
               {fetchUsers?.map((user) => (
                 <Option key={user.id} value={user.id}>
-                  {user.nickname}
+                  {user.fullName}
                 </Option>
               ))}
             </Select>
@@ -228,7 +228,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
             >
               {fetchUsers?.map((user) => (
                 <Option key={user.id} value={user.id}>
-                  {user.nickname}
+                  {user.fullName}
                 </Option>
               ))}
             </Select>
