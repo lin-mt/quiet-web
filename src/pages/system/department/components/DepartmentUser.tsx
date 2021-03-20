@@ -43,8 +43,8 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
       valueType: 'text',
     },
     {
-      title: '昵称',
-      dataIndex: 'nickname',
+      title: '姓名',
+      dataIndex: 'fullName',
       valueType: 'text',
     },
     {

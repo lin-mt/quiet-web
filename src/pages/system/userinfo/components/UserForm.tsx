@@ -113,14 +113,14 @@ const UserForm: React.FC<UserFormProps> = (props) => {
           </Col>
           <Col span={8}>
             <Form.Item
-              label="昵称"
-              name="nickname"
+              label="姓名"
+              name="fullName"
               rules={[
-                { required: true, message: '请输入昵称' },
-                { max: 10, message: '昵称的长度不能超过 10' },
+                { required: true, message: '请输入姓名' },
+                { max: 10, message: '姓名的长度不能超过 10' },
               ]}
             >
-              <Input placeholder="请输入昵称" />
+              <Input placeholder="请输入姓名" />
             </Form.Item>
           </Col>
           <Col span={8}>

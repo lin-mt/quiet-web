@@ -34,7 +34,7 @@ declare namespace SystemEntities {
 
   export type QuietUser = BaseEntity & {
     username: string;
-    nickname: string;
+    fullName: string;
     avatar?: string;
     gender?: string;
     phoneNumber?: string;
