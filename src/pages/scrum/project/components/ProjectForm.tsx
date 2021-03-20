@@ -149,7 +149,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
           <Select
             showSearch={true}
             labelInValue={true}
-            placeholder={'请输入项目经理用户名/昵称'}
+            placeholder={'请输入项目经理用户名/姓名'}
             notFoundContent={fetching ? <Spin size="small" /> : null}
             filterOption={false}
             onSearch={findUserByName}
@@ -158,7 +158,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
           >
             {fetchUsers?.map((user) => (
               <Select.Option key={user.id} value={user.id}>
-                {user.nickname}
+                {user.fullName}
               </Select.Option>
             ))}
           </Select>
