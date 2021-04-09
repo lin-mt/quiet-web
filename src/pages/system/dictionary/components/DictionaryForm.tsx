@@ -1,20 +1,20 @@
 import type { BaseSyntheticEvent } from 'react';
 import React, { useState } from 'react';
 import { Button, Col, Form, Input, Modal } from 'antd';
-import { saveDataDictionary, updateDataDictionary } from '@/services/system/QuietDataDictionary';
+import { saveDictionary, updateDictionary } from '@/services/system/QuietDictionary';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
 
-type DataDictionaryFormProps = {
+type DictionaryFormProps = {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
-  updateInfo?: SystemEntities.QuietDataDictionary;
+  updateInfo?: SystemEntities.QuietDictionary;
   afterAction?: () => void;
 };
 
-const DataDictionaryForm: React.FC<DataDictionaryFormProps> = (props) => {
+const DictionaryForm: React.FC<DictionaryFormProps> = (props) => {
   const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [keyAndParentIdRequired, setKeyAndParentIdRequired] = useState<boolean>(false);
@@ -25,10 +25,10 @@ const DataDictionaryForm: React.FC<DataDictionaryFormProps> = (props) => {
     setSubmitting(true);
     switch (operationType) {
       case OperationType.CREATE:
-        await saveDataDictionary(values);
+        await saveDictionary(values);
         break;
       case OperationType.UPDATE:
-        await updateDataDictionary({ ...updateInfo, ...values });
+        await updateDictionary({ ...updateInfo, ...values });
         break;
       default:
         throw Error(nonsupportMsg);
@@ -95,7 +95,7 @@ const DataDictionaryForm: React.FC<DataDictionaryFormProps> = (props) => {
         </Button>,
       ]}
     >
-      <Form form={form} name="dataDictionaryForm" labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
+      <Form form={form} name="dictionaryForm" labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
         <Col>
           <Form.Item
             label="字典类型"
@@ -155,4 +155,4 @@ const DataDictionaryForm: React.FC<DataDictionaryFormProps> = (props) => {
   );
 };
 
-export default DataDictionaryForm;
+export default DictionaryForm;

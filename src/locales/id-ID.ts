@@ -5,7 +5,7 @@ import pwa from '@/locales/id-ID/pwa';
 import settingDrawer from '@/locales/id-ID/settingDrawer';
 import settings from '@/locales/id-ID/settings';
 import pages from '@/locales/id-ID/pages';
-import dataDictionary from '@/locales/id-ID/dataDictionary';
+import dictionary from '@/locales/id-ID/dictionary';
 
 export default {
   'navbar.lang': 'Bahasa',
@@ -23,5 +23,5 @@ export default {
   ...pwa,
   ...component,
   ...pages,
-  ...dataDictionary,
+  ...dictionary,
 };

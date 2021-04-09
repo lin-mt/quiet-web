@@ -4,7 +4,7 @@ import menu from '@/locales/pt-BR/menu';
 import pwa from '@/locales/pt-BR/pwa';
 import settingDrawer from '@/locales/pt-BR/settingDrawer';
 import settings from '@/locales/pt-BR/settings';
-import dataDictionary from '@/locales/pt-BR/dataDictionary';
+import dictionary from '@/locales/pt-BR/dictionary';
 
 export default {
   'navBar.lang': 'Idiomas',
@@ -18,5 +18,5 @@ export default {
   ...settings,
   ...pwa,
   ...component,
-  ...dataDictionary,
+  ...dictionary,
 };
