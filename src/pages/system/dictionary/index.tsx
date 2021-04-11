@@ -39,8 +39,8 @@ const Dictionary: React.FC<any> = () => {
       valueType: 'text',
     },
     {
-      title: 'value',
-      dataIndex: 'value',
+      title: 'label',
+      dataIndex: 'label',
       valueType: 'text',
     },
     {

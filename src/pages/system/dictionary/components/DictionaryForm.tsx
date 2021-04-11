@@ -17,7 +17,10 @@ type DictionaryFormProps = {
 const DictionaryForm: React.FC<DictionaryFormProps> = (props) => {
   const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [keyAndParentIdRequired, setKeyAndParentIdRequired] = useState<boolean>(false);
+  const [typeRequired, setTypeRequired] = useState<boolean>(true);
+  const [keyRequired, setKeyRequired] = useState<boolean>(false);
+  const [showTypeInput, setShowTypeInput] = useState<boolean>(true);
+  const [showKeyInput, setShowKeyInput] = useState<boolean>(false);
   const nonsupportMsg = 'nonsupport FormType';
 
   async function handleSubmit() {
@@ -68,9 +71,13 @@ const DictionaryForm: React.FC<DictionaryFormProps> = (props) => {
     onCancel();
   }
 
-  function keyAndParentIdOnChange(e: BaseSyntheticEvent) {
+  function parentIdOnChange(e: BaseSyntheticEvent) {
     const { value } = e.target;
-    setKeyAndParentIdRequired(value && value.length > 0);
+    const hasParentIdValue = value && value.length > 0;
+    setShowKeyInput(hasParentIdValue);
+    setKeyRequired(hasParentIdValue);
+    setShowTypeInput(!hasParentIdValue);
+    setTypeRequired(!hasParentIdValue);
   }
 
   return (
@@ -98,48 +105,48 @@ const DictionaryForm: React.FC<DictionaryFormProps> = (props) => {
       <Form form={form} name="dictionaryForm" labelCol={{ span: 5 }} wrapperCol={{ span: 18 }}>
         <Col>
           <Form.Item
-            label="字典类型"
-            name="type"
+            label="label"
+            name="label"
             rules={[
-              { required: true, message: '请输入字典类型' },
-              { max: 30, message: '字典类型长度不能超过 30' },
+              { required: true, message: '请输入label' },
+              { type: 'string', max: 30, message: 'label长度不能超过 30' },
             ]}
           >
-            <Input placeholder="请输入字典类型" />
+            <Input placeholder="请输入label" />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item
-            label="key"
-            name="key"
-            rules={[
-              { required: keyAndParentIdRequired, message: '请输入key' },
-              { type: 'string', max: 30, message: 'key长度不能超过 30' },
-            ]}
-          >
-            <Input placeholder="请输入key" onChange={keyAndParentIdOnChange} />
+          <Form.Item label="父数据字典 ID" name="parentId">
+            <Input placeholder="请输入父数据字典 ID" onChange={parentIdOnChange} />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item
-            label="value"
-            name="value"
-            rules={[
-              { required: true, message: '请输入value' },
-              { type: 'string', max: 30, message: 'value长度不能超过 30' },
-            ]}
-          >
-            <Input placeholder="请输入key" />
-          </Form.Item>
+          {showTypeInput && (
+            <Form.Item
+              label="字典类型"
+              name="type"
+              rules={[
+                { required: typeRequired, message: '请输入字典类型' },
+                { max: 30, message: '字典类型长度不能超过 30' },
+              ]}
+            >
+              <Input placeholder="请输入字典类型" />
+            </Form.Item>
+          )}
         </Col>
         <Col>
-          <Form.Item
-            label="父数据字典 ID"
-            name="parentId"
-            rules={[{ required: keyAndParentIdRequired, message: '请输入父数据字典ID' }]}
-          >
-            <Input placeholder="请输入父数据字典 ID" onChange={keyAndParentIdOnChange} />
-          </Form.Item>
+          {showKeyInput && (
+            <Form.Item
+              label="key"
+              name="key"
+              rules={[
+                { required: keyRequired, message: '请输入key' },
+                { type: 'string', max: 30, message: 'key长度不能超过 30' },
+              ]}
+            >
+              <Input placeholder="请输入key" />
+            </Form.Item>
+          )}
         </Col>
         <Col>
           <Form.Item
