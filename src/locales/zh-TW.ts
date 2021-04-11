@@ -4,7 +4,7 @@ import menu from '@/locales/zh-TW/menu';
 import pwa from '@/locales/zh-TW/pwa';
 import settingDrawer from '@/locales/zh-TW/settingDrawer';
 import settings from '@/locales/zh-TW/settings';
-import dataDictionary from '@/locales/zh-TW/dataDictionary';
+import dictionary from '@/locales/zh-TW/dictionary';
 
 export default {
   'navBar.lang': '語言',
@@ -18,5 +18,5 @@ export default {
   ...settings,
   ...pwa,
   ...component,
-  ...dataDictionary,
+  ...dictionary,
 };

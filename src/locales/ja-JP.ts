@@ -5,7 +5,7 @@ import settings from '@/locales/ja-JP/settings';
 import pwa from '@/locales/ja-JP/pwa';
 import component from '@/locales/ja-JP/component';
 import pages from '@/locales/ja-JP/pages';
-import dataDictionary from '@/locales/ja-JP/dataDictionary';
+import dictionary from '@/locales/ja-JP/dictionary';
 
 export default {
   'navBar.lang': '言語',
@@ -22,5 +22,5 @@ export default {
   ...pwa,
   ...component,
   ...pages,
-  ...dataDictionary,
+  ...dictionary,
 };

@@ -54,10 +54,10 @@ declare namespace SystemEntities {
     remark?: string;
   };
 
-  export type QuietDataDictionary = BaseEntity & {
+  export type QuietDictionary = BaseEntity & {
     type: string;
     key: string;
-    value: string;
+    label: string;
     parentId?: string;
     remark?: string;
   };

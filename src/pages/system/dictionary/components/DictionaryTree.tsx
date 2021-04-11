@@ -1,10 +1,10 @@
 import type { ReactText } from 'react';
 import React, { useEffect, useState } from 'react';
 import { Tree, Modal } from 'antd';
-import { treeDataDictionaryByType } from '@/services/system/QuietDataDictionary';
+import { treeDictionaryByType } from '@/services/system/QuietDictionary';
 import type { DataNode } from 'antd/lib/tree';
 
-type DataDictionaryTreeProps = {
+type DictionaryTreeProps = {
   type?: string;
   visible: boolean;
   maskClosable?: boolean;
@@ -16,7 +16,7 @@ type DataDictionaryTreeProps = {
   afterClose?: () => void;
 };
 
-const DataDictionaryTree: React.FC<DataDictionaryTreeProps> = (props) => {
+const DictionaryTree: React.FC<DictionaryTreeProps> = (props) => {
   const {
     type,
     visible,
@@ -33,14 +33,14 @@ const DataDictionaryTree: React.FC<DataDictionaryTreeProps> = (props) => {
   const [selectedKeys, setSelectedKeys] = useState<ReactText[]>([]);
 
   useEffect(() => {
-    const buildDataDictionaryTreeNodes = (data: any) => {
+    const buildDictionaryTreeNodes = (data: any) => {
       const buildResult = JSON.parse(JSON.stringify(data));
       if (data) {
         for (let i = 0; i < data.length; i += 1) {
           buildResult[i].key = data[i].id;
           buildResult[i].title = data[i].value;
           if (data[i].children) {
-            buildResult[i].children = buildDataDictionaryTreeNodes(data[i].children);
+            buildResult[i].children = buildDictionaryTreeNodes(data[i].children);
           } else {
             buildResult[i].isLeaf = true;
           }
@@ -48,8 +48,8 @@ const DataDictionaryTree: React.FC<DataDictionaryTreeProps> = (props) => {
       }
       return buildResult;
     };
-    treeDataDictionaryByType(type).then((resp) => {
-      setTreeData(buildDataDictionaryTreeNodes(resp));
+    treeDictionaryByType(type).then((resp) => {
+      setTreeData(buildDictionaryTreeNodes(resp));
     });
   }, [type]);
 
@@ -89,4 +89,4 @@ const DataDictionaryTree: React.FC<DataDictionaryTreeProps> = (props) => {
   );
 };
 
-export default DataDictionaryTree;
+export default DictionaryTree;
