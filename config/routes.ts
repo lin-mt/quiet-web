@@ -30,7 +30,7 @@
       },
       {
         path: '/system/dictionary',
-        name: 'data-dictionary',
+        name: 'dictionary',
         component: './system/dictionary',
       },
       {

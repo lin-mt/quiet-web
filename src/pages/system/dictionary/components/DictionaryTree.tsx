@@ -38,7 +38,7 @@ const DictionaryTree: React.FC<DictionaryTreeProps> = (props) => {
       if (data) {
         for (let i = 0; i < data.length; i += 1) {
           buildResult[i].key = data[i].id;
-          buildResult[i].title = data[i].value;
+          buildResult[i].title = data[i].label;
           if (data[i].children) {
             buildResult[i].children = buildDictionaryTreeNodes(data[i].children);
           } else {
