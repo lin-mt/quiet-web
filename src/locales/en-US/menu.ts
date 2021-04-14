@@ -10,9 +10,9 @@ export default {
   'menu.system.team': 'TeamManagement',
   'menu.system.client': 'ApplicationAuthorization',
   'menu.system.dictionary': 'Dictionary',
-  'menu.scrum': '敏捷管理',
-  'menu.scrum.project': '项目管理',
-  'menu.scrum.template': '模板管理',
+  'menu.scrum': 'AgileManagement',
+  'menu.scrum.project': 'ProjectManagement',
+  'menu.scrum.template': 'TemplateManagement',
 
   'menu.welcome': 'Welcome',
   'menu.more-blocks': 'More Blocks',
