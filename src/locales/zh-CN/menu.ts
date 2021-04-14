@@ -9,7 +9,7 @@ export default {
   'menu.system.department': '部门管理',
   'menu.system.team': '团队管理',
   'menu.system.client': '应用授权',
-  'menu.system.data-dictionary': '数据字典',
+  'menu.system.dictionary': '数据字典',
   'menu.scrum': '敏捷管理',
   'menu.scrum.project': '项目管理',
   'menu.scrum.template': '模板管理',

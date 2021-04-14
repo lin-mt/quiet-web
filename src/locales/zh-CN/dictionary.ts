@@ -1,4 +1,4 @@
 export default {
-  // 格式：data.dictionary.${type}.${key}
-  'dictionary.demandType.key': '需求类型',
+  // 格式：app.dictionary.${type}.${key}
+  'app.dictionary.demand-type.key': '需求类型',
 };
