@@ -1,11 +1,11 @@
-import component from '@/locales/zh-CN/component';
-import globalHeader from '@/locales/zh-CN/globalHeader';
-import menu from '@/locales/zh-CN/menu';
-import pwa from '@/locales/zh-CN/pwa';
-import settingDrawer from '@/locales/zh-CN/settingDrawer';
-import settings from '@/locales/zh-CN/settings';
-import pages from '@/locales/zh-CN/pages';
-import dictionary from '@/locales/zh-CN/dictionary';
+import component from './zh-CN/component';
+import globalHeader from './zh-CN/globalHeader';
+import menu from './zh-CN/menu';
+import pwa from './zh-CN/pwa';
+import settingDrawer from './zh-CN/settingDrawer';
+import settings from './zh-CN/settings';
+import pages from './zh-CN/pages';
+import dictionary from './zh-CN/dictionary';
 
 export default {
   'navBar.lang': '语言',

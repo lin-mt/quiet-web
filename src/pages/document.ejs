@@ -4,16 +4,24 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta
+      name="keywords"
+      content="antd,umi,umijs,ant design,脚手架,布局, Ant Design,项目,Pro,admin,控制台,主页,开箱即用,中后台,解决方案,组件库"
+    />
+    <meta
+      name="description"
+      content="An out-of-box UI solution for enterprise applications as a React boilerplate."
+    />
+    <meta name="description" content="开箱即用的中台前端/设计解决方案。" />
+    <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
     />
-    <title>Quiet System</title>
+    <title>Quiet</title>
     <link rel="icon" href="<%= context.config.publicPath +'favicon.ico'%>" type="image/x-icon" />
   </head>
   <body>
     <noscript>Out-of-the-box mid-stage front/design solution!</noscript>
     <div id="root">
-      <!--suppress HtmlUnknownTag -->
       <style>
         html,
         body,
@@ -50,6 +58,9 @@
           opacity: 0;
           -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
           transition: -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+          transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+          transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
+            -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
           -webkit-font-feature-settings: 'tnum';
           font-feature-settings: 'tnum';
         }
@@ -188,7 +199,6 @@
             src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
             width="32"
             style="margin-right: 8px"
-            alt="Quiet"
           />
           Quiet
         </div>

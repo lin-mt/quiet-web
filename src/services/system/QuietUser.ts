@@ -39,6 +39,13 @@ export async function updateUser(params?: any) {
   });
 }
 
+export async function getNotices(options?: Record<string, any>) {
+  return request<API.NoticeIconList>('/api/notices', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 export async function queryCurrent() {
   return request<Result<SystemEntities.QuietUser>>('/api/system/user/currentUserInfo', {
     method: 'POSt',

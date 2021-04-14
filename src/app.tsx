@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { message, notification } from 'antd';
@@ -8,22 +7,24 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import type { ResponseError } from 'umi-request';
 import { queryCurrent } from './services/system/QuietUser';
-import defaultSettings from '../config/defaultSettings';
 import type { Result } from '@/types/Result';
 import { ResultType } from '@/types/Result';
 import { LocalStorage, ResultCode, ResultUrl, System } from '@/constant';
 import type { RequestOptionsInit } from 'umi-request';
 import { request as umiReq } from 'umi';
 
-/**
- * 获取用户信息比较慢的时候会展示一个 loading
- */
+const loginPath = '/login';
+
+/** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
   loading: <PageLoading />,
 };
 
+/**
+ * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
+ * */
 export async function getInitialState(): Promise<{
-  settings?: LayoutSettings;
+  settings?: Partial<LayoutSettings>;
   currentUser?: SystemEntities.QuietUser;
   tokenInfo?: SystemEntities.TokenInfo;
   fetchUserInfo?: () => Promise<Result<SystemEntities.QuietUser> | undefined>;
@@ -37,33 +38,38 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
   // 如果是登录页面，不执行
-  if (history.location.pathname !== '/login') {
+  if (history.location.pathname !== loginPath) {
     const result = await fetchUserInfo();
     const currentUser = result?.data;
     return {
       fetchUserInfo,
       currentUser,
-      settings: defaultSettings,
+      settings: {},
     };
   }
   return {
     fetchUserInfo,
-    settings: defaultSettings,
+    settings: {},
   };
 }
 
+// https://umijs.org/zh-CN/plugins/plugin-layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
+    // waterMarkProps: {
+    //   content: initialState?.currentUser?.username,
+    // },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== '/login') {
-        history.push('/login');
+      if (!initialState?.currentUser && location.pathname !== loginPath) {
+        history.push(loginPath);
       }
     },
+    links: [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,

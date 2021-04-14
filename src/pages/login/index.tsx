@@ -47,7 +47,7 @@ const goto = () => {
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [userFormVisible, setUserFormVisible] = useState(false);
-  const [userLoginState, setUserLoginState] = useState<API.LoginStateType>({});
+  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
   const [userForm] = Form.useForm();
@@ -103,6 +103,7 @@ const Login: React.FC = () => {
               <span className={styles.title}>Quiet</span>
             </Link>
           </div>
+          <div className={styles.desc}>Quiet Web</div>
         </div>
         <div className={styles.main}>
           <ProForm
@@ -130,7 +131,7 @@ const Login: React.FC = () => {
               await handleSubmit(values);
             }}
           >
-            <Tabs activeKey={type} onChange={setType}>
+            <Tabs activeKey={type} onChange={setType} centered={true}>
               <Tabs.TabPane
                 key="account"
                 tab={intl.formatMessage({
