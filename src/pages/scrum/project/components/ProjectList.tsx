@@ -6,7 +6,7 @@ import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
 import { Form, Space, Typography } from 'antd';
 import { OperationType } from '@/types/Type';
 import ProjectSetting from '@/pages/scrum/project/components/ProjectSetting';
-import style from './Components.less';
+import style from '@/pages/scrum/project/components/Components.less';
 
 type ProjectListProps = {
   title: string;
