@@ -140,6 +140,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
                   type={'secondary'}
                   ellipsis={{
                     rows: 1,
+                    tooltip: project.description,
                   }}
                 >
                   {project.description}
