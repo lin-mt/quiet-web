@@ -6,8 +6,8 @@ export enum ResultType {
 }
 
 export type Result<T> = {
-  result?: ResultType;
-  code?: string;
+  result: ResultType;
+  code: string;
   message?: string;
-  data?: T;
+  data: T;
 };

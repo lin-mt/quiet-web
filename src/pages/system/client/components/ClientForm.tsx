@@ -35,28 +35,23 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
+    const submitValues = {
+      ...values,
+      scope: scope?.map((scopeValue) => {
+        return scopeValue.value;
+      }),
+      authorizedGrantTypes: authorizedGrantTypes?.map((authorizedGrantType) => {
+        return authorizedGrantType.value;
+      }),
+    };
     switch (operationType) {
       case OperationType.CREATE:
-        await saveClient({
-          ...values,
-          scope: scope?.map((scopeValue) => {
-            return scopeValue.value;
-          }),
-          authorizedGrantTypes: authorizedGrantTypes?.map((authorizedGrantType) => {
-            return authorizedGrantType.value;
-          }),
-        });
+        await saveClient(submitValues);
         break;
       case OperationType.UPDATE:
         await updateClient({
           ...updateInfo,
-          ...values,
-          scope: scope?.map((scopeValue) => {
-            return scopeValue.value;
-          }),
-          authorizedGrantTypes: authorizedGrantTypes?.map((authorizedGrantType) => {
-            return authorizedGrantType.value;
-          }),
+          ...submitValues,
         });
         break;
       default:
