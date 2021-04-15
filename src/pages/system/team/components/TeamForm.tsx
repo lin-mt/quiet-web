@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Col, Form, Input, Modal, Select, Spin } from 'antd';
+import { Button, Col, Form, Input, Modal } from 'antd';
 import { saveTeam, updateTeam } from '@/services/system/QuietTeam';
 import { listUsersByName } from '@/services/system/QuietUser';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
 import multipleSelectTagRender from '@/utils/RenderUtils';
-
-const { Option } = Select;
+import { DebounceSelect } from '@/pages/components/DebounceSelect';
 
 type TeamFormProps = {
   visible: boolean;
@@ -20,7 +19,6 @@ type TeamFormProps = {
 const RoleForm: React.FC<TeamFormProps> = (props) => {
   const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [fetchUsers, setFetchUsers] = useState<SystemEntities.QuietUser[] | undefined>([]);
   const [productOwners, setProductOwners] = useState<any[]>(
     form.getFieldValue('productOwners')?.map((user: SystemEntities.QuietUser) => {
       return { value: user.id, label: user.fullName };
@@ -36,40 +34,31 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
       return { value: user.id, label: user.fullName };
     }),
   );
-  const [fetching, setFetching] = useState<boolean>(false);
   const nonsupportMsg = 'nonsupport FormType';
 
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
+    const submitValues = {
+      ...values,
+      productOwners: productOwners?.map((user) => {
+        return { id: user.value };
+      }),
+      scrumMasters: scrumMasters?.map((user) => {
+        return { id: user.value };
+      }),
+      members: members?.map((user) => {
+        return { id: user.value };
+      }),
+    };
     switch (operationType) {
       case OperationType.CREATE:
-        await saveTeam({
-          ...values,
-          productOwners: productOwners?.map((user) => {
-            return { id: user.value };
-          }),
-          scrumMasters: scrumMasters?.map((user) => {
-            return { id: user.value };
-          }),
-          members: members?.map((user) => {
-            return { id: user.value };
-          }),
-        });
+        await saveTeam(submitValues);
         break;
       case OperationType.UPDATE:
         await updateTeam({
           ...updateInfo,
-          ...values,
-          productOwners: productOwners?.map((user) => {
-            return { id: user.value };
-          }),
-          scrumMasters: scrumMasters?.map((user) => {
-            return { id: user.value };
-          }),
-          members: members?.map((user) => {
-            return { id: user.value };
-          }),
+          ...submitValues,
         });
         break;
       default:
@@ -110,27 +99,13 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
     onCancel();
   }
 
-  function findUserByName(name: string) {
-    setFetching(true);
-    listUsersByName(name).then((resp) => {
-      setFetchUsers(resp.data);
-      setFetching(false);
+  async function findUserByName(name: string) {
+    return listUsersByName(name).then((resp) => {
+      return resp.data.map((user) => ({
+        label: user.fullName,
+        value: user.id,
+      }));
     });
-  }
-
-  function handleProductOwnersChange(value: any) {
-    setProductOwners(value);
-    setFetchUsers([]);
-  }
-
-  function handleScrumMastersChange(value: any) {
-    setScrumMasters(value);
-    setFetchUsers([]);
-  }
-
-  function handleMembersChange(value: any) {
-    setMembers(value);
-    setFetchUsers([]);
   }
 
   return (
@@ -170,68 +145,38 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
         </Col>
         <Col>
           <Form.Item label="ProductOwner">
-            <Select
+            <DebounceSelect
               mode="multiple"
-              labelInValue
               value={productOwners}
               tagRender={multipleSelectTagRender}
               placeholder="请输入 ProductOwner 用户名/姓名"
-              notFoundContent={fetching ? <Spin size="small" /> : null}
-              filterOption={false}
-              onSearch={findUserByName}
-              onChange={handleProductOwnersChange}
-              onBlur={() => setFetchUsers([])}
-            >
-              {fetchUsers?.map((user) => (
-                <Option key={user.id} value={user.id}>
-                  {user.fullName}
-                </Option>
-              ))}
-            </Select>
+              fetchOptions={findUserByName}
+              onChange={(value) => setProductOwners(value)}
+            />
           </Form.Item>
         </Col>
         <Col>
           <Form.Item label="ScrumMaster">
-            <Select
+            <DebounceSelect
               mode="multiple"
-              labelInValue
               value={scrumMasters}
               tagRender={multipleSelectTagRender}
               placeholder="请输入 ScrumMaster 用户名/姓名"
-              notFoundContent={fetching ? <Spin size="small" /> : null}
-              filterOption={false}
-              onSearch={findUserByName}
-              onChange={handleScrumMastersChange}
-              onBlur={() => setFetchUsers([])}
-            >
-              {fetchUsers?.map((user) => (
-                <Option key={user.id} value={user.id}>
-                  {user.fullName}
-                </Option>
-              ))}
-            </Select>
+              onChange={(value) => setScrumMasters(value)}
+              fetchOptions={findUserByName}
+            />
           </Form.Item>
         </Col>
         <Col>
           <Form.Item label="团队成员">
-            <Select
+            <DebounceSelect
               mode="multiple"
-              labelInValue
               value={members}
               tagRender={multipleSelectTagRender}
               placeholder="请输入团队成员用户名"
-              notFoundContent={fetching ? <Spin size="small" /> : null}
-              filterOption={false}
-              onSearch={findUserByName}
-              onChange={handleMembersChange}
-              onBlur={() => setFetchUsers([])}
-            >
-              {fetchUsers?.map((user) => (
-                <Option key={user.id} value={user.id}>
-                  {user.fullName}
-                </Option>
-              ))}
-            </Select>
+              fetchOptions={findUserByName}
+              onChange={(value) => setMembers(value)}
+            />
           </Form.Item>
         </Col>
         <Col>

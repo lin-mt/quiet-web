@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Modal, Select, Spin } from 'antd';
+import { Button, Modal } from 'antd';
 import { listUsersByName } from '@/services/system/QuietUser';
 import multipleSelectTagRender from '@/utils/RenderUtils';
-
-const { Option } = Select;
+import { DebounceSelect } from '@/pages/components/DebounceSelect';
 
 type UserSelectProps = {
   visible: boolean;
@@ -20,8 +19,6 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
   const { visible, onCancel, onOk, modalTitle, okText, cancelText, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
-  const [fetchUsers, setFetchUsers] = useState<SystemEntities.QuietUser[] | undefined>([]);
-  const [fetching, setFetching] = useState<boolean>(false);
 
   async function handleSubmit() {
     setSubmitting(true);
@@ -36,17 +33,13 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
     onCancel();
   }
 
-  function findUserByName(name: string) {
-    setFetching(true);
-    listUsersByName(name).then((resp) => {
-      setFetchUsers(resp.data);
-      setFetching(false);
+  async function findUserByName(name: string) {
+    return listUsersByName(name).then((resp) => {
+      return resp.data.map((user) => ({
+        label: user.fullName,
+        value: user.id,
+      }));
     });
-  }
-
-  function handleSelectedChange(value: any) {
-    setSelectedUsers(value);
-    setFetchUsers([]);
   }
 
   return (
@@ -71,25 +64,15 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
         </Button>,
       ]}
     >
-      <Select
+      <DebounceSelect
         style={{ width: '100%' }}
         mode="multiple"
-        labelInValue
         value={selectedUsers}
         tagRender={multipleSelectTagRender}
         placeholder="请输入用户名/姓名"
-        notFoundContent={fetching ? <Spin size="small" /> : null}
-        filterOption={false}
-        onSearch={findUserByName}
-        onChange={handleSelectedChange}
-        onBlur={() => setFetchUsers([])}
-      >
-        {fetchUsers?.map((user) => (
-          <Option key={user.id} value={user.id}>
-            {user.fullName}
-          </Option>
-        ))}
-      </Select>
+        fetchOptions={findUserByName}
+        onChange={(newValue) => setSelectedUsers(newValue)}
+      />
     </Modal>
   );
 };
