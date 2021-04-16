@@ -143,7 +143,17 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
                     title={`确定删除项目 ${project.name} 吗?`}
                     onConfirm={() => handleDeleteClick(project)}
                   >
-                    <DeleteFilled key={'delete'} />
+                    <DeleteFilled
+                      key={'delete'}
+                      onMouseOver={(event) => {
+                        // eslint-disable-next-line no-param-reassign
+                        event.currentTarget.style.color = 'red';
+                      }}
+                      onMouseLeave={(event) => {
+                        // eslint-disable-next-line no-param-reassign
+                        event.currentTarget.style.color = 'rgba(0, 0, 0, 0.45)';
+                      }}
+                    />
                   </Popconfirm>
                 ),
               ]}
