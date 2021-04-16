@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SettingOutlined } from '@ant-design/icons';
+import { SettingFilled } from '@ant-design/icons';
 import { Button, Form, Input, Popover, Select } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
 import { updateProject } from '@/services/scrum/ScrumProject';
@@ -68,7 +68,7 @@ const ProjectSetting: React.FC<ProjectSettingProps> = (props) => {
         </Form>
       }
     >
-      <SettingOutlined
+      <SettingFilled
         style={{ width: '100%' }}
         key="setting"
         onClick={() => {

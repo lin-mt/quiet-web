@@ -23,9 +23,9 @@ const Project: React.FC<any> = () => {
         title={'管理的项目'}
         projects={projectManaged}
         newProject={true}
-        settingProject={true}
-        editProject={true}
-        deleteProject={true}
+        canSetting={true}
+        canEdit={true}
+        canDelete={true}
         cardSize={'small'}
         afterUpdateAction={loadAllMyProject}
       />

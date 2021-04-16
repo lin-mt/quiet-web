@@ -1,23 +1,28 @@
 import type { CSSProperties } from 'react';
 import React, { useEffect, useState } from 'react';
 import ProCard from '@ant-design/pro-card';
-import { AppstoreAddOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { AppstoreAddOutlined, DeleteFilled, EditFilled } from '@ant-design/icons';
 import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
-import { Form, Space, Typography } from 'antd';
+import { Form, Popconfirm, Space, Typography } from 'antd';
 import { OperationType } from '@/types/Type';
 import ProjectSetting from '@/pages/scrum/project/components/ProjectSetting';
 import style from '@/pages/scrum/project/components/Components.less';
+import { deleteProject } from '@/services/scrum/ScrumProject';
 
 type ProjectListProps = {
   title: string;
   projects: ScrumEntities.ScrumProject[];
   projectNum?: number;
   newProject?: boolean;
-  settingProject?: boolean;
-  editProject?: boolean;
-  deleteProject?: boolean;
+  canSetting?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
   cardSize?: 'default' | 'small';
   afterUpdateAction?: () => void;
+};
+
+type CardProjectInfo = ScrumEntities.ScrumProject & {
+  key: string;
 };
 
 const ProjectList: React.FC<ProjectListProps> = (props) => {
@@ -26,9 +31,9 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
     projects,
     projectNum = 5,
     newProject = false,
-    settingProject = false,
-    editProject = false,
-    deleteProject = false,
+    canSetting = false,
+    canEdit = false,
+    canDelete = false,
     afterUpdateAction,
     cardSize,
   } = props;
@@ -36,7 +41,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
   const addIconDefaultStyle = { fontSize: '36px' };
 
   const addIconOverStyle = {
-    fontSize: '39px',
+    ...addIconDefaultStyle,
     color: '#1890ff',
   };
   const newProjectKey = 'newProjectKey';
@@ -46,7 +51,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
   const [addIconStyle, setAddIconStyle] = useState<CSSProperties>(addIconDefaultStyle);
   const [projectFormVisible, setProjectFormVisible] = useState<boolean>(false);
   const [projectFormOperationType, setProjectFormOperationType] = useState<OperationType>();
-  const [cardProjects, setCardProjects] = useState<any[]>([]);
+  const [cardProjects, setCardProjects] = useState<CardProjectInfo[]>([]);
   const [updateInfo, setUpdateInfo] = useState<ScrumEntities.ScrumProject>();
 
   useEffect(() => {
@@ -88,6 +93,13 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
     setProjectFormVisible(true);
   }
 
+  async function handleDeleteClick(project: CardProjectInfo) {
+    await deleteProject(project.id);
+    if (afterUpdateAction) {
+      afterUpdateAction();
+    }
+  }
+
   return (
     <>
       <ProCard gutter={24} ghost style={{ marginBottom: '24px' }} title={title}>
@@ -114,11 +126,9 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
               key={project.id}
               title={project.name}
               size={cardSize}
-              className={
-                !(settingProject || editProject || deleteProject) && style.hideProCardActions
-              }
+              className={!(canSetting || canEdit || canDelete) && style.hideProCardActions}
               actions={[
-                settingProject && (
+                canSetting && (
                   <ProjectSetting
                     key={'setting'}
                     projectInfo={project}
@@ -126,10 +136,16 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
                     afterSettingUpdate={afterUpdateAction}
                   />
                 ),
-                editProject && (
-                  <EditOutlined key={'edit'} onClick={() => handleEditClick(project)} />
+                canEdit && <EditFilled key={'edit'} onClick={() => handleEditClick(project)} />,
+                canDelete && (
+                  <Popconfirm
+                    placement={'bottom'}
+                    title={`确定删除项目 ${project.name} 吗?`}
+                    onConfirm={() => handleDeleteClick(project)}
+                  >
+                    <DeleteFilled key={'delete'} />
+                  </Popconfirm>
                 ),
-                deleteProject && <DeleteOutlined key={'delete'} />,
               ]}
             >
               <Space direction={'vertical'}>
