@@ -3,7 +3,7 @@ import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
 import { saveClient, updateClient } from '@/services/system/QuietClient';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
-import multipleSelectTagRender from '@/utils/RenderUtils';
+import { multipleSelectTagRender } from '@/utils/RenderUtils';
 
 type ClientFormProps = {
   visible: boolean;
