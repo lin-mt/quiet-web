@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
 import { listUsersByName } from '@/services/system/QuietUser';
-import multipleSelectTagRender from '@/utils/RenderUtils';
+import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 
 type UserSelectProps = {

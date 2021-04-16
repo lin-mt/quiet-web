@@ -4,7 +4,7 @@ import { saveTeam, updateTeam } from '@/services/system/QuietTeam';
 import { listUsersByName } from '@/services/system/QuietUser';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
-import multipleSelectTagRender from '@/utils/RenderUtils';
+import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 
 type TeamFormProps = {
