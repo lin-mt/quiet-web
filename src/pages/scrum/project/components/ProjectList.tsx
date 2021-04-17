@@ -1,13 +1,14 @@
 import type { CSSProperties } from 'react';
 import React, { useEffect, useState } from 'react';
 import ProCard from '@ant-design/pro-card';
-import { AppstoreAddOutlined, DeleteFilled, EditFilled } from '@ant-design/icons';
-import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
-import { Form, Popconfirm, Space, Typography } from 'antd';
+import { AppstoreAddOutlined, DeleteFilled, EditFilled, ForwardFilled } from '@ant-design/icons';
+import { Button, Form, Popconfirm, Space, Typography } from 'antd';
 import { OperationType } from '@/types/Type';
+import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
 import ProjectSetting from '@/pages/scrum/project/components/ProjectSetting';
 import style from '@/pages/scrum/project/components/Components.less';
 import { deleteProject } from '@/services/scrum/ScrumProject';
+import { Link } from 'umi';
 
 type ProjectListProps = {
   title: string;
@@ -102,7 +103,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
 
   return (
     <>
-      <ProCard gutter={24} ghost style={{ marginBottom: '24px' }} title={title}>
+      <ProCard gutter={24} ghost style={{ marginBottom: '24px' }} title={title} collapsible>
         {cardProjects.map((project) => {
           if (project.key === newProjectKey) {
             return (
@@ -127,6 +128,16 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
               title={project.name}
               size={cardSize}
               className={!(canSetting || canEdit || canDelete) && style.hideProCardActions}
+              extra={
+                <Link to={`/scrum/project/detail/?projectId=${project.id}`}>
+                  <Button
+                    icon={<ForwardFilled />}
+                    type={'primary'}
+                    shape={'round'}
+                    size={'small'}
+                  />
+                </Link>
+              }
               actions={[
                 canSetting && (
                   <ProjectSetting

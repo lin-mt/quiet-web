@@ -23,6 +23,12 @@
         component: './scrum/project',
       },
       {
+        path: '/scrum/project/detail',
+        name: 'project-detail',
+        component: './scrum/project/detail',
+        hideInMenu: true,
+      },
+      {
         path: '/scrum/template',
         name: 'template',
         component: './scrum/template',

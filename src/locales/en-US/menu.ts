@@ -12,6 +12,7 @@ export default {
   'menu.system.dictionary': 'Dictionary',
   'menu.scrum': 'AgileManagement',
   'menu.scrum.project': 'ProjectManagement',
+  'menu.scrum.project-detail': 'ProjectDetails',
   'menu.scrum.template': 'TemplateManagement',
 
   'menu.welcome': 'Welcome',
