@@ -1,28 +1,38 @@
 import { request } from '@@/plugin-request/request';
+import type { Result } from '@/types/Result';
+
+const apiPrefix = '/api/scrum/template';
+
+export function listByName(name: string) {
+  return request<Result<ScrumEntities.ScrumTemplate[]>>(`${apiPrefix}/listByName`, {
+    data: { name },
+    method: 'POST',
+  });
+}
 
 export function saveTemplate(params?: any) {
-  return request('/api/scrum/template/save', {
+  return request(`${apiPrefix}/save`, {
     data: { save: params },
     method: 'POST',
   });
 }
 
 export function updateTemplate(params?: any) {
-  return request('/api/scrum/template/update', {
+  return request(`${apiPrefix}/update`, {
     data: { update: params },
     method: 'POST',
   });
 }
 
 export function deleteTemplate(params: string) {
-  return request('/api/scrum/template/delete', {
+  return request(`${apiPrefix}/delete`, {
     data: { deleteId: params },
     method: 'POST',
   });
 }
 
 export async function allTemplates() {
-  return request('/api/scrum/template/allTemplates', {
+  return request(`${apiPrefix}/allTemplates`, {
     method: 'POST',
   }).then((resData) => {
     return resData.data;

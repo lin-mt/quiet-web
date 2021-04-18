@@ -76,6 +76,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
   function handleEditClick(project: ScrumEntities.ScrumProject) {
     form.setFieldsValue({
       ...project,
+      templateId: { value: project.templateId, label: project.templateName },
       manager: { value: project.manager, label: project.managerName },
       selectTeams: project.teams?.map((team) => {
         return { value: team.id, label: team.teamName };

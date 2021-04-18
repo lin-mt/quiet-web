@@ -7,7 +7,8 @@ declare namespace ScrumEntities {
     description?: string;
     demandPrefix?: string;
     taskPrefix?: string;
-    taskTemplateId?: string;
+    templateId?: string;
+    templateName?: string;
     buildTool?: string;
     managerName?: string;
     teams?: QuietTeam[];

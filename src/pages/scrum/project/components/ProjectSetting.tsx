@@ -56,9 +56,6 @@ const ProjectSetting: React.FC<ProjectSettingProps> = (props) => {
           >
             <Input placeholder="请输入" />
           </Form.Item>
-          <Form.Item label={'任务模版'} name={'taskTemplateId'}>
-            <Input placeholder="请选择" />
-          </Form.Item>
           <Form.Item label={' '} colon={false} style={{ margin: '0px' }}>
             <Button onClick={() => form.setFieldsValue(projectInfo)}>重置</Button>
             <Button type="primary" style={{ float: 'right' }} onClick={handleSettingUpdateClick}>

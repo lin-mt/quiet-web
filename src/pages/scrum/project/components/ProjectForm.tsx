@@ -5,8 +5,10 @@ import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
 import { listUsersByName } from '@/services/system/QuietUser';
 import { listTeamsByTeamName } from '@/services/system/QuietTeam';
+
 import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
+import { listByName } from '@/services/scrum/ScrumTemplate';
 
 type ProjectFormProps = {
   visible: boolean;
@@ -26,20 +28,20 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
+    const submitValues = {
+      ...values,
+      templateId: values.templateId.value,
+      manager: values.manager.value,
+      teamIds: values.selectTeams.map((v: { value: any }) => v.value),
+    };
     switch (operationType) {
       case OperationType.CREATE:
-        await saveProject({
-          ...values,
-          manager: values.manager.value,
-          teamIds: values.selectTeams.map((v: { value: any }) => v.value),
-        });
+        await saveProject(submitValues);
         break;
       case OperationType.UPDATE:
         await updateProject({
           ...updateInfo,
-          ...values,
-          manager: values.manager.value,
-          teamIds: values.selectTeams.map((v: { value: any }) => v.value),
+          ...submitValues,
         });
         break;
       default:
@@ -98,6 +100,15 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
     });
   }
 
+  async function findByTemplateName(name: string) {
+    return listByName(name).then((resp) => {
+      return resp.data.map((template) => ({
+        label: template.name,
+        value: template.id,
+      }));
+    });
+  }
+
   return (
     <Modal
       destroyOnClose
@@ -130,6 +141,13 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
           ]}
         >
           <Input placeholder="请输入" />
+        </Form.Item>
+        <Form.Item
+          label={'任务模版'}
+          name={'templateId'}
+          rules={[{ required: true, message: '请选择任务模板' }]}
+        >
+          <DebounceSelect fetchOptions={findByTemplateName} placeholder="请选择" />
         </Form.Item>
         <Form.Item
           label={'项目经理'}
