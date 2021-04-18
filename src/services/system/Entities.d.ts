@@ -7,6 +7,10 @@ declare namespace SystemEntities {
     gmtUpdate: string;
   };
 
+  export type SerialEntity = BaseEntity & {
+    serialNumber: number;
+  };
+
   export type QuietClient = BaseEntity & {
     clientId: string;
     clientName: string;
