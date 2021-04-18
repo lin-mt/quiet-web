@@ -1,4 +1,6 @@
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
+import React from 'react';
+
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
 export const isUrl = (path: string): boolean => reg.test(path);
@@ -18,3 +20,21 @@ export const isAntDesignProOrDev = (): boolean => {
   }
   return isAntDesignPro();
 };
+
+export function buildFullCard(
+  cards: any[],
+  num: number,
+  addCard?: boolean,
+  addCardKey?: string,
+): any[] {
+  let fullCard: React.SetStateAction<any[]> = [];
+  if (addCard) {
+    fullCard.push({ key: addCardKey });
+  }
+  fullCard = fullCard.concat(cards);
+  const addEmptyCard = num - (fullCard.length % num);
+  for (let i = 0; i < addEmptyCard; i += 1) {
+    fullCard.push({ key: `empty${i}` });
+  }
+  return fullCard;
+}
