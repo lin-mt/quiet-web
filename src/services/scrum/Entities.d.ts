@@ -15,6 +15,14 @@ declare namespace ScrumEntities {
 
   export type ScrumTemplate = SystemEntities.BaseEntity & {
     name: string;
-    description?: string;
+    enable: boolean;
+    remark?: string;
+    taskSteps?: ScrumTaskStep[];
+  };
+
+  export type ScrumTaskStep = SystemEntities.SerialEntity & {
+    name: string;
+    templateId: string;
+    remark?: string;
   };
 }
