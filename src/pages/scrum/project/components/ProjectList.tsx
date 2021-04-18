@@ -9,6 +9,7 @@ import ProjectSetting from '@/pages/scrum/project/components/ProjectSetting';
 import style from '@/pages/scrum/project/components/Components.less';
 import { deleteProject } from '@/services/scrum/ScrumProject';
 import { Link } from 'umi';
+import { buildFullCard } from '@/utils/utils';
 
 type ProjectListProps = {
   title: string;
@@ -56,16 +57,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
   const [updateInfo, setUpdateInfo] = useState<ScrumEntities.ScrumProject>();
 
   useEffect(() => {
-    let buildCardProject: React.SetStateAction<any[]> = [];
-    if (newProject) {
-      buildCardProject.push({ key: newProjectKey });
-    }
-    buildCardProject = buildCardProject.concat(projects);
-    const addEmptyProject = projectNum - (buildCardProject.length % projectNum);
-    for (let i = 0; i < addEmptyProject; i += 1) {
-      buildCardProject.push({ key: `empty${i}` });
-    }
-    setCardProjects(buildCardProject);
+    setCardProjects(buildFullCard(projects, projectNum, newProject, newProjectKey));
   }, [newProject, projectNum, projects]);
 
   function handleMouseOver() {
