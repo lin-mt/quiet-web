@@ -6,7 +6,13 @@ import ProTable from '@ant-design/pro-table';
 import { pageUser, addUsers, removeUsers } from '@/services/system/QuietDepartment';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import UserSelect from '@/pages/system/userinfo/components/UserSelect';
-import { Gender, Weather } from '@/services/system/Enums';
+import { Gender } from '@/services/system/Enums';
+import {
+  accountExpiredStatus,
+  accountLockedStatus,
+  credentialsExpiredStatus,
+  enableStatus,
+} from '@/services/system/Status';
 
 type DepartmentUserProps = {
   department: SystemEntities.QuietDepartment | undefined;
@@ -73,22 +79,26 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
     {
       title: '账号到期',
       dataIndex: 'accountExpired',
-      valueEnum: Weather,
+      valueType: 'select',
+      valueEnum: accountExpiredStatus,
     },
     {
       title: '账号被锁',
       dataIndex: 'accountLocked',
-      valueEnum: Weather,
+      valueType: 'select',
+      valueEnum: accountLockedStatus,
     },
     {
       title: '密码过期',
       dataIndex: 'credentialsExpired',
-      valueEnum: Weather,
+      valueType: 'select',
+      valueEnum: credentialsExpiredStatus,
     },
     {
       title: '账号启用',
       dataIndex: 'enabled',
-      valueEnum: Weather,
+      valueType: 'select',
+      valueEnum: enableStatus,
     },
     {
       title: '操作',

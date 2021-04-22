@@ -203,18 +203,18 @@ const UserForm: React.FC<UserFormProps> = (props) => {
           <>
             <Row gutter={20}>
               <Col span={12}>
-                <Form.Item label="是否锁定" name="accountLocked">
+                <Form.Item label="是否锁定" name={'accountLocked'}>
                   <Select placeholder="请选择" allowClear>
-                    <Option value="YES">是</Option>
-                    <Option value="NO">否</Option>
+                    <Option value="true">是</Option>
+                    <Option value="false">否</Option>
                   </Select>
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="账号是否到期" name="accountExpired">
                   <Select placeholder="请选择" allowClear>
-                    <Option value="YES">是</Option>
-                    <Option value="NO">否</Option>
+                    <Option value="true">是</Option>
+                    <Option value="false">否</Option>
                   </Select>
                 </Form.Item>
               </Col>
@@ -223,16 +223,16 @@ const UserForm: React.FC<UserFormProps> = (props) => {
               <Col span={12}>
                 <Form.Item label="账号是否启用" name="enabled">
                   <Select placeholder="请选择" allowClear>
-                    <Option value="YES">是</Option>
-                    <Option value="NO">否</Option>
+                    <Option value="true">是</Option>
+                    <Option value="false">否</Option>
                   </Select>
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="密码是否过期" name="credentialsExpired">
                   <Select placeholder="请选择" allowClear>
-                    <Option value="YES">是</Option>
-                    <Option value="NO">否</Option>
+                    <Option value="true">是</Option>
+                    <Option value="false">否</Option>
                   </Select>
                 </Form.Item>
               </Col>
