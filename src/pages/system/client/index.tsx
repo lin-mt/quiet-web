@@ -12,7 +12,7 @@ import {
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import ClientForm from '@/pages/system/client/components/ClientForm';
-import { Weather } from '@/services/system/Enums';
+import { autoApproveStatus, scopedStatus, secretRequiredStatus } from '@/services/system/Status';
 
 const ClientManagement: React.FC<any> = () => {
   const [updateClientInfo, setUpdateClientInfo] = useState<SystemEntities.QuietClient>();
@@ -52,12 +52,20 @@ const ClientManagement: React.FC<any> = () => {
     {
       title: '需要认证',
       dataIndex: 'secretRequired',
-      valueEnum: Weather,
+      valueType: 'select',
+      valueEnum: secretRequiredStatus,
     },
     {
       title: '自动授权',
       dataIndex: 'autoApprove',
-      valueEnum: Weather,
+      valueType: 'select',
+      valueEnum: autoApproveStatus,
+    },
+    {
+      title: '范围限制',
+      dataIndex: 'scoped',
+      valueType: 'select',
+      valueEnum: scopedStatus,
     },
     {
       title: '授权范围',
@@ -88,11 +96,6 @@ const ClientManagement: React.FC<any> = () => {
             : '-'}
         </Space>
       ),
-    },
-    {
-      title: '范围限制',
-      dataIndex: 'scoped',
-      valueEnum: Weather,
     },
     {
       title: '授权类型',

@@ -240,8 +240,8 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
               rules={[{ required: true, message: '请选择是否需要认证' }]}
             >
               <Select placeholder={'请选择'}>
-                <Select.Option value={'YES'}>是</Select.Option>
-                <Select.Option value={'NO'}>否</Select.Option>
+                <Select.Option value={'true'}>是</Select.Option>
+                <Select.Option value={'false'}>否</Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -252,8 +252,8 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
               rules={[{ required: true, message: '请选择是否自动授权' }]}
             >
               <Select placeholder={'请选择'}>
-                <Select.Option value={'YES'}>是</Select.Option>
-                <Select.Option value={'NO'}>否</Select.Option>
+                <Select.Option value={'true'}>是</Select.Option>
+                <Select.Option value={'false'}>否</Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -266,8 +266,8 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
               rules={[{ required: true, message: '请选择是否限制授权范围' }]}
             >
               <Select placeholder={'请选择'}>
-                <Select.Option value={'YES'}>是</Select.Option>
-                <Select.Option value={'NO'}>否</Select.Option>
+                <Select.Option value={'true'}>是</Select.Option>
+                <Select.Option value={'false'}>否</Select.Option>
               </Select>
             </Form.Item>
           </Col>
