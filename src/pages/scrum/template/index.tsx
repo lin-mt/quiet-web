@@ -24,9 +24,7 @@ const Project: React.FC<any> = () => {
         templates={templateCreated}
         newTemplate={true}
         changeSelectable={true}
-        canConfigTaskStep={true}
-        canEdit={true}
-        canDelete={true}
+        editable={true}
         cardSize={'small'}
         afterUpdateAction={loadAllTemplate}
       />

@@ -14,7 +14,7 @@ import {
 } from '@ant-design/icons';
 import TaskStepForm from '@/pages/scrum/template/components/TaskStepForm';
 
-type TaskStepFormProps = {
+type TemplateSettingFormProps = {
   visible: boolean;
   onCancel: () => void;
   currentTemplate: ScrumEntities.ScrumTemplate;
@@ -23,7 +23,7 @@ type TaskStepFormProps = {
   afterAction?: () => void;
 };
 
-const TemplateTaskStepForm: React.FC<TaskStepFormProps> = ({
+const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
   visible,
   currentTemplate,
   readOnly = true,
@@ -71,9 +71,9 @@ const TemplateTaskStepForm: React.FC<TaskStepFormProps> = ({
 
   function getTitle() {
     if (readOnly) {
-      return '任务步骤';
+      return '模板配置';
     }
-    return isUpdate ? '更新任务步骤' : '配置任务步骤';
+    return isUpdate ? '更新设置' : '设置模板';
   }
 
   return (
@@ -133,7 +133,7 @@ const TemplateTaskStepForm: React.FC<TaskStepFormProps> = ({
                             placement={'right'}
                             onConfirm={async () => {
                               await deleteTaskStep(taskStep.id);
-                              reloadTemplateTaskSteps();
+                              await reloadTemplateTaskSteps();
                             }}
                           >
                             <Button danger type={'link'} size={'small'} icon={<DeleteOutlined />} />
@@ -172,4 +172,4 @@ const TemplateTaskStepForm: React.FC<TaskStepFormProps> = ({
   );
 };
 
-export default TemplateTaskStepForm;
+export default TemplateSettingForm;

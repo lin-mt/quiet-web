@@ -4,11 +4,10 @@ import ProCard from '@ant-design/pro-card';
 import { AppstoreAddOutlined, DeleteFilled, EditFilled, SettingFilled } from '@ant-design/icons';
 import { Form, Popconfirm, Space, Switch, Tooltip, Typography } from 'antd';
 import { OperationType } from '@/types/Type';
-import style from '@/pages/scrum/template/components/Components.less';
 import { deleteTemplate, updateTemplate } from '@/services/scrum/ScrumTemplate';
 import TemplateForm from '@/pages/scrum/template/components/TemplateForm';
 import { buildFullCard } from '@/utils/utils';
-import TemplateTaskStepForm from '@/pages/scrum/template/components/TemplateTaskStepForm';
+import TemplateSettingForm from '@/pages/scrum/template/components/TemplateSettingForm';
 
 type TemplateListProps = {
   title: string;
@@ -16,9 +15,7 @@ type TemplateListProps = {
   templateNum?: number;
   newTemplate?: boolean;
   changeSelectable?: boolean;
-  canConfigTaskStep?: boolean;
-  canEdit?: boolean;
-  canDelete?: boolean;
+  editable?: boolean;
   cardSize?: 'default' | 'small';
   afterUpdateAction?: () => void;
 };
@@ -34,9 +31,7 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
     templateNum = 5,
     newTemplate = false,
     changeSelectable = false,
-    canConfigTaskStep = false,
-    canEdit = false,
-    canDelete = false,
+    editable = false,
     afterUpdateAction,
     cardSize,
   } = props;
@@ -52,8 +47,8 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
 
   const [addIconStyle, setAddIconStyle] = useState<CSSProperties>(addIconDefaultStyle);
   const [templateFormVisible, setTemplateFormVisible] = useState<boolean>(false);
-  const [templateFormOnlyRead, setTemplateFormOnlyRead] = useState<boolean>(false);
-  const [templateTaskStepFormVisible, setTemplateTaskStepFormVisible] = useState<boolean>(false);
+  const [templateSettingFormOnlyRead, setTemplateSettingFormOnlyRead] = useState<boolean>(false);
+  const [templateSettingFormVisible, setTemplateSettingFormVisible] = useState<boolean>(false);
   const [templateFormOperationType, setTemplateFormOperationType] = useState<OperationType>();
   const [cardTemplates, setCardProjects] = useState<CardTemplateInfo[]>([]);
   const [updateInfo, setUpdateInfo] = useState<ScrumEntities.ScrumTemplate>();
@@ -116,11 +111,10 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
               key={template.id}
               title={template.name}
               size={cardSize}
-              className={!(changeSelectable || canEdit || canDelete) && style.hideProCardActions}
               onClick={() => {
-                if (!(changeSelectable || canEdit || canDelete)) {
-                  setTemplateTaskStepFormVisible(true);
-                  setTemplateFormOnlyRead(true);
+                if (!(changeSelectable || editable)) {
+                  setTemplateSettingFormVisible(true);
+                  setTemplateSettingFormOnlyRead(true);
                   setUpdateInfo(template);
                 }
               }}
@@ -143,38 +137,38 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
                   </Tooltip>
                 ))
               }
-              actions={[
-                canConfigTaskStep && (
-                  <SettingFilled
-                    key={'setting'}
-                    onClick={() => {
-                      setTemplateTaskStepFormVisible(true);
-                      setTemplateFormOnlyRead(false);
-                      setUpdateInfo(template);
-                    }}
-                  />
-                ),
-                canEdit && <EditFilled key={'edit'} onClick={() => handleEditClick(template)} />,
-                canDelete && (
-                  <Popconfirm
-                    placement={'bottom'}
-                    title={`确定删除模板 ${template.name} 吗?`}
-                    onConfirm={() => handleDeleteClick(template)}
-                  >
-                    <DeleteFilled
-                      key={'delete'}
-                      onMouseOver={(event) => {
-                        // eslint-disable-next-line no-param-reassign
-                        event.currentTarget.style.color = 'red';
-                      }}
-                      onMouseLeave={(event) => {
-                        // eslint-disable-next-line no-param-reassign
-                        event.currentTarget.style.color = 'rgba(0, 0, 0, 0.45)';
-                      }}
-                    />
-                  </Popconfirm>
-                ),
-              ]}
+              actions={
+                !editable
+                  ? undefined
+                  : [
+                      <SettingFilled
+                        key={'setting'}
+                        onClick={() => {
+                          setTemplateSettingFormVisible(true);
+                          setTemplateSettingFormOnlyRead(false);
+                          setUpdateInfo(template);
+                        }}
+                      />,
+                      <EditFilled key={'edit'} onClick={() => handleEditClick(template)} />,
+                      <Popconfirm
+                        placement={'bottom'}
+                        title={`确定删除模板 ${template.name} 吗?`}
+                        onConfirm={() => handleDeleteClick(template)}
+                      >
+                        <DeleteFilled
+                          key={'delete'}
+                          onMouseOver={(event) => {
+                            // eslint-disable-next-line no-param-reassign
+                            event.currentTarget.style.color = 'red';
+                          }}
+                          onMouseLeave={(event) => {
+                            // eslint-disable-next-line no-param-reassign
+                            event.currentTarget.style.color = 'rgba(0, 0, 0, 0.45)';
+                          }}
+                        />
+                      </Popconfirm>,
+                    ]
+              }
             >
               <Space direction={'vertical'}>
                 <Typography.Paragraph
@@ -193,13 +187,13 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
           );
         })}
       </ProCard>
-      {templateTaskStepFormVisible && updateInfo && (
-        <TemplateTaskStepForm
-          readOnly={templateFormOnlyRead}
+      {templateSettingFormVisible && updateInfo && (
+        <TemplateSettingForm
+          readOnly={templateSettingFormOnlyRead}
           currentTemplate={updateInfo}
           taskSteps={updateInfo.taskSteps}
-          visible={templateTaskStepFormVisible}
-          onCancel={() => setTemplateTaskStepFormVisible(false)}
+          visible={templateSettingFormVisible}
+          onCancel={() => setTemplateSettingFormVisible(false)}
           afterAction={afterUpdateAction}
         />
       )}
