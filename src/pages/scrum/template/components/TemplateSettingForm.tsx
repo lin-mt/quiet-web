@@ -9,7 +9,7 @@ import {
   batchUpdatePriorities,
   deletePriority,
   getAllByTemplateId as getAllPrioritiesByTemplateId,
-  // updatePriority,
+  updatePriority,
 } from '@/services/scrum/ScrumPriority';
 import {
   CaretDownOutlined,
@@ -20,6 +20,7 @@ import {
 } from '@ant-design/icons';
 import TaskStepForm from '@/pages/scrum/template/components/TaskStepForm';
 import PriorityForm from '@/pages/scrum/template/components/PriorityForm';
+import ColorPicker from '@/pages/components/ColorPicker';
 
 type TemplateSettingFormProps = {
   visible: boolean;
@@ -231,6 +232,16 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
                     key={priority.id}
                     description={
                       <div>
+                        <ColorPicker
+                          initialValue={priority.colorHex}
+                          onChange={async (color: any) => {
+                            const update = priority;
+                            update.colorHex = color;
+                            await updatePriority(update);
+                            await reloadTemplatePriorities();
+                          }}
+                        />
+
                         <div className={'ant-steps-item-description'}>{priority.remark}</div>
                       </div>
                     }
