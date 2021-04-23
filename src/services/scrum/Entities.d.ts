@@ -16,7 +16,7 @@ declare namespace ScrumEntities {
 
   export type ScrumTemplate = SystemEntities.BaseEntity & {
     name: string;
-    enable: boolean;
+    enabled: boolean;
     remark?: string;
     taskSteps?: ScrumTaskStep[];
     priorities?: ScrumPriority[];

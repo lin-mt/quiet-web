@@ -76,10 +76,10 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
     }
   }
 
-  async function handleEnableChange(template: CardTemplateInfo, enable: boolean) {
-    const changeEnableStateTemplate = template;
-    changeEnableStateTemplate.enable = enable;
-    await updateTemplate(changeEnableStateTemplate);
+  async function handleEnabledChange(template: CardTemplateInfo, enabled: boolean) {
+    const changeEnabledStateTemplate = template;
+    changeEnabledStateTemplate.enabled = enabled;
+    await updateTemplate(changeEnabledStateTemplate);
     if (afterUpdateAction) {
       afterUpdateAction();
     }
@@ -124,9 +124,9 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
                   <Switch
                     checkedChildren="启用"
                     unCheckedChildren="关闭"
-                    onChange={(enable) => handleEnableChange(template, enable)}
+                    onChange={(enabled) => handleEnabledChange(template, enabled)}
                     disabled={!(template.taskSteps && template.taskSteps.length > 0)}
-                    defaultChecked={template.enable}
+                    defaultChecked={template.enabled}
                   />
                 ) : (
                   <Tooltip title={'请先配置模板中任务的详细步骤'}>
