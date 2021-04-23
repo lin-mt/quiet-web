@@ -6,7 +6,6 @@ import { Button, Form, Popconfirm, Space, Typography } from 'antd';
 import { OperationType } from '@/types/Type';
 import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
 import ProjectSetting from '@/pages/scrum/project/components/ProjectSetting';
-import style from '@/pages/scrum/project/components/Components.less';
 import { deleteProject } from '@/services/scrum/ScrumProject';
 import { Link } from 'umi';
 import { buildFullCard } from '@/utils/utils';
@@ -16,9 +15,7 @@ type ProjectListProps = {
   projects: ScrumEntities.ScrumProject[];
   projectNum?: number;
   newProject?: boolean;
-  canSetting?: boolean;
-  canEdit?: boolean;
-  canDelete?: boolean;
+  editable?: boolean;
   cardSize?: 'default' | 'small';
   afterUpdateAction?: () => void;
 };
@@ -33,9 +30,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
     projects,
     projectNum = 5,
     newProject = false,
-    canSetting = false,
-    canEdit = false,
-    canDelete = false,
+    editable = false,
     afterUpdateAction,
     cardSize,
   } = props;
@@ -120,7 +115,6 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
               key={project.id}
               title={project.name}
               size={cardSize}
-              className={!(canSetting || canEdit || canDelete) && style.hideProCardActions}
               extra={
                 <Link to={`/scrum/project/detail/?projectId=${project.id}`}>
                   <Button
@@ -131,36 +125,36 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
                   />
                 </Link>
               }
-              actions={[
-                canSetting && (
-                  <ProjectSetting
-                    key={'setting'}
-                    projectInfo={project}
-                    form={settingForm}
-                    afterSettingUpdate={afterUpdateAction}
-                  />
-                ),
-                canEdit && <EditFilled key={'edit'} onClick={() => handleEditClick(project)} />,
-                canDelete && (
-                  <Popconfirm
-                    placement={'bottom'}
-                    title={`确定删除项目 ${project.name} 吗?`}
-                    onConfirm={() => handleDeleteClick(project)}
-                  >
-                    <DeleteFilled
-                      key={'delete'}
-                      onMouseOver={(event) => {
-                        // eslint-disable-next-line no-param-reassign
-                        event.currentTarget.style.color = 'red';
-                      }}
-                      onMouseLeave={(event) => {
-                        // eslint-disable-next-line no-param-reassign
-                        event.currentTarget.style.color = 'rgba(0, 0, 0, 0.45)';
-                      }}
-                    />
-                  </Popconfirm>
-                ),
-              ]}
+              actions={
+                !editable
+                  ? undefined
+                  : [
+                      <ProjectSetting
+                        key={'setting'}
+                        projectInfo={project}
+                        form={settingForm}
+                        afterSettingUpdate={afterUpdateAction}
+                      />,
+                      <EditFilled key={'edit'} onClick={() => handleEditClick(project)} />,
+                      <Popconfirm
+                        placement={'bottom'}
+                        title={`确定删除项目 ${project.name} 吗?`}
+                        onConfirm={() => handleDeleteClick(project)}
+                      >
+                        <DeleteFilled
+                          key={'delete'}
+                          onMouseOver={(event) => {
+                            // eslint-disable-next-line no-param-reassign
+                            event.currentTarget.style.color = 'red';
+                          }}
+                          onMouseLeave={(event) => {
+                            // eslint-disable-next-line no-param-reassign
+                            event.currentTarget.style.color = 'rgba(0, 0, 0, 0.45)';
+                          }}
+                        />
+                      </Popconfirm>,
+                    ]
+              }
             >
               <Space direction={'vertical'}>
                 <Typography.Text style={{ color: '#108EE9' }}>
