@@ -73,6 +73,7 @@
     "@types/jest": "^26.0.0",
     "@types/lodash": "^4.14.144",
     "@types/react": "^17.0.0",
+    "@types/react-color": "^3.0.4",
     "@types/react-dom": "^17.0.0",
     "@types/react-helmet": "^6.1.0",
     "@umijs/fabric": "^2.5.2",
