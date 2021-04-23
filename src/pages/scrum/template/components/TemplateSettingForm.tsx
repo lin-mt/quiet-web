@@ -231,25 +231,22 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
                     status={'process'}
                     key={priority.id}
                     description={
-                      <div>
-                        <ColorPicker
-                          initialValue={priority.colorHex}
-                          onChange={async (color: any) => {
-                            const update = priority;
-                            update.colorHex = color;
-                            await updatePriority(update);
-                            await reloadTemplatePriorities();
-                          }}
-                        />
-
-                        <div className={'ant-steps-item-description'}>{priority.remark}</div>
-                      </div>
+                      <div className={'ant-steps-item-description'}>{priority.remark}</div>
                     }
                     title={
                       <Space>
                         {priority.name}
                         {!readOnly && (
                           <Space>
+                            <ColorPicker
+                              initialValue={priority.colorHex}
+                              onChange={async (color: any) => {
+                                const update = priority;
+                                update.colorHex = color;
+                                await updatePriority(update);
+                                await reloadTemplatePriorities();
+                              }}
+                            />
                             <Tooltip title={'上移'}>
                               <Button
                                 type={'link'}
