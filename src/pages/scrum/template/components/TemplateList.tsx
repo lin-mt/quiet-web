@@ -191,7 +191,6 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
         <TemplateSettingForm
           readOnly={templateSettingFormOnlyRead}
           currentTemplate={updateInfo}
-          taskSteps={updateInfo.taskSteps}
           visible={templateSettingFormVisible}
           onCancel={() => setTemplateSettingFormVisible(false)}
           afterAction={afterUpdateAction}
