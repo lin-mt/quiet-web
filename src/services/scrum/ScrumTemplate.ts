@@ -38,3 +38,12 @@ export async function allTemplates() {
     return resData.data;
   });
 }
+
+export function templateDetailInfo(id: string) {
+  return request(`${apiPrefix}/templateInfo`, {
+    method: 'POST',
+    data: { id },
+  }).then((resData) => {
+    return resData.data;
+  });
+}

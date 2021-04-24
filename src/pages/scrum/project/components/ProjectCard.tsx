@@ -12,11 +12,11 @@ type ProjectCardProps = {
   project: ScrumEntities.ScrumProject;
   cardSize?: 'default' | 'small';
   editable?: boolean;
-  afterUpdateAction?: () => void;
+  afterDeleteAction?: () => void;
 };
 
 const ProjectCard: React.FC<ProjectCardProps> = (props) => {
-  const { project, cardSize, editable = false, afterUpdateAction } = props;
+  const { project, cardSize, editable = false, afterDeleteAction } = props;
 
   const [projectForm] = Form.useForm();
   const [settingForm] = Form.useForm();
@@ -44,8 +44,8 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
 
   async function handleDeleteClick() {
     await deleteProject(projectInfo.id);
-    if (afterUpdateAction) {
-      afterUpdateAction();
+    if (afterDeleteAction) {
+      afterDeleteAction();
     }
   }
 

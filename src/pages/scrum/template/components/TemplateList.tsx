@@ -1,13 +1,12 @@
 import type { CSSProperties } from 'react';
 import React, { useEffect, useState } from 'react';
 import ProCard from '@ant-design/pro-card';
-import { AppstoreAddOutlined, DeleteFilled, EditFilled, SettingFilled } from '@ant-design/icons';
-import { Form, Popconfirm, Space, Switch, Tooltip, Typography } from 'antd';
+import { AppstoreAddOutlined } from '@ant-design/icons';
+import { Form } from 'antd';
 import { OperationType } from '@/types/Type';
-import { deleteTemplate, updateTemplate } from '@/services/scrum/ScrumTemplate';
 import TemplateForm from '@/pages/scrum/template/components/TemplateForm';
 import { buildFullCard } from '@/utils/utils';
-import TemplateSettingForm from '@/pages/scrum/template/components/TemplateSettingForm';
+import TemplateCard from '@/pages/scrum/template/components/TemplateCard';
 
 type TemplateListProps = {
   title: string;
@@ -47,11 +46,8 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
 
   const [addIconStyle, setAddIconStyle] = useState<CSSProperties>(addIconDefaultStyle);
   const [templateFormVisible, setTemplateFormVisible] = useState<boolean>(false);
-  const [templateSettingFormOnlyRead, setTemplateSettingFormOnlyRead] = useState<boolean>(false);
-  const [templateSettingFormVisible, setTemplateSettingFormVisible] = useState<boolean>(false);
   const [templateFormOperationType, setTemplateFormOperationType] = useState<OperationType>();
   const [cardTemplates, setCardProjects] = useState<CardTemplateInfo[]>([]);
-  const [updateInfo, setUpdateInfo] = useState<ScrumEntities.ScrumTemplate>();
 
   useEffect(() => {
     setCardProjects(buildFullCard(templates, templateNum, newTemplate, newTemplateKey));
@@ -60,29 +56,6 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
   function handleNewTemplateClick() {
     setTemplateFormVisible(true);
     setTemplateFormOperationType(OperationType.CREATE);
-  }
-
-  function handleEditClick(template: ScrumEntities.ScrumTemplate) {
-    form.setFieldsValue(template);
-    setUpdateInfo(template);
-    setTemplateFormOperationType(OperationType.UPDATE);
-    setTemplateFormVisible(true);
-  }
-
-  async function handleDeleteClick(template: CardTemplateInfo) {
-    await deleteTemplate(template.id);
-    if (afterUpdateAction) {
-      afterUpdateAction();
-    }
-  }
-
-  async function handleEnabledChange(template: CardTemplateInfo, enabled: boolean) {
-    const changeEnabledStateTemplate = template;
-    changeEnabledStateTemplate.enabled = enabled;
-    await updateTemplate(changeEnabledStateTemplate);
-    if (afterUpdateAction) {
-      afterUpdateAction();
-    }
   }
 
   return (
@@ -106,101 +79,24 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
             );
           }
           return template.id ? (
-            <ProCard
-              hoverable={true}
-              key={template.id}
-              title={template.name}
-              size={cardSize}
-              onClick={() => {
-                if (!(changeSelectable || editable)) {
-                  setTemplateSettingFormVisible(true);
-                  setTemplateSettingFormOnlyRead(true);
-                  setUpdateInfo(template);
-                }
-              }}
-              extra={
-                changeSelectable &&
-                (template.taskSteps && template.taskSteps.length > 0 ? (
-                  <Switch
-                    checkedChildren="启用"
-                    unCheckedChildren="关闭"
-                    onChange={(enabled) => handleEnabledChange(template, enabled)}
-                    disabled={!(template.taskSteps && template.taskSteps.length > 0)}
-                    defaultChecked={template.enabled}
-                  />
-                ) : (
-                  <Tooltip title={'请先配置模板中任务的详细步骤'}>
-                    <Switch
-                      unCheckedChildren="关闭"
-                      disabled={!(template.taskSteps && template.taskSteps.length > 0)}
-                    />
-                  </Tooltip>
-                ))
-              }
-              actions={
-                !editable
-                  ? undefined
-                  : [
-                      <SettingFilled
-                        key={'setting'}
-                        onClick={() => {
-                          setTemplateSettingFormVisible(true);
-                          setTemplateSettingFormOnlyRead(false);
-                          setUpdateInfo(template);
-                        }}
-                      />,
-                      <EditFilled key={'edit'} onClick={() => handleEditClick(template)} />,
-                      <Popconfirm
-                        placement={'bottom'}
-                        title={`确定删除模板 ${template.name} 吗?`}
-                        onConfirm={() => handleDeleteClick(template)}
-                      >
-                        <DeleteFilled
-                          key={'delete'}
-                          onMouseOver={(event) => {
-                            // eslint-disable-next-line no-param-reassign
-                            event.currentTarget.style.color = 'red';
-                          }}
-                          onMouseLeave={(event) => {
-                            // eslint-disable-next-line no-param-reassign
-                            event.currentTarget.style.color = 'rgba(0, 0, 0, 0.45)';
-                          }}
-                        />
-                      </Popconfirm>,
-                    ]
-              }
-            >
-              <Space direction={'vertical'}>
-                <Typography.Paragraph
-                  type={'secondary'}
-                  ellipsis={{
-                    rows: 1,
-                    tooltip: template.remark,
-                  }}
-                >
-                  {template.remark}
-                </Typography.Paragraph>
-              </Space>
+            <ProCard hoverable={true} key={template.id} bodyStyle={{ padding: 0 }}>
+              <TemplateCard
+                template={template}
+                cardSize={cardSize}
+                editable={editable}
+                afterDeleteAction={afterUpdateAction}
+                changeSelectable={changeSelectable}
+              />
             </ProCard>
           ) : (
             <ProCard key={template.key} style={{ backgroundColor: '#f0f2f5' }} />
           );
         })}
       </ProCard>
-      {templateSettingFormVisible && updateInfo && (
-        <TemplateSettingForm
-          readOnly={templateSettingFormOnlyRead}
-          currentTemplate={updateInfo}
-          visible={templateSettingFormVisible}
-          onCancel={() => setTemplateSettingFormVisible(false)}
-          afterAction={afterUpdateAction}
-        />
-      )}
       {templateFormVisible && (
         <TemplateForm
           visible={templateFormVisible}
           form={form}
-          updateInfo={updateInfo}
           operationType={templateFormOperationType}
           onCancel={() => setTemplateFormVisible(false)}
           afterAction={afterUpdateAction}

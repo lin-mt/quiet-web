@@ -89,7 +89,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
               <ProjectCard
                 project={project}
                 cardSize={'small'}
-                afterUpdateAction={afterUpdateAction}
+                afterDeleteAction={afterUpdateAction}
                 editable={editable}
               />
             </ProCard>
