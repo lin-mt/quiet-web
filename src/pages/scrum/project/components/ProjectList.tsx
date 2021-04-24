@@ -1,14 +1,12 @@
 import type { CSSProperties } from 'react';
 import React, { useEffect, useState } from 'react';
 import ProCard from '@ant-design/pro-card';
-import { AppstoreAddOutlined, DeleteFilled, EditFilled, ForwardFilled } from '@ant-design/icons';
-import { Button, Form, Popconfirm, Space, Typography } from 'antd';
+import { AppstoreAddOutlined } from '@ant-design/icons';
+import { Form } from 'antd';
 import { OperationType } from '@/types/Type';
 import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
-import ProjectSetting from '@/pages/scrum/project/components/ProjectSetting';
-import { deleteProject } from '@/services/scrum/ScrumProject';
-import { Link } from 'umi';
 import { buildFullCard } from '@/utils/utils';
+import ProjectCard from '@/pages/scrum/project/components/ProjectCard';
 
 type ProjectListProps = {
   title: string;
@@ -43,13 +41,11 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
   };
   const newProjectKey = 'newProjectKey';
   const [form] = Form.useForm();
-  const [settingForm] = Form.useForm();
 
   const [addIconStyle, setAddIconStyle] = useState<CSSProperties>(addIconDefaultStyle);
   const [projectFormVisible, setProjectFormVisible] = useState<boolean>(false);
   const [projectFormOperationType, setProjectFormOperationType] = useState<OperationType>();
   const [cardProjects, setCardProjects] = useState<CardProjectInfo[]>([]);
-  const [updateInfo, setUpdateInfo] = useState<ScrumEntities.ScrumProject>();
 
   useEffect(() => {
     setCardProjects(buildFullCard(projects, projectNum, newProject, newProjectKey));
@@ -66,27 +62,6 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
   function handleNewProjectClick() {
     setProjectFormVisible(true);
     setProjectFormOperationType(OperationType.CREATE);
-  }
-
-  function handleEditClick(project: ScrumEntities.ScrumProject) {
-    form.setFieldsValue({
-      ...project,
-      templateId: { value: project.templateId, label: project.templateName },
-      manager: { value: project.manager, label: project.managerName },
-      selectTeams: project.teams?.map((team) => {
-        return { value: team.id, label: team.teamName };
-      }),
-    });
-    setUpdateInfo(project);
-    setProjectFormOperationType(OperationType.UPDATE);
-    setProjectFormVisible(true);
-  }
-
-  async function handleDeleteClick(project: CardProjectInfo) {
-    await deleteProject(project.id);
-    if (afterUpdateAction) {
-      afterUpdateAction();
-    }
   }
 
   return (
@@ -110,66 +85,13 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
             );
           }
           return project.id ? (
-            <ProCard
-              hoverable={true}
-              key={project.id}
-              title={project.name}
-              size={cardSize}
-              extra={
-                <Link to={`/scrum/project/detail/?projectId=${project.id}`}>
-                  <Button
-                    icon={<ForwardFilled />}
-                    type={'primary'}
-                    shape={'round'}
-                    size={'small'}
-                  />
-                </Link>
-              }
-              actions={
-                !editable
-                  ? undefined
-                  : [
-                      <ProjectSetting
-                        key={'setting'}
-                        projectInfo={project}
-                        form={settingForm}
-                        afterSettingUpdate={afterUpdateAction}
-                      />,
-                      <EditFilled key={'edit'} onClick={() => handleEditClick(project)} />,
-                      <Popconfirm
-                        placement={'bottom'}
-                        title={`确定删除项目 ${project.name} 吗?`}
-                        onConfirm={() => handleDeleteClick(project)}
-                      >
-                        <DeleteFilled
-                          key={'delete'}
-                          onMouseOver={(event) => {
-                            // eslint-disable-next-line no-param-reassign
-                            event.currentTarget.style.color = 'red';
-                          }}
-                          onMouseLeave={(event) => {
-                            // eslint-disable-next-line no-param-reassign
-                            event.currentTarget.style.color = 'rgba(0, 0, 0, 0.45)';
-                          }}
-                        />
-                      </Popconfirm>,
-                    ]
-              }
-            >
-              <Space direction={'vertical'}>
-                <Typography.Text style={{ color: '#108EE9' }}>
-                  {project.managerName}
-                </Typography.Text>
-                <Typography.Paragraph
-                  type={'secondary'}
-                  ellipsis={{
-                    rows: 1,
-                    tooltip: project.description,
-                  }}
-                >
-                  {project.description}
-                </Typography.Paragraph>
-              </Space>
+            <ProCard hoverable={true} bodyStyle={{ padding: 0 }}>
+              <ProjectCard
+                project={project}
+                cardSize={'small'}
+                afterUpdateAction={afterUpdateAction}
+                editable={editable}
+              />
             </ProCard>
           ) : (
             <ProCard key={project.key} style={{ backgroundColor: '#f0f2f5' }} />
@@ -180,7 +102,6 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
         <ProjectForm
           visible={projectFormVisible}
           form={form}
-          updateInfo={updateInfo}
           operationType={projectFormOperationType}
           onCancel={() => setProjectFormVisible(false)}
           afterAction={afterUpdateAction}
