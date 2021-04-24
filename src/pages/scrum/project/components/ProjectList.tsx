@@ -85,7 +85,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
             );
           }
           return project.id ? (
-            <ProCard hoverable={true} bodyStyle={{ padding: 0 }}>
+            <ProCard key={project.id} hoverable={true} bodyStyle={{ padding: 0 }}>
               <ProjectCard
                 project={project}
                 cardSize={'small'}
