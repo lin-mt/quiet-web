@@ -31,8 +31,17 @@ export function allMyProjects() {
   });
 }
 
-export function projectDetailInfo(id: string) {
+export function findProjectInfo(id: string) {
   return request(`${apiPrefix}/projectInfo`, {
+    method: 'POST',
+    data: { id },
+  }).then((resData) => {
+    return resData.data;
+  });
+}
+
+export function findProjectDetail(id: string) {
+  return request(`${apiPrefix}/detail`, {
     method: 'POST',
     data: { id },
   }).then((resData) => {

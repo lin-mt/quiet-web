@@ -5,7 +5,7 @@ import { DeleteFilled, EditFilled, ForwardFilled } from '@ant-design/icons';
 import ProjectSetting from '@/pages/scrum/project/components/ProjectSetting';
 import React, { useState } from 'react';
 import { OperationType } from '@/types/Type';
-import { deleteProject, projectDetailInfo } from '@/services/scrum/ScrumProject';
+import { deleteProject, findProjectInfo } from '@/services/scrum/ScrumProject';
 import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
 
 type ProjectCardProps = {
@@ -39,7 +39,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
   }
 
   async function reloadProjectInfo() {
-    setProjectInfo(await projectDetailInfo(projectInfo.id));
+    setProjectInfo(await findProjectInfo(projectInfo.id));
   }
 
   async function handleDeleteClick() {
