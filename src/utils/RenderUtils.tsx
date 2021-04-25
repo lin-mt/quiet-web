@@ -1,7 +1,7 @@
 import type { CustomTagProps } from 'rc-select/lib/interface/generator';
 import { Tag } from 'antd';
 
-const quietColor = '#108EE9';
+export const quietColor = '#108EE9';
 
 export function multipleSelectTagRender(tagProps: CustomTagProps) {
   const { label, closable, onClose } = tagProps;
