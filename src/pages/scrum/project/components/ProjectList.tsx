@@ -94,7 +94,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
               />
             </ProCard>
           ) : (
-            <ProCard key={project.key} style={{ backgroundColor: '#f0f2f5' }} />
+            <ProCard key={project.key} style={{ visibility: 'hidden' }} />
           );
         })}
       </ProCard>

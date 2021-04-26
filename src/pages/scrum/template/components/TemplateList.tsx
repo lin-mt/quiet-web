@@ -89,7 +89,7 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
               />
             </ProCard>
           ) : (
-            <ProCard key={template.key} style={{ backgroundColor: '#f0f2f5' }} />
+            <ProCard key={template.key} style={{ visibility: 'hidden' }} />
           );
         })}
       </ProCard>
