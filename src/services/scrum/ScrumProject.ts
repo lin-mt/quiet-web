@@ -40,7 +40,7 @@ export function findProjectInfo(id: string) {
   });
 }
 
-export function findProjectDetail(id: string) {
+export function findProjectDetail(id: string): Promise<ScrumEntities.ScrumProjectDetail> {
   return request(`${apiPrefix}/detail`, {
     method: 'POST',
     data: { id },

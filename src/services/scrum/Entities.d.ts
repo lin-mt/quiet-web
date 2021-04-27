@@ -14,6 +14,12 @@ declare namespace ScrumEntities {
     teams?: QuietTeam[];
   };
 
+  export type ScrumProjectDetail = {
+    project: ScrumEntities.ScrumProject;
+    teams: SystemEntities.QuietTeam[];
+    versions: ScrumEntities.ScrumPriority[];
+  };
+
   export type ScrumTemplate = SystemEntities.BaseEntity & {
     name: string;
     enabled: boolean;
@@ -34,4 +40,18 @@ declare namespace ScrumEntities {
     templateId: string;
     remark?: string;
   };
+
+  export type ScrumDemand = SystemEntities.SerialEntity &
+    SystemEntities.ParentEntity & {
+      title: string;
+      type: string;
+      projectId: string;
+      priorityId: string;
+      iterationId?: string;
+      optimizeDemandId?: string;
+      executorId?: string;
+      startTime?: string;
+      endTime?: string;
+      remark?: string;
+    };
 }
