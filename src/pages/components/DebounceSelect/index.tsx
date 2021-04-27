@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, Spin } from 'antd';
+import { Empty, Select, Spin } from 'antd';
 import type { SelectProps } from 'antd/es/select';
 import debounce from 'lodash/debounce';
 
@@ -43,7 +43,7 @@ export function DebounceSelect<
       labelInValue
       filterOption={false}
       onSearch={debounceFetcher}
-      notFoundContent={fetching ? <Spin size="small" /> : null}
+      notFoundContent={<div style={{ textAlign: 'center' }}>{fetching ? <Spin /> : <Empty />}</div>}
       options={options}
       onBlur={() => setOptions([])}
       {...props}

@@ -11,6 +11,10 @@ declare namespace SystemEntities {
     serialNumber: number;
   };
 
+  export type ParentEntity = BaseEntity & {
+    parentId: number;
+  };
+
   export type QuietClient = BaseEntity & {
     clientId: string;
     clientName: string;
