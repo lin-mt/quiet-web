@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { findProjectDetail } from '@/services/scrum/ScrumProject';
-import { Col, Descriptions, Row, Spin, Tag } from 'antd';
+import { Col, Descriptions, Result, Row, Spin, Tag } from 'antd';
 import { tagColor } from '@/utils/RenderUtils';
 import DemandPoolList from '@/pages/scrum/project/detail/components/DemandPool';
 import DemandPlanning from '@/pages/scrum/project/detail/components/DemandPlanning';
@@ -32,7 +32,7 @@ const ProjectDetail: React.FC<any> = (props) => {
   return (
     <>
       {!projectDetail ? (
-        <Spin />
+        <Result title={<Spin size={'large'} />} />
       ) : (
         <>
           <Descriptions title={projectDetail.project.name}>

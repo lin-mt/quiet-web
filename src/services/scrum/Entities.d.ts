@@ -17,7 +17,6 @@ declare namespace ScrumEntities {
   export type ScrumProjectDetail = {
     project: ScrumEntities.ScrumProject;
     teams: SystemEntities.QuietTeam[];
-    versions: ScrumEntities.ScrumPriority[];
   };
 
   export type ScrumTemplate = SystemEntities.BaseEntity & {
