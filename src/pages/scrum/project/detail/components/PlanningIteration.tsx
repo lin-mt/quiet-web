@@ -141,9 +141,9 @@ export default (props: PlanningIterationProps) => {
                           <Button
                             size={'small'}
                             type={'primary'}
-                            // @ts-ignore
                             style={{
                               visibility:
+                                // @ts-ignore
                                 node.iteration && node.iteration.length > 0 ? 'hidden' : undefined,
                             }}
                             icon={<PlusOutlined />}
