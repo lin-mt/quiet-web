@@ -5,7 +5,6 @@ type IterationFormProps = {
   versionId: string;
   form: FormInstance;
   onCancel: () => void;
-  parentId?: string;
   updateInfo?: ScrumEntities.ScrumIteration;
   afterAction?: () => void;
 };
