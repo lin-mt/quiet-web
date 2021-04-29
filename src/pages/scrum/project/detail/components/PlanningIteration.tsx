@@ -142,7 +142,10 @@ export default (props: PlanningIterationProps) => {
                             size={'small'}
                             type={'primary'}
                             // @ts-ignore
-                            disabled={node.iteration && node.iteration.length > 0}
+                            style={{
+                              visibility:
+                                node.iteration && node.iteration.length > 0 ? 'hidden' : undefined,
+                            }}
                             icon={<PlusOutlined />}
                             onClick={() => {
                               // @ts-ignore
@@ -155,7 +158,10 @@ export default (props: PlanningIterationProps) => {
                           <Button
                             size={'small'}
                             type={'primary'}
-                            disabled={node.children && node.children.length > 0}
+                            style={{
+                              visibility:
+                                node.children && node.children.length > 0 ? 'hidden' : undefined,
+                            }}
                             icon={<PlusOutlined />}
                           >
                             迭代
