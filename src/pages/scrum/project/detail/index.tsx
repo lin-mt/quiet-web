@@ -70,7 +70,7 @@ const ProjectDetail: React.FC<any> = (props) => {
               <DemandPlanning />
             </Col>
             <Col span={8}>
-              <PlanningIteration />
+              <PlanningIteration projectId={projectDetail.project.id} />
             </Col>
           </Row>
         </>
