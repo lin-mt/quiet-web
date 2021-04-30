@@ -142,9 +142,9 @@ export default (props: PlanningIterationProps) => {
                               const selectedNodeValues = {
                                 ...node,
                                 // @ts-ignore
-                                planStartDate: moment(node.planStartDate, 'YYYY-MM-DD'),
+                                planStartDate: moment(node.planStartDate),
                                 // @ts-ignore
-                                planEndDate: moment(node.planEndDate, 'YYYY-MM-DD'),
+                                planEndDate: moment(node.planEndDate),
                               };
                               if (isVersionNode) {
                                 versionForm.setFieldsValue(selectedNodeValues);
