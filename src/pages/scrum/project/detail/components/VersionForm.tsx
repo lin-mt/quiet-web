@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button, DatePicker, Form, Input, Modal } from 'antd';
 import { saveVersion, updateVersion } from '@/services/scrum/ScrumVersion';
 import type { FormInstance } from 'antd/lib/form';
+import { formatDate } from '@/utils/MomentUtils';
 
 type VersionFormProps = {
   visible: boolean;
@@ -19,8 +20,8 @@ export default (props: VersionFormProps) => {
 
   async function handleSubmit() {
     const values = await form.validateFields();
-    values.planStartDate = values.planStartDate.format('YYYY-MM-DD');
-    values.planEndDate = values.planEndDate.format('YYYY-MM-DD');
+    values.planStartDate = formatDate(values.planStartDate);
+    values.planEndDate = formatDate(values.planEndDate);
     values.projectId = projectId;
     values.parentId = parentId;
     setSubmitting(true);

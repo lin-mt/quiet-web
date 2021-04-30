@@ -5,7 +5,7 @@ import { AppstoreAddOutlined } from '@ant-design/icons';
 import { Form } from 'antd';
 import { OperationType } from '@/types/Type';
 import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
-import { buildFullCard } from '@/utils/utils';
+import { buildFullCard } from '@/utils/RenderUtils';
 import ProjectCard from '@/pages/scrum/project/components/ProjectCard';
 
 type ProjectListProps = {

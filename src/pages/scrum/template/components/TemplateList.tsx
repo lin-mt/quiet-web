@@ -5,7 +5,7 @@ import { AppstoreAddOutlined } from '@ant-design/icons';
 import { Form } from 'antd';
 import { OperationType } from '@/types/Type';
 import TemplateForm from '@/pages/scrum/template/components/TemplateForm';
-import { buildFullCard } from '@/utils/utils';
+import { buildFullCard } from '@/utils/RenderUtils';
 import TemplateCard from '@/pages/scrum/template/components/TemplateCard';
 
 type TemplateListProps = {

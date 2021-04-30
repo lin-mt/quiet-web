@@ -3,6 +3,13 @@ import request from 'umi-request';
 
 const apiPrefix = '/api/scrum/iteration';
 
+export function deleteIteration(deleteId: string) {
+  return request(`${apiPrefix}/delete`, {
+    data: { deleteId },
+    method: 'POST',
+  });
+}
+
 export function saveIteration(params?: any): Promise<Result<ScrumEntities.ScrumIteration>> {
   return request(`${apiPrefix}/save`, {
     data: { save: params },

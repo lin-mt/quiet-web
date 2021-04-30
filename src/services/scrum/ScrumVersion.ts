@@ -3,6 +3,13 @@ import request from 'umi-request';
 
 const apiPrefix = '/api/scrum/version';
 
+export function deleteVersion(deleteId: string) {
+  return request(`${apiPrefix}/delete`, {
+    data: { deleteId },
+    method: 'POST',
+  });
+}
+
 export function saveVersion(params?: any) {
   return request(`${apiPrefix}/save`, {
     data: { save: params },

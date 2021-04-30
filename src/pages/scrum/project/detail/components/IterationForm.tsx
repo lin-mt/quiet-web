@@ -2,6 +2,7 @@ import type { FormInstance } from 'antd/lib/form';
 import { useState } from 'react';
 import { saveIteration, updateIteration } from '@/services/scrum/ScrumIteration';
 import { Button, DatePicker, Form, Input, Modal } from 'antd';
+import { formatDate } from '@/utils/MomentUtils';
 
 type IterationFormProps = {
   visible: boolean;
@@ -18,8 +19,8 @@ export default (props: IterationFormProps) => {
 
   async function handleSubmit() {
     const values = await form.validateFields();
-    values.planStartDate = values.planStartDate.format('YYYY-MM-DD');
-    values.planEndDate = values.planEndDate.format('YYYY-MM-DD');
+    values.planStartDate = formatDate(values.planStartDate);
+    values.planEndDate = formatDate(values.planEndDate);
     if (!updateInfo) {
       values.versionId = versionId;
     }

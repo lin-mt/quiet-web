@@ -1,12 +1,24 @@
-import { Button, Card, Descriptions, Empty, Form, Popover, Space, Spin, Tree } from 'antd';
+import {
+  Button,
+  Card,
+  Descriptions,
+  Empty,
+  Form,
+  Popconfirm,
+  Popover,
+  Space,
+  Spin,
+  Tree,
+} from 'antd';
 import type { Key } from 'react';
 import { useEffect, useState } from 'react';
-import { findDetailsByProjectId } from '@/services/scrum/ScrumVersion';
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { deleteVersion, findDetailsByProjectId } from '@/services/scrum/ScrumVersion';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import VersionForm from '@/pages/scrum/project/detail/components/VersionForm';
-import moment from 'moment';
 import { iterationsAddToChildren } from '@/utils/scrum/utils';
 import IterationForm from '@/pages/scrum/project/detail/components/IterationForm';
+import { deleteIteration } from '@/services/scrum/ScrumIteration';
+import { formatDate, toMomentDate } from '@/utils/MomentUtils';
 
 type PlanningIterationProps = {
   projectId: string;
@@ -95,18 +107,24 @@ export default (props: PlanningIterationProps) => {
             // @ts-ignore
             onClick={(e, node) => setSelectedVersionId(node.id)}
             titleRender={(node) => {
-              // @ts-ignore
-              const isVersionNode = !node.versionId;
+              const nodeValues: any = {
+                ...node,
+                // @ts-ignore
+                planStartDate: toMomentDate(node.planStartDate),
+                // @ts-ignore
+                planEndDate: toMomentDate(node.planEndDate),
+              };
+              const isVersionNode = !nodeValues.versionId;
               const showAddVersion =
                 isVersionNode &&
-                // @ts-ignore
-                (!node.children || !node.iterations || node.iterations.length === 0);
+                (!nodeValues.children ||
+                  !nodeValues.iterations ||
+                  nodeValues.iterations.length === 0);
               const showAddIteration =
                 isVersionNode &&
-                (!node.children ||
-                  node.children.length === 0 ||
-                  // @ts-ignore
-                  (node.iterations && node.iterations.length > 0));
+                (!nodeValues.children ||
+                  nodeValues.children.length === 0 ||
+                  (nodeValues.iterations && nodeValues.iterations.length > 0));
               return (
                 <Popover
                   title={null}
@@ -114,23 +132,12 @@ export default (props: PlanningIterationProps) => {
                   trigger={'click'}
                   content={
                     <Descriptions column={1} size={'small'} style={{ width: '360px' }}>
-                      <Descriptions.Item label="备注">
-                        {
-                          // @ts-ignore
-                          node.remark
-                        }
+                      <Descriptions.Item label="备注">{nodeValues.remark}</Descriptions.Item>
+                      <Descriptions.Item label="计划开始日期">
+                        {formatDate(nodeValues.planStartDate)}
                       </Descriptions.Item>
                       <Descriptions.Item label="计划开始日期">
-                        {
-                          // @ts-ignore
-                          node.planStartDate
-                        }
-                      </Descriptions.Item>
-                      <Descriptions.Item label="计划开始日期">
-                        {
-                          // @ts-ignore
-                          node.planEndDate
-                        }
+                        {formatDate(nodeValues.planEndDate)}
                       </Descriptions.Item>
                       <Descriptions.Item>
                         <Space>
@@ -139,23 +146,14 @@ export default (props: PlanningIterationProps) => {
                             type={'primary'}
                             icon={<EditOutlined />}
                             onClick={() => {
-                              const selectedNodeValues = {
-                                ...node,
-                                // @ts-ignore
-                                planStartDate: moment(node.planStartDate),
-                                // @ts-ignore
-                                planEndDate: moment(node.planEndDate),
-                              };
                               if (isVersionNode) {
-                                versionForm.setFieldsValue(selectedNodeValues);
+                                versionForm.setFieldsValue(nodeValues);
                                 setUpdateVersionInfo(node);
                                 setVersionFormVisible(true);
                               } else {
-                                iterationForm.setFieldsValue(selectedNodeValues);
-                                // @ts-ignore
-                                setSelectedVersionId(node.id);
-                                // @ts-ignore
-                                setUpdateIterationInfo(node);
+                                iterationForm.setFieldsValue(nodeValues);
+                                setSelectedVersionId(nodeValues.id);
+                                setUpdateIterationInfo(nodeValues);
                                 setIterationFormVisible(true);
                               }
                             }}
@@ -182,15 +180,35 @@ export default (props: PlanningIterationProps) => {
                               迭代
                             </Button>
                           )}
+                          <Popconfirm
+                            placement={'bottom'}
+                            title={`确认删除${isVersionNode ? '版本' : '迭代'} ${
+                              nodeValues.name
+                            } 吗？`}
+                            onConfirm={async () => {
+                              if (isVersionNode) {
+                                await deleteVersion(nodeValues.id);
+                              } else {
+                                await deleteIteration(nodeValues.id);
+                              }
+                              reloadVersions();
+                            }}
+                          >
+                            <Button
+                              danger={true}
+                              size={'small'}
+                              type={'primary'}
+                              icon={<DeleteOutlined />}
+                            >
+                              删除
+                            </Button>
+                          </Popconfirm>
                         </Space>
                       </Descriptions.Item>
                     </Descriptions>
                   }
                 >
-                  {
-                    // @ts-ignore
-                    `${isVersionNode ? 'v' : ''}${node.name}`
-                  }
+                  {`${isVersionNode ? 'v' : ''}${nodeValues.name}`}
                 </Popover>
               );
             }}
