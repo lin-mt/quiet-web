@@ -14,9 +14,9 @@ import type { Key } from 'react';
 import { useEffect, useState } from 'react';
 import { deleteVersion, findDetailsByProjectId } from '@/services/scrum/ScrumVersion';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import VersionForm from '@/pages/scrum/project/detail/components/VersionForm';
+import VersionForm from '@/pages/scrum/version/components/VersionForm';
 import { iterationsAddToChildren } from '@/utils/scrum/utils';
-import IterationForm from '@/pages/scrum/project/detail/components/IterationForm';
+import IterationForm from '@/pages/scrum/iteration/components/IterationForm';
 import { deleteIteration } from '@/services/scrum/ScrumIteration';
 import { formatDate, toMomentDate } from '@/utils/MomentUtils';
 
