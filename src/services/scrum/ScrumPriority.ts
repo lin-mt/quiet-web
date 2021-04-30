@@ -1,4 +1,4 @@
-import { request } from '@@/plugin-request/request';
+import { request } from 'umi';
 
 const apiPrefix = '/api/scrum/priority';
 

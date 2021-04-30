@@ -1,4 +1,4 @@
-import { request } from '@@/plugin-request/request';
+import { request } from 'umi';
 import type { Result } from '@/types/Result';
 
 const apiPrefix = '/api/scrum/template';

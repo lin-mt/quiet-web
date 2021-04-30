@@ -1,5 +1,5 @@
+import { request } from 'umi';
 import type { Result } from '@/types/Result';
-import request from 'umi-request';
 
 const apiPrefix = '/api/scrum/version';
 

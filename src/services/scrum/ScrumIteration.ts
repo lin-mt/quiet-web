@@ -1,5 +1,5 @@
 import type { Result } from '@/types/Result';
-import request from 'umi-request';
+import { request } from 'umi';
 
 const apiPrefix = '/api/scrum/iteration';
 
