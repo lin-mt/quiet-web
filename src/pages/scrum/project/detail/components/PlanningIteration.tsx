@@ -19,6 +19,8 @@ import { iterationsAddToChildren } from '@/utils/scrum/utils';
 import IterationForm from '@/pages/scrum/iteration/components/IterationForm';
 import { deleteIteration } from '@/services/scrum/ScrumIteration';
 import { formatDate, toMomentDate } from '@/utils/MomentUtils';
+import { useModel } from 'umi';
+import { ProjectDetail } from '@/constant/scrum/ModelNames';
 
 type PlanningIterationProps = {
   projectId: string;
@@ -27,12 +29,13 @@ type PlanningIterationProps = {
 export default (props: PlanningIterationProps) => {
   const { projectId } = props;
 
+  const { versions, setVersions } = useModel(ProjectDetail);
+
   const [loading, setLoading] = useState<boolean>(true);
   const [versionFormVisible, setVersionFormVisible] = useState<boolean>(false);
   const [iterationFormVisible, setIterationFormVisible] = useState<boolean>(false);
   const [selectedVersionId, setSelectedVersionId] = useState<string>();
   const [expandedKeys, setExpandedKeys] = useState<Key[]>();
-  const [versions, setVersions] = useState<ScrumEntities.ScrumVersion[]>([]);
   const [updateVersionInfo, setUpdateVersionInfo] = useState<ScrumEntities.ScrumVersion>();
   const [updateIterationInfo, setUpdateIterationInfo] = useState<ScrumEntities.ScrumIteration>();
   const [versionForm] = Form.useForm();
@@ -52,7 +55,7 @@ export default (props: PlanningIterationProps) => {
       setVersions(iterationsAddToChildren(projectVersions));
       setLoading(false);
     });
-  }, [projectId]);
+  }, [projectId, setVersions]);
 
   return (
     <>

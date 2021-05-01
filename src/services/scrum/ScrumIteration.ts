@@ -23,3 +23,12 @@ export function updateIteration(params?: any): Promise<Result<ScrumEntities.Scru
     method: 'POST',
   });
 }
+
+export function findAllDemandsById(id: string): Promise<ScrumEntities.ScrumDemand[]> {
+  return request<Result<ScrumEntities.ScrumDemand[]>>(`${apiPrefix}/findAllDemandsById`, {
+    data: { id },
+    method: 'POST',
+  }).then((resp) => {
+    return resp.data;
+  });
+}
