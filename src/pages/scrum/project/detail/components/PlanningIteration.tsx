@@ -91,7 +91,7 @@ export default (props: PlanningIterationProps) => {
             {loading ? (
               <Spin />
             ) : (
-              <Empty>
+              <Empty description={'无版本信息'}>
                 <Button
                   type="primary"
                   icon={<PlusOutlined />}

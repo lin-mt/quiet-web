@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { findToBePlanned } from '@/services/scrum/ScrumDemand';
 import { Button, Card, Empty, List, message, Spin } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
+import { PlusOutlined } from '@ant-design/icons';
 
 type DemandPoolListProps = {
   projectId: string;
@@ -40,7 +41,15 @@ export default (props: DemandPoolListProps) => {
   };
   return (
     <>
-      <Card title={'需求池'} size={'small'}>
+      <Card
+        title={'需求池'}
+        size={'small'}
+        extra={
+          <Button type={'primary'} size={'small'} shape={'round'} icon={<PlusOutlined />}>
+            创建需求
+          </Button>
+        }
+      >
         <InfiniteScroll
           initialLoad={true}
           pageStart={0}
@@ -57,8 +66,10 @@ export default (props: DemandPoolListProps) => {
             )}
             locale={{
               emptyText: (
-                <Empty>
-                  <Button type="primary">创建需求</Button>
+                <Empty description={'无待规划需求'}>
+                  <Button type="primary" icon={<PlusOutlined />}>
+                    创建需求
+                  </Button>
                 </Empty>
               ),
             }}

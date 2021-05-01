@@ -62,7 +62,7 @@ const ProjectDetail: React.FC<any> = (props) => {
               })}
             </Descriptions.Item>
           </Descriptions>
-          <Row gutter={16}>
+          <Row gutter={9}>
             <Col span={8}>
               <DemandPoolList projectId={projectDetail.project.id} />
             </Col>
