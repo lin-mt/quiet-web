@@ -3,32 +3,34 @@ import { findToBePlanned } from '@/services/scrum/ScrumDemand';
 import { Button, Card, Empty, List, message, Spin } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import { PlusOutlined } from '@ant-design/icons';
+import { useModel } from '@@/plugin-model/useModel';
+import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 
-type DemandPoolListProps = {
-  projectId: string;
-};
-
-export default (props: DemandPoolListProps) => {
+export default () => {
   const limit = 30;
+  const { projectId } = useModel(PROJECT_DETAIL);
+
   const [offset, setOffset] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [toBePlanned, setToBePlanned] = useState<ScrumEntities.ScrumDemand[]>([]);
 
   useEffect(() => {
-    setLoading(true);
-    findToBePlanned(props.projectId, offset, limit).then((demands) => {
-      setToBePlanned(demands);
-      setOffset(offset + demands.length);
-      setHasMore(limit === demands.length);
-      setLoading(false);
-    });
-  }, [offset, props.projectId]);
+    if (projectId) {
+      setLoading(true);
+      findToBePlanned(projectId, offset, limit).then((demands) => {
+        setToBePlanned(demands);
+        setOffset(offset + demands.length);
+        setHasMore(limit === demands.length);
+        setLoading(false);
+      });
+    }
+  }, [offset, projectId]);
 
   const loadMoreDemandsToBePlanned = () => {
-    if (hasMore) {
+    if (hasMore && projectId) {
       setLoading(true);
-      findToBePlanned(props.projectId, offset, limit).then((demands) => {
+      findToBePlanned(projectId, offset, limit).then((demands) => {
         setToBePlanned(toBePlanned.concat(demands));
         setOffset(offset + demands.length);
         setHasMore(limit === demands.length);

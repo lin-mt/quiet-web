@@ -3,10 +3,10 @@ import { useModel } from 'umi';
 import { Card, Empty, List, Spin, TreeSelect } from 'antd';
 import { disableTreeNode } from '@/utils/scrum/utils';
 import { findAllDemandsById } from '@/services/scrum/ScrumIteration';
-import { ProjectDetail } from '@/constant/scrum/ModelNames';
+import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 
 export default () => {
-  const { versions } = useModel(ProjectDetail);
+  const { versions } = useModel(PROJECT_DETAIL);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedIterationId, setSelectedIterationId] = useState<string>();
   const [iterationDemands, setIterationDemands] = useState<ScrumEntities.ScrumDemand[]>();

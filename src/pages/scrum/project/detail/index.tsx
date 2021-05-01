@@ -1,38 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import { findProjectDetail } from '@/services/scrum/ScrumProject';
-import { Col, Descriptions, Result, Row, Spin, Tag } from 'antd';
+import { Col, Descriptions, Empty, Row, Spin, Tag } from 'antd';
 import { tagColor } from '@/utils/RenderUtils';
 import DemandPoolList from '@/pages/scrum/project/detail/components/DemandPool';
 import DemandPlanning from '@/pages/scrum/project/detail/components/DemandPlanning';
 import PlanningIteration from '@/pages/scrum/project/detail/components/PlanningIteration';
+import { useModel } from 'umi';
+import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 
 const ProjectDetail: React.FC<any> = (props) => {
+  const { projectId, setProjectId } = useModel(PROJECT_DETAIL);
+
+  const [loading, setLoading] = useState<boolean>(false);
   const [projectDetail, setProjectDetail] = useState<ScrumEntities.ScrumProjectDetail>();
   const [projectMembers, setProjectMembers] = useState<Map<string, string>>(
     new Map<string, string>(),
   );
 
   useEffect(() => {
-    findProjectDetail(props.location.query.projectId).then((project) => {
-      setProjectDetail(project);
-      const membersDatum: Map<string, string> = new Map<string, string>();
-      project.teams.forEach((team) => {
-        if (team.members) {
-          team.members.forEach((member) => {
-            if (!membersDatum.has(member.id)) {
-              membersDatum.set(member.id, member.fullName);
-            }
-          });
-        }
+    setProjectId(props.location.query.projectId);
+    if (projectId) {
+      setLoading(true);
+      findProjectDetail(projectId).then((project) => {
+        setProjectDetail(project);
+        const membersDatum: Map<string, string> = new Map<string, string>();
+        project.teams.forEach((team) => {
+          if (team.members) {
+            team.members.forEach((member) => {
+              if (!membersDatum.has(member.id)) {
+                membersDatum.set(member.id, member.fullName);
+              }
+            });
+          }
+        });
+        setProjectMembers(membersDatum);
+        setLoading(false);
       });
-      setProjectMembers(membersDatum);
-    });
-  }, [props.location.query.projectId]);
+    }
+  }, [projectId, props.location.query.projectId, setProjectId]);
 
   return (
     <>
-      {!projectDetail ? (
-        <Result title={<Spin size={'large'} />} />
+      {loading || !projectDetail ? (
+        <Empty description={null} image={null}>
+          <Spin size={'large'} />
+        </Empty>
       ) : (
         <>
           <Descriptions title={projectDetail.project.name}>
@@ -64,13 +76,13 @@ const ProjectDetail: React.FC<any> = (props) => {
           </Descriptions>
           <Row gutter={9}>
             <Col span={8}>
-              <DemandPoolList projectId={projectDetail.project.id} />
+              <DemandPoolList />
             </Col>
             <Col span={8}>
               <DemandPlanning />
             </Col>
             <Col span={8}>
-              <PlanningIteration projectId={projectDetail.project.id} />
+              <PlanningIteration />
             </Col>
           </Row>
         </>

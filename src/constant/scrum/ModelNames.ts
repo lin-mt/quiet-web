@@ -1,1 +1,1 @@
-export const ProjectDetail = 'scrum.ProjectDetail';
+export const PROJECT_DETAIL = 'scrum.ProjectDetail';

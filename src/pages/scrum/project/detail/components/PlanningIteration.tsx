@@ -20,16 +20,10 @@ import IterationForm from '@/pages/scrum/iteration/components/IterationForm';
 import { deleteIteration } from '@/services/scrum/ScrumIteration';
 import { formatDate, toMomentDate } from '@/utils/MomentUtils';
 import { useModel } from 'umi';
-import { ProjectDetail } from '@/constant/scrum/ModelNames';
+import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 
-type PlanningIterationProps = {
-  projectId: string;
-};
-
-export default (props: PlanningIterationProps) => {
-  const { projectId } = props;
-
-  const { versions, setVersions } = useModel(ProjectDetail);
+export default () => {
+  const { projectId, versions, setVersions } = useModel(PROJECT_DETAIL);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [versionFormVisible, setVersionFormVisible] = useState<boolean>(false);
@@ -42,19 +36,23 @@ export default (props: PlanningIterationProps) => {
   const [iterationForm] = Form.useForm();
 
   function reloadVersions() {
-    setLoading(true);
-    findDetailsByProjectId(projectId).then((projectVersions) => {
-      setVersions(iterationsAddToChildren(projectVersions));
-      setLoading(false);
-    });
+    if (projectId) {
+      setLoading(true);
+      findDetailsByProjectId(projectId).then((projectVersions) => {
+        setVersions(iterationsAddToChildren(projectVersions));
+        setLoading(false);
+      });
+    }
   }
 
   useEffect(() => {
-    setLoading(true);
-    findDetailsByProjectId(projectId).then((projectVersions) => {
-      setVersions(iterationsAddToChildren(projectVersions));
-      setLoading(false);
-    });
+    if (projectId) {
+      setLoading(true);
+      findDetailsByProjectId(projectId).then((projectVersions) => {
+        setVersions(iterationsAddToChildren(projectVersions));
+        setLoading(false);
+      });
+    }
   }, [projectId, setVersions]);
 
   return (
@@ -218,7 +216,7 @@ export default (props: PlanningIterationProps) => {
           />
         )}
       </Card>
-      {versionFormVisible && (
+      {versionFormVisible && projectId && (
         <VersionForm
           form={versionForm}
           projectId={projectId}
