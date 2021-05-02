@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import ProCard from '@ant-design/pro-card';
 import { AppstoreAddOutlined } from '@ant-design/icons';
 import { Form } from 'antd';
-import { OperationType } from '@/types/Type';
 import TemplateForm from '@/pages/scrum/template/components/TemplateForm';
 import { buildFullCard } from '@/utils/RenderUtils';
 import TemplateCard from '@/pages/scrum/template/components/TemplateCard';
@@ -23,31 +22,27 @@ type CardTemplateInfo = ScrumEntities.ScrumTemplate & {
   key: string;
 };
 
-const ProjectList: React.FC<TemplateListProps> = (props) => {
-  const {
-    title,
-    templates,
-    templateNum = 5,
-    newTemplate = false,
-    changeSelectable = false,
-    editable = false,
-    afterUpdateAction,
-    cardSize,
-  } = props;
-
+const ProjectList: React.FC<TemplateListProps> = ({
+  title,
+  templates,
+  templateNum = 5,
+  newTemplate = false,
+  changeSelectable = false,
+  editable = false,
+  afterUpdateAction,
+  cardSize,
+}) => {
   const addIconDefaultStyle = { fontSize: '36px' };
-
   const addIconOverStyle = {
     ...addIconDefaultStyle,
     color: '#1890ff',
   };
   const newTemplateKey = 'newTemplateKey';
-  const [form] = Form.useForm();
 
   const [addIconStyle, setAddIconStyle] = useState<CSSProperties>(addIconDefaultStyle);
   const [templateFormVisible, setTemplateFormVisible] = useState<boolean>(false);
-  const [templateFormOperationType, setTemplateFormOperationType] = useState<OperationType>();
   const [cardTemplates, setCardProjects] = useState<CardTemplateInfo[]>([]);
+  const [templateForm] = Form.useForm();
 
   useEffect(() => {
     setCardProjects(buildFullCard(templates, templateNum, newTemplate, newTemplateKey));
@@ -55,7 +50,6 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
 
   function handleNewTemplateClick() {
     setTemplateFormVisible(true);
-    setTemplateFormOperationType(OperationType.CREATE);
   }
 
   return (
@@ -96,8 +90,7 @@ const ProjectList: React.FC<TemplateListProps> = (props) => {
       {templateFormVisible && (
         <TemplateForm
           visible={templateFormVisible}
-          form={form}
-          operationType={templateFormOperationType}
+          form={templateForm}
           onCancel={() => setTemplateFormVisible(false)}
           afterAction={afterUpdateAction}
         />

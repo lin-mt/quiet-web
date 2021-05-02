@@ -1,39 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 import { saveTemplate, updateTemplate } from '@/services/scrum/ScrumTemplate';
 import type { FormInstance } from 'antd/lib/form';
-import { OperationType } from '@/types/Type';
 
 type TemplateFormProps = {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
-  operationType?: OperationType;
   updateInfo?: ScrumEntities.ScrumTemplate;
   afterAction?: () => void;
 };
 
 const TemplateForm: React.FC<TemplateFormProps> = (props) => {
-  const nonsupportMsg = 'nonsupport FormType';
-
-  const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
+  const { visible, onCancel, updateInfo, form, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
+
+  useEffect(() => {
+    form.setFieldsValue(updateInfo);
+  }, [form, updateInfo]);
 
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
-    switch (operationType) {
-      case OperationType.CREATE:
-        await saveTemplate(values);
-        break;
-      case OperationType.UPDATE:
-        await updateTemplate({
-          ...updateInfo,
-          ...values,
-        });
-        break;
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      await updateTemplate({
+        ...updateInfo,
+        ...values,
+      });
+    } else {
+      await saveTemplate(values);
     }
     form.resetFields();
     setSubmitting(false);
@@ -44,25 +39,17 @@ const TemplateForm: React.FC<TemplateFormProps> = (props) => {
   }
 
   function getTitle() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '新建模板';
-      case OperationType.UPDATE:
-        return '更新模板';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新模板';
     }
+    return '新建模板';
   }
 
   function getSubmitButtonName() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '创建';
-      case OperationType.UPDATE:
-        return '更新';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新';
     }
+    return '创建';
   }
 
   function handleModalCancel() {

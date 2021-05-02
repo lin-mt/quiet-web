@@ -3,7 +3,6 @@ import { Form, Popconfirm, Space, Switch, Tooltip, Typography } from 'antd';
 import { DeleteFilled, EditFilled, SettingFilled } from '@ant-design/icons';
 import ProCard from '@ant-design/pro-card';
 import { deleteTemplate, updateTemplate, templateDetailInfo } from '@/services/scrum/ScrumTemplate';
-import { OperationType } from '@/types/Type';
 import TemplateForm from '@/pages/scrum/template/components/TemplateForm';
 import TemplateSettingForm from '@/pages/scrum/template/components/TemplateSettingForm';
 
@@ -21,7 +20,6 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
   const [templateFormVisible, setTemplateFormVisible] = useState<boolean>(false);
   const [templateSettingFormVisible, setTemplateSettingFormVisible] = useState<boolean>(false);
   const [templateSettingFormOnlyRead, setTemplateSettingFormOnlyRead] = useState<boolean>(false);
-  const [templateFormOperationType, setTemplateFormOperationType] = useState<OperationType>();
   const [templateInfo, setTemplateInfo] = useState<ScrumEntities.ScrumTemplate>(template);
 
   async function handleEnabledChange(enabled: boolean) {
@@ -36,8 +34,6 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
   }
 
   function handleEditClick() {
-    templateForm.setFieldsValue(templateInfo);
-    setTemplateFormOperationType(OperationType.UPDATE);
     setTemplateFormVisible(true);
   }
 
@@ -47,6 +43,12 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
       afterDeleteAction();
     }
   }
+
+  const enableStateChangeable =
+    templateInfo.taskSteps &&
+    templateInfo.taskSteps.length > 0 &&
+    templateInfo.priorities &&
+    templateInfo.priorities.length > 0;
 
   return (
     <>
@@ -62,20 +64,16 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
         }}
         extra={
           changeSelectable &&
-          (templateInfo.taskSteps && templateInfo.taskSteps.length > 0 ? (
+          (enableStateChangeable ? (
             <Switch
-              checkedChildren="启用"
-              unCheckedChildren="关闭"
+              checkedChildren={'启用'}
+              unCheckedChildren={'关闭'}
               onChange={handleEnabledChange}
-              disabled={!(templateInfo.taskSteps && templateInfo.taskSteps.length > 0)}
               defaultChecked={templateInfo.enabled}
             />
           ) : (
-            <Tooltip title={'请先配置模板中任务的详细步骤'}>
-              <Switch
-                unCheckedChildren="关闭"
-                disabled={!(templateInfo.taskSteps && templateInfo.taskSteps.length > 0)}
-              />
+            <Tooltip title={'请先配置模板中任务的详细步骤以及优先级信息'}>
+              <Switch disabled={true} unCheckedChildren={'关闭'} />
             </Tooltip>
           ))
         }
@@ -137,7 +135,6 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
           visible={templateFormVisible}
           form={templateForm}
           updateInfo={templateInfo}
-          operationType={templateFormOperationType}
           onCancel={() => setTemplateFormVisible(false)}
           afterAction={reloadTemplateInfo}
         />
