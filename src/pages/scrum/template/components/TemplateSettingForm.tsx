@@ -18,30 +18,30 @@ import {
   EditFilled,
   PlusOutlined,
 } from '@ant-design/icons';
-import TaskStepForm from '@/pages/scrum/template/components/TaskStepForm';
-import PriorityForm from '@/pages/scrum/template/components/PriorityForm';
+import TaskStepForm from '@/pages/scrum/taskStep/components/TaskStepForm';
+import PriorityForm from '@/pages/scrum/priority/components/PriorityForm';
 import ColorPicker from '@/pages/components/ColorPicker';
 
 type TemplateSettingFormProps = {
   visible: boolean;
   onCancel: () => void;
-  currentTemplate: ScrumEntities.ScrumTemplate;
+  template: ScrumEntities.ScrumTemplate;
   readOnly?: boolean;
   afterAction?: () => void;
 };
 
 const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
   visible,
-  currentTemplate,
+  template,
   readOnly = true,
   afterAction,
   onCancel,
 }) => {
   const [taskSteps, setTaskSteps] = useState<ScrumEntities.ScrumTaskStep[] | undefined>(
-    currentTemplate.taskSteps,
+    template.taskSteps,
   );
   const [priorities, setPriorities] = useState<ScrumEntities.ScrumPriority[] | undefined>(
-    currentTemplate.priorities,
+    template.priorities,
   );
   const [updateTaskStepInfo, setUpdateTaskStepInfo] = useState<ScrumEntities.ScrumTaskStep>();
   const [updatePriorityInfo, setUpdatePriorityInfo] = useState<ScrumEntities.ScrumPriority>();
@@ -57,8 +57,8 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
   }
 
   async function reloadTemplateTaskSteps() {
-    await getAllTaskStepByTemplateId(currentTemplate.id).then((resp) => {
-      setTaskSteps(resp.data);
+    await getAllTaskStepByTemplateId(template.id).then((resp) => {
+      setTaskSteps(resp);
       setUpdateTaskStepInfo(undefined);
     });
     if (afterAction) {
@@ -67,8 +67,8 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
   }
 
   async function reloadTemplatePriorities() {
-    await getAllPrioritiesByTemplateId(currentTemplate.id).then((resp) => {
-      setPriorities(resp.data);
+    await getAllPrioritiesByTemplateId(template.id).then((resp) => {
+      setPriorities(resp);
       setUpdatePriorityInfo(undefined);
     });
     if (afterAction) {
@@ -320,7 +320,7 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
       {taskStepFormVisible && (
         <TaskStepForm
           form={taskStepForm}
-          template={currentTemplate}
+          template={template}
           visible={taskStepFormVisible}
           updateInfo={updateTaskStepInfo}
           onCancel={() => setTaskStepFormVisible(false)}
@@ -330,7 +330,7 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
       {priorityFormVisible && (
         <PriorityForm
           form={priorityForm}
-          template={currentTemplate}
+          template={template}
           visible={priorityFormVisible}
           updateInfo={updatePriorityInfo}
           onCancel={() => setPriorityFormVisible(false)}

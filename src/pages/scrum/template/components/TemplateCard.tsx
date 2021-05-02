@@ -126,7 +126,7 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
       {templateSettingFormVisible && (
         <TemplateSettingForm
           readOnly={templateSettingFormOnlyRead}
-          currentTemplate={templateInfo}
+          template={templateInfo}
           visible={templateSettingFormVisible}
           onCancel={() => setTemplateSettingFormVisible(false)}
           afterAction={reloadTemplateInfo}

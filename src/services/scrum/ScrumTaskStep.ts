@@ -1,12 +1,13 @@
 import { request } from 'umi';
+import type { Result } from '@/types/Result';
 
 const apiPrefix = '/api/scrum/taskStep';
 
-export function getAllByTemplateId(param: string) {
-  return request(`${apiPrefix}/getAllByTemplateId`, {
-    data: { templateId: param },
+export function getAllByTemplateId(templateId: string): Promise<ScrumEntities.ScrumTaskStep[]> {
+  return request<Result<ScrumEntities.ScrumTaskStep[]>>(`${apiPrefix}/getAllByTemplateId`, {
+    data: { templateId },
     method: 'POST',
-  });
+  }).then((resp) => resp.data);
 }
 
 export function saveTaskStep(params: ScrumEntities.ScrumTaskStep) {
