@@ -1,4 +1,17 @@
 import { request } from 'umi';
+import type { Result } from '@/types/Result';
+
+export function listByTypeForSelect(type: string): Promise<SystemEntities.QuietDictionary[]> {
+  return request<Result<SystemEntities.QuietDictionary[]>>(
+    '/api/system/dictionary/listByTypeForSelect',
+    {
+      data: { type },
+      method: 'POST',
+    },
+  ).then((resData) => {
+    return resData.data;
+  });
+}
 
 export async function treeDictionaryByType(params?: any) {
   return request('/api/system/dictionary/treeByType', {

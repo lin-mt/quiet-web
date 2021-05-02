@@ -3,3 +3,7 @@ export enum OperationType {
   UPDATE = 'update',
   REGISTERED = 'registered',
 }
+
+export enum DictionaryType {
+  DemandType = 'DemandType',
+}
