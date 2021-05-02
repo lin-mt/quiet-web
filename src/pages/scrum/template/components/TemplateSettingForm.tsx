@@ -8,7 +8,7 @@ import {
 import {
   batchUpdatePriorities,
   deletePriority,
-  getAllByTemplateId as getAllPrioritiesByTemplateId,
+  findAllByTemplateId as getAllPrioritiesByTemplateId,
   updatePriority,
 } from '@/services/scrum/ScrumPriority';
 import {

@@ -7,9 +7,10 @@ import DemandPlanning from '@/pages/scrum/project/detail/components/DemandPlanni
 import PlanningIteration from '@/pages/scrum/project/detail/components/PlanningIteration';
 import { useModel } from 'umi';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
+import { findAllByTemplateId } from '@/services/scrum/ScrumPriority';
 
 const ProjectDetail: React.FC<any> = (props) => {
-  const { projectId, setProjectId, members, setMembers } = useModel(PROJECT_DETAIL);
+  const { projectId, setProjectId, members, setMembers, setPriorities } = useModel(PROJECT_DETAIL);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [projectDetail, setProjectDetail] = useState<ScrumEntities.ScrumProjectDetail>();
@@ -18,21 +19,24 @@ const ProjectDetail: React.FC<any> = (props) => {
     setProjectId(props.location.query.projectId);
     if (projectId) {
       setLoading(true);
-      findProjectDetail(projectId).then((project) => {
+      findProjectDetail(projectId).then(async (project) => {
         setProjectDetail(project);
-        const membersDatum: Record<string, string> = {};
+        const membersDatum: Record<string, SystemEntities.QuietUser> = {};
         project.teams.forEach((team) => {
           if (team.members) {
             team.members.forEach((member) => {
-              membersDatum[member.id] = member.fullName;
+              membersDatum[member.id] = member;
             });
           }
         });
         setMembers(membersDatum);
-        setLoading(false);
+        await findAllByTemplateId(project.project.templateId).then((priorities) => {
+          setPriorities(priorities);
+          setLoading(false);
+        });
       });
     }
-  }, [projectId, props.location.query.projectId, setMembers, setProjectId]);
+  }, [props.location.query.projectId, projectId, setProjectId, setMembers, setPriorities]);
 
   return (
     <>
@@ -63,7 +67,7 @@ const ProjectDetail: React.FC<any> = (props) => {
               {Object.keys(members).map((id) => {
                 return (
                   <Tag color={tagColor} key={id}>
-                    {members[id]}
+                    {members[id].fullName}
                   </Tag>
                 );
               })}

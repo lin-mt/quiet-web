@@ -4,10 +4,10 @@ declare namespace ScrumEntities {
   export type ScrumProject = SystemEntities.BaseEntity & {
     name: string;
     manager: string;
+    templateId: string;
     description?: string;
     demandPrefix?: string;
     taskPrefix?: string;
-    templateId?: string;
     templateName?: string;
     buildTool?: string;
     managerName?: string;
@@ -46,7 +46,6 @@ declare namespace ScrumEntities {
       type: string;
       projectId: string;
       priorityId: string;
-      iterationId?: string;
       optimizeDemandId?: string;
       executorId?: string;
       startTime?: string;

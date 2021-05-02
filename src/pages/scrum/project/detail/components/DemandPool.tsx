@@ -1,31 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { findToBePlanned } from '@/services/scrum/ScrumDemand';
-import { Button, Card, Empty, List, message, Spin } from 'antd';
+import { Button, Card, Empty, Form, List, message, Spin } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import { PlusOutlined } from '@ant-design/icons';
 import { useModel } from '@@/plugin-model/useModel';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
+import DemandForm from '@/pages/scrum/demand/components/DemandForm';
 
 export default () => {
   const limit = 30;
-  const { projectId } = useModel(PROJECT_DETAIL);
+  const { projectId, priorities } = useModel(PROJECT_DETAIL);
 
   const [offset, setOffset] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [demandFormVisible, setDemandFormVisible] = useState<boolean>(false);
   const [toBePlanned, setToBePlanned] = useState<ScrumEntities.ScrumDemand[]>([]);
+  const [demandForm] = Form.useForm();
 
-  useEffect(() => {
+  const initToBePlanned = useCallback(() => {
     if (projectId) {
       setLoading(true);
-      findToBePlanned(projectId, offset, limit).then((demands) => {
+      findToBePlanned(projectId, 0, limit).then((demands) => {
         setToBePlanned(demands);
-        setOffset(offset + demands.length);
+        setOffset(demands.length);
         setHasMore(limit === demands.length);
         setLoading(false);
       });
     }
-  }, [offset, projectId]);
+  }, [projectId]);
+
+  useEffect(() => {
+    initToBePlanned();
+  }, [initToBePlanned]);
 
   const loadMoreDemandsToBePlanned = () => {
     if (hasMore && projectId) {
@@ -41,14 +48,21 @@ export default () => {
       });
     }
   };
+
   return (
     <>
       <Card
         title={'需求池'}
         size={'small'}
         extra={
-          <Button type={'primary'} size={'small'} shape={'round'} icon={<PlusOutlined />}>
-            创建需求
+          <Button
+            type={'primary'}
+            size={'small'}
+            shape={'round'}
+            icon={<PlusOutlined />}
+            onClick={() => setDemandFormVisible(true)}
+          >
+            新建需求
           </Button>
         }
       >
@@ -59,27 +73,41 @@ export default () => {
           hasMore={!loading && hasMore}
           useWindow={false}
         >
-          <List
+          <List<ScrumEntities.ScrumDemand>
             dataSource={toBePlanned}
             renderItem={(item) => (
               <List.Item title={item.title}>
-                <div>content</div>
+                <div>{item.title}</div>
               </List.Item>
             )}
             locale={{
-              emptyText: (
+              emptyText: loading ? (
+                <Spin />
+              ) : (
                 <Empty description={'无待规划需求'}>
-                  <Button type="primary" icon={<PlusOutlined />}>
-                    创建需求
+                  <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={() => setDemandFormVisible(true)}
+                  >
+                    新建需求
                   </Button>
                 </Empty>
               ),
             }}
-          >
-            {loading && <Spin />}
-          </List>
+          />
         </InfiniteScroll>
       </Card>
+      {demandFormVisible && projectId && (
+        <DemandForm
+          form={demandForm}
+          visible={demandFormVisible}
+          projectId={projectId}
+          priorities={priorities}
+          onCancel={() => setDemandFormVisible(false)}
+          afterAction={initToBePlanned}
+        />
+      )}
     </>
   );
 };
