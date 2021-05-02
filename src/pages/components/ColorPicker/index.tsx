@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProFormColorPicker } from '@ant-design/pro-form';
 import debounce from 'lodash/debounce';
 
@@ -15,6 +15,10 @@ const ColorPicker: React.FC<ColorPickerProps> = (props) => {
     initialValue === null ? undefined : initialValue,
   );
   const fetchRef = React.useRef(0);
+
+  useEffect(() => {
+    setFieldValue(initialValue);
+  }, [initialValue]);
 
   const debounceInvokeOnChange = React.useMemo(() => {
     const invokeOnChange = (color: string) => {
