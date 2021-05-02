@@ -17,7 +17,8 @@ const ColorPicker: React.FC<ColorPickerProps> = (props) => {
   const fetchRef = React.useRef(0);
 
   useEffect(() => {
-    setFieldValue(initialValue);
+    if (initialValue) setFieldValue(initialValue);
+    else setFieldValue('#1890FF');
   }, [initialValue]);
 
   const debounceInvokeOnChange = React.useMemo(() => {
