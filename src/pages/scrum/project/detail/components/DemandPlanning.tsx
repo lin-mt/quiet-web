@@ -29,7 +29,6 @@ export default () => {
         extra={
           <TreeSelect
             showSearch={true}
-            allowClear={true}
             style={{ width: '300px' }}
             treeNodeFilterProp={'title'}
             onSelect={(value) => setSelectedIterationId(value.toString())}

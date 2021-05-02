@@ -9,13 +9,10 @@ import { useModel } from 'umi';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 
 const ProjectDetail: React.FC<any> = (props) => {
-  const { projectId, setProjectId } = useModel(PROJECT_DETAIL);
+  const { projectId, setProjectId, members, setMembers } = useModel(PROJECT_DETAIL);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [projectDetail, setProjectDetail] = useState<ScrumEntities.ScrumProjectDetail>();
-  const [projectMembers, setProjectMembers] = useState<Map<string, string>>(
-    new Map<string, string>(),
-  );
 
   useEffect(() => {
     setProjectId(props.location.query.projectId);
@@ -23,21 +20,19 @@ const ProjectDetail: React.FC<any> = (props) => {
       setLoading(true);
       findProjectDetail(projectId).then((project) => {
         setProjectDetail(project);
-        const membersDatum: Map<string, string> = new Map<string, string>();
+        const membersDatum: Record<string, string> = {};
         project.teams.forEach((team) => {
           if (team.members) {
             team.members.forEach((member) => {
-              if (!membersDatum.has(member.id)) {
-                membersDatum.set(member.id, member.fullName);
-              }
+              membersDatum[member.id] = member.fullName;
             });
           }
         });
-        setProjectMembers(membersDatum);
+        setMembers(membersDatum);
         setLoading(false);
       });
     }
-  }, [projectId, props.location.query.projectId, setProjectId]);
+  }, [projectId, props.location.query.projectId, setMembers, setProjectId]);
 
   return (
     <>
@@ -65,10 +60,10 @@ const ProjectDetail: React.FC<any> = (props) => {
               })}
             </Descriptions.Item>
             <Descriptions.Item label={'项目成员'} span={2}>
-              {[...projectMembers.entries()].map(([id, fullName]) => {
+              {Object.keys(members).map((id) => {
                 return (
                   <Tag color={tagColor} key={id}>
-                    {fullName}
+                    {members[id]}
                   </Tag>
                 );
               })}

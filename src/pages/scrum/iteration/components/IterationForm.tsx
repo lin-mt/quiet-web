@@ -82,7 +82,7 @@ export default (props: IterationFormProps) => {
         </Button>,
       ]}
     >
-      <Form form={form} name={'projectForm'} labelCol={{ span: 6 }}>
+      <Form form={form} name={'iterationForm'} labelCol={{ span: 6 }}>
         <Form.Item
           label={'迭代名称'}
           name={'name'}
