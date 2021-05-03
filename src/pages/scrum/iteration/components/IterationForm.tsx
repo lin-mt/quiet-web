@@ -1,5 +1,4 @@
-import type { FormInstance } from 'antd/lib/form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { saveIteration, updateIteration } from '@/services/scrum/ScrumIteration';
 import { Button, DatePicker, Form, Input, Modal } from 'antd';
 import { formatDate } from '@/utils/MomentUtils';
@@ -8,15 +7,20 @@ import type { ScrumIteration } from '@/services/scrum/EntitiyType';
 interface IterationFormProps {
   visible: boolean;
   versionId: string;
-  form: FormInstance;
   onCancel: () => void;
   updateInfo?: ScrumIteration;
   afterAction?: () => void;
 }
 
 export default (props: IterationFormProps) => {
-  const { visible, versionId, onCancel, updateInfo, form, afterAction } = props;
+  const { visible, versionId, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue(updateInfo);
+  }, [form, updateInfo]);
 
   async function handleSubmit() {
     const values = await form.validateFields();

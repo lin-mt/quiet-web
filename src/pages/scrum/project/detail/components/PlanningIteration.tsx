@@ -34,7 +34,6 @@ export default () => {
   const [updateVersionInfo, setUpdateVersionInfo] = useState<ScrumVersion>();
   const [updateIterationInfo, setUpdateIterationInfo] = useState<ScrumIteration>();
   const [versionForm] = Form.useForm();
-  const [iterationForm] = Form.useForm();
 
   function reloadVersions() {
     if (projectId) {
@@ -153,7 +152,6 @@ export default () => {
                                 setUpdateVersionInfo(nodeValues);
                                 setVersionFormVisible(true);
                               } else {
-                                iterationForm.setFieldsValue(nodeValues);
                                 setSelectedVersionId(nodeValues.id);
                                 setUpdateIterationInfo(nodeValues);
                                 setIterationFormVisible(true);
@@ -234,7 +232,6 @@ export default () => {
       )}
       {iterationFormVisible && selectedVersionId && (
         <IterationForm
-          form={iterationForm}
           versionId={selectedVersionId}
           visible={iterationFormVisible}
           updateInfo={updateIterationInfo}
