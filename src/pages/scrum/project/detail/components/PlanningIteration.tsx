@@ -1,15 +1,4 @@
-import {
-  Button,
-  Card,
-  Descriptions,
-  Empty,
-  Form,
-  Popconfirm,
-  Popover,
-  Space,
-  Spin,
-  Tree,
-} from 'antd';
+import { Button, Card, Descriptions, Empty, Popconfirm, Popover, Space, Spin, Tree } from 'antd';
 import type { Key } from 'react';
 import { useEffect, useState } from 'react';
 import { deleteVersion, findDetailsByProjectId } from '@/services/scrum/ScrumVersion';
@@ -33,7 +22,6 @@ export default () => {
   const [expandedKeys, setExpandedKeys] = useState<Key[]>();
   const [updateVersionInfo, setUpdateVersionInfo] = useState<ScrumVersion>();
   const [updateIterationInfo, setUpdateIterationInfo] = useState<ScrumIteration>();
-  const [versionForm] = Form.useForm();
 
   function reloadVersions() {
     if (projectId) {
@@ -148,7 +136,6 @@ export default () => {
                             icon={<EditOutlined />}
                             onClick={() => {
                               if (isVersionNode) {
-                                versionForm.setFieldsValue(nodeValues);
                                 setUpdateVersionInfo(nodeValues);
                                 setVersionFormVisible(true);
                               } else {

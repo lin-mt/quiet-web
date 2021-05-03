@@ -16,8 +16,8 @@ interface VersionFormProps {
 export default (props: VersionFormProps) => {
   const { visible, projectId, parentId, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
-
   const [form] = Form.useForm();
+
   useEffect(() => {
     form.setFieldsValue(updateInfo);
   }, [form, updateInfo]);
