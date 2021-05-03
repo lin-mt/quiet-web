@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Col, Form, Modal, Popconfirm, Row, Space, Steps, Tooltip } from 'antd';
+import { Button, Col, Modal, Popconfirm, Row, Space, Steps, Tooltip } from 'antd';
 import {
   batchUpdateTaskStep,
   deleteTaskStep,
@@ -46,7 +46,6 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
   const [priorityFormVisible, setPriorityFormVisible] = useState<boolean>(false);
   const isUpdateTaskSteps = taskSteps && taskSteps.length > 0;
   const isUpdatePriorities = priorities && priorities.length > 0;
-  const [taskStepForm] = Form.useForm();
 
   function handleModalCancel() {
     onCancel();
@@ -171,7 +170,6 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
                                 icon={<EditFilled />}
                                 onClick={() => {
                                   setUpdateTaskStepInfo(taskStep);
-                                  taskStepForm.setFieldsValue(taskStep);
                                   setTaskStepFormVisible(true);
                                 }}
                               />
@@ -211,7 +209,10 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
                 shape={'round'}
                 icon={<PlusOutlined />}
                 type={'primary'}
-                onClick={() => setTaskStepFormVisible(true)}
+                onClick={() => {
+                  setUpdateTaskStepInfo(undefined);
+                  setTaskStepFormVisible(true);
+                }}
               >
                 添加步骤
               </Button>
@@ -317,7 +318,6 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
       </Row>
       {taskStepFormVisible && (
         <TaskStepForm
-          form={taskStepForm}
           template={template}
           visible={taskStepFormVisible}
           updateInfo={updateTaskStepInfo}

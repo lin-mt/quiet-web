@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 import { saveTaskStep, updateTaskStep } from '@/services/scrum/ScrumTaskStep';
-import type { FormInstance } from 'antd/lib/form';
 import type { ScrumTaskStep, ScrumTemplate } from '@/services/scrum/EntitiyType';
 
 interface TaskStepFormProps {
   visible: boolean;
-  form: FormInstance;
   template: ScrumTemplate;
   onCancel: () => void;
   updateInfo?: ScrumTaskStep;
@@ -14,8 +12,15 @@ interface TaskStepFormProps {
 }
 
 const TaskStepForm: React.FC<TaskStepFormProps> = (props) => {
-  const { visible, onCancel, updateInfo, form, template, afterAction } = props;
+  const { visible, onCancel, updateInfo, template, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue(updateInfo);
+  }, [form, updateInfo]);
+
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
