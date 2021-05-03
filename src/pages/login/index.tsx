@@ -7,14 +7,13 @@ import {
   UserOutlined,
   WeiboCircleOutlined,
 } from '@ant-design/icons';
-import { Alert, Space, message, Tabs, Form } from 'antd';
+import { Alert, Space, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import type { LoginParams } from '@/services/system/Login';
 import { oauthToken, getFakeCaptcha } from '@/services/system/Login';
-import { OperationType } from '@/types/Type';
 import UserForm from '@/pages/system/userinfo/components/UserForm';
 import styles from './index.less';
 import { LocalStorage } from '@/constant';
@@ -50,7 +49,6 @@ const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
-  const [userForm] = Form.useForm();
 
   const intl = useIntl();
 
@@ -315,9 +313,8 @@ const Login: React.FC = () => {
       <Footer />
       {userFormVisible && (
         <UserForm
-          operationType={OperationType.REGISTERED}
+          isUserRegister={true}
           visible={userFormVisible}
-          form={userForm}
           onCancel={() => setUserFormVisible(false)}
         />
       )}
