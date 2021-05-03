@@ -1,11 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { Button, Form, Popconfirm } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { deleteDepartment, queryDepartment } from '@/services/system/QuietDepartment';
 import { PageContainer } from '@ant-design/pro-layout';
-import { OperationType } from '@/types/Type';
 import DepartmentForm from '@/pages/system/department/components/DepartmentForm';
 import DepartmentTree from '@/pages/system/department/components/DepartmentTree';
 import DepartmentUser from '@/pages/system/department/components/DepartmentUser';
@@ -17,9 +16,7 @@ const PermissionConfig: React.FC<any> = () => {
   const [departmentTreeVisible, setDepartmentTreeVisible] = useState<boolean>(false);
   const [departmentUserVisible, setDepartmentUserVisible] = useState<boolean>(false);
   const [selectedDepartment, setSelectedDepartment] = useState<QuietDepartment>();
-  const [departmentFormType, setDepartmentOperationType] = useState<OperationType>();
   const departmentModalActionRef = useRef<ActionType>();
-  const [departmentForm] = Form.useForm();
   const columns: ProColumns<QuietDepartment>[] = [
     {
       title: 'ID',
@@ -78,9 +75,7 @@ const PermissionConfig: React.FC<any> = () => {
             key="update"
             onClick={() => {
               const role = { ...record };
-              departmentForm.setFieldsValue(role);
               setUpdateDepartmentInfo(role);
-              setDepartmentOperationType(OperationType.UPDATE);
               setDepartmentModalVisible(true);
             }}
           >
@@ -115,7 +110,7 @@ const PermissionConfig: React.FC<any> = () => {
   });
 
   function createDepartment() {
-    setDepartmentOperationType(OperationType.CREATE);
+    setUpdateDepartmentInfo(undefined);
     setDepartmentModalVisible(true);
   }
 
@@ -145,8 +140,6 @@ const PermissionConfig: React.FC<any> = () => {
         <DepartmentForm
           visible={departmentFormVisible}
           onCancel={handlePermissionFormCancel}
-          form={departmentForm}
-          operationType={departmentFormType}
           updateInfo={updateDepartmentInfo}
           afterAction={refreshPageInfo}
         />

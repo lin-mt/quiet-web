@@ -1,38 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Input, Modal } from 'antd';
 import { saveDepartment, updateDepartment } from '@/services/system/QuietDepartment';
-import type { FormInstance } from 'antd/lib/form';
-import { OperationType } from '@/types/Type';
 import type { QuietDepartment } from '@/services/system/EntityType';
 
 type DepartmentFormProps = {
   visible: boolean;
-  form: FormInstance;
   onCancel: () => void;
-  operationType?: OperationType;
   updateInfo?: QuietDepartment;
   afterAction?: () => void;
 };
 
 const DepartmentForm: React.FC<DepartmentFormProps> = (props) => {
-  const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
+  const { visible, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const nonsupportMsg = 'nonsupport FormType';
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue(updateInfo);
+  }, [form, updateInfo]);
 
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
-    switch (operationType) {
-      case OperationType.CREATE:
-        await saveDepartment(values);
-        break;
-      case OperationType.UPDATE:
-        await updateDepartment({ ...updateInfo, ...values });
-        break;
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      await updateDepartment({ ...updateInfo, ...values });
+    } else {
+      await saveDepartment(values);
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -41,29 +36,21 @@ const DepartmentForm: React.FC<DepartmentFormProps> = (props) => {
   }
 
   function getTitle() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '新增部门信息';
-      case OperationType.UPDATE:
-        return '更新部门信息';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新部门信息';
     }
+    return '新增部门信息';
   }
 
   function getSubmitButtonName() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '保存';
-      case OperationType.UPDATE:
-        return '更新';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新';
     }
+    return '保存';
   }
 
   function handleModalCancel() {
-    form.resetFields();
+    form.setFieldsValue(undefined);
     onCancel();
   }
 
