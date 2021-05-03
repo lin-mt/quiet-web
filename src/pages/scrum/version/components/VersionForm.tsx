@@ -37,7 +37,6 @@ export default (props: VersionFormProps) => {
     } else {
       await saveVersion(values);
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -60,7 +59,7 @@ export default (props: VersionFormProps) => {
   }
 
   function handleModalCancel() {
-    form.resetFields();
+    form.setFieldsValue(undefined);
     onCancel();
   }
 

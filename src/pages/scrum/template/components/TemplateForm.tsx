@@ -30,7 +30,6 @@ const TemplateForm: React.FC<TemplateFormProps> = (props) => {
     } else {
       await saveTemplate(values);
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -53,7 +52,7 @@ const TemplateForm: React.FC<TemplateFormProps> = (props) => {
   }
 
   function handleModalCancel() {
-    form.resetFields();
+    form.setFieldsValue(undefined);
     onCancel();
   }
 

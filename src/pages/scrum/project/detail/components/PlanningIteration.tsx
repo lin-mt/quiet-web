@@ -81,7 +81,10 @@ export default () => {
                 <Button
                   type="primary"
                   icon={<PlusOutlined />}
-                  onClick={() => setVersionFormVisible(true)}
+                  onClick={() => {
+                    setSelectedVersionId(undefined);
+                    setVersionFormVisible(true);
+                  }}
                 >
                   新建版本
                 </Button>
@@ -93,8 +96,6 @@ export default () => {
             treeData={versions}
             expandedKeys={expandedKeys}
             onExpand={(keys) => setExpandedKeys(keys)}
-            // @ts-ignore
-            onClick={(e, node) => setSelectedVersionId(node.id)}
             titleRender={(node) => {
               const nodeValues: any = {
                 ...node,
@@ -135,11 +136,11 @@ export default () => {
                             type={'primary'}
                             icon={<EditOutlined />}
                             onClick={() => {
+                              setSelectedVersionId(nodeValues.id);
                               if (isVersionNode) {
                                 setUpdateVersionInfo(nodeValues);
                                 setVersionFormVisible(true);
                               } else {
-                                setSelectedVersionId(nodeValues.id);
                                 setUpdateIterationInfo(nodeValues);
                                 setIterationFormVisible(true);
                               }
@@ -152,7 +153,10 @@ export default () => {
                               size={'small'}
                               type={'primary'}
                               icon={<PlusOutlined />}
-                              onClick={() => setVersionFormVisible(true)}
+                              onClick={() => {
+                                setSelectedVersionId(nodeValues.id);
+                                setVersionFormVisible(true);
+                              }}
                             >
                               子版本
                             </Button>
@@ -162,7 +166,10 @@ export default () => {
                               size={'small'}
                               type={'primary'}
                               icon={<PlusOutlined />}
-                              onClick={() => setIterationFormVisible(true)}
+                              onClick={() => {
+                                setSelectedVersionId(nodeValues.id);
+                                setIterationFormVisible(true);
+                              }}
                             >
                               迭代
                             </Button>
@@ -209,11 +216,7 @@ export default () => {
           updateInfo={updateVersionInfo}
           visible={versionFormVisible}
           afterAction={reloadVersions}
-          onCancel={() => {
-            setVersionFormVisible(false);
-            setSelectedVersionId(undefined);
-            setUpdateVersionInfo(undefined);
-          }}
+          onCancel={() => setVersionFormVisible(false)}
         />
       )}
       {iterationFormVisible && selectedVersionId && (
@@ -222,11 +225,7 @@ export default () => {
           visible={iterationFormVisible}
           updateInfo={updateIterationInfo}
           afterAction={reloadVersions}
-          onCancel={() => {
-            setIterationFormVisible(false);
-            setSelectedVersionId(undefined);
-            setUpdateIterationInfo(undefined);
-          }}
+          onCancel={() => setIterationFormVisible(false)}
         />
       )}
     </>

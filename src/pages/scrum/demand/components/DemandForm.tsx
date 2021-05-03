@@ -40,7 +40,6 @@ export default (props: DemandFormProps) => {
     } else {
       await saveDemand(values);
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -63,7 +62,7 @@ export default (props: DemandFormProps) => {
   }
 
   function handleModalCancel() {
-    form.resetFields();
+    form.setFieldsValue(undefined);
     onCancel();
   }
 

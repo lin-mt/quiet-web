@@ -47,10 +47,6 @@ const ProjectList: React.FC<TemplateListProps> = ({
     setCardProjects(buildFullCard(templates, templateNum, newTemplate, newTemplateKey));
   }, [newTemplate, templateNum, templates]);
 
-  function handleNewTemplateClick() {
-    setTemplateFormVisible(true);
-  }
-
   return (
     <>
       <ProCard gutter={24} ghost style={{ marginBottom: '24px' }} title={title} collapsible>
@@ -65,7 +61,7 @@ const ProjectList: React.FC<TemplateListProps> = ({
                 style={{ minHeight: '168px' }}
                 onMouseOver={() => setAddIconStyle(addIconOverStyle)}
                 onMouseLeave={() => setAddIconStyle(addIconDefaultStyle)}
-                onClick={handleNewTemplateClick}
+                onClick={() => setTemplateFormVisible(true)}
               >
                 <AppstoreAddOutlined style={addIconStyle} />
               </ProCard>

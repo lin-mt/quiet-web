@@ -53,7 +53,6 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
     } else {
       await saveProject(submitValues);
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -76,7 +75,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
   }
 
   function handleModalCancel() {
-    form.resetFields();
+    form.setFieldsValue(undefined);
     onCancel();
   }
 

@@ -38,7 +38,6 @@ export default (props: IterationFormProps) => {
     } else {
       await saveIteration(values);
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -61,7 +60,7 @@ export default (props: IterationFormProps) => {
   }
 
   function handleModalCancel() {
-    form.resetFields();
+    form.setFieldsValue(undefined);
     onCancel();
   }
 

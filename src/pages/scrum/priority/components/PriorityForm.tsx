@@ -34,7 +34,6 @@ const PriorityForm: React.FC<PriorityFormProps> = (props) => {
         ...values,
       });
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -43,7 +42,7 @@ const PriorityForm: React.FC<PriorityFormProps> = (props) => {
   }
 
   function handleModalCancel() {
-    form.resetFields();
+    form.setFieldsValue(undefined);
     onCancel();
   }
 

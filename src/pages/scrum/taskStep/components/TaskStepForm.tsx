@@ -34,7 +34,6 @@ const TaskStepForm: React.FC<TaskStepFormProps> = (props) => {
         ...values,
       });
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -43,7 +42,7 @@ const TaskStepForm: React.FC<TaskStepFormProps> = (props) => {
   }
 
   function handleModalCancel() {
-    form.resetFields();
+    form.setFieldsValue(undefined);
     onCancel();
   }
 
