@@ -2,8 +2,6 @@ import type { CSSProperties } from 'react';
 import React, { useEffect, useState } from 'react';
 import ProCard from '@ant-design/pro-card';
 import { AppstoreAddOutlined } from '@ant-design/icons';
-import { Form } from 'antd';
-import { OperationType } from '@/types/Type';
 import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
 import { buildFullCard } from '@/utils/RenderUtils';
 import ProjectCard from '@/pages/scrum/project/components/ProjectCard';
@@ -41,11 +39,9 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
     color: '#1890ff',
   };
   const newProjectKey = 'newProjectKey';
-  const [form] = Form.useForm();
 
   const [addIconStyle, setAddIconStyle] = useState<CSSProperties>(addIconDefaultStyle);
   const [projectFormVisible, setProjectFormVisible] = useState<boolean>(false);
-  const [projectFormOperationType, setProjectFormOperationType] = useState<OperationType>();
   const [cardProjects, setCardProjects] = useState<CardProjectInfo[]>([]);
 
   useEffect(() => {
@@ -62,7 +58,6 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
 
   function handleNewProjectClick() {
     setProjectFormVisible(true);
-    setProjectFormOperationType(OperationType.CREATE);
   }
 
   return (
@@ -102,8 +97,6 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
       {projectFormVisible && (
         <ProjectForm
           visible={projectFormVisible}
-          form={form}
-          operationType={projectFormOperationType}
           onCancel={() => setProjectFormVisible(false)}
           afterAction={afterUpdateAction}
         />

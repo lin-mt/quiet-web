@@ -4,7 +4,6 @@ import { Button, Form, Popconfirm, Space, Typography } from 'antd';
 import { DeleteFilled, EditFilled, ForwardFilled } from '@ant-design/icons';
 import ProjectSetting from '@/pages/scrum/project/components/ProjectSetting';
 import React, { useState } from 'react';
-import { OperationType } from '@/types/Type';
 import { deleteProject, findProjectInfo } from '@/services/scrum/ScrumProject';
 import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
 import type { ScrumProject } from '@/services/scrum/EntitiyType';
@@ -19,22 +18,11 @@ interface ProjectCardProps {
 const ProjectCard: React.FC<ProjectCardProps> = (props) => {
   const { project, cardSize, editable = false, afterDeleteAction } = props;
 
-  const [projectForm] = Form.useForm();
   const [settingForm] = Form.useForm();
   const [projectFormVisible, setProjectFormVisible] = useState<boolean>(false);
-  const [projectFormOperationType, setProjectFormOperationType] = useState<OperationType>();
   const [projectInfo, setProjectInfo] = useState<ScrumProject>(project);
 
   async function handleEditClick() {
-    projectForm.setFieldsValue({
-      ...projectInfo,
-      templateId: { value: projectInfo.templateId, label: projectInfo.templateName },
-      manager: { value: projectInfo.manager, label: projectInfo.managerName },
-      selectTeams: projectInfo.teams?.map((team) => {
-        return { value: team.id, label: team.teamName };
-      }),
-    });
-    setProjectFormOperationType(OperationType.UPDATE);
     setProjectFormVisible(true);
     await reloadProjectInfo();
   }
@@ -109,9 +97,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
       {projectFormVisible && (
         <ProjectForm
           visible={projectFormVisible}
-          form={projectForm}
           updateInfo={projectInfo}
-          operationType={projectFormOperationType}
           onCancel={() => setProjectFormVisible(false)}
           afterAction={reloadProjectInfo}
         />

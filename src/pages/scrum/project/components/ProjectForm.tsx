@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 import { saveProject, updateProject } from '@/services/scrum/ScrumProject';
-import type { FormInstance } from 'antd/lib/form';
-import { OperationType } from '@/types/Type';
 import { listUsersByName } from '@/services/system/QuietUser';
 import { listTeamsByTeamName } from '@/services/system/QuietTeam';
-
 import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import { listByName } from '@/services/scrum/ScrumTemplate';
@@ -13,18 +10,31 @@ import type { ScrumProject } from '@/services/scrum/EntitiyType';
 
 interface ProjectFormProps {
   visible: boolean;
-  form: FormInstance;
   onCancel: () => void;
-  operationType?: OperationType;
   updateInfo?: ScrumProject;
   afterAction?: () => void;
 }
 
 const ProjectForm: React.FC<ProjectFormProps> = (props) => {
-  const nonsupportMsg = 'nonsupport FormType';
-
-  const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
+  const { visible, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (updateInfo) {
+      form.setFieldsValue({
+        ...updateInfo,
+        templateId: { value: updateInfo.templateId, label: updateInfo.templateName },
+        manager: { value: updateInfo.manager, label: updateInfo.managerName },
+        selectTeams: updateInfo.teams?.map((team) => {
+          return { value: team.id, label: team.teamName };
+        }),
+      });
+    } else {
+      form.setFieldsValue(undefined);
+    }
+  }, [form, updateInfo]);
 
   async function handleSubmit() {
     const values = await form.validateFields();
@@ -35,18 +45,13 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
       manager: values.manager.value,
       teamIds: values.selectTeams.map((v: { value: any }) => v.value),
     };
-    switch (operationType) {
-      case OperationType.CREATE:
-        await saveProject(submitValues);
-        break;
-      case OperationType.UPDATE:
-        await updateProject({
-          ...updateInfo,
-          ...submitValues,
-        });
-        break;
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      await updateProject({
+        ...updateInfo,
+        ...submitValues,
+      });
+    } else {
+      await saveProject(submitValues);
     }
     form.resetFields();
     setSubmitting(false);
@@ -57,25 +62,17 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
   }
 
   function getTitle() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '新建项目';
-      case OperationType.UPDATE:
-        return '更新项目';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新项目';
     }
+    return '新建项目';
   }
 
   function getSubmitButtonName() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '创建';
-      case OperationType.UPDATE:
-        return '更新';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新';
     }
+    return '创建';
   }
 
   function handleModalCancel() {
