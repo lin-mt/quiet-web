@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 import { saveTemplate, updateTemplate } from '@/services/scrum/ScrumTemplate';
-import type { FormInstance } from 'antd/lib/form';
 
 type TemplateFormProps = {
   visible: boolean;
-  form: FormInstance;
   onCancel: () => void;
   updateInfo?: ScrumEntities.ScrumTemplate;
   afterAction?: () => void;
 };
 
 const TemplateForm: React.FC<TemplateFormProps> = (props) => {
-  const { visible, onCancel, updateInfo, form, afterAction } = props;
+  const { visible, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     form.setFieldsValue(updateInfo);

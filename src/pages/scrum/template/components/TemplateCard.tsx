@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Popconfirm, Space, Switch, Tooltip, Typography } from 'antd';
+import { Popconfirm, Space, Switch, Tooltip, Typography } from 'antd';
 import { DeleteFilled, EditFilled, SettingFilled } from '@ant-design/icons';
 import ProCard from '@ant-design/pro-card';
 import { deleteTemplate, updateTemplate, templateDetailInfo } from '@/services/scrum/ScrumTemplate';
@@ -16,7 +16,6 @@ type TemplateCardProps = {
 
 const TemplateCard: React.FC<TemplateCardProps> = (props) => {
   const { template, cardSize, editable, changeSelectable, afterDeleteAction } = props;
-  const [templateForm] = Form.useForm();
   const [templateFormVisible, setTemplateFormVisible] = useState<boolean>(false);
   const [templateSettingFormVisible, setTemplateSettingFormVisible] = useState<boolean>(false);
   const [templateSettingFormOnlyRead, setTemplateSettingFormOnlyRead] = useState<boolean>(false);
@@ -133,7 +132,6 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
       {templateFormVisible && (
         <TemplateForm
           visible={templateFormVisible}
-          form={templateForm}
           updateInfo={templateInfo}
           onCancel={() => setTemplateFormVisible(false)}
           afterAction={reloadTemplateInfo}
