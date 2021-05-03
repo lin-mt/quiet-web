@@ -3,13 +3,14 @@ import { Button, Col, Form, Input, Modal } from 'antd';
 import { savePermission, updatePermission } from '@/services/system/QuietPermission';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
+import type { QuietPermission } from '@/services/system/EntityType';
 
 type PermissionFormProps = {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
-  updateInfo?: SystemEntities.QuietPermission;
+  updateInfo?: QuietPermission;
   afterAction?: () => void;
 };
 

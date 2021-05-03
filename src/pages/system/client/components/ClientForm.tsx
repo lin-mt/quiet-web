@@ -4,13 +4,14 @@ import { saveClient, updateClient } from '@/services/system/QuietClient';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
 import { multipleSelectTagRender } from '@/utils/RenderUtils';
+import type { QuietClient } from '@/services/system/EntityType';
 
 type ClientFormProps = {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
-  updateInfo?: SystemEntities.QuietClient;
+  updateInfo?: QuietClient;
   afterAction?: () => void;
 };
 

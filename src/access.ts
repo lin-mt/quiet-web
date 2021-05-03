@@ -1,14 +1,14 @@
 // src/access.ts
-export default function access(initialState: {
-  currentUser?: SystemEntities.QuietUser | undefined;
-}) {
+import type { QuietRole, QuietUser } from '@/services/system/EntityType';
+
+export default function access(initialState: { currentUser?: QuietUser | undefined }) {
   const { currentUser } = initialState || {};
   return {
     ROLE_SystemAdmin: currentUser && hasRole(currentUser.authorities, 'ROLE_SystemAdmin'),
   };
 }
 
-function hasRole(roles: SystemEntities.QuietRole[], roleName: string) {
+function hasRole(roles: QuietRole[], roleName: string) {
   let hasRoleName = false;
   // eslint-disable-next-line no-restricted-syntax
   for (const role of roles) {

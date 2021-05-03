@@ -3,13 +3,14 @@ import { Button, Col, Form, Input, Modal } from 'antd';
 import { saveRole, updateRole } from '@/services/system/QuietRole';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
+import type { QuietRole } from '@/services/system/EntityType';
 
 type RoleFormProps = {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
-  updateInfo?: SystemEntities.QuietRole;
+  updateInfo?: QuietRole;
   afterAction?: () => void;
 };
 

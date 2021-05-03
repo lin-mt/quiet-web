@@ -3,13 +3,14 @@ import { Button, Col, Form, Input, Modal } from 'antd';
 import { saveDepartment, updateDepartment } from '@/services/system/QuietDepartment';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
+import type { QuietDepartment } from '@/services/system/EntityType';
 
 type DepartmentFormProps = {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
-  updateInfo?: SystemEntities.QuietDepartment;
+  updateInfo?: QuietDepartment;
   afterAction?: () => void;
 };
 

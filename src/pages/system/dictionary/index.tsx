@@ -3,24 +3,22 @@ import { Button, Form, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { queryDictionary, deleteDictionary } from '@/services/system/QuietDictionary';
+import { pageDictionary, deleteDictionary } from '@/services/system/QuietDictionary';
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import DictionaryTree from '@/pages/system/dictionary/components/DictionaryTree';
 import DictionaryForm from '@/pages/system/dictionary/components/DictionaryForm';
+import type { QuietDictionary } from '@/services/system/EntityType';
 
 const Dictionary: React.FC<any> = () => {
-  const [
-    updateDictionaryInfo,
-    setUpdateDictionaryInfo,
-  ] = useState<SystemEntities.QuietDictionary>();
+  const [updateDictionaryInfo, setUpdateDictionaryInfo] = useState<QuietDictionary>();
   const [dictionaryFormVisible, setDictionaryFormVisible] = useState<boolean>(false);
   const [dictionaryTreeVisible, setDictionaryTreeVisible] = useState<boolean>(false);
 
   const [dictionaryFormOperationType, setDictionaryFormOperationType] = useState<OperationType>();
   const dictionaryModalActionRef = useRef<ActionType>();
   const [dictionaryForm] = Form.useForm();
-  const columns: ProColumns<SystemEntities.QuietDictionary>[] = [
+  const columns: ProColumns<QuietDictionary>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -127,10 +125,10 @@ const Dictionary: React.FC<any> = () => {
 
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuietDictionary>
+      <ProTable<QuietDictionary>
         actionRef={dictionaryModalActionRef}
         rowKey={(record) => record.id}
-        request={(params, sorter, filter) => queryDictionary({ params, sorter, filter })}
+        request={(params, sorter, filter) => pageDictionary({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="tree" onClick={showDictionaryByTree}>
             所有数据字典

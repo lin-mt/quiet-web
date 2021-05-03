@@ -59,7 +59,7 @@ const Login: React.FC = () => {
     if (userInfo) {
       setInitialState({
         ...initialState,
-        currentUser: userInfo.data,
+        currentUser: userInfo,
       });
     }
   };

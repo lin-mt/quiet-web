@@ -3,18 +3,19 @@ import { Button, Form, Popconfirm, Space, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { queryTeam, deleteTeam } from '@/services/system/QuietTeam';
+import { pageTeam, deleteTeam } from '@/services/system/QuietTeam';
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import TeamForm from './components/TeamForm';
+import type { QuietTeam } from '@/services/system/EntityType';
 
 const TeamManagement: React.FC<any> = () => {
-  const [updateTeamInfo, setUpdateTeamInfo] = useState<SystemEntities.QuietTeam>();
+  const [updateTeamInfo, setUpdateTeamInfo] = useState<QuietTeam>();
   const [roleFormVisible, setTeamModalVisible] = useState<boolean>(false);
   const [roleFormType, setTeamOperationType] = useState<OperationType>();
   const teamModalActionRef = useRef<ActionType>();
   const [teamForm] = Form.useForm();
-  const columns: ProColumns<SystemEntities.QuietTeam>[] = [
+  const columns: ProColumns<QuietTeam>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -148,10 +149,10 @@ const TeamManagement: React.FC<any> = () => {
 
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuietTeam>
+      <ProTable<QuietTeam>
         actionRef={teamModalActionRef}
         rowKey={(record) => record.id}
-        request={(params, sorter, filter) => queryTeam({ params, sorter, filter })}
+        request={(params, sorter, filter) => pageTeam({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createTeam}>
             <PlusOutlined /> 新建团队

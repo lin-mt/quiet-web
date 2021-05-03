@@ -5,6 +5,7 @@ import type { DictionaryType } from '@/types/Type';
 import { useModel } from 'umi';
 import { DICTIONARY } from '@/constant/system/Modelnames';
 import { listByTypeForSelect } from '@/services/system/QuietDictionary';
+import type { QuietDictionary } from '@/services/system/EntityType';
 
 export interface DictionarySelectProps extends Omit<SelectProps<any>, 'options' | 'children'> {
   type: DictionaryType;
@@ -26,7 +27,7 @@ export function DictionarySelect({ type, allowClear = false, ...props }: Diction
     setLoading(true);
     let isMounted = true;
 
-    const buildOptions = (sources: SystemEntities.QuietDictionary[]): OptionType[] => {
+    const buildOptions = (sources: QuietDictionary[]): OptionType[] => {
       const datumOptions: OptionType[] = [];
       sources.forEach((dictionary) => {
         datumOptions.push({

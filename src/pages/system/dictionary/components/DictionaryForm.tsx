@@ -4,13 +4,14 @@ import { Button, Col, Form, Input, Modal } from 'antd';
 import { saveDictionary, updateDictionary } from '@/services/system/QuietDictionary';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
+import type { QuietDictionary } from '@/services/system/EntityType';
 
 type DictionaryFormProps = {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
-  updateInfo?: SystemEntities.QuietDictionary;
+  updateInfo?: QuietDictionary;
   afterAction?: () => void;
 };
 

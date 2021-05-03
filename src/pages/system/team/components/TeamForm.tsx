@@ -6,13 +6,14 @@ import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
 import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
+import type { QuietTeam, QuietUser } from '@/services/system/EntityType';
 
 type TeamFormProps = {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
-  updateInfo?: SystemEntities.QuietTeam;
+  updateInfo?: QuietTeam;
   afterAction?: () => void;
 };
 
@@ -20,17 +21,17 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
   const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [productOwners, setProductOwners] = useState<any[]>(
-    form.getFieldValue('productOwners')?.map((user: SystemEntities.QuietUser) => {
+    form.getFieldValue('productOwners')?.map((user: QuietUser) => {
       return { value: user.id, label: user.fullName };
     }),
   );
   const [scrumMasters, setScrumMasters] = useState<any[]>(
-    form.getFieldValue('scrumMasters')?.map((user: SystemEntities.QuietUser) => {
+    form.getFieldValue('scrumMasters')?.map((user: QuietUser) => {
       return { value: user.id, label: user.fullName };
     }),
   );
   const [members, setMembers] = useState<any[]>(
-    form.getFieldValue('members')?.map((user: SystemEntities.QuietUser) => {
+    form.getFieldValue('members')?.map((user: QuietUser) => {
       return { value: user.id, label: user.fullName };
     }),
   );
@@ -101,7 +102,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
 
   async function findUserByName(name: string) {
     return listUsersByName(name).then((resp) => {
-      return resp.data.map((user) => ({
+      return resp.map((user) => ({
         label: user.fullName,
         value: user.id,
       }));

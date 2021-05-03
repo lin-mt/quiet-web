@@ -3,6 +3,7 @@ import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
 import { registeredUser, updateUser } from '@/services/system/QuietUser';
 import type { FormInstance } from 'antd/lib/form';
 import { OperationType } from '@/types/Type';
+import type { QuietUser } from '@/services/system/EntityType';
 
 const { Option } = Select;
 
@@ -11,7 +12,7 @@ type UserFormProps = {
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
-  updateInfo?: SystemEntities.QuietUser;
+  updateInfo?: QuietUser;
   afterAction?: () => void;
 };
 

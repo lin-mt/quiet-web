@@ -13,9 +13,10 @@ import {
   credentialsExpiredStatus,
   enableStatus,
 } from '@/services/system/Status';
+import type { QuietDepartment, QuietUser } from '@/services/system/EntityType';
 
 type DepartmentUserProps = {
-  department: SystemEntities.QuietDepartment | undefined;
+  department: QuietDepartment | undefined;
   visible: boolean;
   onCancel: () => void;
   onOk: () => void;
@@ -36,7 +37,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
     onOk();
   }
 
-  const columns: ProColumns<SystemEntities.QuietUser>[] = [
+  const columns: ProColumns<QuietUser>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -161,7 +162,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
       onCancel={handleOnCancel}
       onOk={handleOnOk}
     >
-      <ProTable<SystemEntities.QuietUser>
+      <ProTable<QuietUser>
         actionRef={userModalActionRef}
         rowSelection={{ onChange: (keys) => setSelectedRowKeys(keys) }}
         tableAlertRender={false}
