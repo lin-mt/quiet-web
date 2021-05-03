@@ -1,64 +1,69 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
 import { saveClient, updateClient } from '@/services/system/QuietClient';
-import type { FormInstance } from 'antd/lib/form';
-import { OperationType } from '@/types/Type';
 import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import type { QuietClient } from '@/services/system/EntityType';
 
 type ClientFormProps = {
   visible: boolean;
-  form: FormInstance;
   onCancel: () => void;
-  operationType?: OperationType;
   updateInfo?: QuietClient;
   afterAction?: () => void;
 };
 
 const ClientForm: React.FC<ClientFormProps> = (props) => {
-  const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
+  const { visible, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [inputForSelectValues, setInputForSelectValues] = useState<string[]>();
-  const [scope, setScope] = useState<{ key: string; value: string; label: string }[]>(
-    form.getFieldValue('scope')?.map((scopeValue: string) => {
-      return { value: scopeValue, label: scopeValue };
-    }),
-  );
+  const [scopes, setScopes] = useState<{ key: string; value: string; label: string }[]>();
   const [authorizedGrantTypes, setAuthorizedGrantTypes] = useState<
     { key: string; value: string; label: string }[]
-  >(
-    form.getFieldValue('authorizedGrantTypes')?.map((authorizedGrantType: string) => {
-      return { value: authorizedGrantType, label: authorizedGrantType };
-    }),
-  );
-  const nonsupportMsg = 'nonsupport FormType';
+  >();
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (updateInfo) {
+      setAuthorizedGrantTypes(
+        updateInfo.authorizedGrantTypes?.map((authorizedGrantType) => {
+          return {
+            key: authorizedGrantType,
+            value: authorizedGrantType,
+            label: authorizedGrantType,
+          };
+        }),
+      );
+      setScopes(
+        updateInfo.scope?.map((scope) => {
+          return { key: scope, value: scope, label: scope };
+        }),
+      );
+      form.setFieldsValue(updateInfo);
+    } else {
+      form.setFieldsValue(undefined);
+    }
+  }, [form, updateInfo]);
 
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
     const submitValues = {
       ...values,
-      scope: scope?.map((scopeValue) => {
+      scope: scopes?.map((scopeValue) => {
         return scopeValue.value;
       }),
       authorizedGrantTypes: authorizedGrantTypes?.map((authorizedGrantType) => {
         return authorizedGrantType.value;
       }),
     };
-    switch (operationType) {
-      case OperationType.CREATE:
-        await saveClient(submitValues);
-        break;
-      case OperationType.UPDATE:
-        await updateClient({
-          ...updateInfo,
-          ...submitValues,
-        });
-        break;
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      await updateClient({
+        ...updateInfo,
+        ...submitValues,
+      });
+    } else {
+      await saveClient(submitValues);
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -67,29 +72,21 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
   }
 
   function getTitle() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '新建客户端';
-      case OperationType.UPDATE:
-        return '更新客户端';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新客户端';
     }
+    return '新建客户端';
   }
 
   function getSubmitButtonName() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '新增';
-      case OperationType.UPDATE:
-        return '更新';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新';
     }
+    return '新增';
   }
 
   function handleModalCancel() {
-    form.resetFields();
+    form.setFieldsValue(undefined);
     onCancel();
   }
 
@@ -98,7 +95,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
   }
 
   function handleScopeChange(value: any) {
-    setScope(value);
+    setScopes(value);
     setInputForSelectValues([]);
   }
 
@@ -110,7 +107,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
   return (
     <Modal
       destroyOnClose
-      width={900}
+      width={1090}
       title={getTitle()}
       visible={visible}
       onCancel={() => handleModalCancel()}
@@ -129,7 +126,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
         </Button>,
       ]}
     >
-      <Form form={form} name={'clientForm'} labelCol={{ span: 9 }}>
+      <Form form={form} name={'clientForm'} labelCol={{ span: 7 }}>
         <Row>
           <Col span={12}>
             <Form.Item
@@ -195,7 +192,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
               <Select
                 mode="multiple"
                 labelInValue
-                value={scope}
+                value={scopes}
                 tagRender={multipleSelectTagRender}
                 placeholder="请输入授权范围"
                 filterOption={false}

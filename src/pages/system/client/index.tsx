@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Button, Form, Popconfirm, Space, Tag } from 'antd';
+import { Button, Popconfirm, Space, Tag } from 'antd';
 import { CloseOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -10,7 +10,6 @@ import {
   removeClientScope,
 } from '@/services/system/QuietClient';
 import { PageContainer } from '@ant-design/pro-layout';
-import { OperationType } from '@/types/Type';
 import ClientForm from '@/pages/system/client/components/ClientForm';
 import { autoApproveStatus, scopedStatus, secretRequiredStatus } from '@/services/system/Status';
 import type { QuietClient } from '@/services/system/EntityType';
@@ -18,18 +17,16 @@ import type { QuietClient } from '@/services/system/EntityType';
 const ClientManagement: React.FC<any> = () => {
   const [updateClientInfo, setUpdateClientInfo] = useState<QuietClient>();
   const [clientFormVisible, setClientModalVisible] = useState<boolean>(false);
-  const [clientFormType, setClientOperationType] = useState<OperationType>();
   const clientModalActionRef = useRef<ActionType>();
-  const [clientForm] = Form.useForm();
 
   async function confirmRemoveClientAuthorizedGrantType(id: string, authorizedGrantType: string) {
     await removeClientAuthorizedGrantType(id, authorizedGrantType);
-    refreshPageInfo();
+    clientModalActionRef?.current?.reload();
   }
 
   async function confirmRemoveClientScope(id: string, scope: string) {
     await removeClientScope(id, scope);
-    refreshPageInfo();
+    clientModalActionRef?.current?.reload();
   }
 
   const columns: ProColumns<QuietClient>[] = [
@@ -188,10 +185,7 @@ const ClientManagement: React.FC<any> = () => {
           <a
             key="update"
             onClick={() => {
-              const client = { ...record };
-              clientForm.setFieldsValue(client);
-              setUpdateClientInfo(client);
-              setClientOperationType(OperationType.UPDATE);
+              setUpdateClientInfo({ ...record });
               setClientModalVisible(true);
             }}
           >
@@ -202,7 +196,7 @@ const ClientManagement: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该客户端吗？"
             onConfirm={() => {
-              deleteClient(record.id).then(() => refreshPageInfo());
+              deleteClient(record.id).then(() => clientModalActionRef?.current?.reload());
             }}
           >
             <a key="delete">删除</a>
@@ -218,19 +212,6 @@ const ClientManagement: React.FC<any> = () => {
     registeredRedirectUri: { show: false },
   });
 
-  function createClient() {
-    setClientOperationType(OperationType.CREATE);
-    setClientModalVisible(true);
-  }
-
-  function handleClientFormCancel() {
-    setClientModalVisible(false);
-  }
-
-  function refreshPageInfo() {
-    clientModalActionRef?.current?.reload();
-  }
-
   return (
     <PageContainer>
       <ProTable<QuietClient>
@@ -238,7 +219,14 @@ const ClientManagement: React.FC<any> = () => {
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => queryClient({ params, sorter, filter })}
         toolBarRender={() => [
-          <Button type="primary" key="create" onClick={createClient}>
+          <Button
+            type="primary"
+            key="create"
+            onClick={() => {
+              setUpdateClientInfo(undefined);
+              setClientModalVisible(true);
+            }}
+          >
             <PlusOutlined /> 新建客户端
           </Button>,
         ]}
@@ -249,11 +237,9 @@ const ClientManagement: React.FC<any> = () => {
       {clientFormVisible && (
         <ClientForm
           visible={clientFormVisible}
-          onCancel={handleClientFormCancel}
-          operationType={clientFormType}
-          form={clientForm}
+          onCancel={() => setClientModalVisible(false)}
           updateInfo={updateClientInfo}
-          afterAction={refreshPageInfo}
+          afterAction={() => clientModalActionRef?.current?.reload()}
         />
       )}
     </PageContainer>
