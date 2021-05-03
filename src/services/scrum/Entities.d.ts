@@ -1,6 +1,11 @@
 declare namespace ScrumEntities {
   import QuietTeam = SystemEntities.QuietTeam;
 
+  export interface AllTemplate {
+    templateCreated: ScrumTemplate[];
+    templateSelectable: ScrumTemplate[];
+  }
+
   export type ScrumProject = SystemEntities.BaseEntity & {
     name: string;
     manager: string;

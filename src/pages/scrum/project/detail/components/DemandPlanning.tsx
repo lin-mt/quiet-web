@@ -28,6 +28,7 @@ export default () => {
         size={'small'}
         extra={
           <TreeSelect
+            size={'small'}
             showSearch={true}
             style={{ width: '300px' }}
             treeNodeFilterProp={'title'}

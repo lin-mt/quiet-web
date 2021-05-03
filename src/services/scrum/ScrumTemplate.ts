@@ -10,18 +10,22 @@ export function listByName(name: string) {
   });
 }
 
-export function saveTemplate(params?: any) {
-  return request(`${apiPrefix}/save`, {
-    data: { save: params },
+export function saveTemplate(
+  save: ScrumEntities.ScrumTemplate,
+): Promise<ScrumEntities.ScrumTemplate> {
+  return request<Result<ScrumEntities.ScrumTemplate>>(`${apiPrefix}/save`, {
+    data: { save },
     method: 'POST',
-  });
+  }).then((resp) => resp.data);
 }
 
-export function updateTemplate(params?: any) {
-  return request(`${apiPrefix}/update`, {
-    data: { update: params },
+export function updateTemplate(
+  update: ScrumEntities.ScrumTemplate,
+): Promise<ScrumEntities.ScrumTemplate> {
+  return request<Result<ScrumEntities.ScrumTemplate>>(`${apiPrefix}/update`, {
+    data: { update },
     method: 'POST',
-  });
+  }).then((resp) => resp.data);
 }
 
 export function deleteTemplate(params: string) {
@@ -31,8 +35,8 @@ export function deleteTemplate(params: string) {
   });
 }
 
-export async function allTemplates() {
-  return request(`${apiPrefix}/allTemplates`, {
+export function allTemplates(): Promise<ScrumEntities.AllTemplate> {
+  return request<Result<ScrumEntities.AllTemplate>>(`${apiPrefix}/allTemplates`, {
     method: 'POST',
   }).then((resData) => {
     return resData.data;
