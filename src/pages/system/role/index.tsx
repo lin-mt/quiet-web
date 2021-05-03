@@ -1,11 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { Button, Form, Popconfirm } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { queryRole, deleteRole } from '@/services/system/QuietRole';
 import { PageContainer } from '@ant-design/pro-layout';
-import { OperationType } from '@/types/Type';
 import RoleTree from '@/pages/system/role/components/RoleTree';
 import RoleForm from '@/pages/system/role/components/RoleForm';
 import type { QuietRole } from '@/services/system/EntityType';
@@ -15,9 +14,7 @@ const RoleManagement: React.FC<any> = () => {
   const [roleFormVisible, setRoleModalVisible] = useState<boolean>(false);
   const [roleTreeVisible, setRoleTreeVisible] = useState<boolean>(false);
 
-  const [roleFormType, setRoleOperationType] = useState<OperationType>();
   const roleModalActionRef = useRef<ActionType>();
-  const [roleForm] = Form.useForm();
   const columns: ProColumns<QuietRole>[] = [
     {
       title: 'ID',
@@ -79,9 +76,7 @@ const RoleManagement: React.FC<any> = () => {
             key="update"
             onClick={() => {
               const role = { ...record };
-              roleForm.setFieldsValue(role);
               setUpdateRoleInfo(role);
-              setRoleOperationType(OperationType.UPDATE);
               setRoleModalVisible(true);
             }}
           >
@@ -92,7 +87,7 @@ const RoleManagement: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该角色吗？"
             onConfirm={() => {
-              deleteRole(record.id).then(() => refreshPageInfo());
+              deleteRole(record.id).then(() => roleModalActionRef?.current?.reload());
             }}
           >
             <a key="delete">删除</a>
@@ -108,20 +103,8 @@ const RoleManagement: React.FC<any> = () => {
   });
 
   function createRole() {
-    setRoleOperationType(OperationType.CREATE);
+    setUpdateRoleInfo(undefined);
     setRoleModalVisible(true);
-  }
-
-  function handleRoleFormCancel() {
-    setRoleModalVisible(false);
-  }
-
-  function refreshPageInfo() {
-    roleModalActionRef?.current?.reload();
-  }
-
-  function showAllRoleByTree() {
-    setRoleTreeVisible(true);
   }
 
   return (
@@ -131,7 +114,7 @@ const RoleManagement: React.FC<any> = () => {
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => queryRole({ params, sorter, filter })}
         toolBarRender={() => [
-          <Button type="primary" key="tree" onClick={showAllRoleByTree}>
+          <Button type="primary" key="tree" onClick={() => setRoleTreeVisible(true)}>
             所有角色
           </Button>,
           <Button type="primary" key="create" onClick={createRole}>
@@ -145,11 +128,9 @@ const RoleManagement: React.FC<any> = () => {
       {roleFormVisible && (
         <RoleForm
           visible={roleFormVisible}
-          onCancel={handleRoleFormCancel}
-          operationType={roleFormType}
-          form={roleForm}
+          onCancel={() => setRoleModalVisible(false)}
           updateInfo={updateRoleInfo}
-          afterAction={refreshPageInfo}
+          afterAction={() => roleModalActionRef?.current?.reload()}
         />
       )}
       {roleTreeVisible && (
