@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { allMyProjects } from '@/services/scrum/ScrumProject';
 import ProjectList from '@/pages/scrum/project/components/ProjectList';
+import type { ScrumProject } from '@/services/scrum/EntitiyType';
 
 const Project: React.FC<any> = () => {
-  const [projectManaged, setProjectManaged] = useState<ScrumEntities.ScrumProject[]>([]);
-  const [projectInvolved, setProjectInvolved] = useState<ScrumEntities.ScrumProject[]>([]);
+  const [projectManaged, setProjectManaged] = useState<ScrumProject[]>([]);
+  const [projectInvolved, setProjectInvolved] = useState<ScrumProject[]>([]);
 
   function loadAllMyProject() {
     allMyProjects().then((resp) => {

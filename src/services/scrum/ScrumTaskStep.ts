@@ -1,39 +1,40 @@
 import { request } from 'umi';
 import type { Result } from '@/types/Result';
+import type { ScrumTaskStep } from '@/services/scrum/EntitiyType';
 
 const apiPrefix = '/api/scrum/taskStep';
 
-export function getAllByTemplateId(templateId: string): Promise<ScrumEntities.ScrumTaskStep[]> {
-  return request<Result<ScrumEntities.ScrumTaskStep[]>>(`${apiPrefix}/getAllByTemplateId`, {
-    data: { templateId },
+export function getAllByTemplateId(templateId: string): Promise<ScrumTaskStep[]> {
+  return request<Result<ScrumTaskStep[]>>(`${apiPrefix}/getAllByTemplateId`, {
     method: 'POST',
+    data: { templateId },
   }).then((resp) => resp.data);
 }
 
-export function saveTaskStep(params: ScrumEntities.ScrumTaskStep) {
-  return request(`${apiPrefix}/save`, {
-    data: { save: params },
+export function saveTaskStep(save: ScrumTaskStep): Promise<ScrumTaskStep> {
+  return request<Result<ScrumTaskStep>>(`${apiPrefix}/save`, {
     method: 'POST',
-  });
+    data: { save },
+  }).then((resp) => resp.data);
 }
 
-export function updateTaskStep(params: ScrumEntities.ScrumTaskStep) {
-  return request(`${apiPrefix}/update`, {
-    data: { update: params },
+export function updateTaskStep(update: ScrumTaskStep): Promise<ScrumTaskStep> {
+  return request<Result<ScrumTaskStep>>(`${apiPrefix}/update`, {
     method: 'POST',
-  });
+    data: { update },
+  }).then((resp) => resp.data);
 }
 
-export function deleteTaskStep(params: string) {
+export function deleteTaskStep(deleteId: string) {
   return request(`${apiPrefix}/delete`, {
-    data: { deleteId: params },
     method: 'POST',
+    data: { deleteId },
   });
 }
 
-export function batchUpdateTaskStep(params: ScrumEntities.ScrumTaskStep[]) {
-  return request(`${apiPrefix}/updateBatch`, {
-    data: { updateBatch: params },
+export function batchUpdateTaskStep(updateBatch: ScrumTaskStep[]): Promise<ScrumTaskStep[]> {
+  return request<Result<ScrumTaskStep[]>>(`${apiPrefix}/updateBatch`, {
     method: 'POST',
-  });
+    data: { updateBatch },
+  }).then((resp) => resp.data);
 }

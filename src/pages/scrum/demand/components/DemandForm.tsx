@@ -4,16 +4,17 @@ import { saveDemand, updateDemand } from '@/services/scrum/ScrumDemand';
 import { Button, Form, Input, Modal, Select } from 'antd';
 import { DictionarySelect } from '@/pages/components/DictionarySelect';
 import { DictionaryType } from '@/types/Type';
+import type { ScrumIteration, ScrumPriority } from '@/services/scrum/EntitiyType';
 
-type DemandFormProps = {
+interface DemandFormProps {
   visible: boolean;
   form: FormInstance;
   projectId: string;
-  priorities: ScrumEntities.ScrumPriority[];
+  priorities: ScrumPriority[];
   onCancel: () => void;
-  updateInfo?: ScrumEntities.ScrumIteration;
+  updateInfo?: ScrumIteration;
   afterAction?: () => void;
-};
+}
 
 export default (props: DemandFormProps) => {
   const { visible, onCancel, updateInfo, form, projectId, priorities, afterAction } = props;

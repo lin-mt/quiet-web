@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { allTemplates } from '@/services/scrum/ScrumTemplate';
 import TemplateList from '@/pages/scrum/template/components/TemplateList';
+import type { ScrumTemplate } from '@/services/scrum/EntitiyType';
 
 const Project: React.FC<any> = () => {
-  const [templateCreated, setTemplateCreated] = useState<ScrumEntities.ScrumTemplate[]>([]);
-  const [templateSelectable, setTemplateSelectable] = useState<ScrumEntities.ScrumTemplate[]>([]);
+  const [templateCreated, setTemplateCreated] = useState<ScrumTemplate[]>([]);
+  const [templateSelectable, setTemplateSelectable] = useState<ScrumTemplate[]>([]);
 
   function loadAllTemplate() {
     allTemplates().then((resp) => {

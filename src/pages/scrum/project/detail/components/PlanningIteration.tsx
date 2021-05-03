@@ -21,6 +21,7 @@ import { deleteIteration } from '@/services/scrum/ScrumIteration';
 import { formatDate, toMomentDate } from '@/utils/MomentUtils';
 import { useModel } from 'umi';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
+import type { ScrumIteration, ScrumVersion } from '@/services/scrum/EntitiyType';
 
 export default () => {
   const { projectId, versions, setVersions } = useModel(PROJECT_DETAIL);
@@ -30,8 +31,8 @@ export default () => {
   const [iterationFormVisible, setIterationFormVisible] = useState<boolean>(false);
   const [selectedVersionId, setSelectedVersionId] = useState<string>();
   const [expandedKeys, setExpandedKeys] = useState<Key[]>();
-  const [updateVersionInfo, setUpdateVersionInfo] = useState<ScrumEntities.ScrumVersion>();
-  const [updateIterationInfo, setUpdateIterationInfo] = useState<ScrumEntities.ScrumIteration>();
+  const [updateVersionInfo, setUpdateVersionInfo] = useState<ScrumVersion>();
+  const [updateIterationInfo, setUpdateIterationInfo] = useState<ScrumIteration>();
   const [versionForm] = Form.useForm();
   const [iterationForm] = Form.useForm();
 
@@ -149,7 +150,7 @@ export default () => {
                             onClick={() => {
                               if (isVersionNode) {
                                 versionForm.setFieldsValue(nodeValues);
-                                setUpdateVersionInfo(node);
+                                setUpdateVersionInfo(nodeValues);
                                 setVersionFormVisible(true);
                               } else {
                                 iterationForm.setFieldsValue(nodeValues);

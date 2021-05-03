@@ -7,20 +7,21 @@ import { OperationType } from '@/types/Type';
 import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
 import { buildFullCard } from '@/utils/RenderUtils';
 import ProjectCard from '@/pages/scrum/project/components/ProjectCard';
+import type { ScrumProject } from '@/services/scrum/EntitiyType';
 
-type ProjectListProps = {
+interface ProjectListProps {
   title: string;
-  projects: ScrumEntities.ScrumProject[];
+  projects: ScrumProject[];
   projectNum?: number;
   newProject?: boolean;
   editable?: boolean;
   cardSize?: 'default' | 'small';
   afterUpdateAction?: () => void;
-};
+}
 
-type CardProjectInfo = ScrumEntities.ScrumProject & {
+interface CardProjectInfo extends ScrumProject {
   key: string;
-};
+}
 
 const ProjectList: React.FC<ProjectListProps> = (props) => {
   const {

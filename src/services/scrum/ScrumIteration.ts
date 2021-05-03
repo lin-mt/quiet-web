@@ -1,33 +1,34 @@
 import type { Result } from '@/types/Result';
 import { request } from 'umi';
+import type { ScrumDemand, ScrumIteration } from '@/services/scrum/EntitiyType';
 
 const apiPrefix = '/api/scrum/iteration';
 
 export function deleteIteration(deleteId: string) {
   return request(`${apiPrefix}/delete`, {
+    method: 'POST',
     data: { deleteId },
-    method: 'POST',
   });
 }
 
-export function saveIteration(params?: any): Promise<Result<ScrumEntities.ScrumIteration>> {
-  return request(`${apiPrefix}/save`, {
-    data: { save: params },
+export function saveIteration(save: ScrumIteration): Promise<ScrumIteration> {
+  return request<Result<ScrumIteration>>(`${apiPrefix}/save`, {
     method: 'POST',
-  });
+    data: { save },
+  }).then((resp) => resp.data);
 }
 
-export function updateIteration(params?: any): Promise<Result<ScrumEntities.ScrumIteration>> {
-  return request(`${apiPrefix}/update`, {
-    data: { update: params },
+export function updateIteration(update: ScrumIteration): Promise<ScrumIteration> {
+  return request<Result<ScrumIteration>>(`${apiPrefix}/update`, {
     method: 'POST',
-  });
+    data: { update },
+  }).then((resp) => resp.data);
 }
 
-export function findAllDemandsById(id: string): Promise<ScrumEntities.ScrumDemand[]> {
-  return request<Result<ScrumEntities.ScrumDemand[]>>(`${apiPrefix}/findAllDemandsById`, {
+export function findAllDemandsById(id: string): Promise<ScrumDemand[]> {
+  return request<Result<ScrumDemand[]>>(`${apiPrefix}/findAllDemandsById`, {
+    method: 'POST',
     data: { id },
-    method: 'POST',
   }).then((resp) => {
     return resp.data;
   });

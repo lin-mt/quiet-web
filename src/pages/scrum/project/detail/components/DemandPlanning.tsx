@@ -4,12 +4,13 @@ import { Card, Empty, List, Spin, TreeSelect } from 'antd';
 import { disableTreeNode } from '@/utils/scrum/utils';
 import { findAllDemandsById } from '@/services/scrum/ScrumIteration';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
+import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 
 export default () => {
   const { versions } = useModel(PROJECT_DETAIL);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedIterationId, setSelectedIterationId] = useState<string>();
-  const [iterationDemands, setIterationDemands] = useState<ScrumEntities.ScrumDemand[]>();
+  const [iterationDemands, setIterationDemands] = useState<ScrumDemand[]>();
 
   useEffect(() => {
     if (selectedIterationId) {
@@ -41,7 +42,7 @@ export default () => {
         <List
           dataSource={iterationDemands}
           renderItem={(item) => {
-            const demand: ScrumEntities.ScrumDemand = item;
+            const demand: ScrumDemand = item;
             return (
               <List.Item title={demand.title}>
                 <div>{demand.remark}</div>

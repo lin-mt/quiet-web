@@ -5,21 +5,22 @@ import ProCard from '@ant-design/pro-card';
 import { deleteTemplate, updateTemplate, templateDetailInfo } from '@/services/scrum/ScrumTemplate';
 import TemplateForm from '@/pages/scrum/template/components/TemplateForm';
 import TemplateSettingForm from '@/pages/scrum/template/components/TemplateSettingForm';
+import type { ScrumTemplate } from '@/services/scrum/EntitiyType';
 
-type TemplateCardProps = {
-  template: ScrumEntities.ScrumTemplate;
+interface TemplateCardProps {
+  template: ScrumTemplate;
   cardSize?: 'default' | 'small';
   editable?: boolean;
   changeSelectable?: boolean;
   afterDeleteAction?: () => void;
-};
+}
 
 const TemplateCard: React.FC<TemplateCardProps> = (props) => {
   const { template, cardSize, editable, changeSelectable, afterDeleteAction } = props;
   const [templateFormVisible, setTemplateFormVisible] = useState<boolean>(false);
   const [templateSettingFormVisible, setTemplateSettingFormVisible] = useState<boolean>(false);
   const [templateSettingFormOnlyRead, setTemplateSettingFormOnlyRead] = useState<boolean>(false);
-  const [templateInfo, setTemplateInfo] = useState<ScrumEntities.ScrumTemplate>(template);
+  const [templateInfo, setTemplateInfo] = useState<ScrumTemplate>(template);
 
   async function handleEnabledChange(enabled: boolean) {
     const changeEnabledStateTemplate = templateInfo;

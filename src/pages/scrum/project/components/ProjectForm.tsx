@@ -9,15 +9,16 @@ import { listTeamsByTeamName } from '@/services/system/QuietTeam';
 import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import { listByName } from '@/services/scrum/ScrumTemplate';
+import type { ScrumProject } from '@/services/scrum/EntitiyType';
 
-type ProjectFormProps = {
+interface ProjectFormProps {
   visible: boolean;
   form: FormInstance;
   onCancel: () => void;
   operationType?: OperationType;
-  updateInfo?: ScrumEntities.ScrumProject;
+  updateInfo?: ScrumProject;
   afterAction?: () => void;
-};
+}
 
 const ProjectForm: React.FC<ProjectFormProps> = (props) => {
   const nonsupportMsg = 'nonsupport FormType';
@@ -102,7 +103,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
 
   async function findByTemplateName(name: string) {
     return listByName(name).then((resp) => {
-      return resp.data.map((template) => ({
+      return resp.map((template) => ({
         label: template.name,
         value: template.id,
       }));

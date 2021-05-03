@@ -21,14 +21,15 @@ import {
 import TaskStepForm from '@/pages/scrum/taskStep/components/TaskStepForm';
 import PriorityForm from '@/pages/scrum/priority/components/PriorityForm';
 import ColorPicker from '@/pages/components/ColorPicker';
+import type { ScrumPriority, ScrumTaskStep, ScrumTemplate } from '@/services/scrum/EntitiyType';
 
-type TemplateSettingFormProps = {
+interface TemplateSettingFormProps {
   visible: boolean;
   onCancel: () => void;
-  template: ScrumEntities.ScrumTemplate;
+  template: ScrumTemplate;
   readOnly?: boolean;
   afterAction?: () => void;
-};
+}
 
 const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
   visible,
@@ -37,14 +38,10 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
   afterAction,
   onCancel,
 }) => {
-  const [taskSteps, setTaskSteps] = useState<ScrumEntities.ScrumTaskStep[] | undefined>(
-    template.taskSteps,
-  );
-  const [priorities, setPriorities] = useState<ScrumEntities.ScrumPriority[] | undefined>(
-    template.priorities,
-  );
-  const [updateTaskStepInfo, setUpdateTaskStepInfo] = useState<ScrumEntities.ScrumTaskStep>();
-  const [updatePriorityInfo, setUpdatePriorityInfo] = useState<ScrumEntities.ScrumPriority>();
+  const [taskSteps, setTaskSteps] = useState<ScrumTaskStep[] | undefined>(template.taskSteps);
+  const [priorities, setPriorities] = useState<ScrumPriority[] | undefined>(template.priorities);
+  const [updateTaskStepInfo, setUpdateTaskStepInfo] = useState<ScrumTaskStep>();
+  const [updatePriorityInfo, setUpdatePriorityInfo] = useState<ScrumPriority>();
   const [taskStepFormVisible, setTaskStepFormVisible] = useState<boolean>(false);
   const [priorityFormVisible, setPriorityFormVisible] = useState<boolean>(false);
   const isUpdateTaskSteps = taskSteps && taskSteps.length > 0;

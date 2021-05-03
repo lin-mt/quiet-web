@@ -1,23 +1,23 @@
-export function iterationsAddToChildren(
-  pvs: ScrumEntities.ScrumVersion[],
-): ScrumEntities.ScrumVersion[] {
-  return pvs.map((pv) => {
-    const newPv = pv;
-    if (newPv.children && newPv.children.length > 0) {
-      newPv.children = iterationsAddToChildren(newPv.children);
+import type { ScrumVersion } from '@/services/scrum/EntitiyType';
+
+export function iterationsAddToChildren(scrumVersions: ScrumVersion[]): ScrumVersion[] {
+  return scrumVersions.map((sv) => {
+    const newSv: any = sv;
+    if (newSv.children && newSv.children.length > 0) {
+      newSv.children = iterationsAddToChildren(newSv.children);
     }
-    if (newPv.iterations && newPv.iterations.length > 0) {
-      if (!newPv.children) {
-        newPv.children = [];
+    if (newSv.iterations && newSv.iterations.length > 0) {
+      if (!newSv.children) {
+        newSv.children = [];
       }
-      newPv.children = newPv.children.concat(newPv.iterations);
+      newSv.children = newSv.children.concat(newSv.iterations);
     }
-    return newPv;
+    return newSv;
   });
 }
 
-export function disableTreeNode(nodes: ScrumEntities.ScrumVersion[]): ScrumEntities.ScrumVersion[] {
-  const newNodes: ScrumEntities.ScrumVersion[] = [];
+export function disableTreeNode(nodes: ScrumVersion[]): ScrumVersion[] {
+  const newNodes: any[] = [];
   nodes.forEach((val) => newNodes.push({ ...val }));
   return newNodes.map((node) => {
     const newNode = node;

@@ -8,12 +8,13 @@ import PlanningIteration from '@/pages/scrum/project/detail/components/PlanningI
 import { useModel } from 'umi';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import { findAllByTemplateId } from '@/services/scrum/ScrumPriority';
+import type { ScrumProjectDetail } from '@/services/scrum/EntitiyType';
 
 const ProjectDetail: React.FC<any> = (props) => {
   const { projectId, setProjectId, members, setMembers, setPriorities } = useModel(PROJECT_DETAIL);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [projectDetail, setProjectDetail] = useState<ScrumEntities.ScrumProjectDetail>();
+  const [projectDetail, setProjectDetail] = useState<ScrumProjectDetail>();
 
   useEffect(() => {
     setProjectId(props.location.query.projectId);

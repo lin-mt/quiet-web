@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import type { ScrumPriority, ScrumVersion } from '@/services/scrum/EntitiyType';
 
 export default () => {
   const [projectId, setProjectId] = useState<string>();
-  const [versions, setVersions] = useState<ScrumEntities.ScrumVersion[]>([]);
+  const [versions, setVersions] = useState<ScrumVersion[]>([]);
   const [members, setMembers] = useState<Record<string, SystemEntities.QuietUser>>({});
-  const [priorities, setPriorities] = useState<ScrumEntities.ScrumPriority[]>([]);
+  const [priorities, setPriorities] = useState<ScrumPriority[]>([]);
 
   return {
     projectId,

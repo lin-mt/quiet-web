@@ -2,25 +2,25 @@ import type { CSSProperties } from 'react';
 import React, { useEffect, useState } from 'react';
 import ProCard from '@ant-design/pro-card';
 import { AppstoreAddOutlined } from '@ant-design/icons';
-import { Form } from 'antd';
 import TemplateForm from '@/pages/scrum/template/components/TemplateForm';
 import { buildFullCard } from '@/utils/RenderUtils';
 import TemplateCard from '@/pages/scrum/template/components/TemplateCard';
+import type { ScrumTemplate } from '@/services/scrum/EntitiyType';
 
-type TemplateListProps = {
+interface TemplateListProps {
   title: string;
-  templates: ScrumEntities.ScrumTemplate[];
+  templates: ScrumTemplate[];
   templateNum?: number;
   newTemplate?: boolean;
   changeSelectable?: boolean;
   editable?: boolean;
   cardSize?: 'default' | 'small';
   afterUpdateAction?: () => void;
-};
+}
 
-type CardTemplateInfo = ScrumEntities.ScrumTemplate & {
+interface CardTemplateInfo extends ScrumTemplate {
   key: string;
-};
+}
 
 const ProjectList: React.FC<TemplateListProps> = ({
   title,
@@ -42,7 +42,6 @@ const ProjectList: React.FC<TemplateListProps> = ({
   const [addIconStyle, setAddIconStyle] = useState<CSSProperties>(addIconDefaultStyle);
   const [templateFormVisible, setTemplateFormVisible] = useState<boolean>(false);
   const [cardTemplates, setCardProjects] = useState<CardTemplateInfo[]>([]);
-  const [templateForm] = Form.useForm();
 
   useEffect(() => {
     setCardProjects(buildFullCard(templates, templateNum, newTemplate, newTemplateKey));
@@ -90,7 +89,6 @@ const ProjectList: React.FC<TemplateListProps> = ({
       {templateFormVisible && (
         <TemplateForm
           visible={templateFormVisible}
-          form={templateForm}
           onCancel={() => setTemplateFormVisible(false)}
           afterAction={afterUpdateAction}
         />

@@ -6,6 +6,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { useModel } from '@@/plugin-model/useModel';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import DemandForm from '@/pages/scrum/demand/components/DemandForm';
+import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 
 export default () => {
   const limit = 30;
@@ -15,7 +16,7 @@ export default () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [demandFormVisible, setDemandFormVisible] = useState<boolean>(false);
-  const [toBePlanned, setToBePlanned] = useState<ScrumEntities.ScrumDemand[]>([]);
+  const [toBePlanned, setToBePlanned] = useState<ScrumDemand[]>([]);
   const [demandForm] = Form.useForm();
 
   const initToBePlanned = useCallback(() => {
@@ -73,7 +74,7 @@ export default () => {
           hasMore={!loading && hasMore}
           useWindow={false}
         >
-          <List<ScrumEntities.ScrumDemand>
+          <List<ScrumDemand>
             dataSource={toBePlanned}
             renderItem={(item) => (
               <List.Item title={item.title}>

@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 import { savePriority, updatePriority } from '@/services/scrum/ScrumPriority';
 import type { FormInstance } from 'antd/lib/form';
+import type { ScrumPriority, ScrumTemplate } from '@/services/scrum/EntitiyType';
 
-type PriorityFormProps = {
+interface PriorityFormProps {
   visible: boolean;
   form: FormInstance;
-  template: ScrumEntities.ScrumTemplate;
+  template: ScrumTemplate;
   onCancel: () => void;
-  updateInfo?: ScrumEntities.ScrumPriority;
+  updateInfo?: ScrumPriority;
   afterAction?: () => void;
-};
+}
 
 const PriorityForm: React.FC<PriorityFormProps> = (props) => {
   const { visible, onCancel, updateInfo, form, template, afterAction } = props;

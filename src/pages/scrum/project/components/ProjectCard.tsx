@@ -7,13 +7,14 @@ import React, { useState } from 'react';
 import { OperationType } from '@/types/Type';
 import { deleteProject, findProjectInfo } from '@/services/scrum/ScrumProject';
 import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
+import type { ScrumProject } from '@/services/scrum/EntitiyType';
 
-type ProjectCardProps = {
-  project: ScrumEntities.ScrumProject;
+interface ProjectCardProps {
+  project: ScrumProject;
   cardSize?: 'default' | 'small';
   editable?: boolean;
   afterDeleteAction?: () => void;
-};
+}
 
 const ProjectCard: React.FC<ProjectCardProps> = (props) => {
   const { project, cardSize, editable = false, afterDeleteAction } = props;
@@ -22,7 +23,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
   const [settingForm] = Form.useForm();
   const [projectFormVisible, setProjectFormVisible] = useState<boolean>(false);
   const [projectFormOperationType, setProjectFormOperationType] = useState<OperationType>();
-  const [projectInfo, setProjectInfo] = useState<ScrumEntities.ScrumProject>(project);
+  const [projectInfo, setProjectInfo] = useState<ScrumProject>(project);
 
   async function handleEditClick() {
     projectForm.setFieldsValue({

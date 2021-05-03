@@ -3,16 +3,17 @@ import { Button, DatePicker, Form, Input, Modal } from 'antd';
 import { saveVersion, updateVersion } from '@/services/scrum/ScrumVersion';
 import type { FormInstance } from 'antd/lib/form';
 import { formatDate } from '@/utils/MomentUtils';
+import type { ScrumVersion } from '@/services/scrum/EntitiyType';
 
-type VersionFormProps = {
+interface VersionFormProps {
   visible: boolean;
   projectId: string;
   form: FormInstance;
   onCancel: () => void;
   parentId?: string;
-  updateInfo?: ScrumEntities.ScrumVersion;
+  updateInfo?: ScrumVersion;
   afterAction?: () => void;
-};
+}
 
 export default (props: VersionFormProps) => {
   const { visible, projectId, parentId, onCancel, updateInfo, form, afterAction } = props;

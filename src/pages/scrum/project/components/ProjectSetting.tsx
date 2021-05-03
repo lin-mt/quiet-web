@@ -3,12 +3,13 @@ import { SettingFilled } from '@ant-design/icons';
 import { Button, Form, Input, Popover, Select } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
 import { updateProject } from '@/services/scrum/ScrumProject';
+import type { ScrumProject } from '@/services/scrum/EntitiyType';
 
-type ProjectSettingProps = {
-  projectInfo: ScrumEntities.ScrumProject;
+interface ProjectSettingProps {
+  projectInfo: ScrumProject;
   form: FormInstance;
   afterSettingUpdate?: () => void;
-};
+}
 
 const ProjectSetting: React.FC<ProjectSettingProps> = (props) => {
   const { Option } = Select;

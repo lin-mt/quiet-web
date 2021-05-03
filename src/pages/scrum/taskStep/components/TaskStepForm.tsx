@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 import { saveTaskStep, updateTaskStep } from '@/services/scrum/ScrumTaskStep';
 import type { FormInstance } from 'antd/lib/form';
+import type { ScrumTaskStep, ScrumTemplate } from '@/services/scrum/EntitiyType';
 
-type TaskStepFormProps = {
+interface TaskStepFormProps {
   visible: boolean;
   form: FormInstance;
-  template: ScrumEntities.ScrumTemplate;
+  template: ScrumTemplate;
   onCancel: () => void;
-  updateInfo?: ScrumEntities.ScrumTaskStep;
+  updateInfo?: ScrumTaskStep;
   afterAction?: () => void;
-};
+}
 
 const TaskStepForm: React.FC<TaskStepFormProps> = (props) => {
   const { visible, onCancel, updateInfo, form, template, afterAction } = props;

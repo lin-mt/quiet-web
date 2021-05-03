@@ -1,53 +1,46 @@
 import { request } from 'umi';
 import type { Result } from '@/types/Result';
+import type { AllTemplate, ScrumTemplate } from '@/services/scrum/EntitiyType';
 
 const apiPrefix = '/api/scrum/template';
 
-export function listByName(name: string) {
-  return request<Result<ScrumEntities.ScrumTemplate[]>>(`${apiPrefix}/listByName`, {
+export function listByName(name: string): Promise<ScrumTemplate[]> {
+  return request<Result<ScrumTemplate[]>>(`${apiPrefix}/listByName`, {
+    method: 'POST',
     data: { name },
-    method: 'POST',
-  });
-}
-
-export function saveTemplate(
-  save: ScrumEntities.ScrumTemplate,
-): Promise<ScrumEntities.ScrumTemplate> {
-  return request<Result<ScrumEntities.ScrumTemplate>>(`${apiPrefix}/save`, {
-    data: { save },
-    method: 'POST',
   }).then((resp) => resp.data);
 }
 
-export function updateTemplate(
-  update: ScrumEntities.ScrumTemplate,
-): Promise<ScrumEntities.ScrumTemplate> {
-  return request<Result<ScrumEntities.ScrumTemplate>>(`${apiPrefix}/update`, {
-    data: { update },
+export function saveTemplate(save: ScrumTemplate): Promise<ScrumTemplate> {
+  return request<Result<ScrumTemplate>>(`${apiPrefix}/save`, {
     method: 'POST',
+    data: { save },
+  }).then((resp) => resp.data);
+}
+
+export function updateTemplate(update: ScrumTemplate): Promise<ScrumTemplate> {
+  return request<Result<ScrumTemplate>>(`${apiPrefix}/update`, {
+    method: 'POST',
+    data: { update },
   }).then((resp) => resp.data);
 }
 
 export function deleteTemplate(params: string) {
   return request(`${apiPrefix}/delete`, {
+    method: 'POST',
     data: { deleteId: params },
-    method: 'POST',
   });
 }
 
-export function allTemplates(): Promise<ScrumEntities.AllTemplate> {
-  return request<Result<ScrumEntities.AllTemplate>>(`${apiPrefix}/allTemplates`, {
+export function allTemplates(): Promise<AllTemplate> {
+  return request<Result<AllTemplate>>(`${apiPrefix}/allTemplates`, {
     method: 'POST',
-  }).then((resData) => {
-    return resData.data;
-  });
+  }).then((resp) => resp.data);
 }
 
-export function templateDetailInfo(id: string) {
-  return request(`${apiPrefix}/templateInfo`, {
+export function templateDetailInfo(id: string): Promise<ScrumTemplate> {
+  return request<Result<ScrumTemplate>>(`${apiPrefix}/templateInfo`, {
     method: 'POST',
     data: { id },
-  }).then((resData) => {
-    return resData.data;
-  });
+  }).then((resp) => resp.data);
 }

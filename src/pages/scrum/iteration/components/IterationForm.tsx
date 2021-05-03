@@ -3,15 +3,16 @@ import { useState } from 'react';
 import { saveIteration, updateIteration } from '@/services/scrum/ScrumIteration';
 import { Button, DatePicker, Form, Input, Modal } from 'antd';
 import { formatDate } from '@/utils/MomentUtils';
+import type { ScrumIteration } from '@/services/scrum/EntitiyType';
 
-type IterationFormProps = {
+interface IterationFormProps {
   visible: boolean;
   versionId: string;
   form: FormInstance;
   onCancel: () => void;
-  updateInfo?: ScrumEntities.ScrumIteration;
+  updateInfo?: ScrumIteration;
   afterAction?: () => void;
-};
+}
 
 export default (props: IterationFormProps) => {
   const { visible, versionId, onCancel, updateInfo, form, afterAction } = props;
