@@ -9,6 +9,7 @@ import { useModel } from 'umi';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import { findAllByTemplateId } from '@/services/scrum/ScrumPriority';
 import type { ScrumProjectDetail } from '@/services/scrum/EntitiyType';
+import type { QuietUser } from '@/services/system/EntityType';
 
 const ProjectDetail: React.FC<any> = (props) => {
   const { projectId, setProjectId, members, setMembers, setPriorities } = useModel(PROJECT_DETAIL);
@@ -22,7 +23,7 @@ const ProjectDetail: React.FC<any> = (props) => {
       setLoading(true);
       findProjectDetail(projectId).then(async (project) => {
         setProjectDetail(project);
-        const membersDatum: Record<string, SystemEntities.QuietUser> = {};
+        const membersDatum: Record<string, QuietUser> = {};
         project.teams.forEach((team) => {
           if (team.members) {
             team.members.forEach((member) => {

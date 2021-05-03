@@ -1,9 +1,17 @@
+import type {
+  BaseEntity,
+  KeyEntity,
+  ParentEntity,
+  QuietTeam,
+  SerialEntity,
+} from '@/services/system/EntityType';
+
 export interface AllTemplate {
   templateCreated: ScrumTemplate[];
   templateSelectable: ScrumTemplate[];
 }
 
-export interface ScrumProject extends SystemEntities.BaseEntity {
+export interface ScrumProject extends BaseEntity {
   name: string;
   manager: string;
   templateId: string;
@@ -13,12 +21,12 @@ export interface ScrumProject extends SystemEntities.BaseEntity {
   templateName?: string;
   buildTool?: string;
   managerName?: string;
-  teams?: SystemEntities.QuietTeam[];
+  teams?: QuietTeam[];
 }
 
 export interface ScrumProjectDetail {
   project: ScrumProject;
-  teams: SystemEntities.QuietTeam[];
+  teams: QuietTeam[];
 }
 
 export interface MyScrumProject {
@@ -26,7 +34,7 @@ export interface MyScrumProject {
   projectInvolved: ScrumProject[];
 }
 
-export interface ScrumTemplate extends SystemEntities.BaseEntity {
+export interface ScrumTemplate extends BaseEntity {
   name: string;
   enabled: boolean;
   remark?: string;
@@ -34,22 +42,20 @@ export interface ScrumTemplate extends SystemEntities.BaseEntity {
   priorities?: ScrumPriority[];
 }
 
-export interface ScrumTaskStep extends SystemEntities.SerialEntity {
+export interface ScrumTaskStep extends SerialEntity {
   name: string;
   templateId: string;
   remark?: string;
 }
 
-export interface ScrumPriority extends SystemEntities.SerialEntity {
+export interface ScrumPriority extends SerialEntity {
   name: string;
   colorHex?: string;
   templateId: string;
   remark?: string;
 }
 
-export interface ScrumDemand
-  extends SystemEntities.SerialEntity,
-    SystemEntities.ParentEntity<ScrumDemand> {
+export interface ScrumDemand extends SerialEntity, ParentEntity<ScrumDemand> {
   title: string;
   type: string;
   projectId: string;
@@ -61,7 +67,7 @@ export interface ScrumDemand
   remark?: string;
 }
 
-export interface ScrumIteration extends SystemEntities.SerialEntity {
+export interface ScrumIteration extends SerialEntity {
   name: string;
   versionId: string;
   planStartDate: string;
@@ -71,10 +77,7 @@ export interface ScrumIteration extends SystemEntities.SerialEntity {
   remark?: string;
 }
 
-export interface ScrumVersion
-  extends SystemEntities.ParentEntity<ScrumVersion>,
-    SystemEntities.SerialEntity,
-    SystemEntities.KeyEntity {
+export interface ScrumVersion extends ParentEntity<ScrumVersion>, SerialEntity, KeyEntity {
   name: string;
   projectId: string;
   planStartDate: string;
