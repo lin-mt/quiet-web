@@ -5,7 +5,7 @@ import { CloseOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { queryUser, deleteUser, removeRole, addRoles } from '@/services/system/QuietUser';
+import { pageUser, deleteUser, removeRole, addRoles } from '@/services/system/QuietUser';
 import { OperationType } from '@/types/Type';
 import UserForm from './components/UserForm';
 import { Tooltip } from 'antd';
@@ -17,9 +17,10 @@ import {
   credentialsExpiredStatus,
   enableStatus,
 } from '@/services/system/Status';
+import type { QuietUser } from '@/services/system/EntityType';
 
 const UserInfo: React.FC<any> = () => {
-  const [updateUserInfo, setUpdateUserInfo] = useState<SystemEntities.QuietUser>();
+  const [updateUserInfo, setUpdateUserInfo] = useState<QuietUser>();
   const [userFormVisible, setUserModalVisible] = useState<boolean>(false);
   const [roleTreeVisible, setRoleTreeVisible] = useState<boolean>(false);
   const [addRoleUserId, setAddRoleUserId] = useState<string | null>(null);
@@ -37,7 +38,7 @@ const UserInfo: React.FC<any> = () => {
     setRoleTreeVisible(true);
   }
 
-  const columns: ProColumns<SystemEntities.QuietUser>[] = [
+  const columns: ProColumns<QuietUser>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -223,8 +224,8 @@ const UserInfo: React.FC<any> = () => {
   }
 
   async function handleRoleTreeOnOk(keys?: ReactText[]) {
-    const addEntities: { userId: string | null; roleId: ReactText }[] = [];
-    if (keys) {
+    const addEntities: { userId: string; roleId: ReactText }[] = [];
+    if (keys && addRoleUserId) {
       keys.forEach((key) => {
         addEntities.push({ userId: addRoleUserId, roleId: key });
       });
@@ -237,10 +238,10 @@ const UserInfo: React.FC<any> = () => {
 
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuietUser>
+      <ProTable<QuietUser>
         actionRef={userModalActionRef}
         rowKey={(record) => record.id}
-        request={(params, sorter, filter) => queryUser({ params, sorter, filter })}
+        request={(params, sorter, filter) => pageUser({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createUser}>
             <PlusOutlined /> 新建用户

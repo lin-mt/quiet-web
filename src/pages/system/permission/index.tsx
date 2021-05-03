@@ -7,17 +7,15 @@ import { deletePermission, queryPermission } from '@/services/system/QuietPermis
 import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import PermissionForm from '@/pages/system/permission/components/PermissionForm';
+import type { QuietPermission } from '@/services/system/EntityType';
 
 const PermissionConfig: React.FC<any> = () => {
-  const [
-    updatePermissionInfo,
-    setUpdatePermissionInfo,
-  ] = useState<SystemEntities.QuietPermission>();
+  const [updatePermissionInfo, setUpdatePermissionInfo] = useState<QuietPermission>();
   const [permissionFormVisible, setPermissionModalVisible] = useState<boolean>(false);
   const [permissionFormType, setPermissionOperationType] = useState<OperationType>();
   const permissionModalActionRef = useRef<ActionType>();
   const [permissionForm] = Form.useForm();
-  const columns: ProColumns<SystemEntities.QuietPermission>[] = [
+  const columns: ProColumns<QuietPermission>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -121,7 +119,7 @@ const PermissionConfig: React.FC<any> = () => {
 
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuietPermission>
+      <ProTable<QuietPermission>
         actionRef={permissionModalActionRef}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => queryPermission({ params, sorter, filter })}

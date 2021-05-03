@@ -8,16 +8,17 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import RoleTree from '@/pages/system/role/components/RoleTree';
 import RoleForm from '@/pages/system/role/components/RoleForm';
+import type { QuietRole } from '@/services/system/EntityType';
 
 const RoleManagement: React.FC<any> = () => {
-  const [updateRoleInfo, setUpdateRoleInfo] = useState<SystemEntities.QuietRole>();
+  const [updateRoleInfo, setUpdateRoleInfo] = useState<QuietRole>();
   const [roleFormVisible, setRoleModalVisible] = useState<boolean>(false);
   const [roleTreeVisible, setRoleTreeVisible] = useState<boolean>(false);
 
   const [roleFormType, setRoleOperationType] = useState<OperationType>();
   const roleModalActionRef = useRef<ActionType>();
   const [roleForm] = Form.useForm();
-  const columns: ProColumns<SystemEntities.QuietRole>[] = [
+  const columns: ProColumns<QuietRole>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -125,7 +126,7 @@ const RoleManagement: React.FC<any> = () => {
 
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuietRole>
+      <ProTable<QuietRole>
         actionRef={roleModalActionRef}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => queryRole({ params, sorter, filter })}

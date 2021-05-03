@@ -1,10 +1,11 @@
 import { useCallback, useState } from 'react';
+import type { QuietDictionary } from '@/services/system/EntityType';
 
 export default () => {
-  const [dictionaries] = useState<Record<string, SystemEntities.QuietDictionary[]>>({});
+  const [dictionaries] = useState<Record<string, QuietDictionary[]>>({});
 
   const addDictionaries = useCallback(
-    (type: string, newDictionaries: SystemEntities.QuietDictionary[]) => {
+    (type: string, newDictionaries: QuietDictionary[]) => {
       if (!dictionaries[type]) {
         dictionaries[type] = newDictionaries;
       }

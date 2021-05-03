@@ -13,9 +13,10 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { OperationType } from '@/types/Type';
 import ClientForm from '@/pages/system/client/components/ClientForm';
 import { autoApproveStatus, scopedStatus, secretRequiredStatus } from '@/services/system/Status';
+import type { QuietClient } from '@/services/system/EntityType';
 
 const ClientManagement: React.FC<any> = () => {
-  const [updateClientInfo, setUpdateClientInfo] = useState<SystemEntities.QuietClient>();
+  const [updateClientInfo, setUpdateClientInfo] = useState<QuietClient>();
   const [clientFormVisible, setClientModalVisible] = useState<boolean>(false);
   const [clientFormType, setClientOperationType] = useState<OperationType>();
   const clientModalActionRef = useRef<ActionType>();
@@ -31,7 +32,7 @@ const ClientManagement: React.FC<any> = () => {
     refreshPageInfo();
   }
 
-  const columns: ProColumns<SystemEntities.QuietClient>[] = [
+  const columns: ProColumns<QuietClient>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -232,7 +233,7 @@ const ClientManagement: React.FC<any> = () => {
 
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuietClient>
+      <ProTable<QuietClient>
         actionRef={clientModalActionRef}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => queryClient({ params, sorter, filter })}

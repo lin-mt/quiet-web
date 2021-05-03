@@ -1,42 +1,44 @@
 import { request } from 'umi';
 import type { Result } from '@/types/Result';
 import type { ReactText } from 'react';
+import type { NoticeIconData, QuietUser, QuietUserRole } from '@/services/system/EntityType';
+import type { RequestData } from '@ant-design/pro-table/lib/typing';
 
-export function listUsersByName(name: string) {
-  return request<Result<SystemEntities.QuietUser[]>>('/api/system/user/listUsersByName', {
-    data: { name },
+export function listUsersByName(name: string): Promise<QuietUser[]> {
+  return request<Result<QuietUser[]>>('/api/system/user/listUsersByName', {
     method: 'POST',
-  });
+    data: { name },
+  }).then((resp) => resp.data);
 }
 
-export async function queryUser(params?: any) {
-  return request('/api/system/user/page', {
-    data: params,
+export async function pageUser(params?: any): Promise<Partial<RequestData<QuietUser>>> {
+  return request<Result<Partial<RequestData<QuietUser>>>>('/api/system/user/page', {
     method: 'POST',
+    data: params,
   }).then((resData) => {
     return { ...resData.data, data: resData.data.results };
   });
 }
 
-export async function registeredUser(params?: any) {
-  return request('/api/system/user/registered', {
-    data: { save: params },
+export async function registeredUser(save: QuietUser): Promise<QuietUser> {
+  return request<Result<QuietUser>>('/api/system/user/registered', {
     method: 'POST',
-  });
+    data: { save },
+  }).then((resp) => resp.data);
 }
 
-export async function deleteUser(params?: any) {
+export async function deleteUser(deleteId: string) {
   request('/api/system/user/delete', {
-    data: { deleteId: params },
     method: 'POST',
+    data: { deleteId },
   });
 }
 
-export async function updateUser(params?: any) {
-  return request('/api/system/user/update', {
-    data: { update: params },
+export async function updateUser(update: QuietUser): Promise<QuietUser> {
+  return request<Result<QuietUser>>('/api/system/user/update', {
     method: 'POST',
-  });
+    data: { update },
+  }).then((resp) => resp.data);
 }
 
 export async function getNotices(options?: Record<string, any>) {
@@ -46,15 +48,15 @@ export async function getNotices(options?: Record<string, any>) {
   });
 }
 
-export async function queryCurrent() {
-  return request<Result<SystemEntities.QuietUser>>('/api/system/user/currentUserInfo', {
+export async function queryCurrent(): Promise<QuietUser> {
+  return request<Result<QuietUser>>('/api/system/user/currentUserInfo', {
     method: 'POSt',
   }).then((res) => {
     if (res && res.data && !res.data.avatar) {
       res.data.avatar =
         'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
     }
-    return res;
+    return res.data;
   });
 }
 
@@ -65,13 +67,15 @@ export async function removeRole(userId: string, roleId: string) {
   });
 }
 
-export async function addRoles(userRoles: { userId: string | null; roleId: ReactText }[]) {
-  return request('/api/system/user/addRoles', {
-    data: { saveBatch: userRoles },
+export async function addRoles(
+  saveBatch: { userId: string; roleId: ReactText }[],
+): Promise<QuietUserRole> {
+  return request<Result<QuietUserRole>>('/api/system/user/addRoles', {
     method: 'POST',
-  });
+    data: { saveBatch },
+  }).then((resp) => resp.data);
 }
 
 export async function queryNotices(): Promise<any> {
-  return request<{ data: SystemEntities.NoticeIconData[] }>('/api/notices');
+  return request<{ data: NoticeIconData[] }>('/api/notices');
 }

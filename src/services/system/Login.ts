@@ -1,14 +1,15 @@
 import { request } from 'umi';
 import type { Result } from '@/types/Result';
 import { LocalStorage, System } from '@/constant';
+import type { TokenInfo } from '@/services/system/EntityType';
 
-export type LoginParams = {
+export interface LoginParams {
   username: string;
   secretCode: string;
   mobile: string;
   captcha: string;
   type: string;
-};
+}
 
 export async function accountLogin(params: LoginParams) {
   return request<Result<any>>('/api/system/login/account', {
@@ -23,7 +24,7 @@ export async function oauthToken(params: LoginParams) {
     password: params.secretCode,
     grant_type: System.GrantType.Password,
   };
-  return request<SystemEntities.TokenInfo>('/api/system/oauth/token', {
+  return request<TokenInfo>('/api/system/oauth/token', {
     method: 'POST',
     params: oauthData,
     headers: {

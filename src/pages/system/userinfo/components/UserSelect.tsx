@@ -35,7 +35,7 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
 
   async function findUserByName(name: string) {
     return listUsersByName(name).then((resp) => {
-      return resp.data.map((user) => ({
+      return resp.map((user) => ({
         label: user.fullName,
         value: user.id,
       }));

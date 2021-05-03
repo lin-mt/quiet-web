@@ -1,31 +1,36 @@
 import { request } from 'umi';
+import type { RequestData } from '@ant-design/pro-table/lib/typing';
+import type { QuietPermission } from '@/services/system/EntityType';
+import type { Result } from '@/types/Result';
 
-export async function queryPermission(params?: any) {
-  return request('/api/system/permission/page', {
-    data: params,
+export async function queryPermission(
+  params?: any,
+): Promise<Partial<RequestData<QuietPermission>>> {
+  return request<Result<Partial<RequestData<QuietPermission>>>>('/api/system/permission/page', {
     method: 'POST',
+    data: params,
   }).then((resData) => {
     return { ...resData.data, data: resData.data.results };
   });
 }
 
-export async function savePermission(params?: any) {
-  return request('/api/system/permission/save', {
-    data: { save: params },
+export async function savePermission(save: QuietPermission): Promise<QuietPermission> {
+  return request<Result<QuietPermission>>('/api/system/permission/save', {
     method: 'POST',
-  });
+    data: { save },
+  }).then((resp) => resp.data);
 }
 
-export async function updatePermission(params?: any) {
-  return request('/api/system/permission/update', {
-    data: { update: params },
+export async function updatePermission(update: QuietPermission): Promise<QuietPermission> {
+  return request<Result<QuietPermission>>('/api/system/permission/update', {
     method: 'POST',
-  });
+    data: { update },
+  }).then((resp) => resp.data);
 }
 
-export async function deletePermission(params?: any) {
+export async function deletePermission(deleteId: string) {
   return request('/api/system/permission/delete', {
-    data: { deleteId: params },
     method: 'POST',
+    data: { deleteId },
   });
 }

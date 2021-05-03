@@ -9,20 +9,18 @@ import { OperationType } from '@/types/Type';
 import DepartmentForm from '@/pages/system/department/components/DepartmentForm';
 import DepartmentTree from '@/pages/system/department/components/DepartmentTree';
 import DepartmentUser from '@/pages/system/department/components/DepartmentUser';
+import type { QuietDepartment } from '@/services/system/EntityType';
 
 const PermissionConfig: React.FC<any> = () => {
-  const [
-    updateDepartmentInfo,
-    setUpdateDepartmentInfo,
-  ] = useState<SystemEntities.QuietDepartment>();
+  const [updateDepartmentInfo, setUpdateDepartmentInfo] = useState<QuietDepartment>();
   const [departmentFormVisible, setDepartmentModalVisible] = useState<boolean>(false);
   const [departmentTreeVisible, setDepartmentTreeVisible] = useState<boolean>(false);
   const [departmentUserVisible, setDepartmentUserVisible] = useState<boolean>(false);
-  const [selectedDepartment, setSelectedDepartment] = useState<SystemEntities.QuietDepartment>();
+  const [selectedDepartment, setSelectedDepartment] = useState<QuietDepartment>();
   const [departmentFormType, setDepartmentOperationType] = useState<OperationType>();
   const departmentModalActionRef = useRef<ActionType>();
   const [departmentForm] = Form.useForm();
-  const columns: ProColumns<SystemEntities.QuietDepartment>[] = [
+  const columns: ProColumns<QuietDepartment>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -127,7 +125,7 @@ const PermissionConfig: React.FC<any> = () => {
 
   return (
     <PageContainer>
-      <ProTable<SystemEntities.QuietDepartment>
+      <ProTable<QuietDepartment>
         actionRef={departmentModalActionRef}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => queryDepartment({ params, sorter, filter })}

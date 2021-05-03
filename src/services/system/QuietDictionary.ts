@@ -1,53 +1,48 @@
 import { request } from 'umi';
 import type { Result } from '@/types/Result';
+import type { QuietDictionary } from '@/services/system/EntityType';
+import type { RequestData } from '@ant-design/pro-table/lib/typing';
 
-export function listByTypeForSelect(type: string): Promise<SystemEntities.QuietDictionary[]> {
-  return request<Result<SystemEntities.QuietDictionary[]>>(
-    '/api/system/dictionary/listByTypeForSelect',
-    {
-      data: { type },
-      method: 'POST',
-    },
-  ).then((resData) => {
-    return resData.data;
-  });
-}
-
-export async function treeDictionaryByType(params?: any) {
-  return request('/api/system/dictionary/treeByType', {
-    data: { type: params },
+export function listByTypeForSelect(type: string): Promise<QuietDictionary[]> {
+  return request<Result<QuietDictionary[]>>('/api/system/dictionary/listByTypeForSelect', {
     method: 'POST',
-  }).then((resData) => {
-    return resData.data;
-  });
+    data: { type },
+  }).then((resp) => resp.data);
 }
 
-export async function queryDictionary(params?: any) {
-  return request('/api/system/dictionary/page', {
+export async function treeDictionaryByType(type: string | undefined): Promise<QuietDictionary[]> {
+  return request<Result<QuietDictionary[]>>('/api/system/dictionary/treeByType', {
+    method: 'POST',
+    data: { type },
+  }).then((resp) => resp.data);
+}
+
+export async function pageDictionary(params?: any): Promise<Partial<RequestData<QuietDictionary>>> {
+  return request<Result<Partial<RequestData<QuietDictionary>>>>('/api/system/dictionary/page', {
+    method: 'POST',
     data: params,
-    method: 'POST',
   }).then((resData) => {
     return { ...resData.data, data: resData.data.results };
   });
 }
 
-export async function saveDictionary(params?: any) {
-  return request('/api/system/dictionary/save', {
-    data: { save: params },
+export async function saveDictionary(save: QuietDictionary): Promise<QuietDictionary> {
+  return request<Result<QuietDictionary>>('/api/system/dictionary/save', {
     method: 'POST',
-  });
+    data: { save },
+  }).then((resp) => resp.data);
 }
 
-export async function updateDictionary(params?: any) {
-  return request('/api/system/dictionary/update', {
-    data: { update: params },
+export async function updateDictionary(update: QuietDictionary): Promise<QuietDictionary> {
+  return request<Result<QuietDictionary>>('/api/system/dictionary/update', {
     method: 'POST',
-  });
+    data: { update },
+  }).then((resp) => resp.data);
 }
 
-export async function deleteDictionary(params?: any) {
+export async function deleteDictionary(deleteId: string) {
   return request('/api/system/dictionary/delete', {
-    data: { deleteId: params },
     method: 'POST',
+    data: { deleteId },
   });
 }

@@ -12,6 +12,7 @@ import { ResultType } from '@/types/Result';
 import { LocalStorage, ResultCode, ResultUrl, System } from '@/constant';
 import type { RequestOptionsInit } from 'umi-request';
 import { request as umiReq } from 'umi';
+import type { QuietUser, TokenInfo } from '@/services/system/EntityType';
 
 const loginPath = '/login';
 
@@ -25,9 +26,9 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: SystemEntities.QuietUser;
-  tokenInfo?: SystemEntities.TokenInfo;
-  fetchUserInfo?: () => Promise<Result<SystemEntities.QuietUser> | undefined>;
+  currentUser?: QuietUser;
+  tokenInfo?: TokenInfo;
+  fetchUserInfo?: () => Promise<QuietUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -39,8 +40,7 @@ export async function getInitialState(): Promise<{
   };
   // 如果是登录页面，不执行
   if (history.location.pathname !== loginPath) {
-    const result = await fetchUserInfo();
-    const currentUser = result?.data;
+    const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
       currentUser,
@@ -108,7 +108,7 @@ const refreshToken = () => {
       grant_type: System.GrantType.RefreshToken,
       refresh_token: tokenInfo.refresh_token,
     };
-    return umiReq<SystemEntities.TokenInfo>('/api/system/oauth/token', {
+    return umiReq<TokenInfo>('/api/system/oauth/token', {
       method: 'POST',
       params: refreshTokenData,
       headers: {
