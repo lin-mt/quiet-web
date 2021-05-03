@@ -1,43 +1,38 @@
 import type { BaseSyntheticEvent } from 'react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Input, Modal } from 'antd';
 import { saveDictionary, updateDictionary } from '@/services/system/QuietDictionary';
-import type { FormInstance } from 'antd/lib/form';
-import { OperationType } from '@/types/Type';
 import type { QuietDictionary } from '@/services/system/EntityType';
 
 type DictionaryFormProps = {
   visible: boolean;
-  form: FormInstance;
   onCancel: () => void;
-  operationType?: OperationType;
   updateInfo?: QuietDictionary;
   afterAction?: () => void;
 };
 
 const DictionaryForm: React.FC<DictionaryFormProps> = (props) => {
-  const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
+  const { visible, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [typeRequired, setTypeRequired] = useState<boolean>(true);
   const [keyRequired, setKeyRequired] = useState<boolean>(false);
   const [showTypeInput, setShowTypeInput] = useState<boolean>(true);
   const [showKeyInput, setShowKeyInput] = useState<boolean>(false);
-  const nonsupportMsg = 'nonsupport FormType';
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue(updateInfo);
+  }, [form, updateInfo]);
 
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
-    switch (operationType) {
-      case OperationType.CREATE:
-        await saveDictionary(values);
-        break;
-      case OperationType.UPDATE:
-        await updateDictionary({ ...updateInfo, ...values });
-        break;
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      await updateDictionary({ ...updateInfo, ...values });
+    } else {
+      await saveDictionary(values);
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -46,25 +41,17 @@ const DictionaryForm: React.FC<DictionaryFormProps> = (props) => {
   }
 
   function getTitle() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '新建数据字典';
-      case OperationType.UPDATE:
-        return '更新数据字典';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新数据字典';
     }
+    return '新建数据字典';
   }
 
   function getSubmitButtonName() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '保存';
-      case OperationType.UPDATE:
-        return '更新';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新';
     }
+    return '保存';
   }
 
   function handleModalCancel() {
