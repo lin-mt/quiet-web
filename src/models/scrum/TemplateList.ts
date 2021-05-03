@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
 export default () => {
-  const [templateList] = useState<Record<string, ScrumEntities.ScrumTemplate>>({});
+  const [templateList, setTemplateList] = useState<Record<string, ScrumEntities.ScrumTemplate>>({});
 
   const addOrUpdateTemplate = useCallback(
     (template: ScrumEntities.ScrumTemplate) => {
@@ -19,5 +19,18 @@ export default () => {
     [templateList],
   );
 
-  return { templateList, addTemplates, addOrUpdateTemplate };
+  const deleteTemplate = useCallback(
+    (id: string): void => {
+      const newTemplateList: Record<string, ScrumEntities.ScrumTemplate> = {};
+      Object.keys(templateList).forEach((key) => {
+        if (key !== id) {
+          newTemplateList[key] = templateList[key];
+        }
+      });
+      setTemplateList(newTemplateList);
+    },
+    [templateList],
+  );
+
+  return { templateList, addTemplates, addOrUpdateTemplate, deleteTemplate };
 };
