@@ -217,7 +217,6 @@ export default () => {
       </Card>
       {versionFormVisible && projectId && (
         <VersionForm
-          form={versionForm}
           projectId={projectId}
           parentId={selectedVersionId}
           updateInfo={updateVersionInfo}

@@ -1,14 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, DatePicker, Form, Input, Modal } from 'antd';
 import { saveVersion, updateVersion } from '@/services/scrum/ScrumVersion';
-import type { FormInstance } from 'antd/lib/form';
 import { formatDate } from '@/utils/MomentUtils';
 import type { ScrumVersion } from '@/services/scrum/EntitiyType';
 
 interface VersionFormProps {
   visible: boolean;
   projectId: string;
-  form: FormInstance;
   onCancel: () => void;
   parentId?: string;
   updateInfo?: ScrumVersion;
@@ -16,8 +14,13 @@ interface VersionFormProps {
 }
 
 export default (props: VersionFormProps) => {
-  const { visible, projectId, parentId, onCancel, updateInfo, form, afterAction } = props;
+  const { visible, projectId, parentId, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const [form] = Form.useForm();
+  useEffect(() => {
+    form.setFieldsValue(updateInfo);
+  }, [form, updateInfo]);
 
   async function handleSubmit() {
     const values = await form.validateFields();
