@@ -1,38 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Input, Modal } from 'antd';
 import { savePermission, updatePermission } from '@/services/system/QuietPermission';
-import type { FormInstance } from 'antd/lib/form';
-import { OperationType } from '@/types/Type';
 import type { QuietPermission } from '@/services/system/EntityType';
 
 type PermissionFormProps = {
   visible: boolean;
-  form: FormInstance;
   onCancel: () => void;
-  operationType?: OperationType;
   updateInfo?: QuietPermission;
   afterAction?: () => void;
 };
 
 const RoleForm: React.FC<PermissionFormProps> = (props) => {
-  const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
+  const { visible, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const nonsupportMsg = 'nonsupport FormType';
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue(updateInfo);
+  }, [form, updateInfo]);
 
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
-    switch (operationType) {
-      case OperationType.CREATE:
-        await savePermission(values);
-        break;
-      case OperationType.UPDATE:
-        await updatePermission({ ...updateInfo, ...values });
-        break;
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      await updatePermission({ ...updateInfo, ...values });
+    } else {
+      await savePermission(values);
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -41,29 +36,21 @@ const RoleForm: React.FC<PermissionFormProps> = (props) => {
   }
 
   function getTitle() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '保存';
-      case OperationType.UPDATE:
-        return '更新';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新';
     }
+    return '保存';
   }
 
   function getSubmitButtonName() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '保存配置';
-      case OperationType.UPDATE:
-        return '更新配置';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新配置';
     }
+    return '保存配置';
   }
 
   function handleModalCancel() {
-    form.resetFields();
+    form.setFieldsValue(undefined);
     onCancel();
   }
 

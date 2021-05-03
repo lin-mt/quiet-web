@@ -1,20 +1,17 @@
 import React, { useRef, useState } from 'react';
-import { Button, Form, Popconfirm, Space, Tag } from 'antd';
+import { Button, Popconfirm, Space, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { pageTeam, deleteTeam } from '@/services/system/QuietTeam';
 import { PageContainer } from '@ant-design/pro-layout';
-import { OperationType } from '@/types/Type';
 import TeamForm from './components/TeamForm';
 import type { QuietTeam } from '@/services/system/EntityType';
 
 const TeamManagement: React.FC<any> = () => {
   const [updateTeamInfo, setUpdateTeamInfo] = useState<QuietTeam>();
   const [roleFormVisible, setTeamModalVisible] = useState<boolean>(false);
-  const [roleFormType, setTeamOperationType] = useState<OperationType>();
   const teamModalActionRef = useRef<ActionType>();
-  const [teamForm] = Form.useForm();
   const columns: ProColumns<QuietTeam>[] = [
     {
       title: 'ID',
@@ -105,10 +102,7 @@ const TeamManagement: React.FC<any> = () => {
           <a
             key="update"
             onClick={() => {
-              const team = { ...record };
-              teamForm.setFieldsValue(team);
-              setUpdateTeamInfo(team);
-              setTeamOperationType(OperationType.UPDATE);
+              setUpdateTeamInfo({ ...record });
               setTeamModalVisible(true);
             }}
           >
@@ -119,7 +113,7 @@ const TeamManagement: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该团队以及队员信息吗？"
             onConfirm={() => {
-              deleteTeam(record.id).then(() => refreshPageInfo());
+              deleteTeam(record.id).then(() => teamModalActionRef?.current?.reload());
             }}
           >
             <a key="delete">删除</a>
@@ -135,16 +129,12 @@ const TeamManagement: React.FC<any> = () => {
   });
 
   function createTeam() {
-    setTeamOperationType(OperationType.CREATE);
+    setUpdateTeamInfo(undefined);
     setTeamModalVisible(true);
   }
 
   function handleTeamFormCancel() {
     setTeamModalVisible(false);
-  }
-
-  function refreshPageInfo() {
-    teamModalActionRef?.current?.reload();
   }
 
   return (
@@ -166,10 +156,8 @@ const TeamManagement: React.FC<any> = () => {
         <TeamForm
           visible={roleFormVisible}
           onCancel={handleTeamFormCancel}
-          operationType={roleFormType}
-          form={teamForm}
           updateInfo={updateTeamInfo}
-          afterAction={refreshPageInfo}
+          afterAction={() => teamModalActionRef?.current?.reload()}
         />
       )}
     </PageContainer>

@@ -1,12 +1,11 @@
 import type { ReactText } from 'react';
 import React, { useRef, useState } from 'react';
-import { Button, Form, Popconfirm, Space, Tag } from 'antd';
+import { Button, Popconfirm, Space, Tag } from 'antd';
 import { CloseOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { pageUser, deleteUser, removeRole, addRoles } from '@/services/system/QuietUser';
-import { OperationType } from '@/types/Type';
 import UserForm from './components/UserForm';
 import { Tooltip } from 'antd';
 import RoleTree from '@/pages/system/role/components/RoleTree';
@@ -24,13 +23,11 @@ const UserInfo: React.FC<any> = () => {
   const [userFormVisible, setUserModalVisible] = useState<boolean>(false);
   const [roleTreeVisible, setRoleTreeVisible] = useState<boolean>(false);
   const [addRoleUserId, setAddRoleUserId] = useState<string | null>(null);
-  const [userFormType, setUserModalType] = useState<OperationType>();
   const userModalActionRef = useRef<ActionType>();
-  const [userForm] = Form.useForm();
 
   async function confirmRemoveUserRole(userId: string, roleId: string) {
     await removeRole(userId, roleId);
-    refreshPageInfo();
+    userModalActionRef.current?.reload();
   }
 
   function addUserRole(userId: string) {
@@ -177,9 +174,7 @@ const UserInfo: React.FC<any> = () => {
                 credentialsExpired: record.credentialsExpired,
                 enabled: record.enabled,
               };
-              userForm.setFieldsValue(userInfo);
               setUpdateUserInfo(userInfo);
-              setUserModalType(OperationType.UPDATE);
               setUserModalVisible(true);
             }}
           >
@@ -190,7 +185,7 @@ const UserInfo: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该用户及该用户的相关信息吗？"
             onConfirm={() => {
-              deleteUser(record.id).then(() => refreshPageInfo());
+              deleteUser(record.id).then(() => userModalActionRef.current?.reload());
             }}
           >
             <a key="delete">删除</a>
@@ -206,16 +201,8 @@ const UserInfo: React.FC<any> = () => {
   });
 
   function createUser() {
-    setUserModalType(OperationType.CREATE);
+    setUpdateUserInfo(undefined);
     setUserModalVisible(true);
-  }
-
-  function handleUserFormCancel() {
-    setUserModalVisible(false);
-  }
-
-  function refreshPageInfo() {
-    userModalActionRef.current?.reload();
   }
 
   function handleRoleTreeOnCancel() {
@@ -230,7 +217,7 @@ const UserInfo: React.FC<any> = () => {
         addEntities.push({ userId: addRoleUserId, roleId: key });
       });
       await addRoles(addEntities);
-      refreshPageInfo();
+      userModalActionRef.current?.reload();
       setAddRoleUserId(null);
       setRoleTreeVisible(false);
     }
@@ -254,11 +241,10 @@ const UserInfo: React.FC<any> = () => {
       {userFormVisible && (
         <UserForm
           visible={userFormVisible}
-          onCancel={handleUserFormCancel}
-          operationType={userFormType}
-          form={userForm}
+          onCancel={() => setUserModalVisible(false)}
+          isUserRegister={false}
           updateInfo={updateUserInfo}
-          afterAction={refreshPageInfo}
+          afterAction={() => userModalActionRef.current?.reload()}
         />
       )}
       {roleTreeVisible && (

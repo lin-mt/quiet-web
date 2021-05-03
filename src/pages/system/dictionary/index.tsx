@@ -1,11 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { Button, Form, Popconfirm } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { pageDictionary, deleteDictionary } from '@/services/system/QuietDictionary';
 import { PageContainer } from '@ant-design/pro-layout';
-import { OperationType } from '@/types/Type';
 import DictionaryTree from '@/pages/system/dictionary/components/DictionaryTree';
 import DictionaryForm from '@/pages/system/dictionary/components/DictionaryForm';
 import type { QuietDictionary } from '@/services/system/EntityType';
@@ -15,9 +14,7 @@ const Dictionary: React.FC<any> = () => {
   const [dictionaryFormVisible, setDictionaryFormVisible] = useState<boolean>(false);
   const [dictionaryTreeVisible, setDictionaryTreeVisible] = useState<boolean>(false);
 
-  const [dictionaryFormOperationType, setDictionaryFormOperationType] = useState<OperationType>();
   const dictionaryModalActionRef = useRef<ActionType>();
-  const [dictionaryForm] = Form.useForm();
   const columns: ProColumns<QuietDictionary>[] = [
     {
       title: 'ID',
@@ -77,10 +74,7 @@ const Dictionary: React.FC<any> = () => {
           <a
             key="update"
             onClick={() => {
-              const dictionary = { ...record };
-              dictionaryForm.setFieldsValue(dictionary);
-              setUpdateDictionaryInfo(dictionary);
-              setDictionaryFormOperationType(OperationType.UPDATE);
+              setUpdateDictionaryInfo({ ...record });
               setDictionaryFormVisible(true);
             }}
           >
@@ -91,7 +85,7 @@ const Dictionary: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该数据字典吗？"
             onConfirm={() => {
-              deleteDictionary(record.id).then(() => refreshPageInfo());
+              deleteDictionary(record.id).then(() => dictionaryModalActionRef?.current?.reload());
             }}
           >
             <a key="delete">删除</a>
@@ -107,20 +101,8 @@ const Dictionary: React.FC<any> = () => {
   });
 
   function createDictionary() {
-    setDictionaryFormOperationType(OperationType.CREATE);
+    setUpdateDictionaryInfo(undefined);
     setDictionaryFormVisible(true);
-  }
-
-  function handleDictionaryFormCancel() {
-    setDictionaryFormVisible(false);
-  }
-
-  function refreshPageInfo() {
-    dictionaryModalActionRef?.current?.reload();
-  }
-
-  function showDictionaryByTree() {
-    setDictionaryTreeVisible(true);
   }
 
   return (
@@ -130,7 +112,7 @@ const Dictionary: React.FC<any> = () => {
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => pageDictionary({ params, sorter, filter })}
         toolBarRender={() => [
-          <Button type="primary" key="tree" onClick={showDictionaryByTree}>
+          <Button type="primary" key="tree" onClick={() => setDictionaryTreeVisible(true)}>
             所有数据字典
           </Button>,
           <Button type="primary" key="create" onClick={createDictionary}>
@@ -144,11 +126,9 @@ const Dictionary: React.FC<any> = () => {
       {dictionaryFormVisible && (
         <DictionaryForm
           visible={dictionaryFormVisible}
-          onCancel={handleDictionaryFormCancel}
-          operationType={dictionaryFormOperationType}
-          form={dictionaryForm}
+          onCancel={() => setDictionaryFormVisible(false)}
           updateInfo={updateDictionaryInfo}
-          afterAction={refreshPageInfo}
+          afterAction={() => dictionaryModalActionRef?.current?.reload()}
         />
       )}
       {dictionaryTreeVisible && (

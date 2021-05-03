@@ -1,41 +1,49 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Input, Modal } from 'antd';
 import { saveTeam, updateTeam } from '@/services/system/QuietTeam';
 import { listUsersByName } from '@/services/system/QuietUser';
-import type { FormInstance } from 'antd/lib/form';
-import { OperationType } from '@/types/Type';
 import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import type { QuietTeam, QuietUser } from '@/services/system/EntityType';
 
 type TeamFormProps = {
   visible: boolean;
-  form: FormInstance;
   onCancel: () => void;
-  operationType?: OperationType;
   updateInfo?: QuietTeam;
   afterAction?: () => void;
 };
 
 const RoleForm: React.FC<TeamFormProps> = (props) => {
-  const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
+  const { visible, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [productOwners, setProductOwners] = useState<any[]>(
-    form.getFieldValue('productOwners')?.map((user: QuietUser) => {
-      return { value: user.id, label: user.fullName };
-    }),
-  );
-  const [scrumMasters, setScrumMasters] = useState<any[]>(
-    form.getFieldValue('scrumMasters')?.map((user: QuietUser) => {
-      return { value: user.id, label: user.fullName };
-    }),
-  );
-  const [members, setMembers] = useState<any[]>(
-    form.getFieldValue('members')?.map((user: QuietUser) => {
-      return { value: user.id, label: user.fullName };
-    }),
-  );
-  const nonsupportMsg = 'nonsupport FormType';
+  const [productOwners, setProductOwners] = useState<any[]>();
+  const [scrumMasters, setScrumMasters] = useState<any[]>();
+  const [members, setMembers] = useState<any[]>();
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (updateInfo) {
+      form.setFieldsValue(updateInfo);
+      setProductOwners(
+        updateInfo.productOwners?.map((user: QuietUser) => {
+          return { value: user.id, label: user.fullName };
+        }),
+      );
+      setScrumMasters(
+        updateInfo.scrumMasters?.map((user: QuietUser) => {
+          return { value: user.id, label: user.fullName };
+        }),
+      );
+      setMembers(
+        updateInfo.members?.map((user: QuietUser) => {
+          return { value: user.id, label: user.fullName };
+        }),
+      );
+    } else {
+      form.setFieldsValue(undefined);
+    }
+  }, [form, updateInfo]);
 
   async function handleSubmit() {
     const values = await form.validateFields();
@@ -52,20 +60,14 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
         return { id: user.value };
       }),
     };
-    switch (operationType) {
-      case OperationType.CREATE:
-        await saveTeam(submitValues);
-        break;
-      case OperationType.UPDATE:
-        await updateTeam({
-          ...updateInfo,
-          ...submitValues,
-        });
-        break;
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      await updateTeam({
+        ...updateInfo,
+        ...submitValues,
+      });
+    } else {
+      await saveTeam(submitValues);
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -74,29 +76,21 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
   }
 
   function getTitle() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '新建团队';
-      case OperationType.UPDATE:
-        return '更新团队';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新团队';
     }
+    return '新建团队';
   }
 
   function getSubmitButtonName() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '保存';
-      case OperationType.UPDATE:
-        return '更新';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新';
     }
+    return '保存';
   }
 
   function handleModalCancel() {
-    form.resetFields();
+    form.setFieldsValue(undefined);
     onCancel();
   }
 
@@ -174,7 +168,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
               mode="multiple"
               value={members}
               tagRender={multipleSelectTagRender}
-              placeholder="请输入团队成员用户名"
+              placeholder="请输入团队成员 用户名/姓名"
               fetchOptions={findUserByName}
               onChange={(value) => setMembers(value)}
             />

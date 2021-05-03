@@ -1,43 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
 import { registeredUser, updateUser } from '@/services/system/QuietUser';
-import type { FormInstance } from 'antd/lib/form';
-import { OperationType } from '@/types/Type';
 import type { QuietUser } from '@/services/system/EntityType';
 
 const { Option } = Select;
 
 type UserFormProps = {
   visible: boolean;
-  form: FormInstance;
   onCancel: () => void;
-  operationType?: OperationType;
+  isUserRegister: boolean;
   updateInfo?: QuietUser;
   afterAction?: () => void;
 };
 
 const UserForm: React.FC<UserFormProps> = (props) => {
-  const { visible, onCancel, operationType, updateInfo, form, afterAction } = props;
+  const { visible, onCancel, isUserRegister, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const nonsupportMsg = 'nonsupport operationType';
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue(updateInfo);
+  }, [form, updateInfo]);
 
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
-    switch (operationType) {
-      case OperationType.CREATE:
-      case OperationType.REGISTERED:
-        values.avatar =
-          'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
-        await registeredUser(values);
-        break;
-      case OperationType.UPDATE:
-        await updateUser({ ...updateInfo, ...values });
-        break;
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      await updateUser({ ...updateInfo, ...values });
+    } else {
+      values.avatar =
+        'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
+      await registeredUser(values);
     }
-    form.resetFields();
     setSubmitting(false);
     onCancel();
     if (afterAction) {
@@ -46,33 +41,21 @@ const UserForm: React.FC<UserFormProps> = (props) => {
   }
 
   function getTitle() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '新建用户';
-      case OperationType.UPDATE:
-        return '更新用户';
-      case OperationType.REGISTERED:
-        return '注册';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新用户';
     }
+    return '注册用户';
   }
 
   function getSubmitButtonName() {
-    switch (operationType) {
-      case OperationType.CREATE:
-        return '保存';
-      case OperationType.UPDATE:
-        return '更新';
-      case OperationType.REGISTERED:
-        return '注册';
-      default:
-        throw Error(nonsupportMsg);
+    if (updateInfo) {
+      return '更新';
     }
+    return '注册';
   }
 
   function handleModalCancel() {
-    form.resetFields();
+    form.setFieldsValue(undefined);
     onCancel();
   }
 
@@ -200,7 +183,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        {operationType !== OperationType.REGISTERED && (
+        {!isUserRegister && (
           <>
             <Row gutter={20}>
               <Col span={12}>
