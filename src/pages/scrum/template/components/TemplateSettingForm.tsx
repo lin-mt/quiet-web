@@ -47,7 +47,6 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
   const isUpdateTaskSteps = taskSteps && taskSteps.length > 0;
   const isUpdatePriorities = priorities && priorities.length > 0;
   const [taskStepForm] = Form.useForm();
-  const [priorityForm] = Form.useForm();
 
   function handleModalCancel() {
     onCancel();
@@ -269,7 +268,6 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
                                 icon={<EditFilled />}
                                 onClick={() => {
                                   setUpdatePriorityInfo(priority);
-                                  priorityForm.setFieldsValue(priority);
                                   setPriorityFormVisible(true);
                                 }}
                               />
@@ -306,7 +304,10 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
                 shape={'round'}
                 icon={<PlusOutlined />}
                 type={'primary'}
-                onClick={() => setPriorityFormVisible(true)}
+                onClick={() => {
+                  setPriorityFormVisible(true);
+                  setUpdatePriorityInfo(undefined);
+                }}
               >
                 添加优先级
               </Button>
@@ -326,7 +327,6 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
       )}
       {priorityFormVisible && (
         <PriorityForm
-          form={priorityForm}
           template={template}
           visible={priorityFormVisible}
           updateInfo={updatePriorityInfo}

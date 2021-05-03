@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 import { savePriority, updatePriority } from '@/services/scrum/ScrumPriority';
-import type { FormInstance } from 'antd/lib/form';
 import type { ScrumPriority, ScrumTemplate } from '@/services/scrum/EntitiyType';
 
 interface PriorityFormProps {
   visible: boolean;
-  form: FormInstance;
   template: ScrumTemplate;
   onCancel: () => void;
   updateInfo?: ScrumPriority;
@@ -14,7 +12,14 @@ interface PriorityFormProps {
 }
 
 const PriorityForm: React.FC<PriorityFormProps> = (props) => {
-  const { visible, onCancel, updateInfo, form, template, afterAction } = props;
+  const { visible, onCancel, updateInfo, template, afterAction } = props;
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue(updateInfo);
+  }, [form, updateInfo]);
+
   const [submitting, setSubmitting] = useState<boolean>(false);
   async function handleSubmit() {
     const values = await form.validateFields();
