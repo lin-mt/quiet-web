@@ -1,20 +1,17 @@
 import React, { useRef, useState } from 'react';
-import { Button, Form, Popconfirm } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { deletePermission, queryPermission } from '@/services/system/QuietPermission';
 import { PageContainer } from '@ant-design/pro-layout';
-import { OperationType } from '@/types/Type';
 import PermissionForm from '@/pages/system/permission/components/PermissionForm';
 import type { QuietPermission } from '@/services/system/EntityType';
 
 const PermissionConfig: React.FC<any> = () => {
   const [updatePermissionInfo, setUpdatePermissionInfo] = useState<QuietPermission>();
   const [permissionFormVisible, setPermissionModalVisible] = useState<boolean>(false);
-  const [permissionFormType, setPermissionOperationType] = useState<OperationType>();
   const permissionModalActionRef = useRef<ActionType>();
-  const [permissionForm] = Form.useForm();
   const columns: ProColumns<QuietPermission>[] = [
     {
       title: 'ID',
@@ -75,10 +72,7 @@ const PermissionConfig: React.FC<any> = () => {
           <a
             key="update"
             onClick={() => {
-              const role = { ...record };
-              permissionForm.setFieldsValue(role);
-              setUpdatePermissionInfo(role);
-              setPermissionOperationType(OperationType.UPDATE);
+              setUpdatePermissionInfo({ ...record });
               setPermissionModalVisible(true);
             }}
           >
@@ -89,7 +83,7 @@ const PermissionConfig: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该配置信息吗？"
             onConfirm={() => {
-              deletePermission(record.id).then(() => refreshPageInfo());
+              deletePermission(record.id).then(() => permissionModalActionRef?.current?.reload());
             }}
           >
             <a key="delete">删除</a>
@@ -99,21 +93,13 @@ const PermissionConfig: React.FC<any> = () => {
     },
   ];
 
-  function refreshPageInfo() {
-    permissionModalActionRef?.current?.reload();
-  }
-
-  function handlePermissionFormCancel() {
-    setPermissionModalVisible(false);
-  }
-
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
     gmtCreate: { show: false },
     gmtUpdate: { show: false },
   });
 
   function createPermission() {
-    setPermissionOperationType(OperationType.CREATE);
+    setUpdatePermissionInfo(undefined);
     setPermissionModalVisible(true);
   }
 
@@ -124,8 +110,8 @@ const PermissionConfig: React.FC<any> = () => {
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => queryPermission({ params, sorter, filter })}
         toolBarRender={() => [
-          <Button type="primary" key="create" onClick={createPermission}>
-            <PlusOutlined /> 新增配置
+          <Button type="primary" key="create" onClick={createPermission} icon={<PlusOutlined />}>
+            新增配置
           </Button>,
         ]}
         columns={columns}
@@ -135,11 +121,9 @@ const PermissionConfig: React.FC<any> = () => {
       {permissionFormVisible && (
         <PermissionForm
           visible={permissionFormVisible}
-          onCancel={handlePermissionFormCancel}
-          form={permissionForm}
-          operationType={permissionFormType}
+          onCancel={() => setPermissionModalVisible(false)}
           updateInfo={updatePermissionInfo}
-          afterAction={refreshPageInfo}
+          afterAction={() => permissionModalActionRef?.current?.reload()}
         />
       )}
     </PageContainer>
