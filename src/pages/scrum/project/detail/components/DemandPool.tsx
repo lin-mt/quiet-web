@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { findToBePlanned } from '@/services/scrum/ScrumDemand';
-import { Button, Card, Empty, Form, List, message, Spin } from 'antd';
+import { Button, Card, Empty, List, message, Spin } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 import { PlusOutlined } from '@ant-design/icons';
 import { useModel } from '@@/plugin-model/useModel';
@@ -17,7 +17,6 @@ export default () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [demandFormVisible, setDemandFormVisible] = useState<boolean>(false);
   const [toBePlanned, setToBePlanned] = useState<ScrumDemand[]>([]);
-  const [demandForm] = Form.useForm();
 
   const initToBePlanned = useCallback(() => {
     if (projectId) {
@@ -101,7 +100,6 @@ export default () => {
       </Card>
       {demandFormVisible && projectId && (
         <DemandForm
-          form={demandForm}
           visible={demandFormVisible}
           projectId={projectId}
           priorities={priorities}

@@ -1,5 +1,4 @@
-import type { FormInstance } from 'antd/lib/form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { saveDemand, updateDemand } from '@/services/scrum/ScrumDemand';
 import { Button, Form, Input, Modal, Select } from 'antd';
 import { DictionarySelect } from '@/pages/components/DictionarySelect';
@@ -8,7 +7,6 @@ import type { ScrumIteration, ScrumPriority } from '@/services/scrum/EntitiyType
 
 interface DemandFormProps {
   visible: boolean;
-  form: FormInstance;
   projectId: string;
   priorities: ScrumPriority[];
   onCancel: () => void;
@@ -17,8 +15,14 @@ interface DemandFormProps {
 }
 
 export default (props: DemandFormProps) => {
-  const { visible, onCancel, updateInfo, form, projectId, priorities, afterAction } = props;
+  const { visible, onCancel, updateInfo, projectId, priorities, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue(updateInfo);
+  }, [form, updateInfo]);
 
   const prioritiesOptions = priorities.map((priority) => {
     return { key: priority.id, value: priority.id, label: priority.name };
