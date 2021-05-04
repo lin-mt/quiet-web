@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { findProjectDetail } from '@/services/scrum/ScrumProject';
 import { Col, Descriptions, Empty, Row, Spin, Tag } from 'antd';
 import { tagColor } from '@/utils/RenderUtils';
-import DemandPoolList from '@/pages/scrum/project/detail/components/DemandPool';
+import DemandPool from '@/pages/scrum/project/detail/components/DemandPool';
 import DemandPlanning from '@/pages/scrum/project/detail/components/DemandPlanning';
 import PlanningIteration from '@/pages/scrum/project/detail/components/PlanningIteration';
 import { useModel } from 'umi';
@@ -77,7 +77,7 @@ const ProjectDetail: React.FC<any> = (props) => {
           </Descriptions>
           <Row gutter={9}>
             <Col span={8}>
-              <DemandPoolList />
+              <DemandPool />
             </Col>
             <Col span={8}>
               <DemandPlanning />
