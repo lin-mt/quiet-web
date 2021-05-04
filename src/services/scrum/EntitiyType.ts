@@ -50,7 +50,7 @@ export interface ScrumTaskStep extends SerialEntity {
 
 export interface ScrumPriority extends SerialEntity {
   name: string;
-  colorHex?: string;
+  colorHex: string;
   templateId: string;
   remark?: string;
 }

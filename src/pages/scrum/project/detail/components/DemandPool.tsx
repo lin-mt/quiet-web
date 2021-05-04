@@ -7,6 +7,7 @@ import { useModel } from '@@/plugin-model/useModel';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import DemandForm from '@/pages/scrum/demand/components/DemandForm';
 import type { ScrumDemand } from '@/services/scrum/EntitiyType';
+import DemandCard from '@/pages/scrum/demand/components/DemandCard';
 
 export default () => {
   const limit = 30;
@@ -75,9 +76,10 @@ export default () => {
         >
           <List<ScrumDemand>
             dataSource={toBePlanned}
-            renderItem={(item) => (
-              <List.Item title={item.title}>
-                <div>{item.title}</div>
+            grid={{ column: 1 }}
+            renderItem={(demand) => (
+              <List.Item style={{ marginBottom: '12px' }}>
+                <DemandCard demand={demand} />
               </List.Item>
             )}
             locale={{
