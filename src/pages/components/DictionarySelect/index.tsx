@@ -4,7 +4,6 @@ import type { SelectProps } from 'antd/es/select';
 import type { DictionaryType } from '@/types/Type';
 import { useModel } from 'umi';
 import { DICTIONARY } from '@/constant/system/Modelnames';
-import { listByTypeForSelect } from '@/services/system/QuietDictionary';
 import type { QuietDictionary } from '@/services/system/EntityType';
 
 export interface DictionarySelectProps extends Omit<SelectProps<any>, 'options' | 'children'> {
@@ -19,7 +18,7 @@ type OptionType = {
 };
 
 export function DictionarySelect({ type, allowClear = false, ...props }: DictionarySelectProps) {
-  const { dictionaries, addDictionaries } = useModel(DICTIONARY);
+  const { getDictionariesByType } = useModel(DICTIONARY);
   const [loading, setLoading] = React.useState(false);
   const [options, setOptions] = React.useState<OptionType[]>([]);
 
@@ -38,22 +37,16 @@ export function DictionarySelect({ type, allowClear = false, ...props }: Diction
       });
       return datumOptions;
     };
-    if (dictionaries[type]) {
-      setOptions(buildOptions(dictionaries[type]));
-      setLoading(false);
-    } else {
-      listByTypeForSelect(type).then((resp) => {
-        if (isMounted) {
-          setOptions(buildOptions(resp));
-          setLoading(false);
-          addDictionaries(type, resp);
-        }
-      });
-    }
+    getDictionariesByType(type).then((dictionaries) => {
+      if (isMounted) {
+        setOptions(buildOptions(dictionaries));
+        setLoading(false);
+      }
+    });
     return () => {
       isMounted = false;
     };
-  }, [addDictionaries, dictionaries, type]);
+  }, [getDictionariesByType, type]);
 
   return (
     <Select
