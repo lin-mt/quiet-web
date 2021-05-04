@@ -59,9 +59,9 @@ export interface ScrumDemand extends SerialEntity, ParentEntity<ScrumDemand> {
   title: string;
   type: string;
   projectId: string;
+  iterationId?: string;
   priorityId: string;
   optimizeDemandId?: string;
-  executorId?: string;
   startTime?: string;
   endTime?: string;
   remark?: string;

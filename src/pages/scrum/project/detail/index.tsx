@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { findProjectDetail } from '@/services/scrum/ScrumProject';
-import { Col, Descriptions, Empty, Row, Spin, Tag } from 'antd';
+import { Col, Descriptions, Empty, message, Row, Spin, Tag } from 'antd';
 import { tagColor } from '@/utils/RenderUtils';
 import DemandPool from '@/pages/scrum/project/detail/components/DemandPool';
 import DemandPlanning from '@/pages/scrum/project/detail/components/DemandPlanning';
@@ -10,12 +10,24 @@ import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import { findAllByTemplateId } from '@/services/scrum/ScrumPriority';
 import type { ScrumProjectDetail } from '@/services/scrum/EntitiyType';
 import type { QuietUser } from '@/services/system/EntityType';
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
+import { planning } from '@/services/scrum/ScrumDemand';
 
 const ProjectDetail: React.FC<any> = (props) => {
-  const { projectId, setProjectId, members, setMembers, setPriorities } = useModel(PROJECT_DETAIL);
+  const {
+    projectId,
+    setProjectId,
+    members,
+    setMembers,
+    setPriorities,
+    selectedIterationId,
+  } = useModel(PROJECT_DETAIL);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [projectDetail, setProjectDetail] = useState<ScrumProjectDetail>();
+  const demandPoolRef = useRef();
+  const demandPlanningRef = useRef();
 
   useEffect(() => {
     setProjectId(props.location.query.projectId);
@@ -39,6 +51,52 @@ const ProjectDetail: React.FC<any> = (props) => {
       });
     }
   }, [props.location.query.projectId, projectId, setProjectId, setMembers, setPriorities]);
+
+  function handlePlanningResult(result: boolean) {
+    if (!result) {
+      message.error('操作失败，请联系管理员！').then();
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    }
+  }
+
+  function handleDemandDragEnd(result: DropResult) {
+    const { destination, source, draggableId } = result;
+    const demandId = draggableId;
+    if (!destination) {
+      return;
+    }
+    if (destination.droppableId === source.droppableId) {
+      return;
+    }
+    if (destination?.droppableId === 'DemandPlanning') {
+      if (!selectedIterationId) {
+        message.warning('请选择需求要规划的迭代！').then();
+        return;
+      }
+      planning(demandId, selectedIterationId).then((planningResult) => {
+        handlePlanningResult(planningResult);
+      });
+      // @ts-ignore
+      const operationDemand = demandPoolRef?.current?.getDemandById(demandId);
+      // @ts-ignore
+      demandPoolRef?.current?.removeDemand(source.index);
+      // @ts-ignore
+      demandPlanningRef?.current?.addDemand(operationDemand, destination.index);
+    }
+    if (destination?.droppableId === 'DemandPool') {
+      planning(demandId).then((planningResult) => {
+        handlePlanningResult(planningResult);
+      });
+      // @ts-ignore
+      const operationDemand = demandPlanningRef?.current?.getDemandById(demandId);
+      // @ts-ignore
+      demandPlanningRef?.current?.removeDemand(source.index);
+      // @ts-ignore
+      demandPoolRef?.current?.addDemand(operationDemand, destination.index);
+    }
+  }
 
   return (
     <>
@@ -76,12 +134,14 @@ const ProjectDetail: React.FC<any> = (props) => {
             </Descriptions.Item>
           </Descriptions>
           <Row gutter={9}>
-            <Col span={8}>
-              <DemandPool />
-            </Col>
-            <Col span={8}>
-              <DemandPlanning />
-            </Col>
+            <DragDropContext onDragEnd={handleDemandDragEnd}>
+              <Col span={8}>
+                <DemandPool ref={demandPoolRef} />
+              </Col>
+              <Col span={8}>
+                <DemandPlanning ref={demandPlanningRef} />
+              </Col>
+            </DragDropContext>
             <Col span={8}>
               <PlanningIteration />
             </Col>

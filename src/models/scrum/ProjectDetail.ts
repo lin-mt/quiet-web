@@ -7,6 +7,7 @@ export default () => {
   const [versions, setVersions] = useState<ScrumVersion[]>([]);
   const [members, setMembers] = useState<Record<string, QuietUser>>({});
   const [priorities, updatePriorities] = useState<ScrumPriority[]>([]);
+  const [selectedIterationId, setSelectedIterationId] = useState<string>();
   const [priorityColors, setPriorityColors] = useState<Record<string, string>>({});
 
   const setPriorities = useCallback((ps: ScrumPriority[]) => {
@@ -29,6 +30,8 @@ export default () => {
     setMembers,
     priorities,
     setPriorities,
+    selectedIterationId,
+    setSelectedIterationId,
     priorityColors,
   };
 };
