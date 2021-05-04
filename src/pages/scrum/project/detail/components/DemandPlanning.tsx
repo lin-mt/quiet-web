@@ -5,6 +5,7 @@ import { disableTreeNode } from '@/utils/scrum/utils';
 import { findAllDemandsById } from '@/services/scrum/ScrumIteration';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import type { ScrumDemand } from '@/services/scrum/EntitiyType';
+import DemandCard from '@/pages/scrum/demand/components/DemandCard';
 
 export default () => {
   const { versions } = useModel(PROJECT_DETAIL);
@@ -39,18 +40,18 @@ export default () => {
           />
         }
       >
-        <List
+        <List<ScrumDemand>
           dataSource={iterationDemands}
-          renderItem={(item) => {
-            const demand: ScrumDemand = item;
-            return (
-              <List.Item title={demand.title}>
-                <div>{demand.remark}</div>
-              </List.Item>
-            );
-          }}
+          grid={{ column: 1 }}
+          renderItem={(demand) => (
+            <List.Item style={{ marginBottom: '12px' }}>
+              <DemandCard demand={demand} />
+            </List.Item>
+          )}
           locale={{
-            emptyText: (
+            emptyText: loading ? (
+              <Spin />
+            ) : (
               <Empty
                 description={
                   !selectedIterationId ? '请选择需求要规划的迭代' : '请从需求池拖拽需求进行需求规划'
@@ -58,9 +59,7 @@ export default () => {
               />
             ),
           }}
-        >
-          {loading && <Spin />}
-        </List>
+        />
       </Card>
     </>
   );
