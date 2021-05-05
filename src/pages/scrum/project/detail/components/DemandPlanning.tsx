@@ -2,15 +2,20 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Link, useModel } from 'umi';
 import { Button, Card, Empty, List, Space, Spin, TreeSelect } from 'antd';
 import { disableTreeNode } from '@/utils/scrum/utils';
-import { findAllDemandsById } from '@/services/scrum/ScrumIteration';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 import DemandCard from '@/pages/scrum/demand/components/DemandCard';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
-import { ForwardFilled } from '@ant-design/icons';
+import { CaretDownFilled, ForwardFilled } from '@ant-design/icons';
+import { scrollByIterationId } from '@/services/scrum/ScrumDemand';
 
 export default forwardRef((_, ref) => {
+  const limit = 6;
+
   const { versions, selectedIterationId, setSelectedIterationId } = useModel(PROJECT_DETAIL);
+
+  const [offset, setOffset] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [iterationDemands, setIterationDemands] = useState<ScrumDemand[]>([]);
 
@@ -43,12 +48,26 @@ export default forwardRef((_, ref) => {
   useEffect(() => {
     if (selectedIterationId) {
       setLoading(true);
-      findAllDemandsById(selectedIterationId).then((demands) => {
+      scrollByIterationId(selectedIterationId, 0, limit).then((demands) => {
         setIterationDemands(demands);
+        setOffset(demands.length);
+        setHasMore(limit === demands.length);
         setLoading(false);
       });
     }
   }, [selectedIterationId]);
+
+  function loadMoreDemandsInIteration() {
+    if (hasMore && selectedIterationId) {
+      setLoading(true);
+      scrollByIterationId(selectedIterationId, offset, limit).then((demands) => {
+        setIterationDemands(iterationDemands.concat(demands));
+        setOffset(offset + demands.length);
+        setHasMore(limit === demands.length);
+        setLoading(false);
+      });
+    }
+  }
 
   return (
     <>
@@ -77,8 +96,27 @@ export default forwardRef((_, ref) => {
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               <List<ScrumDemand>
-                dataSource={iterationDemands}
                 grid={{ column: 1 }}
+                dataSource={iterationDemands}
+                loadMore={
+                  selectedIterationId &&
+                  hasMore &&
+                  !loading && (
+                    <div
+                      style={{
+                        textAlign: 'center',
+                      }}
+                    >
+                      <Button
+                        size={'small'}
+                        type={'text'}
+                        style={{ width: '100%', borderRadius: '5px', backgroundColor: 'lightgrey' }}
+                        onClick={loadMoreDemandsInIteration}
+                        icon={<CaretDownFilled />}
+                      />
+                    </div>
+                  )
+                }
                 renderItem={(demand, index) => (
                   <Draggable draggableId={demand.id} index={index}>
                     {(demandProvider) => (

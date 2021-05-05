@@ -30,3 +30,16 @@ export function findToBePlanned(
     return resData.data;
   });
 }
+
+export function scrollByIterationId(
+  iterationId: string,
+  offset: number,
+  limit: number,
+): Promise<ScrumDemand[]> {
+  return request<Result<ScrumDemand[]>>(`${apiPrefix}/scrollByIterationId`, {
+    method: 'POST',
+    data: { id: iterationId, offset, limit },
+  }).then((resData) => {
+    return resData.data;
+  });
+}
