@@ -62,6 +62,7 @@ export default forwardRef((_, ref) => {
               showSearch={true}
               style={{ width: '300px' }}
               treeNodeFilterProp={'title'}
+              defaultValue={selectedIterationId}
               onSelect={(value) => setSelectedIterationId(value.toString())}
               placeholder={'请选择需求规划的迭代'}
               treeData={disableTreeNode(versions)}
