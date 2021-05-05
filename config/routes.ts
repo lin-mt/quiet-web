@@ -30,7 +30,7 @@
       },
       {
         path: '/scrum/project/iteration',
-        name: 'project-detail',
+        name: 'project-iteration',
         component: './scrum/project/iteration',
         hideInMenu: true,
       },
