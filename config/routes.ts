@@ -29,6 +29,12 @@
         hideInMenu: true,
       },
       {
+        path: '/scrum/project/iteration',
+        name: 'project-detail',
+        component: './scrum/project/iteration',
+        hideInMenu: true,
+      },
+      {
         path: '/scrum/template',
         name: 'template',
         component: './scrum/template',

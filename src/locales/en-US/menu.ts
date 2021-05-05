@@ -13,6 +13,7 @@ export default {
   'menu.scrum': 'AgileManagement',
   'menu.scrum.project': 'ProjectManagement',
   'menu.scrum.project-detail': 'ProjectDetails',
+  'menu.scrum.project-iteration': 'ProjectIteration',
   'menu.scrum.template': 'TemplateManagement',
 
   'menu.welcome': 'Welcome',

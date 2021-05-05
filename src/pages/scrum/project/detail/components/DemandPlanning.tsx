@@ -1,12 +1,13 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import { useModel } from 'umi';
-import { Card, Empty, List, Spin, TreeSelect } from 'antd';
+import { Link, useModel } from 'umi';
+import { Button, Card, Empty, List, Space, Spin, TreeSelect } from 'antd';
 import { disableTreeNode } from '@/utils/scrum/utils';
 import { findAllDemandsById } from '@/services/scrum/ScrumIteration';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 import DemandCard from '@/pages/scrum/demand/components/DemandCard';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { ForwardFilled } from '@ant-design/icons';
 
 export default forwardRef((_, ref) => {
   const { versions, selectedIterationId, setSelectedIterationId } = useModel(PROJECT_DETAIL);
@@ -55,15 +56,20 @@ export default forwardRef((_, ref) => {
         title={'需求规划'}
         size={'small'}
         extra={
-          <TreeSelect
-            size={'small'}
-            showSearch={true}
-            style={{ width: '300px' }}
-            treeNodeFilterProp={'title'}
-            onSelect={(value) => setSelectedIterationId(value.toString())}
-            placeholder={'请选择需求规划的迭代'}
-            treeData={disableTreeNode(versions)}
-          />
+          <Space>
+            <TreeSelect
+              size={'small'}
+              showSearch={true}
+              style={{ width: '300px' }}
+              treeNodeFilterProp={'title'}
+              onSelect={(value) => setSelectedIterationId(value.toString())}
+              placeholder={'请选择需求规划的迭代'}
+              treeData={disableTreeNode(versions)}
+            />
+            <Link to={`/scrum/project/iteration/?iterationId=${selectedIterationId}`}>
+              <Button icon={<ForwardFilled />} type={'primary'} shape={'round'} size={'small'} />
+            </Link>
+          </Space>
         }
       >
         <Droppable droppableId={'DemandPlanning'} type="TASK">

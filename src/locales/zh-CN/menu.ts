@@ -13,6 +13,7 @@ export default {
   'menu.scrum': '敏捷管理',
   'menu.scrum.project': '项目管理',
   'menu.scrum.project-detail': '项目详情',
+  'menu.scrum.project-iteration': '迭代详情',
   'menu.scrum.template': '模板管理',
 
   'menu.welcome': '欢迎',
