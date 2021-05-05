@@ -8,11 +8,11 @@ import PlanningIteration from '@/pages/scrum/project/detail/components/PlanningI
 import { useModel } from 'umi';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import { findAllByTemplateId } from '@/services/scrum/ScrumPriority';
-import type { ScrumProjectDetail } from '@/services/scrum/EntitiyType';
+import type { ScrumDemand, ScrumProjectDetail } from '@/services/scrum/EntitiyType';
 import type { QuietUser } from '@/services/system/EntityType';
 import type { DropResult } from 'react-beautiful-dnd';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { planning } from '@/services/scrum/ScrumDemand';
+import { updateDemand } from '@/services/scrum/ScrumDemand';
 
 const ProjectDetail: React.FC<any> = (props) => {
   const {
@@ -75,22 +75,24 @@ const ProjectDetail: React.FC<any> = (props) => {
         message.warning('请选择需求要规划的迭代！').then();
         return;
       }
-      planning(demandId, selectedIterationId).then((planningResult) => {
-        handlePlanningResult(planningResult);
-      });
       // @ts-ignore
-      const operationDemand = demandPoolRef?.current?.getDemandById(demandId);
+      const operationDemand: ScrumDemand = demandPoolRef?.current?.getDemandById(demandId);
+      operationDemand.iterationId = selectedIterationId;
+      updateDemand(operationDemand).then((planningResult) => {
+        handlePlanningResult(planningResult.iterationId === selectedIterationId);
+      });
       // @ts-ignore
       demandPoolRef?.current?.removeDemand(source.index);
       // @ts-ignore
       demandPlanningRef?.current?.addDemand(operationDemand, destination.index);
     }
     if (destination?.droppableId === 'DemandPool') {
-      planning(demandId).then((planningResult) => {
-        handlePlanningResult(planningResult);
-      });
       // @ts-ignore
-      const operationDemand = demandPlanningRef?.current?.getDemandById(demandId);
+      const operationDemand: ScrumDemand = demandPlanningRef?.current?.getDemandById(demandId);
+      operationDemand.iterationId = undefined;
+      updateDemand(operationDemand).then((planningResult) => {
+        handlePlanningResult(!planningResult.iterationId);
+      });
       // @ts-ignore
       demandPlanningRef?.current?.removeDemand(source.index);
       // @ts-ignore

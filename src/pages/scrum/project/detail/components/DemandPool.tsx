@@ -1,4 +1,3 @@
-import type { Ref } from 'react';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { findToBePlanned } from '@/services/scrum/ScrumDemand';
 import { Button, Card, Empty, List, message, Spin } from 'antd';
@@ -11,7 +10,7 @@ import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 import DemandCard from '@/pages/scrum/demand/components/DemandCard';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
-const DemandPool = (_: any, ref: Ref<any> | undefined) => {
+export default forwardRef((_, ref) => {
   const limit = 30;
   const { projectId, priorities } = useModel(PROJECT_DETAIL);
 
@@ -156,6 +155,4 @@ const DemandPool = (_: any, ref: Ref<any> | undefined) => {
       )}
     </>
   );
-};
-
-export default forwardRef(DemandPool);
+});

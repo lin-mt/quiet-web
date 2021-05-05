@@ -4,13 +4,6 @@ import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 
 const apiPrefix = '/api/scrum/demand';
 
-export function planning(id: string, iterationId?: string): Promise<boolean> {
-  return request<Result<boolean>>(`${apiPrefix}/planning`, {
-    method: 'POST',
-    data: { id, iterationId },
-  }).then((resp) => resp.data);
-}
-
 export function saveDemand(save: ScrumDemand): Promise<ScrumDemand> {
   return request<Result<ScrumDemand>>(`${apiPrefix}/save`, {
     method: 'POST',

@@ -1,4 +1,3 @@
-import type { Ref } from 'react';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useModel } from 'umi';
 import { Card, Empty, List, Spin, TreeSelect } from 'antd';
@@ -9,7 +8,7 @@ import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 import DemandCard from '@/pages/scrum/demand/components/DemandCard';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
-const DemandPlanning = (_: any, ref: Ref<any> | undefined) => {
+export default forwardRef((_, ref) => {
   const { versions, selectedIterationId, setSelectedIterationId } = useModel(PROJECT_DETAIL);
   const [loading, setLoading] = useState<boolean>(false);
   const [iterationDemands, setIterationDemands] = useState<ScrumDemand[]>([]);
@@ -109,6 +108,4 @@ const DemandPlanning = (_: any, ref: Ref<any> | undefined) => {
       </Card>
     </>
   );
-};
-
-export default forwardRef(DemandPlanning);
+});
