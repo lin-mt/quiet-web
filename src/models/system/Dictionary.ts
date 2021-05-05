@@ -32,5 +32,14 @@ export default () => {
     [dictionaryLabels, getDictionariesByType],
   );
 
-  return { getDictionariesByType, getDictionaryLabels };
+  const initDictionaries = useCallback(
+    (types: DictionaryType[]) => {
+      types.forEach((type) => {
+        getDictionaryLabels(type).then();
+      });
+    },
+    [getDictionaryLabels],
+  );
+
+  return { getDictionariesByType, getDictionaryLabels, initDictionaries };
 };
