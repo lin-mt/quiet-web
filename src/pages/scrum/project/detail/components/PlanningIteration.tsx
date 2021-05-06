@@ -11,6 +11,14 @@ import { formatDate, toMomentDate } from '@/utils/MomentUtils';
 import { useModel } from 'umi';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import type { ScrumIteration, ScrumVersion } from '@/services/scrum/EntitiyType';
+import styled from 'styled-components';
+
+const EmptyContainer = styled.div`
+  text-align: center;
+  padding: 16px;
+  color: rgba(0, 0, 0, 0.25);
+  font-size: 14px;
+`;
 
 export default () => {
   const { projectId, versions, setVersions } = useModel(PROJECT_DETAIL);
@@ -67,14 +75,7 @@ export default () => {
         }
       >
         {loading || versions.length === 0 ? (
-          <div
-            style={{
-              textAlign: 'center',
-              padding: '16px',
-              color: 'rgba(0, 0, 0, 0.25)',
-              fontSize: '14px',
-            }}
-          >
+          <EmptyContainer>
             {loading ? (
               <Spin />
             ) : (
@@ -91,7 +92,7 @@ export default () => {
                 </Button>
               </Empty>
             )}
-          </div>
+          </EmptyContainer>
         ) : (
           <Tree
             treeData={versions}
