@@ -62,7 +62,6 @@
     "react-dev-inspector": "^1.1.1",
     "react-dom": "^17.0.0",
     "react-helmet-async": "^1.0.4",
-    "react-infinite-scroller": "^1.2.4",
     "styled-components": "^5.2.3",
     "umi": "^3.4.0",
     "umi-request": "^1.0.8"
@@ -78,7 +77,6 @@
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-helmet": "^6.1.0",
-    "@types/react-infinite-scroller": "^1.2.1",
     "@types/styled-components": "^5.1.9",
     "@umijs/fabric": "^2.5.2",
     "@umijs/plugin-blocks": "^2.0.5",
