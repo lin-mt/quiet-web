@@ -82,17 +82,20 @@ export default forwardRef((_, ref) => {
           <Space>
             <TreeSelect
               size={'small'}
+              virtual={false}
               showSearch={true}
-              style={{ width: '300px' }}
+              style={{ width: '200px' }}
               treeNodeFilterProp={'title'}
               defaultValue={selectedIterationId}
               onSelect={(value) => setSelectedIterationId(value.toString())}
               placeholder={'请选择需求规划的迭代'}
               treeData={disableTreeNode(versions)}
             />
-            <Link to={`/scrum/project/iteration/?iterationId=${selectedIterationId}`}>
-              <Button icon={<ForwardFilled />} type={'primary'} shape={'round'} size={'small'} />
-            </Link>
+            {selectedIterationId && (
+              <Link to={`/scrum/project/iteration?iterationId=${selectedIterationId}`}>
+                <Button icon={<ForwardFilled />} type={'primary'} shape={'round'} size={'small'} />
+              </Link>
+            )}
           </Space>
         }
       >

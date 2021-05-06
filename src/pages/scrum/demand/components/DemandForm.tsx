@@ -111,7 +111,7 @@ export default (props: DemandFormProps) => {
           name={'priorityId'}
           rules={[{ required: true, message: '请选择优先级' }]}
         >
-          <Select showSearch={true} placeholder="请输入选择优先级" options={prioritiesOptions} />
+          <Select showSearch={true} placeholder="请选择优先级" options={prioritiesOptions} />
         </Form.Item>
         <Form.Item
           label={'需求备注'}
