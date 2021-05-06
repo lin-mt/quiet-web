@@ -13,6 +13,7 @@ import type { QuietUser } from '@/services/system/EntityType';
 import type { DropResult } from 'react-beautiful-dnd';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { updateDemand } from '@/services/scrum/ScrumDemand';
+import { DroppableId } from '@/pages/scrum/project/detail/components/Common';
 
 const ProjectDetail: React.FC<any> = (props) => {
   const {
@@ -70,7 +71,7 @@ const ProjectDetail: React.FC<any> = (props) => {
     if (destination.droppableId === source.droppableId) {
       return;
     }
-    if (destination?.droppableId === 'DemandPlanning') {
+    if (destination?.droppableId === DroppableId.DemandPlanning) {
       if (!selectedIterationId) {
         message.warning('请选择需求要规划的迭代！').then();
         return;
@@ -86,7 +87,7 @@ const ProjectDetail: React.FC<any> = (props) => {
       // @ts-ignore
       demandPlanningRef?.current?.addDemand(operationDemand, destination.index);
     }
-    if (destination?.droppableId === 'DemandPool') {
+    if (destination?.droppableId === DroppableId.DemandPool) {
       // @ts-ignore
       const operationDemand: ScrumDemand = demandPlanningRef?.current?.getDemandById(demandId);
       operationDemand.iterationId = undefined;

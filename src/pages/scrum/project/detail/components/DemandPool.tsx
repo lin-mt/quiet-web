@@ -8,6 +8,7 @@ import DemandForm from '@/pages/scrum/demand/components/DemandForm';
 import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 import DemandCard from '@/pages/scrum/demand/components/DemandCard';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { DroppableId, LoadingMoreContainer } from '@/pages/scrum/project/detail/components/Common';
 
 export default forwardRef((_, ref) => {
   const limit = 6;
@@ -78,6 +79,8 @@ export default forwardRef((_, ref) => {
       <Card
         title={'需求池'}
         size={'small'}
+        bordered={false}
+        bodyStyle={{ paddingTop: 6, paddingBottom: 6 }}
         extra={
           <Button
             type={'primary'}
@@ -90,31 +93,12 @@ export default forwardRef((_, ref) => {
           </Button>
         }
       >
-        <Droppable droppableId={'DemandPool'} type="TASK" isDropDisabled={false}>
+        <Droppable droppableId={DroppableId.DemandPool} type="TASK" isDropDisabled={false}>
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               <List<ScrumDemand>
                 dataSource={toBePlanned}
                 grid={{ column: 1 }}
-                loadMore={
-                  projectId &&
-                  hasMore &&
-                  !loading && (
-                    <div
-                      style={{
-                        textAlign: 'center',
-                      }}
-                    >
-                      <Button
-                        size={'small'}
-                        type={'text'}
-                        style={{ width: '100%', borderRadius: '5px', backgroundColor: 'lightgrey' }}
-                        onClick={loadMoreDemandsToBePlanned}
-                        icon={<CaretDownFilled />}
-                      />
-                    </div>
-                  )
-                }
                 renderItem={(demand, index) => (
                   <Draggable draggableId={demand.id} index={index}>
                     {(demandProvider) => (
@@ -123,7 +107,7 @@ export default forwardRef((_, ref) => {
                         {...demandProvider.dragHandleProps}
                         ref={demandProvider.innerRef}
                       >
-                        <List.Item style={{ marginBottom: '12px' }}>
+                        <List.Item style={{ margin: 0, paddingBottom: 6, paddingTop: 6 }}>
                           <DemandCard demand={demand} />
                         </List.Item>
                       </div>
@@ -151,6 +135,22 @@ export default forwardRef((_, ref) => {
           )}
         </Droppable>
       </Card>
+      {projectId && toBePlanned.length > 0 && (
+        <LoadingMoreContainer>
+          {hasMore ? (
+            <Button
+              size={'small'}
+              type={'text'}
+              loading={loading}
+              style={{ width: '100%', backgroundColor: 'lightgrey' }}
+              onClick={loadMoreDemandsToBePlanned}
+              icon={<CaretDownFilled />}
+            />
+          ) : (
+            '已无更多需求...'
+          )}
+        </LoadingMoreContainer>
+      )}
       {demandFormVisible && projectId && (
         <DemandForm
           visible={demandFormVisible}

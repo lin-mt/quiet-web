@@ -48,6 +48,7 @@ export default () => {
       <Card
         title={'规划迭代'}
         size={'small'}
+        bordered={false}
         extra={
           <div>
             <Button

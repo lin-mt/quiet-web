@@ -8,6 +8,7 @@ import DemandCard from '@/pages/scrum/demand/components/DemandCard';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { CaretDownFilled, ForwardFilled } from '@ant-design/icons';
 import { scrollByIterationId } from '@/services/scrum/ScrumDemand';
+import { DroppableId, LoadingMoreContainer } from '@/pages/scrum/project/detail/components/Common';
 
 export default forwardRef((_, ref) => {
   const limit = 6;
@@ -49,6 +50,7 @@ export default forwardRef((_, ref) => {
     if (selectedIterationId) {
       setLoading(true);
       scrollByIterationId(selectedIterationId, 0, limit).then((demands) => {
+        demands.concat();
         setIterationDemands(demands);
         setOffset(demands.length);
         setHasMore(limit === demands.length);
@@ -74,6 +76,8 @@ export default forwardRef((_, ref) => {
       <Card
         title={'需求规划'}
         size={'small'}
+        bordered={false}
+        bodyStyle={{ paddingTop: 6, paddingBottom: 6 }}
         extra={
           <Space>
             <TreeSelect
@@ -92,31 +96,12 @@ export default forwardRef((_, ref) => {
           </Space>
         }
       >
-        <Droppable droppableId={'DemandPlanning'} type="TASK">
+        <Droppable droppableId={DroppableId.DemandPlanning} type="TASK">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               <List<ScrumDemand>
                 grid={{ column: 1 }}
                 dataSource={iterationDemands}
-                loadMore={
-                  selectedIterationId &&
-                  hasMore &&
-                  !loading && (
-                    <div
-                      style={{
-                        textAlign: 'center',
-                      }}
-                    >
-                      <Button
-                        size={'small'}
-                        type={'text'}
-                        style={{ width: '100%', borderRadius: '5px', backgroundColor: 'lightgrey' }}
-                        onClick={loadMoreDemandsInIteration}
-                        icon={<CaretDownFilled />}
-                      />
-                    </div>
-                  )
-                }
                 renderItem={(demand, index) => (
                   <Draggable draggableId={demand.id} index={index}>
                     {(demandProvider) => (
@@ -125,7 +110,7 @@ export default forwardRef((_, ref) => {
                         {...demandProvider.dragHandleProps}
                         ref={demandProvider.innerRef}
                       >
-                        <List.Item style={{ marginBottom: '12px' }}>
+                        <List.Item style={{ margin: 0, paddingBottom: 6, paddingTop: 6 }}>
                           <DemandCard demand={demand} />
                         </List.Item>
                       </div>
@@ -151,6 +136,22 @@ export default forwardRef((_, ref) => {
           )}
         </Droppable>
       </Card>
+      {selectedIterationId && iterationDemands.length > 0 && (
+        <LoadingMoreContainer>
+          {hasMore ? (
+            <Button
+              size={'small'}
+              type={'text'}
+              loading={loading}
+              style={{ width: '100%', backgroundColor: 'lightgrey' }}
+              onClick={loadMoreDemandsInIteration}
+              icon={<CaretDownFilled />}
+            />
+          ) : (
+            '已无更多需求...'
+          )}
+        </LoadingMoreContainer>
+      )}
     </>
   );
 });
