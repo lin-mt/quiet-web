@@ -9,6 +9,7 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { CaretDownFilled, ForwardFilled } from '@ant-design/icons';
 import { scrollByIterationId } from '@/services/scrum/ScrumDemand';
 import { DroppableId, LoadingMoreContainer } from '@/pages/scrum/project/detail/components/Common';
+import { filterStyle } from '@/utils/RenderUtils';
 
 export default forwardRef((_, ref) => {
   const limit = 6;
@@ -85,7 +86,7 @@ export default forwardRef((_, ref) => {
               virtual={false}
               showSearch={true}
               bordered={false}
-              style={{ width: '200px' }}
+              style={{ ...filterStyle, width: '200px' }}
               treeNodeFilterProp={'title'}
               defaultValue={selectedIterationId}
               onSelect={(value) => setSelectedIterationId(value.toString())}
