@@ -1,32 +1,106 @@
 import type { ScrumDemand } from '@/services/scrum/EntitiyType';
-import { Card, Typography } from 'antd';
+import { Card, Col, Menu, Row, Typography } from 'antd';
+import { AlignCenterOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Dropdown } from 'antd';
+import styled from 'styled-components';
 
 interface DemandCardProps {
   demand: ScrumDemand;
   demandTypeLabels: Record<string, string>;
   priorityColors: Record<string, string>;
+  onEditClick?: () => void;
+  onDeleteClick?: () => void;
 }
 
-export default ({ demand, demandTypeLabels, priorityColors }: DemandCardProps) => {
+const CustomStyleCard = styled(Card)<{ color: string }>`
+  font-size: 12px;
+  border-width: 1px 1px 1px 9px;
+  border-style: solid;
+  border-color: ${(props) => props.color};
+  border-image: initial;
+  border-radius: 3px;
+  transition: box-shadow 0.3s, border-color 0.3s;
+  &:hover {
+    box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12),
+      0 5px 12px 4px rgba(0, 0, 0, 0.09);
+  }
+`;
+
+const OperationContainer = styled.div`
+  width: 100%;
+  text-align: center;
+  &:hover {
+    background-color: #f1f4f5;
+    cursor: pointer;
+  }
+`;
+
+export default ({
+  demand,
+  demandTypeLabels,
+  priorityColors,
+  onEditClick,
+  onDeleteClick,
+}: DemandCardProps) => {
+  const showOperation: boolean = !!onEditClick || !!onDeleteClick;
   return (
-    <Card
+    <CustomStyleCard
       size={'small'}
-      hoverable={true}
-      style={{
-        fontSize: '12px',
-        borderWidth: '1px 1px 1px 9px',
-        borderStyle: 'solid',
-        borderColor: `${priorityColors[demand.priorityId]}`,
-        borderImage: 'initial',
-        borderRadius: '3px',
-      }}
+      color={priorityColors[demand.priorityId]}
       bodyStyle={{ padding: '9px' }}
     >
-      <div>标题：{demand.title}</div>
-      <div>类型：{demandTypeLabels[demand.type]}</div>
-      <Typography.Paragraph ellipsis={{ rows: 1, tooltip: true }} style={{ margin: '0' }}>
-        备注：{demand.remark}
-      </Typography.Paragraph>
-    </Card>
+      <Row>
+        <Col span={22}>
+          <div>标题：{demand.title}</div>
+          <div>类型：{demandTypeLabels[demand.type]}</div>
+          <Typography.Paragraph ellipsis={{ rows: 1, tooltip: true }} style={{ margin: '0' }}>
+            备注：{demand.remark}
+          </Typography.Paragraph>
+        </Col>
+        {showOperation && (
+          <Col span={2}>
+            <Dropdown
+              placement={'bottomCenter'}
+              overlay={() => {
+                return (
+                  <Menu>
+                    {onEditClick && (
+                      <Menu.Item
+                        key="edit"
+                        icon={<EditOutlined />}
+                        style={{ fontSize: 'smaller', color: '#1890ff' }}
+                        onClick={() => {
+                          onEditClick();
+                        }}
+                      >
+                        编辑
+                      </Menu.Item>
+                    )}
+                    {onDeleteClick && (
+                      <Menu.Item
+                        key="delete"
+                        icon={<DeleteOutlined />}
+                        style={{ fontSize: 'smaller', color: 'red' }}
+                        onClick={() => {
+                          onDeleteClick();
+                        }}
+                      >
+                        删除
+                      </Menu.Item>
+                    )}
+                  </Menu>
+                );
+              }}
+            >
+              <OperationContainer>
+                <a onClick={(e) => e.preventDefault()}>
+                  <AlignCenterOutlined />
+                </a>
+              </OperationContainer>
+            </Dropdown>
+          </Col>
+        )}
+      </Row>
+    </CustomStyleCard>
   );
 };

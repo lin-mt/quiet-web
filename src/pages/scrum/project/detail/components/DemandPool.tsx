@@ -21,6 +21,7 @@ export default forwardRef((_, ref) => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [demandFormVisible, setDemandFormVisible] = useState<boolean>(false);
+  const [demandUpdateInfo, setDemandUpdateInfo] = useState<ScrumDemand>();
   const [toBePlanned, setToBePlanned] = useState<ScrumDemand[]>([]);
   const [demandTypeLabels, setDemandTypeLabels] = useState<Record<string, string>>({});
 
@@ -50,7 +51,7 @@ export default forwardRef((_, ref) => {
     },
   }));
 
-  const initToBePlanned = useCallback(async () => {
+  const refreshToBePlanned = useCallback(async () => {
     if (projectId) {
       setLoading(true);
       await findToBePlanned(projectId, 0, limit).then((demands) => {
@@ -66,8 +67,8 @@ export default forwardRef((_, ref) => {
   }, [getDictionaryLabels, projectId]);
 
   useEffect(() => {
-    initToBePlanned().then();
-  }, [initToBePlanned]);
+    refreshToBePlanned().then();
+  }, [refreshToBePlanned]);
 
   function loadMoreDemandsToBePlanned() {
     if (hasMore && projectId) {
@@ -117,6 +118,10 @@ export default forwardRef((_, ref) => {
                         <List.Item style={{ margin: 0, paddingBottom: 6, paddingTop: 6 }}>
                           <DemandCard
                             demand={demand}
+                            onEditClick={() => {
+                              setDemandUpdateInfo(demand);
+                              setDemandFormVisible(true);
+                            }}
                             demandTypeLabels={demandTypeLabels}
                             priorityColors={priorityColors}
                           />
@@ -166,9 +171,10 @@ export default forwardRef((_, ref) => {
         <DemandForm
           visible={demandFormVisible}
           projectId={projectId}
+          updateInfo={demandUpdateInfo}
           priorities={priorities}
           onCancel={() => setDemandFormVisible(false)}
-          afterAction={initToBePlanned}
+          afterAction={refreshToBePlanned}
         />
       )}
     </>

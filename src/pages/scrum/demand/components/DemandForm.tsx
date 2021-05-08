@@ -3,15 +3,15 @@ import { saveDemand, updateDemand } from '@/services/scrum/ScrumDemand';
 import { Button, Form, Input, Modal, Select } from 'antd';
 import { DictionarySelect } from '@/pages/components/DictionarySelect';
 import { DictionaryType } from '@/types/Type';
-import type { ScrumIteration, ScrumPriority } from '@/services/scrum/EntitiyType';
+import type { ScrumDemand, ScrumPriority } from '@/services/scrum/EntitiyType';
 
 interface DemandFormProps {
   visible: boolean;
   projectId: string;
   priorities: ScrumPriority[];
   onCancel: () => void;
-  updateInfo?: ScrumIteration;
-  afterAction?: () => void;
+  updateInfo?: ScrumDemand;
+  afterAction?: (newDemandInfo: ScrumDemand) => void;
 }
 
 export default (props: DemandFormProps) => {
@@ -32,18 +32,19 @@ export default (props: DemandFormProps) => {
     const values = await form.validateFields();
     values.projectId = projectId;
     setSubmitting(true);
+    let newDemandInfo: ScrumDemand;
     if (updateInfo) {
-      await updateDemand({
+      newDemandInfo = await updateDemand({
         ...updateInfo,
         ...values,
       });
     } else {
-      await saveDemand(values);
+      newDemandInfo = await saveDemand(values);
     }
     setSubmitting(false);
     onCancel();
     if (afterAction) {
-      afterAction();
+      afterAction(newDemandInfo);
     }
   }
 
