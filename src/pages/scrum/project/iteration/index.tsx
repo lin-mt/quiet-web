@@ -1,5 +1,11 @@
 import type { PropsWithChildren } from 'react';
 
 export default (props: PropsWithChildren<any>) => {
-  return <>{props.location.query.iterationId}</>;
+  return (
+    <>
+      ProjectId: {props.location.query.projectId}
+      <br />
+      iterationId: {props.location.query.iterationId}
+    </>
+  );
 };

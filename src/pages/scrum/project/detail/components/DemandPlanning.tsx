@@ -14,7 +14,9 @@ import { filterStyle } from '@/utils/RenderUtils';
 export default forwardRef((_, ref) => {
   const limit = 6;
 
-  const { versions, selectedIterationId, setSelectedIterationId } = useModel(PROJECT_DETAIL);
+  const { projectId, versions, selectedIterationId, setSelectedIterationId } = useModel(
+    PROJECT_DETAIL,
+  );
 
   const [offset, setOffset] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -93,7 +95,9 @@ export default forwardRef((_, ref) => {
               placeholder={'请选择需求规划的迭代'}
               treeData={disableVersionNode(versions)}
             />
-            <Link to={`/scrum/project/iteration?iterationId=${selectedIterationId}`}>
+            <Link
+              to={`/scrum/project/iteration?projectId=${projectId}&iterationId=${selectedIterationId}`}
+            >
               <Button
                 icon={<ForwardFilled />}
                 type={'primary'}
