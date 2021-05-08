@@ -9,16 +9,20 @@ import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 import DemandCard from '@/pages/scrum/demand/components/DemandCard';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { DroppableId, LoadingMoreContainer } from '@/pages/scrum/project/detail/components/Common';
+import { DictionaryType } from '@/types/Type';
+import { DICTIONARY } from '@/constant/system/Modelnames';
 
 export default forwardRef((_, ref) => {
   const limit = 6;
-  const { projectId, priorities } = useModel(PROJECT_DETAIL);
+  const { projectId, priorities, priorityColors } = useModel(PROJECT_DETAIL);
+  const { getDictionaryLabels } = useModel(DICTIONARY);
 
   const [offset, setOffset] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [demandFormVisible, setDemandFormVisible] = useState<boolean>(false);
   const [toBePlanned, setToBePlanned] = useState<ScrumDemand[]>([]);
+  const [demandTypeLabels, setDemandTypeLabels] = useState<Record<string, string>>({});
 
   useImperativeHandle(ref, () => ({
     getDemandById: (demandId: string): ScrumDemand | null => {
@@ -46,20 +50,23 @@ export default forwardRef((_, ref) => {
     },
   }));
 
-  const initToBePlanned = useCallback(() => {
+  const initToBePlanned = useCallback(async () => {
     if (projectId) {
       setLoading(true);
-      findToBePlanned(projectId, 0, limit).then((demands) => {
+      await findToBePlanned(projectId, 0, limit).then((demands) => {
         setToBePlanned(demands);
         setOffset(demands.length);
         setHasMore(limit === demands.length);
-        setLoading(false);
       });
+      await getDictionaryLabels(DictionaryType.DemandType).then((labels) =>
+        setDemandTypeLabels(labels),
+      );
+      setLoading(false);
     }
-  }, [projectId]);
+  }, [getDictionaryLabels, projectId]);
 
   useEffect(() => {
-    initToBePlanned();
+    initToBePlanned().then();
   }, [initToBePlanned]);
 
   function loadMoreDemandsToBePlanned() {
@@ -108,7 +115,11 @@ export default forwardRef((_, ref) => {
                         ref={demandProvider.innerRef}
                       >
                         <List.Item style={{ margin: 0, paddingBottom: 6, paddingTop: 6 }}>
-                          <DemandCard demand={demand} />
+                          <DemandCard
+                            demand={demand}
+                            demandTypeLabels={demandTypeLabels}
+                            priorityColors={priorityColors}
+                          />
                         </List.Item>
                       </div>
                     )}

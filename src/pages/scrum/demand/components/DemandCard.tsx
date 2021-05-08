@@ -1,28 +1,13 @@
 import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 import { Card, Typography } from 'antd';
-import { useModel } from '@@/plugin-model/useModel';
-import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
-import { DICTIONARY } from '@/constant/system/Modelnames';
-import { useEffect, useState } from 'react';
-import { DictionaryType } from '@/types/Type';
 
 interface DemandCardProps {
   demand: ScrumDemand;
+  demandTypeLabels: Record<string, string>;
+  priorityColors: Record<string, string>;
 }
 
-export default ({ demand }: DemandCardProps) => {
-  const { projectId, priorityColors } = useModel(PROJECT_DETAIL);
-  const { getDictionaryLabels } = useModel(DICTIONARY);
-  const [demandLabels, setDemandLabels] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    if (projectId) {
-      getDictionaryLabels(DictionaryType.DemandType).then((labels) => {
-        setDemandLabels(labels);
-      });
-    }
-  }, [getDictionaryLabels, projectId]);
-
+export default ({ demand, demandTypeLabels, priorityColors }: DemandCardProps) => {
   return (
     <Card
       size={'small'}
@@ -38,7 +23,7 @@ export default ({ demand }: DemandCardProps) => {
       bodyStyle={{ padding: '9px' }}
     >
       <div>标题：{demand.title}</div>
-      <div>类型：{demandLabels[demand.type]}</div>
+      <div>类型：{demandTypeLabels[demand.type]}</div>
       <Typography.Paragraph ellipsis={{ rows: 1, tooltip: true }} style={{ margin: '0' }}>
         备注：{demand.remark}
       </Typography.Paragraph>

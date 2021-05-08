@@ -10,18 +10,26 @@ import { CaretDownFilled, ForwardFilled } from '@ant-design/icons';
 import { scrollByIterationId } from '@/services/scrum/ScrumDemand';
 import { DroppableId, LoadingMoreContainer } from '@/pages/scrum/project/detail/components/Common';
 import { filterStyle } from '@/utils/RenderUtils';
+import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DictionaryType } from '@/types/Type';
 
 export default forwardRef((_, ref) => {
   const limit = 6;
 
-  const { projectId, versions, selectedIterationId, setSelectedIterationId } = useModel(
-    PROJECT_DETAIL,
-  );
+  const {
+    projectId,
+    versions,
+    priorityColors,
+    selectedIterationId,
+    setSelectedIterationId,
+  } = useModel(PROJECT_DETAIL);
+  const { getDictionaryLabels } = useModel(DICTIONARY);
 
   const [offset, setOffset] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [iterationDemands, setIterationDemands] = useState<ScrumDemand[]>([]);
+  const [demandTypeLabels, setDemandTypeLabels] = useState<Record<string, string>>({});
 
   useImperativeHandle(ref, () => ({
     getDemandById: (demandId: string): ScrumDemand | null => {
@@ -52,15 +60,18 @@ export default forwardRef((_, ref) => {
   useEffect(() => {
     if (selectedIterationId) {
       setLoading(true);
-      scrollByIterationId(selectedIterationId, 0, limit).then((demands) => {
+      scrollByIterationId(selectedIterationId, 0, limit).then(async (demands) => {
         demands.concat();
         setIterationDemands(demands);
         setOffset(demands.length);
         setHasMore(limit === demands.length);
+        await getDictionaryLabels(DictionaryType.DemandType).then((labels) =>
+          setDemandTypeLabels(labels),
+        );
         setLoading(false);
       });
     }
-  }, [selectedIterationId]);
+  }, [getDictionaryLabels, selectedIterationId]);
 
   function loadMoreDemandsInIteration() {
     if (hasMore && selectedIterationId) {
@@ -124,7 +135,11 @@ export default forwardRef((_, ref) => {
                         ref={demandProvider.innerRef}
                       >
                         <List.Item style={{ margin: 0, paddingBottom: 6, paddingTop: 6 }}>
-                          <DemandCard demand={demand} />
+                          <DemandCard
+                            demand={demand}
+                            demandTypeLabels={demandTypeLabels}
+                            priorityColors={priorityColors}
+                          />
                         </List.Item>
                       </div>
                     )}
