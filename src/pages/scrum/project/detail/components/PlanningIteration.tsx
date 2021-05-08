@@ -23,7 +23,7 @@ const EmptyContainer = styled.div`
 export default () => {
   const { projectId, versions, setVersions } = useModel(PROJECT_DETAIL);
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [versionFormVisible, setVersionFormVisible] = useState<boolean>(false);
   const [iterationFormVisible, setIterationFormVisible] = useState<boolean>(false);
   const [selectedVersionId, setSelectedVersionId] = useState<string>();

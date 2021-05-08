@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Link, useModel } from 'umi';
 import { Button, Card, Empty, List, Space, Spin, TreeSelect } from 'antd';
-import { disableTreeNode } from '@/utils/scrum/utils';
+import { disableVersionNode } from '@/utils/scrum/utils';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 import DemandCard from '@/pages/scrum/demand/components/DemandCard';
@@ -91,7 +91,7 @@ export default forwardRef((_, ref) => {
               defaultValue={selectedIterationId}
               onSelect={(value) => setSelectedIterationId(value.toString())}
               placeholder={'请选择需求规划的迭代'}
-              treeData={disableTreeNode(versions)}
+              treeData={disableVersionNode(versions)}
             />
             <Link to={`/scrum/project/iteration?iterationId=${selectedIterationId}`}>
               <Button

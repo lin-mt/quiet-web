@@ -16,7 +16,7 @@ export default forwardRef((_, ref) => {
 
   const [offset, setOffset] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [demandFormVisible, setDemandFormVisible] = useState<boolean>(false);
   const [toBePlanned, setToBePlanned] = useState<ScrumDemand[]>([]);
 

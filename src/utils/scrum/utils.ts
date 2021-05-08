@@ -1,7 +1,9 @@
 import type { ScrumVersion } from '@/services/scrum/EntitiyType';
 
 export function iterationsAddToChildren(scrumVersions: ScrumVersion[]): ScrumVersion[] {
-  return scrumVersions.map((sv) => {
+  const newNodes: ScrumVersion[] = [];
+  scrumVersions.forEach((val) => newNodes.push({ ...val }));
+  return newNodes.map((sv) => {
     const newSv: any = sv;
     if (newSv.children && newSv.children.length > 0) {
       newSv.children = iterationsAddToChildren(newSv.children);
@@ -16,13 +18,13 @@ export function iterationsAddToChildren(scrumVersions: ScrumVersion[]): ScrumVer
   });
 }
 
-export function disableTreeNode(nodes: ScrumVersion[]): ScrumVersion[] {
+export function disableVersionNode(nodes: ScrumVersion[]): ScrumVersion[] {
   const newNodes: any[] = [];
   nodes.forEach((val) => newNodes.push({ ...val }));
   return newNodes.map((node) => {
     const newNode = node;
     if (newNode.children && newNode.children.length > 0) {
-      newNode.children = disableTreeNode(newNode.children);
+      newNode.children = disableVersionNode(newNode.children);
     }
     if (!newNode.versionId) {
       newNode.disabled = true;
