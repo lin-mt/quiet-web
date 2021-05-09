@@ -1,5 +1,5 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
-import { findToBePlanned } from '@/services/scrum/ScrumDemand';
+import { deleteDemand, findToBePlanned } from '@/services/scrum/ScrumDemand';
 import { Button, Card, Empty, List, Spin } from 'antd';
 import { CaretDownFilled, PlusOutlined } from '@ant-design/icons';
 import { useModel } from '@@/plugin-model/useModel';
@@ -121,6 +121,10 @@ export default forwardRef((_, ref) => {
                             onEditClick={() => {
                               setDemandUpdateInfo(demand);
                               setDemandFormVisible(true);
+                            }}
+                            onDeleteClick={async () => {
+                              await deleteDemand(demand.id);
+                              refreshToBePlanned().then();
                             }}
                             demandTypeLabels={demandTypeLabels}
                             priorityColors={priorityColors}

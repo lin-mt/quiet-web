@@ -61,6 +61,7 @@ export default ({
           <Col span={2}>
             <Dropdown
               placement={'bottomCenter'}
+              trigger={['click']}
               overlay={() => {
                 return (
                   <Menu>

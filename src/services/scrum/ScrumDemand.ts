@@ -4,6 +4,13 @@ import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 
 const apiPrefix = '/api/scrum/demand';
 
+export function deleteDemand(deleteId: string) {
+  return request(`${apiPrefix}/delete`, {
+    method: 'POST',
+    data: { deleteId },
+  });
+}
+
 export function saveDemand(save: ScrumDemand): Promise<ScrumDemand> {
   return request<Result<ScrumDemand>>(`${apiPrefix}/save`, {
     method: 'POST',
