@@ -42,6 +42,14 @@ export default ({
     ...taskStepTasks,
   });
 
+  function calculateDroppableMinHeight(): number {
+    let maxCount = 0;
+    Object.keys(taskStepToTasks).forEach((key) => {
+      maxCount = maxCount < taskStepToTasks[key].length ? taskStepToTasks[key].length : maxCount;
+    });
+    return maxCount * 80;
+  }
+
   function handleCreateTaskClick(e: React.MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
     setTaskUpdateInfo(undefined);
@@ -156,7 +164,13 @@ export default ({
               return (
                 <Droppable droppableId={taskStep.id} type="TASK" key={cardContainerKey}>
                   {(provided) => (
-                    <div ref={provided.innerRef} {...provided.droppableProps}>
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      style={{
+                        minHeight: calculateDroppableMinHeight(),
+                      }}
+                    >
                       <CardContainer>{taskInfos}</CardContainer>
                       {provided.placeholder}
                     </div>
