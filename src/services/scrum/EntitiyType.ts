@@ -67,6 +67,19 @@ export interface ScrumDemand extends SerialEntity, ParentEntity<ScrumDemand> {
   remark?: string;
 }
 
+export interface ScrumTask extends SerialEntity {
+  title: string;
+  type: string;
+  demandId: string;
+  taskStepId: string;
+  executorId: string;
+  participant?: string[];
+  preTaskIds?: string[];
+  startTime?: string;
+  endTime?: string;
+  remark: string;
+}
+
 export interface ScrumIteration extends SerialEntity {
   name: string;
   versionId: string;

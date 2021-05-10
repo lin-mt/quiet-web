@@ -4,6 +4,13 @@ import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 
 const apiPrefix = '/api/scrum/demand';
 
+export function findAllByIterationId(iterationId: string): Promise<ScrumDemand[]> {
+  return request<Result<ScrumDemand[]>>(`${apiPrefix}/findAllByIterationId`, {
+    method: 'POST',
+    data: { iterationId },
+  }).then((resp) => resp.data);
+}
+
 export function deleteDemand(deleteId: string) {
   return request(`${apiPrefix}/delete`, {
     method: 'POST',
@@ -41,7 +48,7 @@ export function findToBePlanned(
 export function scrollByIterationId(
   iterationId: string,
   offset: number,
-  limit: number,
+  limit?: number,
 ): Promise<ScrumDemand[]> {
   return request<Result<ScrumDemand[]>>(`${apiPrefix}/scrollByIterationId`, {
     method: 'POST',
