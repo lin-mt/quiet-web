@@ -109,7 +109,7 @@ export default ({
   return (
     <>
       <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Space direction={'vertical'} style={{ backgroundColor: 'white' }}>
+        <Space direction={'vertical'} style={{ backgroundColor: 'white', borderRadius: 3 }}>
           <Space align={'start'}>
             <CardContainer style={{ paddingBottom: 0 }}>
               <DemandCard
