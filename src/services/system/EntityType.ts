@@ -71,11 +71,10 @@ export interface QuietUserRole extends BaseEntity {
   roleId: string;
 }
 
-export interface QuietDictionary extends BaseEntity {
+export interface QuietDictionary extends ParentEntity<QuietDictionary> {
   type: string;
   key: string;
   label: string;
-  parentId?: string;
   remark?: string;
 }
 
