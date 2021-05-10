@@ -7,18 +7,14 @@ import React, { useState } from 'react';
 import TaskForm from '@/pages/scrum/task/components/TaskForm';
 import type { QuietUser } from '@/services/system/EntityType';
 import TaskCard from '@/pages/scrum/task/components/TaskCard';
-import { deleteTask, findAllTaskByDemandIds } from '@/services/scrum/ScrumTask';
+import { deleteTask, findAllTaskByDemandIds, updateTask } from '@/services/scrum/ScrumTask';
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 const CardContainer = styled(Col)`
   width: 260px;
-  min-height: 86px;
   padding: 6px 6px 6px 6px;
-  background-color: white;
   border-radius: 6px;
-`;
-
-const CreateTask = styled.a`
-  font-size: 12px;
 `;
 
 interface IterationRowProps {
@@ -68,51 +64,109 @@ export default ({
     reloadDemandTasks();
   }
 
+  function handleOnDragEnd({ destination, source, draggableId }: DropResult) {
+    if (!destination) {
+      return;
+    }
+    if (destination.droppableId === source.droppableId) {
+      return;
+    }
+    let operatingTask: ScrumTask | undefined;
+    taskStepToTasks[source.droppableId].every((datum) => {
+      if (datum.id === draggableId) {
+        operatingTask = datum;
+        return false;
+      }
+      return true;
+    });
+    if (operatingTask) {
+      operatingTask.taskStepId = destination.droppableId;
+      updateTask(operatingTask).then();
+      const sourceTasks = Array.from(taskStepToTasks[source.droppableId]);
+      sourceTasks.splice(source.index, 1);
+      let destinationTasks: ScrumTask[] = [];
+      if (taskStepToTasks[destination.droppableId]) {
+        destinationTasks = Array.from(taskStepToTasks[destination.droppableId]);
+      }
+      destinationTasks.splice(destination.index, 0, operatingTask);
+      const newTaskStepToTasks = {
+        ...taskStepToTasks,
+        [source.droppableId]: sourceTasks,
+        [destination.droppableId]: destinationTasks,
+      };
+      setTaskStepToTasks(newTaskStepToTasks);
+    }
+  }
+
   return (
     <>
-      <Space align={'start'} style={{ backgroundColor: 'white' }}>
-        <CardContainer>
-          <DemandCard
-            cardStyle={{ width: 248, cursor: 'pointer' }}
-            demand={demand}
-            demandTypeLabels={demandTypeLabels}
-            priorityColors={priorityColors}
-          />
-        </CardContainer>
-        {taskSteps.map((taskStep, index) => {
-          const cardContainerKey = `${demand.id}-${taskStep.id}`;
-          let taskInfos: React.ReactNode;
-          if (taskStepToTasks) {
-            const tasks: ScrumTask[] = taskStepToTasks[taskStep.id];
-            if (tasks) {
-              taskInfos = tasks.map((task, taskIndex) => {
-                return (
-                  <TaskCard
-                    cardStyle={{ marginTop: taskIndex === 0 ? 0 : 6 }}
-                    key={task.id}
-                    task={task}
-                    executorName={members[task.executorId].fullName}
-                    taskTypeLabels={taskTypeLabels}
-                    onEditClick={() => handleTaskCardEdit(task)}
-                    onDeleteClick={() => handleTaskCardDelete(task)}
-                  />
-                );
-              });
-            }
-          }
-          return (
-            <CardContainer key={cardContainerKey}>
-              {taskInfos}
-              {index === 0 && (
-                <CreateTask onClick={(e) => handleCreateTaskClick(e)}>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Space direction={'vertical'} style={{ backgroundColor: 'white' }}>
+          <Space align={'start'}>
+            <CardContainer style={{ paddingBottom: 0 }}>
+              <DemandCard
+                cardStyle={{ width: 248, cursor: 'pointer' }}
+                demand={demand}
+                demandTypeLabels={demandTypeLabels}
+                priorityColors={priorityColors}
+              />
+              <div
+                style={{
+                  fontSize: 12,
+                  paddingTop: 3,
+                  marginLeft: 188,
+                }}
+              >
+                <a onClick={(e) => handleCreateTaskClick(e)}>
                   <PlusOutlined />
                   创建任务
-                </CreateTask>
-              )}
+                </a>
+              </div>
             </CardContainer>
-          );
-        })}
-      </Space>
+            {taskSteps.map((taskStep) => {
+              const cardContainerKey = `${demand.id}-${taskStep.id}`;
+              let taskInfos: React.ReactNode;
+              if (taskStepToTasks) {
+                const tasks: ScrumTask[] = taskStepToTasks[taskStep.id];
+                if (tasks) {
+                  taskInfos = tasks.map((task, taskIndex) => {
+                    return (
+                      <Draggable draggableId={task.id} index={taskIndex} key={task.id}>
+                        {(provided) => (
+                          <div
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            ref={provided.innerRef}
+                          >
+                            <TaskCard
+                              cardStyle={{ marginTop: taskIndex === 0 ? 0 : 6 }}
+                              task={task}
+                              executorName={members[task.executorId].fullName}
+                              taskTypeLabels={taskTypeLabels}
+                              onEditClick={() => handleTaskCardEdit(task)}
+                              onDeleteClick={() => handleTaskCardDelete(task)}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    );
+                  });
+                }
+              }
+              return (
+                <Droppable droppableId={taskStep.id} type="TASK" key={cardContainerKey}>
+                  {(provided) => (
+                    <div ref={provided.innerRef} {...provided.droppableProps}>
+                      <CardContainer>{taskInfos}</CardContainer>
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              );
+            })}
+          </Space>
+        </Space>
+      </DragDropContext>
       {taskFormVisible && (
         <TaskForm
           taskStepId={taskSteps[0].id}
