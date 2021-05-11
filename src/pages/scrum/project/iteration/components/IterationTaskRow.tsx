@@ -90,7 +90,7 @@ export default ({
     if (operatingTask) {
       operatingTask.taskStepId = destination.droppableId;
       updateTask(operatingTask).then((result) => {
-        if (result.taskStepId === destination.droppableId) {
+        if (result.taskStepId !== destination.droppableId) {
           message.error('操作失败，请联系管理员！').then(() => window.location.reload());
         }
       });
