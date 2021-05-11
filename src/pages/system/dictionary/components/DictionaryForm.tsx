@@ -14,10 +14,8 @@ type DictionaryFormProps = {
 const DictionaryForm: React.FC<DictionaryFormProps> = (props) => {
   const { visible, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [typeRequired, setTypeRequired] = useState<boolean>(true);
-  const [keyRequired, setKeyRequired] = useState<boolean>(false);
-  const [showTypeInput, setShowTypeInput] = useState<boolean>(true);
-  const [showKeyInput, setShowKeyInput] = useState<boolean>(false);
+  const [typeRequired, setTypeRequired] = useState<boolean>(!updateInfo || !updateInfo.parentId);
+  const [keyRequired, setKeyRequired] = useState<boolean>(!!updateInfo && !!updateInfo.parentId);
 
   const [form] = Form.useForm();
 
@@ -62,9 +60,7 @@ const DictionaryForm: React.FC<DictionaryFormProps> = (props) => {
   function parentIdOnChange(e: BaseSyntheticEvent) {
     const { value } = e.target;
     const hasParentIdValue = value && value.length > 0;
-    setShowKeyInput(hasParentIdValue);
     setKeyRequired(hasParentIdValue);
-    setShowTypeInput(!hasParentIdValue);
     setTypeRequired(!hasParentIdValue);
   }
 
@@ -109,7 +105,7 @@ const DictionaryForm: React.FC<DictionaryFormProps> = (props) => {
           </Form.Item>
         </Col>
         <Col>
-          {showTypeInput && (
+          {typeRequired && (
             <Form.Item
               label="字典类型"
               name="type"
@@ -123,7 +119,7 @@ const DictionaryForm: React.FC<DictionaryFormProps> = (props) => {
           )}
         </Col>
         <Col>
-          {showKeyInput && (
+          {keyRequired && (
             <Form.Item
               label="key"
               name="key"
