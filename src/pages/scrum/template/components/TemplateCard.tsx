@@ -63,19 +63,19 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
           }
         }}
         extra={
-          changeSelectable &&
-          (enableStateChangeable ? (
-            <Switch
-              checkedChildren={'启用'}
-              unCheckedChildren={'关闭'}
-              onChange={handleEnabledChange}
-              defaultChecked={templateInfo.enabled}
-            />
-          ) : (
-            <Tooltip title={'请先配置模板中任务的详细步骤以及优先级信息'}>
-              <Switch disabled={true} unCheckedChildren={'关闭'} />
+          changeSelectable && (
+            <Tooltip
+              title={enableStateChangeable ? '' : '请先配置模板中任务的详细步骤以及优先级信息'}
+            >
+              <Switch
+                checkedChildren={'启用'}
+                unCheckedChildren={'关闭'}
+                onChange={handleEnabledChange}
+                disabled={!enableStateChangeable}
+                defaultChecked={templateInfo.enabled}
+              />
             </Tooltip>
-          ))
+          )
         }
         actions={
           !editable
