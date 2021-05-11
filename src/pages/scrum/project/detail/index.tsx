@@ -55,10 +55,7 @@ const ProjectDetail: React.FC<any> = (props) => {
 
   function handlePlanningResult(result: boolean) {
     if (!result) {
-      message.error('操作失败，请联系管理员！').then();
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      message.error('操作失败，请联系管理员！').then(() => window.location.reload());
     }
   }
 
@@ -71,7 +68,7 @@ const ProjectDetail: React.FC<any> = (props) => {
     if (destination.droppableId === source.droppableId) {
       return;
     }
-    if (destination?.droppableId === DroppableId.DemandPlanning) {
+    if (destination.droppableId === DroppableId.DemandPlanning) {
       if (!selectedIterationId) {
         message.warning('请选择需求要规划的迭代！').then();
         return;

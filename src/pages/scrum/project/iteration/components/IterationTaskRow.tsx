@@ -1,4 +1,4 @@
-import { Col, Space } from 'antd';
+import { Col, message, Space } from 'antd';
 import DemandCard from '@/pages/scrum/demand/components/DemandCard';
 import type { ScrumDemand, ScrumTask, ScrumTaskStep } from '@/services/scrum/EntitiyType';
 import { PlusOutlined } from '@ant-design/icons';
@@ -89,7 +89,11 @@ export default ({
     });
     if (operatingTask) {
       operatingTask.taskStepId = destination.droppableId;
-      updateTask(operatingTask).then();
+      updateTask(operatingTask).then((result) => {
+        if (result.taskStepId === destination.droppableId) {
+          message.error('操作失败，请联系管理员！').then(() => window.location.reload());
+        }
+      });
       const sourceTasks = Array.from(taskStepToTasks[source.droppableId]);
       sourceTasks.splice(source.index, 1);
       let destinationTasks: ScrumTask[] = [];
