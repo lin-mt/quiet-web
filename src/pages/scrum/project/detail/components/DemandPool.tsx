@@ -1,6 +1,6 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { deleteDemand, findToBePlanned } from '@/services/scrum/ScrumDemand';
-import { Button, Card, Empty, List, Spin } from 'antd';
+import { Button, Card, Empty, List, Select, Space, Spin } from 'antd';
 import { CaretDownFilled, PlusOutlined } from '@ant-design/icons';
 import { useModel } from '@@/plugin-model/useModel';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
@@ -11,11 +11,19 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { DroppableId, LoadingMoreContainer } from '@/pages/scrum/project/detail/components/Common';
 import { DictionaryType } from '@/types/Type';
 import { DICTIONARY } from '@/constant/system/Modelnames';
+import { filterStyle } from '@/utils/RenderUtils';
+import type { QuietDictionary } from '@/services/system/EntityType';
+
+export interface ScrumDemandFilter {
+  planned?: string;
+  priorityId?: string;
+  demandType?: string;
+}
 
 export default forwardRef((_, ref) => {
   const limit = 6;
   const { projectId, priorities, priorityColors } = useModel(PROJECT_DETAIL);
-  const { getDictionaryLabels } = useModel(DICTIONARY);
+  const { getDictionaryLabels, getDictionariesByType } = useModel(DICTIONARY);
 
   const [offset, setOffset] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -23,7 +31,9 @@ export default forwardRef((_, ref) => {
   const [demandFormVisible, setDemandFormVisible] = useState<boolean>(false);
   const [demandUpdateInfo, setDemandUpdateInfo] = useState<ScrumDemand>();
   const [toBePlanned, setToBePlanned] = useState<ScrumDemand[]>([]);
+  const [demandType, setDemandType] = useState<QuietDictionary[]>([]);
   const [demandTypeLabels, setDemandTypeLabels] = useState<Record<string, string>>({});
+  const [demandFilter, setDemandFilter] = useState<ScrumDemandFilter>({});
 
   useImperativeHandle(ref, () => ({
     getDemandById: (demandId: string): ScrumDemand | null => {
@@ -54,7 +64,7 @@ export default forwardRef((_, ref) => {
   const refreshToBePlanned = useCallback(async () => {
     if (projectId) {
       setLoading(true);
-      await findToBePlanned(projectId, 0, limit).then((demands) => {
+      await findToBePlanned(projectId, demandFilter, 0, limit).then((demands) => {
         setToBePlanned(demands);
         setOffset(demands.length);
         setHasMore(limit === demands.length);
@@ -62,9 +72,12 @@ export default forwardRef((_, ref) => {
       await getDictionaryLabels(DictionaryType.DemandType).then((labels) =>
         setDemandTypeLabels(labels),
       );
+      await getDictionariesByType(DictionaryType.DemandType).then((dictionaries) => {
+        setDemandType(dictionaries);
+      });
       setLoading(false);
     }
-  }, [getDictionaryLabels, projectId]);
+  }, [demandFilter, getDictionariesByType, getDictionaryLabels, projectId]);
 
   useEffect(() => {
     refreshToBePlanned().then();
@@ -73,7 +86,7 @@ export default forwardRef((_, ref) => {
   function loadMoreDemandsToBePlanned() {
     if (hasMore && projectId) {
       setLoading(true);
-      findToBePlanned(projectId, offset, limit).then((demands) => {
+      findToBePlanned(projectId, demandFilter, offset, limit).then((demands) => {
         setToBePlanned(toBePlanned.concat(demands));
         setOffset(offset + demands.length);
         setHasMore(limit === demands.length);
@@ -90,15 +103,54 @@ export default forwardRef((_, ref) => {
         bordered={false}
         bodyStyle={{ paddingTop: 6, paddingBottom: 6 }}
         extra={
-          <Button
-            type={'primary'}
-            size={'small'}
-            shape={'round'}
-            icon={<PlusOutlined />}
-            onClick={() => setDemandFormVisible(true)}
-          >
-            新建需求
-          </Button>
+          <Space size={'large'}>
+            <Space>
+              <Select
+                size={'small'}
+                bordered={false}
+                allowClear={true}
+                style={{ ...filterStyle, width: 93 }}
+                placeholder={'规划状态'}
+                onChange={(value) =>
+                  setDemandFilter({ ...demandFilter, planned: value?.toString() })
+                }
+              >
+                <Select.Option value={'false'}>待规划</Select.Option>
+                <Select.Option value={'true'}>已规划</Select.Option>
+              </Select>
+              <Select
+                size={'small'}
+                bordered={false}
+                allowClear={true}
+                style={{ ...filterStyle, width: 93 }}
+                placeholder={'需求类型'}
+                options={demandType.map((d) => ({ label: d.label, value: `${d.type}.${d.key}` }))}
+                onChange={(value) =>
+                  setDemandFilter({ ...demandFilter, demandType: value?.toString() })
+                }
+              />
+              <Select
+                size={'small'}
+                bordered={false}
+                allowClear={true}
+                style={{ ...filterStyle, width: 93 }}
+                placeholder={'优先级'}
+                options={priorities.map((p) => ({ label: p.name, value: p.id }))}
+                onChange={(value) =>
+                  setDemandFilter({ ...demandFilter, priorityId: value?.toString() })
+                }
+              />
+            </Space>
+            <Button
+              type={'primary'}
+              size={'small'}
+              shape={'round'}
+              icon={<PlusOutlined />}
+              onClick={() => setDemandFormVisible(true)}
+            >
+              需求
+            </Button>
+          </Space>
         }
       >
         <Droppable droppableId={DroppableId.DemandPool} type="TASK" isDropDisabled={false}>
@@ -108,7 +160,11 @@ export default forwardRef((_, ref) => {
                 dataSource={toBePlanned}
                 grid={{ column: 1 }}
                 renderItem={(demand, index) => (
-                  <Draggable draggableId={demand.id} index={index}>
+                  <Draggable
+                    draggableId={demand.id}
+                    index={index}
+                    isDragDisabled={!!demand.iterationId}
+                  >
                     {(demandProvider) => (
                       <div
                         {...demandProvider.draggableProps}
@@ -118,6 +174,10 @@ export default forwardRef((_, ref) => {
                         <List.Item style={{ margin: 0, paddingBottom: 6, paddingTop: 6 }}>
                           <DemandCard
                             demand={demand}
+                            cardStyle={{
+                              backgroundColor: demand.iterationId ? '#ececec' : '',
+                              cursor: demand.iterationId ? 'pointer' : '',
+                            }}
                             onEditClick={() => {
                               setDemandUpdateInfo(demand);
                               setDemandFormVisible(true);
