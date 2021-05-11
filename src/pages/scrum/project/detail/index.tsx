@@ -84,7 +84,7 @@ const ProjectDetail: React.FC<any> = (props) => {
       // @ts-ignore
       demandPlanningRef?.current?.addDemand(operationDemand, destination.index);
     }
-    if (destination?.droppableId === DroppableId.DemandPool) {
+    if (destination.droppableId === DroppableId.DemandPool) {
       // @ts-ignore
       const operationDemand: ScrumDemand = demandPlanningRef?.current?.getDemandById(demandId);
       operationDemand.iterationId = undefined;
