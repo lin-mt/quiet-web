@@ -174,10 +174,14 @@ export default forwardRef((_, ref) => {
                         <List.Item style={{ margin: 0, paddingBottom: 6, paddingTop: 6 }}>
                           <DemandCard
                             demand={demand}
-                            cardStyle={{
-                              backgroundColor: demand.iterationId ? '#ececec' : '',
-                              cursor: demand.iterationId ? 'pointer' : '',
-                            }}
+                            cardStyle={
+                              demand.iterationId
+                                ? {
+                                    backgroundColor: '#ececec',
+                                    cursor: 'pointer',
+                                  }
+                                : undefined
+                            }
                             onEditClick={() => {
                               setDemandUpdateInfo(demand);
                               setDemandFormVisible(true);
