@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Link, useModel } from 'umi';
-import { Button, Card, Empty, List, Space, Spin, TreeSelect } from 'antd';
+import { Button, Card, Empty, List, Space, Spin, Tooltip, TreeSelect } from 'antd';
 import { disableVersionNode } from '@/utils/scrum/utils';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import type { ScrumDemand } from '@/services/scrum/EntitiyType';
@@ -109,13 +109,15 @@ export default forwardRef((_, ref) => {
             <Link
               to={`/scrum/project/iteration?projectId=${projectId}&iterationId=${selectedIterationId}`}
             >
-              <Button
-                icon={<ForwardFilled />}
-                type={'primary'}
-                shape={'round'}
-                size={'small'}
-                disabled={!selectedIterationId}
-              />
+              <Tooltip title={selectedIterationId ? '' : '请选择需求要规划的迭代'}>
+                <Button
+                  icon={<ForwardFilled />}
+                  type={'primary'}
+                  shape={'round'}
+                  size={'small'}
+                  disabled={!selectedIterationId}
+                />
+              </Tooltip>
             </Link>
           </Space>
         }
