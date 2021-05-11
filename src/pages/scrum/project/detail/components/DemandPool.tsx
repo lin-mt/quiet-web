@@ -177,7 +177,10 @@ export default forwardRef((_, ref) => {
           projectId={projectId}
           updateInfo={demandUpdateInfo}
           priorities={priorities}
-          onCancel={() => setDemandFormVisible(false)}
+          onCancel={() => {
+            setDemandFormVisible(false);
+            setDemandUpdateInfo(undefined);
+          }}
           afterAction={refreshToBePlanned}
         />
       )}
