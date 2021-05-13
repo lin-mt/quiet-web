@@ -16,14 +16,8 @@ import { updateDemand } from '@/services/scrum/ScrumDemand';
 import { DroppableId } from '@/pages/scrum/project/detail/components/Common';
 
 const ProjectDetail: React.FC<any> = (props) => {
-  const {
-    projectId,
-    setProjectId,
-    members,
-    setMembers,
-    setPriorities,
-    selectedIterationId,
-  } = useModel(PROJECT_DETAIL);
+  const { projectId, setProjectId, members, setMembers, setPriorities, selectedIterationId } =
+    useModel(PROJECT_DETAIL);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [projectDetail, setProjectDetail] = useState<ScrumProjectDetail>();

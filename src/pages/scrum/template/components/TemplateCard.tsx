@@ -54,8 +54,8 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
     <>
       <ProCard
         size={cardSize}
-        title={templateInfo.name}
         style={{ height: '100%' }}
+        title={templateInfo.name}
         onClick={() => {
           if (!(changeSelectable || editable)) {
             setTemplateSettingFormVisible(true);

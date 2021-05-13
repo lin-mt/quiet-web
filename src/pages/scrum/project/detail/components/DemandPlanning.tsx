@@ -16,13 +16,8 @@ import { DictionaryType } from '@/types/Type';
 export default forwardRef((_, ref) => {
   const limit = 6;
 
-  const {
-    projectId,
-    versions,
-    priorityColors,
-    selectedIterationId,
-    setSelectedIterationId,
-  } = useModel(PROJECT_DETAIL);
+  const { projectId, versions, priorityColors, selectedIterationId, setSelectedIterationId } =
+    useModel(PROJECT_DETAIL);
   const { getDictionaryLabels } = useModel(DICTIONARY);
 
   const [offset, setOffset] = useState<number>(0);
