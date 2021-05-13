@@ -13,7 +13,7 @@ type TeamFormProps = {
   afterAction?: () => void;
 };
 
-const RoleForm: React.FC<TeamFormProps> = (props) => {
+const TeamForm: React.FC<TeamFormProps> = (props) => {
   const { visible, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -189,4 +189,4 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
   );
 };
 
-export default RoleForm;
+export default TeamForm;
