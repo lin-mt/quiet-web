@@ -17,17 +17,8 @@ type DictionaryTreeProps = {
 };
 
 const DictionaryTree: React.FC<DictionaryTreeProps> = (props) => {
-  const {
-    type,
-    visible,
-    maskClosable,
-    closable,
-    onCancel,
-    onOk,
-    multiple,
-    onSelect,
-    afterClose,
-  } = props;
+  const { type, visible, maskClosable, closable, onCancel, onOk, multiple, onSelect, afterClose } =
+    props;
 
   const [treeData, setTreeData] = useState<DataNode[] | undefined>([]);
   const [selectedKeys, setSelectedKeys] = useState<ReactText[]>([]);
