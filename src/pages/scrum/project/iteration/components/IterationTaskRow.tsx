@@ -43,10 +43,12 @@ export default ({
   });
 
   function calculateDroppableMinHeight(): number {
-    let maxCount = 0;
-    Object.keys(taskStepToTasks).forEach((key) => {
-      maxCount = maxCount < taskStepToTasks[key].length ? taskStepToTasks[key].length : maxCount;
-    });
+    let maxCount = 1;
+    if (taskStepToTasks) {
+      Object.keys(taskStepToTasks).forEach((key) => {
+        maxCount = maxCount < taskStepToTasks[key].length ? taskStepToTasks[key].length : maxCount;
+      });
+    }
     return maxCount * 80;
   }
 
@@ -190,10 +192,8 @@ export default ({
           taskStepId={taskSteps[0].id}
           visible={taskFormVisible}
           updateInfo={taskUpdateInfo}
-          onCancel={() => {
-            setTaskFormVisible(false);
-            reloadDemandTasks();
-          }}
+          onCancel={() => setTaskFormVisible(false)}
+          afterAction={() => reloadDemandTasks()}
           executors={Object.keys(members).map((key) => members[key])}
           demandId={demand.id}
         />

@@ -41,7 +41,7 @@ export function findToBePlanned(
 ): Promise<ScrumDemand[]> {
   return request<Result<ScrumDemand[]>>(`${apiPrefix}/scrollToBePlanned`, {
     method: 'POST',
-    data: { id: projectId, demandFilter, offset, limit },
+    data: { id: projectId, demandFilter: { planned: false, ...demandFilter }, offset, limit },
   }).then((resData) => {
     return resData.data;
   });

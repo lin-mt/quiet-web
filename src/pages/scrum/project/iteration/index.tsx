@@ -102,14 +102,14 @@ export default (props: PropsWithChildren<any>) => {
   useEffect(() => {
     if (selectedIterationId) {
       // 加载需求
-      findAllByIterationId(selectedIterationId).then(async (scrumDemands) => {
+      findAllByIterationId(selectedIterationId).then((scrumDemands) => {
         const demandIds: string[] = [];
         setDemands(scrumDemands);
         scrumDemands.forEach((datum) => {
           demandIds.push(datum.id);
         });
         // 加载任务
-        await findAllTaskByDemandIds(demandIds).then((tasks) => {
+        findAllTaskByDemandIds(demandIds).then((tasks) => {
           setDemandTasks(tasks);
         });
       });
@@ -118,18 +118,8 @@ export default (props: PropsWithChildren<any>) => {
 
   return (
     <>
-      <QueryFilter<any>>
-        <ProFormField
-          name={'iterationId'}
-          label={'当前迭代'}
-          initialValue={selectedIterationId}
-          rules={[
-            {
-              required: true,
-              message: '请选择迭代',
-            },
-          ]}
-        >
+      <QueryFilter<any> span={4}>
+        <ProFormField name={'iterationId'} label={'当前迭代'} initialValue={selectedIterationId}>
           <TreeSelect
             virtual={false}
             showSearch={true}

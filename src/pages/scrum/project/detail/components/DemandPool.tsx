@@ -110,19 +110,6 @@ export default forwardRef((_, ref) => {
                 bordered={false}
                 allowClear={true}
                 style={{ ...filterStyle, width: 93 }}
-                placeholder={'规划状态'}
-                onChange={(value) =>
-                  setDemandFilter({ ...demandFilter, planned: value?.toString() })
-                }
-              >
-                <Select.Option value={'false'}>待规划</Select.Option>
-                <Select.Option value={'true'}>已规划</Select.Option>
-              </Select>
-              <Select
-                size={'small'}
-                bordered={false}
-                allowClear={true}
-                style={{ ...filterStyle, width: 93 }}
                 placeholder={'需求类型'}
                 options={demandType.map((d) => ({ label: d.label, value: `${d.type}.${d.key}` }))}
                 onChange={(value) =>
