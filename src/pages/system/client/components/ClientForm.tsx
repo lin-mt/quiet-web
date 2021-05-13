@@ -16,9 +16,8 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [inputForSelectValues, setInputForSelectValues] = useState<string[]>();
   const [scopes, setScopes] = useState<{ key: string; value: string; label: string }[]>();
-  const [authorizedGrantTypes, setAuthorizedGrantTypes] = useState<
-    { key: string; value: string; label: string }[]
-  >();
+  const [authorizedGrantTypes, setAuthorizedGrantTypes] =
+    useState<{ key: string; value: string; label: string }[]>();
 
   const [form] = Form.useForm();
 

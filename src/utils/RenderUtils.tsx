@@ -1,6 +1,5 @@
 import type { CustomTagProps } from 'rc-select/lib/interface/generator';
 import { Tag } from 'antd';
-import React from 'react';
 
 export const tagColor = '#108EE9';
 export const filterStyle = {
@@ -14,24 +13,4 @@ export function multipleSelectTagRender(tagProps: CustomTagProps) {
       {label}
     </Tag>
   );
-}
-
-export function buildFullCard(
-  cards: any[],
-  num: number,
-  addCard?: boolean,
-  addCardKey?: string,
-): any[] {
-  let fullCard: React.SetStateAction<any[]> = [];
-  if (addCard) {
-    fullCard.push({ key: addCardKey });
-  }
-  fullCard = fullCard.concat(cards);
-  if (fullCard.length % num !== 0) {
-    const addEmptyCard = num - (fullCard.length % num);
-    for (let i = 0; i < addEmptyCard; i += 1) {
-      fullCard.push({ key: `empty${i}` });
-    }
-  }
-  return fullCard;
 }
