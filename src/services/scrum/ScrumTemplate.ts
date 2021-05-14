@@ -4,8 +4,8 @@ import type { AllTemplate, ScrumTemplate } from '@/services/scrum/EntitiyType';
 
 const apiPrefix = '/api/scrum/template';
 
-export function listByName(name: string): Promise<ScrumTemplate[]> {
-  return request<Result<ScrumTemplate[]>>(`${apiPrefix}/listByName`, {
+export function listEnabledByName(name: string): Promise<ScrumTemplate[]> {
+  return request<Result<ScrumTemplate[]>>(`${apiPrefix}/listEnabledByName`, {
     method: 'POST',
     data: { name },
   }).then((resp) => resp.data);

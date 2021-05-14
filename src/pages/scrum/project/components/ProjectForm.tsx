@@ -5,7 +5,7 @@ import { listUsersByName } from '@/services/system/QuietUser';
 import { listTeamsByTeamName } from '@/services/system/QuietTeam';
 import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
-import { listByName } from '@/services/scrum/ScrumTemplate';
+import { listEnabledByName } from '@/services/scrum/ScrumTemplate';
 import type { ScrumProject } from '@/services/scrum/EntitiyType';
 
 interface ProjectFormProps {
@@ -98,7 +98,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
   }
 
   async function findByTemplateName(name: string) {
-    return listByName(name).then((resp) => {
+    return listEnabledByName(name).then((resp) => {
       return resp.map((template) => ({
         label: template.name,
         value: template.id,
