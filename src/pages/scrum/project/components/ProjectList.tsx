@@ -12,18 +12,11 @@ interface ProjectListProps {
   newProject?: boolean;
   editable?: boolean;
   cardSize?: 'default' | 'small';
-  afterUpdateAction?: () => void;
+  afterAction?: () => void;
 }
 
 const ProjectList: React.FC<ProjectListProps> = (props) => {
-  const {
-    title,
-    projects,
-    newProject = false,
-    editable = false,
-    afterUpdateAction,
-    cardSize,
-  } = props;
+  const { title, projects, newProject = false, editable = false, afterAction, cardSize } = props;
 
   const addIconDefaultStyle = { fontSize: '36px' };
 
@@ -59,7 +52,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
   }
 
   const cardHeight = 168;
-  const colSpan = 4;
+  const colSpan = '20%';
 
   return (
     <>
@@ -99,7 +92,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
               <ProjectCard
                 project={project}
                 cardSize={'small'}
-                afterDeleteAction={afterUpdateAction}
+                afterDeleteAction={afterAction}
                 editable={editable}
               />
             </ProCard>
@@ -110,7 +103,7 @@ const ProjectList: React.FC<ProjectListProps> = (props) => {
         <ProjectForm
           visible={projectFormVisible}
           onCancel={() => setProjectFormVisible(false)}
-          afterAction={afterUpdateAction}
+          afterAction={afterAction}
         />
       )}
     </>

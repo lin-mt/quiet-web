@@ -46,7 +46,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
   }, [newTemplate, templates]);
 
   const cardHeight = 168;
-  const colSpan = 4;
+  const colSpan = '20%';
 
   return (
     <>

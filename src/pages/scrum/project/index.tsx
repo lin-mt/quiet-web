@@ -5,17 +5,21 @@ import type { ScrumProject } from '@/services/scrum/EntitiyType';
 import { useModel } from 'umi';
 import { DICTIONARY } from '@/constant/system/Modelnames';
 import { DictionaryType } from '@/types/Type';
+import { Empty, Spin } from 'antd';
 
 const Project: React.FC<any> = () => {
   const { initDictionaries } = useModel(DICTIONARY);
 
+  const [loading, setLoading] = useState<boolean>(true);
   const [projectManaged, setProjectManaged] = useState<ScrumProject[]>([]);
   const [projectInvolved, setProjectInvolved] = useState<ScrumProject[]>([]);
 
   function loadAllMyProject() {
+    setLoading(true);
     allMyProjects().then((resp) => {
       setProjectManaged(resp.projectManaged);
       setProjectInvolved(resp.projectInvolved);
+      setLoading(false);
     });
   }
 
@@ -26,16 +30,22 @@ const Project: React.FC<any> = () => {
 
   return (
     <>
-      <ProjectList
-        title={'管理的项目'}
-        projects={projectManaged}
-        newProject={true}
-        editable={true}
-        cardSize={'small'}
-        afterUpdateAction={loadAllMyProject}
-      />
-      {projectInvolved.length > 0 && (
-        <ProjectList title={'参与的项目'} projects={projectInvolved} />
+      {loading ? (
+        <Empty description={null} image={<Spin size={'large'} />} />
+      ) : (
+        <>
+          <ProjectList
+            title={'管理的项目'}
+            projects={projectManaged}
+            newProject={true}
+            editable={true}
+            cardSize={'small'}
+            afterAction={loadAllMyProject}
+          />
+          {projectInvolved.length > 0 && (
+            <ProjectList title={'参与的项目'} projects={projectInvolved} />
+          )}
+        </>
       )}
     </>
   );
