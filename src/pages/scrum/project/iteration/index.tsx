@@ -36,6 +36,13 @@ const MainContainer = styled.div`
   padding-bottom: 13px;
 `;
 
+interface DemandAndTaskFilter {
+  demandTitle?: string;
+  priorityId?: string;
+  demandType?: string;
+  executorId?: string;
+}
+
 export default (props: PropsWithChildren<any>) => {
   const { projectId, iterationId } = props.location.query;
 
@@ -45,8 +52,12 @@ export default (props: PropsWithChildren<any>) => {
   const [taskSteps, setTaskSteps] = useState<ScrumTaskStep[]>([]);
   const [versions, setVersions] = useState<ScrumVersion[]>([]);
   const [demands, setDemands] = useState<ScrumDemand[]>([]);
+  const [allDemands, setAllDemands] = useState<ScrumDemand[]>([]);
   // <demandId, <taskStepId, scrumTask[]>>
   const [demandTasks, setDemandTasks] = useState<Record<string, Record<string, ScrumTask[]>>>({});
+  const [allDemandTasks, setAllDemandTasks] = useState<Record<string, Record<string, ScrumTask[]>>>(
+    {},
+  );
   const [members, setMembers] = useState<Record<string, QuietUser>>({});
   const [priorities, setPriorities] = useState<ScrumPriority[]>([]);
   const [priorityColors, setPriorityColors] = useState<Record<string, string>>({});
@@ -105,39 +116,81 @@ export default (props: PropsWithChildren<any>) => {
       findAllByIterationId(selectedIterationId).then((scrumDemands) => {
         const demandIds: string[] = [];
         setDemands(scrumDemands);
+        setAllDemands(scrumDemands);
         scrumDemands.forEach((datum) => {
           demandIds.push(datum.id);
         });
         // 加载任务
         findAllTaskByDemandIds(demandIds).then((tasks) => {
           setDemandTasks(tasks);
+          setAllDemandTasks(tasks);
         });
       });
     }
-  }, [selectedIterationId]);
+  }, [selectedIterationId, versions]);
+
+  async function filterDemandAndTask(filter: DemandAndTaskFilter) {
+    const scrumDemands: ScrumDemand[] = [];
+    const demandIds: string[] = [];
+    const scrumDemandTasks: Record<string, Record<string, ScrumTask[]>> = {};
+    if (filter.executorId) {
+      Object.keys(allDemandTasks).forEach((demandId) => {
+        const demandTasksDatum: Record<string, ScrumTask[]> = {};
+        Object.keys(allDemandTasks[demandId]).forEach((taskStepId) => {
+          allDemandTasks[demandId][taskStepId].forEach((task) => {
+            if (task.executorId === filter.executorId) {
+              if (!demandTasksDatum[taskStepId]) {
+                demandTasksDatum[taskStepId] = [];
+              }
+              demandTasksDatum[taskStepId].push(task);
+            }
+          });
+        });
+        if (Object.keys(demandTasksDatum).length > 0) {
+          demandIds.push(demandId);
+          scrumDemandTasks[demandId] = demandTasksDatum;
+        }
+      });
+    }
+    allDemands.forEach((demand) => {
+      if (filter.executorId && !demandIds.includes(demand.id)) {
+        return;
+      }
+      if (filter.demandTitle && !demand.title.includes(filter.demandTitle)) {
+        return;
+      }
+      if (filter.demandType && demand.type !== filter.demandType) {
+        return;
+      }
+      if (filter.priorityId && demand.priorityId !== filter.priorityId) {
+        return;
+      }
+      scrumDemands.push(demand);
+    });
+    setDemands(scrumDemands);
+  }
 
   return (
     <>
-      <QueryFilter<any> span={4}>
-        <ProFormField name={'iterationId'} label={'当前迭代'} initialValue={selectedIterationId}>
+      <QueryFilter submitter={false}>
+        <ProFormField name={'iterationId'} label={'当前迭代'} initialValue={iterationId}>
           <TreeSelect
             virtual={false}
             showSearch={true}
             treeNodeFilterProp={'title'}
-            defaultValue={selectedIterationId}
+            defaultValue={iterationId}
             onSelect={(value) => setSelectedIterationId(value.toString())}
             placeholder={'请选择迭代'}
             treeData={disableVersionNode(versions)}
           />
         </ProFormField>
-        <ProFormSelect
-          name={'executorId'}
-          label={'执行者'}
-          options={Object.keys(members).map((key) => ({
-            label: members[key].fullName,
-            value: key,
-          }))}
-        />
+      </QueryFilter>
+      <QueryFilter<DemandAndTaskFilter>
+        span={4}
+        onFinish={filterDemandAndTask}
+        onReset={() => setSelectedIterationId(iterationId)}
+      >
+        <ProFormText name={'demandTitle'} label={'需求标题'} />
         <ProFormSelect
           name={'priorityId'}
           label={'优先级'}
@@ -151,7 +204,14 @@ export default (props: PropsWithChildren<any>) => {
             value: key,
           }))}
         />
-        <ProFormText name={'demandTitle'} label={'需求标题'} />
+        <ProFormSelect
+          name={'executorId'}
+          label={'执行者'}
+          options={Object.keys(members).map((memberId) => ({
+            label: members[memberId].fullName,
+            value: memberId,
+          }))}
+        />
       </QueryFilter>
       {loading ? (
         <Empty description={null} image={null}>
