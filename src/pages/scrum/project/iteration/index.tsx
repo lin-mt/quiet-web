@@ -10,18 +10,20 @@ import type { ScrumVersion } from '@/services/scrum/EntitiyType';
 import type { QuietUser } from '@/services/system/EntityType';
 import { findProjectDetail } from '@/services/scrum/ScrumProject';
 import { findAllByTemplateId } from '@/services/scrum/ScrumPriority';
+import { start, end } from '@/services/scrum/ScrumIteration';
 import { useModel } from '@@/plugin-model/useModel';
 import { DICTIONARY } from '@/constant/system/Modelnames';
 import { DictionaryType } from '@/types/Type';
 import { findAllByIterationId } from '@/services/scrum/ScrumDemand';
 import { findAllTaskByDemandIds } from '@/services/scrum/ScrumTask';
 import { findDetailsByProjectId } from '@/services/scrum/ScrumVersion';
-import { disableVersionNode, iterationsAddToChildren } from '@/utils/scrum/utils';
+import { disableVersionNode, getIterationInfo, iterationsAddToChildren } from '@/utils/scrum/utils';
 import { getAllByTemplateId as getAllTaskStepByTemplateId } from '@/services/scrum/ScrumTaskStep';
-import { Card, Empty, Space, Spin, TreeSelect } from 'antd';
+import { Button, Card, Empty, Space, Spin, Tooltip, TreeSelect } from 'antd';
 import { ProFormField, ProFormSelect, ProFormText, QueryFilter } from '@ant-design/pro-form';
 import styled from 'styled-components';
 import IterationTaskRow from '@/pages/scrum/project/iteration/components/IterationTaskRow';
+import { FastForwardOutlined, PauseOutlined } from '@ant-design/icons';
 
 const TitleCard = styled(Card)`
   width: 260px;
@@ -170,6 +172,35 @@ export default (props: PropsWithChildren<any>) => {
     setDemands(scrumDemands);
   }
 
+  function getIterationOperationTooltip(): string {
+    if (selectedIterationId) {
+      const iterationInfo = getIterationInfo(versions, selectedIterationId);
+      if (!iterationInfo?.startTime) {
+        return '开始迭代';
+      }
+      if (iterationInfo?.endTime) {
+        return '迭代已结束';
+      }
+      return '结束迭代';
+    }
+    return '请选择迭代';
+  }
+
+  async function handleStartOrEndIteration() {
+    if (selectedIterationId) {
+      const iterationInfo = getIterationInfo(versions, selectedIterationId);
+      if (!iterationInfo?.startTime) {
+        await start(selectedIterationId);
+      }
+      if (iterationInfo?.startTime && !iterationInfo?.endTime) {
+        await end(selectedIterationId);
+      }
+      findDetailsByProjectId(projectId).then((projectVersions) => {
+        setVersions(iterationsAddToChildren(projectVersions));
+      });
+    }
+  }
+
   return (
     <>
       <QueryFilter submitter={false}>
@@ -179,11 +210,30 @@ export default (props: PropsWithChildren<any>) => {
             showSearch={true}
             treeNodeFilterProp={'title'}
             defaultValue={iterationId}
-            onSelect={(value) => setSelectedIterationId(value.toString())}
+            onChange={(value) => setSelectedIterationId(value)}
             placeholder={'请选择迭代'}
             treeData={disableVersionNode(versions)}
           />
         </ProFormField>
+        <Tooltip title={getIterationOperationTooltip} placement={'right'}>
+          <Button
+            loading={loading}
+            type={'primary'}
+            style={{ width: 50 }}
+            disabled={
+              !selectedIterationId || !!getIterationInfo(versions, selectedIterationId)?.endTime
+            }
+            danger={!!getIterationInfo(versions, selectedIterationId)?.startTime}
+            onClick={handleStartOrEndIteration}
+            icon={
+              getIterationInfo(versions, selectedIterationId)?.startTime ? (
+                <PauseOutlined />
+              ) : (
+                <FastForwardOutlined />
+              )
+            }
+          />
+        </Tooltip>
       </QueryFilter>
       <QueryFilter<DemandAndTaskFilter>
         span={4}

@@ -1,4 +1,4 @@
-import type { ScrumVersion } from '@/services/scrum/EntitiyType';
+import type { ScrumIteration, ScrumVersion } from '@/services/scrum/EntitiyType';
 
 export function iterationsAddToChildren(scrumVersions: ScrumVersion[]): ScrumVersion[] {
   const newNodes: ScrumVersion[] = [];
@@ -31,4 +31,30 @@ export function disableVersionNode(nodes: ScrumVersion[]): ScrumVersion[] {
     }
     return newNode;
   });
+}
+
+export function getIterationInfo(
+  nodes: ScrumVersion[],
+  iterationId: string,
+): ScrumIteration | undefined {
+  let iterationInfo: ScrumIteration | undefined;
+  nodes.every((node) => {
+    if (node.iterations) {
+      node.iterations.every((iteration) => {
+        if (iteration.id === iterationId) {
+          iterationInfo = iteration;
+          return false;
+        }
+        return true;
+      });
+    }
+    if (iterationInfo) {
+      return false;
+    }
+    if (node.children) {
+      iterationInfo = getIterationInfo(node.children, iterationId);
+    }
+    return !iterationInfo;
+  });
+  return iterationInfo;
 }

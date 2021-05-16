@@ -4,6 +4,20 @@ import type { ScrumIteration } from '@/services/scrum/EntitiyType';
 
 const apiPrefix = '/api/scrum/iteration';
 
+export function end(id: string) {
+  return request(`${apiPrefix}/end`, {
+    method: 'POST',
+    data: { id },
+  });
+}
+
+export function start(id: string) {
+  return request(`${apiPrefix}/start`, {
+    method: 'POST',
+    data: { id },
+  });
+}
+
 export function deleteIteration(deleteId: string) {
   return request(`${apiPrefix}/delete`, {
     method: 'POST',
