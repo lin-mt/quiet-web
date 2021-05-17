@@ -19,7 +19,7 @@ import { findAllTaskByDemandIds } from '@/services/scrum/ScrumTask';
 import { findDetailsByProjectId } from '@/services/scrum/ScrumVersion';
 import { disableVersionNode, getIterationInfo, iterationsAddToChildren } from '@/utils/scrum/utils';
 import { getAllByTemplateId as getAllTaskStepByTemplateId } from '@/services/scrum/ScrumTaskStep';
-import { Button, Card, Empty, Space, Spin, Tooltip, TreeSelect } from 'antd';
+import { Button, Card, Empty, message, Space, Spin, Tooltip, TreeSelect } from 'antd';
 import { ProFormField, ProFormSelect, ProFormText, QueryFilter } from '@ant-design/pro-form';
 import styled from 'styled-components';
 import IterationTaskRow from '@/pages/scrum/project/iteration/components/IterationTaskRow';
@@ -201,6 +201,19 @@ export default (props: PropsWithChildren<any>) => {
     }
   }
 
+  function taskCanBeCreated(): boolean {
+    const iterationInfo = getIterationInfo(versions, selectedIterationId);
+    if (!iterationInfo?.startTime) {
+      message.warn('迭代还未开始，无法创建任务').then();
+      return false;
+    }
+    if (iterationInfo?.endTime) {
+      message.warn('迭代已结束，无法创建任务').then();
+      return false;
+    }
+    return true;
+  }
+
   return (
     <>
       <QueryFilter submitter={false}>
@@ -287,6 +300,7 @@ export default (props: PropsWithChildren<any>) => {
                 <IterationTaskRow
                   key={demand.id}
                   demand={demand}
+                  taskCanBeCreated={taskCanBeCreated}
                   members={members}
                   demandTypeLabels={demandTypeLabels}
                   taskTypeLabels={taskTypeLabels}

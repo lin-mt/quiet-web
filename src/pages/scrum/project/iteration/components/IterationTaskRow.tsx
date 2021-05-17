@@ -19,6 +19,7 @@ const CardContainer = styled(Col)`
 
 interface IterationRowProps {
   demand: ScrumDemand;
+  taskCanBeCreated: () => boolean;
   demandTypeLabels: Record<string, string>;
   taskTypeLabels: Record<string, string>;
   priorityColors: Record<string, string>;
@@ -29,6 +30,7 @@ interface IterationRowProps {
 
 export default ({
   demand,
+  taskCanBeCreated,
   demandTypeLabels,
   taskTypeLabels,
   priorityColors,
@@ -54,8 +56,10 @@ export default ({
 
   function handleCreateTaskClick(e: React.MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
-    setTaskUpdateInfo(undefined);
-    setTaskFormVisible(true);
+    if (taskCanBeCreated()) {
+      setTaskUpdateInfo(undefined);
+      setTaskFormVisible(true);
+    }
   }
 
   function handleTaskCardEdit(task: ScrumTask) {
