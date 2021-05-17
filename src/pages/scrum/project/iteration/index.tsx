@@ -129,7 +129,7 @@ export default (props: PropsWithChildren<any>) => {
         });
       });
     }
-  }, [selectedIterationId, versions]);
+  }, [selectedIterationId]);
 
   async function filterDemandAndTask(filter: DemandAndTaskFilter) {
     const scrumDemands: ScrumDemand[] = [];
@@ -210,7 +210,7 @@ export default (props: PropsWithChildren<any>) => {
             showSearch={true}
             treeNodeFilterProp={'title'}
             defaultValue={iterationId}
-            onChange={(value) => setSelectedIterationId(value)}
+            onSelect={(value) => setSelectedIterationId(value)}
             placeholder={'请选择迭代'}
             treeData={disableVersionNode(versions)}
           />
