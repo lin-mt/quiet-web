@@ -159,8 +159,8 @@ export default ({
                             <TaskCard
                               cardStyle={{ marginTop: taskIndex === 0 ? 0 : 6 }}
                               task={task}
+                              taskType={taskTypeLabels[task.type]}
                               executorName={members[task.executorId].fullName}
-                              taskTypeLabels={taskTypeLabels}
                               onEditClick={() => handleTaskCardEdit(task)}
                               onDeleteClick={() => handleTaskCardDelete(task)}
                             />
