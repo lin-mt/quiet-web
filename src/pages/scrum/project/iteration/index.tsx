@@ -2,6 +2,7 @@ import type { PropsWithChildren } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import type {
   ScrumDemand,
+  ScrumIteration,
   ScrumPriority,
   ScrumTask,
   ScrumTaskStep,
@@ -19,7 +20,7 @@ import { findAllTaskByDemandIds } from '@/services/scrum/ScrumTask';
 import { findDetailsByProjectId } from '@/services/scrum/ScrumVersion';
 import { disableVersionNode, getIterationInfo, iterationsAddToChildren } from '@/utils/scrum/utils';
 import { getAllByTemplateId as getAllTaskStepByTemplateId } from '@/services/scrum/ScrumTaskStep';
-import { Button, Card, Empty, message, Space, Spin, Tooltip, TreeSelect } from 'antd';
+import { Button, Card, Empty, message, Popconfirm, Space, Spin, Tooltip, TreeSelect } from 'antd';
 import { ProFormField, ProFormSelect, ProFormText, QueryFilter } from '@ant-design/pro-form';
 import styled from 'styled-components';
 import IterationTaskRow from '@/pages/scrum/project/iteration/components/IterationTaskRow';
@@ -174,7 +175,7 @@ export default (props: PropsWithChildren<any>) => {
 
   function getIterationOperationTooltip(): string {
     if (selectedIterationId) {
-      const iterationInfo = getIterationInfo(versions, selectedIterationId);
+      const iterationInfo = selectedIteration();
       if (!iterationInfo?.startTime) {
         return '开始迭代';
       }
@@ -186,23 +187,24 @@ export default (props: PropsWithChildren<any>) => {
     return '请选择迭代';
   }
 
-  async function handleStartOrEndIteration() {
+  function selectedIteration(): ScrumIteration | undefined {
+    return getIterationInfo(versions, selectedIterationId);
+  }
+
+  async function handleStartIteration() {
     if (selectedIterationId) {
-      const iterationInfo = getIterationInfo(versions, selectedIterationId);
+      const iterationInfo = selectedIteration();
       if (!iterationInfo?.startTime) {
         await start(selectedIterationId);
+        findDetailsByProjectId(projectId).then((projectVersions) => {
+          setVersions(iterationsAddToChildren(projectVersions));
+        });
       }
-      if (iterationInfo?.startTime && !iterationInfo?.endTime) {
-        await end(selectedIterationId);
-      }
-      findDetailsByProjectId(projectId).then((projectVersions) => {
-        setVersions(iterationsAddToChildren(projectVersions));
-      });
     }
   }
 
   function taskCanBeCreated(): boolean {
-    const iterationInfo = getIterationInfo(versions, selectedIterationId);
+    const iterationInfo = selectedIteration();
     if (!iterationInfo?.startTime) {
       message.warn('迭代还未开始，无法创建任务').then();
       return false;
@@ -212,6 +214,18 @@ export default (props: PropsWithChildren<any>) => {
       return false;
     }
     return true;
+  }
+
+  async function endSelectedIteration() {
+    if (selectedIterationId) {
+      const iterationInfo = selectedIteration();
+      if (iterationInfo?.startTime && !iterationInfo?.endTime) {
+        await end(selectedIterationId);
+        findDetailsByProjectId(projectId).then((projectVersions) => {
+          setVersions(iterationsAddToChildren(projectVersions));
+        });
+      }
+    }
   }
 
   return (
@@ -229,23 +243,21 @@ export default (props: PropsWithChildren<any>) => {
           />
         </ProFormField>
         <Tooltip title={getIterationOperationTooltip} placement={'right'}>
-          <Button
-            loading={loading}
-            type={'primary'}
-            style={{ width: 50 }}
-            disabled={
-              !selectedIterationId || !!getIterationInfo(versions, selectedIterationId)?.endTime
-            }
-            danger={!!getIterationInfo(versions, selectedIterationId)?.startTime}
-            onClick={handleStartOrEndIteration}
-            icon={
-              getIterationInfo(versions, selectedIterationId)?.startTime ? (
-                <PauseOutlined />
-              ) : (
-                <FastForwardOutlined />
-              )
-            }
-          />
+          <Popconfirm
+            title={'结束当前迭代，未完成的需求将会进入下一个迭代'}
+            disabled={!selectedIteration()?.startTime || !!selectedIteration()?.endTime}
+            onConfirm={endSelectedIteration}
+          >
+            <Button
+              loading={loading}
+              type={'primary'}
+              style={{ width: 50 }}
+              disabled={!selectedIterationId || !!selectedIteration()?.endTime}
+              danger={!!selectedIteration()?.startTime}
+              onClick={handleStartIteration}
+              icon={selectedIteration()?.startTime ? <PauseOutlined /> : <FastForwardOutlined />}
+            />
+          </Popconfirm>
         </Tooltip>
       </QueryFilter>
       <QueryFilter<DemandAndTaskFilter>
