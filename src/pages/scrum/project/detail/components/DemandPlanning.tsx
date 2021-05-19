@@ -92,8 +92,9 @@ export default forwardRef((_, ref) => {
             <TreeSelect
               size={'small'}
               virtual={false}
-              showSearch={true}
+              treeIcon={true}
               bordered={false}
+              showSearch={true}
               style={{ ...filterStyle, width: '200px' }}
               treeNodeFilterProp={'title'}
               defaultValue={selectedIterationId}

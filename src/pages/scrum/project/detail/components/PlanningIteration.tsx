@@ -1,8 +1,8 @@
 import { Button, Card, Descriptions, Empty, Popconfirm, Popover, Space, Spin, Tree } from 'antd';
 import type { Key } from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { deleteVersion, findDetailsByProjectId } from '@/services/scrum/ScrumVersion';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, FileOutlined, PlusOutlined } from '@ant-design/icons';
 import VersionForm from '@/pages/scrum/version/components/VersionForm';
 import { iterationsAddToChildren } from '@/utils/scrum/utils';
 import IterationForm from '@/pages/scrum/iteration/components/IterationForm';
@@ -31,17 +31,7 @@ export default () => {
   const [updateVersionInfo, setUpdateVersionInfo] = useState<ScrumVersion>();
   const [updateIterationInfo, setUpdateIterationInfo] = useState<ScrumIteration>();
 
-  function reloadVersions() {
-    if (projectId) {
-      setLoading(true);
-      findDetailsByProjectId(projectId).then((projectVersions) => {
-        setVersions(iterationsAddToChildren(projectVersions));
-        setLoading(false);
-      });
-    }
-  }
-
-  useEffect(() => {
+  const loadVersions = useCallback(() => {
     if (projectId) {
       setLoading(true);
       findDetailsByProjectId(projectId).then((projectVersions) => {
@@ -50,6 +40,10 @@ export default () => {
       });
     }
   }, [projectId, setVersions]);
+
+  useEffect(() => {
+    loadVersions();
+  }, [loadVersions]);
 
   return (
     <>
@@ -95,6 +89,8 @@ export default () => {
           </EmptyContainer>
         ) : (
           <Tree
+            draggable={true}
+            blockNode={true}
             treeData={versions}
             expandedKeys={expandedKeys}
             onExpand={(keys) => setExpandedKeys(keys)}
@@ -120,7 +116,7 @@ export default () => {
               return (
                 <Popover
                   title={null}
-                  placement={'bottom'}
+                  placement={'bottomLeft'}
                   trigger={'click'}
                   content={
                     <Descriptions column={1} size={'small'} style={{ width: '360px' }}>
@@ -187,7 +183,7 @@ export default () => {
                               } else {
                                 await deleteIteration(nodeValues.id);
                               }
-                              reloadVersions();
+                              loadVersions();
                             }}
                           >
                             <Button
@@ -204,7 +200,9 @@ export default () => {
                     </Descriptions>
                   }
                 >
-                  {`${isVersionNode ? 'v' : ''}${nodeValues.name}`}
+                  <div style={{ width: '100%' }}>
+                    {!isVersionNode && <FileOutlined />} {nodeValues.name}
+                  </div>
                 </Popover>
               );
             }}
@@ -217,7 +215,7 @@ export default () => {
           parentId={selectedVersionId}
           updateInfo={updateVersionInfo}
           visible={versionFormVisible}
-          afterAction={reloadVersions}
+          afterAction={loadVersions}
           onCancel={() => setVersionFormVisible(false)}
         />
       )}
@@ -226,7 +224,7 @@ export default () => {
           versionId={selectedVersionId}
           visible={iterationFormVisible}
           updateInfo={updateIterationInfo}
-          afterAction={reloadVersions}
+          afterAction={loadVersions}
           onCancel={() => setIterationFormVisible(false)}
         />
       )}

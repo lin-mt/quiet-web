@@ -51,7 +51,7 @@ export default (props: PropsWithChildren<any>) => {
 
   const { getDictionaryLabels } = useModel(DICTIONARY);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [taskSteps, setTaskSteps] = useState<ScrumTaskStep[]>([]);
   const [versions, setVersions] = useState<ScrumVersion[]>([]);
   const [demands, setDemands] = useState<ScrumDemand[]>([]);
@@ -232,11 +232,12 @@ export default (props: PropsWithChildren<any>) => {
     <>
       <QueryFilter submitter={false}>
         <ProFormField name={'iterationId'} label={'当前迭代'} initialValue={iterationId}>
-          <TreeSelect
+          <TreeSelect<string>
             virtual={false}
+            treeIcon={true}
             showSearch={true}
+            loading={loading}
             treeNodeFilterProp={'title'}
-            defaultValue={iterationId}
             onSelect={(value) => setSelectedIterationId(value)}
             placeholder={'请选择迭代'}
             treeData={disableVersionNode(versions)}
@@ -312,6 +313,9 @@ export default (props: PropsWithChildren<any>) => {
                 <IterationTaskRow
                   key={demand.id}
                   demand={demand}
+                  taskDragDisabled={
+                    !selectedIteration()?.startTime || !!selectedIteration()?.endTime
+                  }
                   taskCanBeCreated={taskCanBeCreated}
                   members={members}
                   demandTypeLabels={demandTypeLabels}

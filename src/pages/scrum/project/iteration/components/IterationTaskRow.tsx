@@ -19,6 +19,7 @@ const CardContainer = styled(Col)`
 
 interface IterationRowProps {
   demand: ScrumDemand;
+  taskDragDisabled: boolean;
   taskCanBeCreated: () => boolean;
   demandTypeLabels: Record<string, string>;
   taskTypeLabels: Record<string, string>;
@@ -30,6 +31,7 @@ interface IterationRowProps {
 
 export default ({
   demand,
+  taskDragDisabled,
   taskCanBeCreated,
   demandTypeLabels,
   taskTypeLabels,
@@ -149,7 +151,12 @@ export default ({
                 if (tasks) {
                   taskInfos = tasks.map((task, taskIndex) => {
                     return (
-                      <Draggable draggableId={task.id} index={taskIndex} key={task.id}>
+                      <Draggable
+                        draggableId={task.id}
+                        index={taskIndex}
+                        key={task.id}
+                        isDragDisabled={taskDragDisabled}
+                      >
                         {(provided) => (
                           <div
                             {...provided.draggableProps}

@@ -1,4 +1,5 @@
 import type { ScrumIteration, ScrumVersion } from '@/services/scrum/EntitiyType';
+import { FileOutlined } from '@ant-design/icons';
 
 export function iterationsAddToChildren(scrumVersions: ScrumVersion[]): ScrumVersion[] {
   const newNodes: ScrumVersion[] = [];
@@ -9,6 +10,13 @@ export function iterationsAddToChildren(scrumVersions: ScrumVersion[]): ScrumVer
       newSv.children = iterationsAddToChildren(newSv.children);
     }
     if (newSv.iterations && newSv.iterations.length > 0) {
+      const newIterations: any[] = [];
+      newSv.iterations.forEach((iteration: any) => {
+        const newIteration = { ...iteration };
+        newIteration.icon = <FileOutlined />;
+        newIterations.push(newIteration);
+      });
+      newSv.iterations = newIterations;
       if (!newSv.children) {
         newSv.children = [];
       }
