@@ -89,7 +89,6 @@ export default () => {
           </EmptyContainer>
         ) : (
           <Tree
-            draggable={true}
             blockNode={true}
             treeData={versions}
             expandedKeys={expandedKeys}
