@@ -52,6 +52,7 @@ export default (props: PropsWithChildren<any>) => {
   const { getDictionaryLabels } = useModel(DICTIONARY);
 
   const [loading, setLoading] = useState<boolean>(true);
+  const [demandAndTaskLoading, setDemandAndTaskLoading] = useState<boolean>(true);
   const [taskSteps, setTaskSteps] = useState<ScrumTaskStep[]>([]);
   const [versions, setVersions] = useState<ScrumVersion[]>([]);
   const [demands, setDemands] = useState<ScrumDemand[]>([]);
@@ -68,55 +69,53 @@ export default (props: PropsWithChildren<any>) => {
   const [taskTypeLabels, setTaskTypeLabels] = useState<Record<string, string>>({});
   const [selectedIterationId, setSelectedIterationId] = useState<string>(iterationId);
 
-  const init = useCallback(async () => {
+  const init = useCallback(() => {
     setLoading(true);
-    const project = await findProjectDetail(projectId);
-    // 加载团队成员信息
-    const membersDatum: Record<string, QuietUser> = {};
-    project.teams.forEach((team) => {
-      if (team.members) {
-        team.members.forEach((member) => {
-          membersDatum[member.id] = member;
-        });
-      }
-    });
-    setMembers(membersDatum);
-    // 加载优先级ID与颜色的对应关系
-    await findAllByTemplateId(project.project.templateId).then((scrumPriorities) => {
-      setPriorities(scrumPriorities);
-      const datum: Record<string, string> = {};
-      scrumPriorities.forEach((priority) => {
-        datum[priority.id] = priority.colorHex;
+    findProjectDetail(projectId).then(async (project) => {
+      // 加载团队成员信息
+      const membersDatum: Record<string, QuietUser> = {};
+      project.teams.forEach((team) => {
+        if (team.members) {
+          team.members.forEach((member) => {
+            membersDatum[member.id] = member;
+          });
+        }
       });
-      setPriorityColors(datum);
+      setMembers(membersDatum);
+      // 加载优先级ID与颜色的对应关系
+      await findAllByTemplateId(project.project.templateId).then((scrumPriorities) => {
+        setPriorities(scrumPriorities);
+        const datum: Record<string, string> = {};
+        scrumPriorities.forEach((priority) => {
+          datum[priority.id] = priority.colorHex;
+        });
+        setPriorityColors(datum);
+      });
+      // 加载任务步骤
+      await getAllTaskStepByTemplateId(project.project.templateId).then((scrumTaskSteps) => {
+        setTaskSteps(scrumTaskSteps);
+      });
+      // 加载版本信息
+      await findDetailsByProjectId(projectId).then((projectVersions) => {
+        setVersions(iterationsAddToChildren(projectVersions));
+      });
+      // 查询需求类型
+      await getDictionaryLabels(DictionaryType.DemandType).then((labels) =>
+        setDemandTypeLabels(labels),
+      );
+      // 查询任务类型
+      await getDictionaryLabels(DictionaryType.TaskType).then((labels) =>
+        setTaskTypeLabels(labels),
+      );
+      setLoading(false);
     });
-    // 加载任务步骤
-    await getAllTaskStepByTemplateId(project.project.templateId).then((scrumTaskSteps) => {
-      setTaskSteps(scrumTaskSteps);
-    });
-    // 加载版本信息
-    await findDetailsByProjectId(projectId).then((projectVersions) => {
-      setVersions(iterationsAddToChildren(projectVersions));
-    });
-    // 查询需求类型
-    await getDictionaryLabels(DictionaryType.DemandType).then((labels) =>
-      setDemandTypeLabels(labels),
-    );
-    // 查询任务类型
-    await getDictionaryLabels(DictionaryType.TaskType).then((labels) => setTaskTypeLabels(labels));
-    setLoading(false);
   }, [getDictionaryLabels, projectId]);
 
-  useEffect(() => {
-    if (projectId) {
-      init().then();
-    }
-  }, [init, projectId]);
-
-  useEffect(() => {
+  const loadDemandsAndTasks = useCallback(() => {
     if (selectedIterationId) {
+      setDemandAndTaskLoading(true);
       // 加载需求
-      findAllByIterationId(selectedIterationId).then((scrumDemands) => {
+      findAllByIterationId(selectedIterationId).then(async (scrumDemands) => {
         const demandIds: string[] = [];
         setDemands(scrumDemands);
         setAllDemands(scrumDemands);
@@ -124,13 +123,24 @@ export default (props: PropsWithChildren<any>) => {
           demandIds.push(datum.id);
         });
         // 加载任务
-        findAllTaskByDemandIds(demandIds).then((tasks) => {
+        await findAllTaskByDemandIds(demandIds).then((tasks) => {
           setDemandTasks(tasks);
           setAllDemandTasks(tasks);
         });
+        setDemandAndTaskLoading(false);
       });
     }
   }, [selectedIterationId]);
+
+  useEffect(() => {
+    if (projectId) {
+      init();
+    }
+  }, [init, projectId]);
+
+  useEffect(() => {
+    loadDemandsAndTasks();
+  }, [loadDemandsAndTasks]);
 
   async function filterDemandAndTask(filter: DemandAndTaskFilter) {
     const scrumDemands: ScrumDemand[] = [];
@@ -224,6 +234,7 @@ export default (props: PropsWithChildren<any>) => {
         findDetailsByProjectId(projectId).then((projectVersions) => {
           setVersions(iterationsAddToChildren(projectVersions));
         });
+        loadDemandsAndTasks();
       }
     }
   }
@@ -289,7 +300,7 @@ export default (props: PropsWithChildren<any>) => {
           }))}
         />
       </QueryFilter>
-      {loading ? (
+      {demandAndTaskLoading ? (
         <Empty description={null} image={null}>
           <Spin size={'large'} />
         </Empty>
