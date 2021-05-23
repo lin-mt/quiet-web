@@ -35,6 +35,14 @@ export interface QuietClient extends BaseEntity {
   remake: string;
 }
 
+export interface QuietRoute extends BaseEntity {
+  environment: string;
+  routeId: string;
+  uri: string;
+  predicates: string[];
+  filters: string[];
+}
+
 export interface TokenInfo extends BaseEntity {
   access_token: string;
   expires_in: number;

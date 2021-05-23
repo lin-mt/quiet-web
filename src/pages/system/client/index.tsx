@@ -68,6 +68,7 @@ const ClientManagement: React.FC<any> = () => {
     {
       title: '授权范围',
       dataIndex: 'scope',
+      search: false,
       render: (_, record) => (
         <Space direction={'vertical'}>
           {record.scope

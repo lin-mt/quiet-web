@@ -214,7 +214,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
                 labelInValue
                 value={authorizedGrantTypes}
                 tagRender={multipleSelectTagRender}
-                placeholder="请输入授权范围"
+                placeholder="请输入授权类型"
                 filterOption={false}
                 onSearch={buildOptionByInputValue}
                 onChange={handleAuthorizedGrantTypesChange}
