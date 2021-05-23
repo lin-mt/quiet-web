@@ -6,7 +6,8 @@ import { useModel } from 'umi';
 import { DICTIONARY } from '@/constant/system/Modelnames';
 import type { QuietDictionary } from '@/services/system/EntityType';
 
-export interface DictionarySelectProps extends Omit<SelectProps<any>, 'options' | 'children'> {
+export interface DictionarySelectProps<ValueType = any>
+  extends Omit<SelectProps<ValueType>, 'options' | 'children'> {
   type: DictionaryType;
   allowClear?: boolean;
 }
@@ -17,7 +18,9 @@ type OptionType = {
   value: string;
 };
 
-export function DictionarySelect({ type, allowClear = false, ...props }: DictionarySelectProps) {
+export function DictionarySelect<
+  ValueType extends { key?: string; label: React.ReactNode; value: string | number } = any,
+>({ type, allowClear = false, ...props }: DictionarySelectProps) {
   const { getDictionariesByType } = useModel(DICTIONARY);
   const [loading, setLoading] = React.useState(false);
   const [options, setOptions] = React.useState<OptionType[]>([]);
@@ -49,7 +52,7 @@ export function DictionarySelect({ type, allowClear = false, ...props }: Diction
   }, [getDictionariesByType, type]);
 
   return (
-    <Select
+    <Select<ValueType>
       allowClear={allowClear}
       notFoundContent={<div style={{ textAlign: 'center' }}>{loading ? <Spin /> : <Empty />}</div>}
       options={options}
