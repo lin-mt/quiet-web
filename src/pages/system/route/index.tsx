@@ -1,12 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Popconfirm, Space, Tag } from 'antd';
-import { CloseOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Button, message, Popconfirm, Space, Tag } from 'antd';
+import {
+  CaretUpOutlined,
+  CloseOutlined,
+  PlusOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
 import type { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import {
   deleteRoute,
   pageRoute,
   removeFilter,
+  publishRoute,
   removePredicate,
 } from '@/services/system/QuietRoute';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -15,12 +21,14 @@ import type { QuietRoute } from '@/services/system/EntityType';
 import { useModel } from 'umi';
 import { DICTIONARY } from '@/constant/system/Modelnames';
 import { DictionaryType } from '@/types/Type';
+import { DictionarySelect } from '@/pages/components/DictionarySelect';
 
 const GatewayRoute: React.FC<any> = () => {
   const { getDictionaryLabels } = useModel(DICTIONARY);
 
   const [updateRouteInfo, setUpdateRouteInfo] = useState<QuietRoute>();
   const [routeFormVisible, setRouteModalVisible] = useState<boolean>(false);
+  const [publishEnvironment, setPublishEnvironment] = useState<string>();
   const [environmentLabels, setEnvironmentLabels] = useState<Record<string, string>>({});
   const routeModalActionRef = useRef<ActionType>();
 
@@ -38,6 +46,13 @@ const GatewayRoute: React.FC<any> = () => {
   async function confirmRemoveRoutePredicate(id: string, predicate: string) {
     await removePredicate(id, predicate);
     routeModalActionRef?.current?.reload();
+  }
+
+  async function handleConfirmPublishRoute() {
+    if (publishEnvironment) {
+      await publishRoute(publishEnvironment);
+      message.success('发布成功').then();
+    }
   }
 
   const columns: ProColumns<QuietRoute>[] = [
@@ -179,6 +194,7 @@ const GatewayRoute: React.FC<any> = () => {
       },
     },
   ];
+
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
     gmtCreate: { show: false },
     gmtUpdate: { show: false },
@@ -191,6 +207,30 @@ const GatewayRoute: React.FC<any> = () => {
         rowKey={(record) => record.id}
         request={(params, sorter, filter) => pageRoute({ params, sorter, filter })}
         toolBarRender={() => [
+          <DictionarySelect
+            allowClear={true}
+            type={DictionaryType.Environment}
+            style={{ width: 120 }}
+            placeholder={'请选择'}
+            onChange={(value) => setPublishEnvironment(value)}
+          />,
+          <Popconfirm
+            title={
+              publishEnvironment
+                ? `确认发布 ${environmentLabels[publishEnvironment]} 下的路由配置吗？`
+                : '请选择要发布的环境配置'
+            }
+            onConfirm={handleConfirmPublishRoute}
+          >
+            <Button
+              danger={true}
+              type={'primary'}
+              icon={<CaretUpOutlined />}
+              disabled={!publishEnvironment}
+            >
+              发布
+            </Button>
+          </Popconfirm>,
           <Button
             type="primary"
             key="create"
