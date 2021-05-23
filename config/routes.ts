@@ -24,6 +24,11 @@
         component: './system/client',
       },
       {
+        path: '/system/route',
+        name: 'gateway-route',
+        component: './system/route',
+      },
+      {
         path: '/system/department',
         name: 'department',
         component: './system/department',

@@ -28,21 +28,21 @@ export async function queryClient(params?: any): Promise<Partial<RequestData<Qui
 
 export async function saveClient(save: QuietClient): Promise<QuietClient> {
   return request<Result<QuietClient>>('/api/system/client/save', {
-    data: { save },
     method: 'POST',
+    data: { save },
   }).then((resp) => resp.data);
 }
 
 export async function updateClient(update: QuietClient): Promise<QuietClient> {
   return request<Result<QuietClient>>('/api/system/client/update', {
-    data: { update },
     method: 'POST',
+    data: { update },
   }).then((resp) => resp.data);
 }
 
 export async function deleteClient(deleteId: string) {
   return request('/api/system/client/delete', {
-    data: { deleteId },
     method: 'POST',
+    data: { deleteId },
   });
 }

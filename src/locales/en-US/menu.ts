@@ -9,7 +9,8 @@ export default {
   'menu.system.department': 'DepartmentManagement',
   'menu.system.team': 'TeamManagement',
   'menu.system.client': 'ApplicationAuthorization',
-  'menu.system.dictionary': 'Dictionary',
+  'menu.system.dictionary': 'DictionaryConfig',
+  'menu.system.gateway-route': 'RouteConfig',
 
   'menu.welcome': 'Welcome',
   'menu.more-blocks': 'More Blocks',
