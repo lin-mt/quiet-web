@@ -103,5 +103,8 @@
   },
   "engines": {
     "node": ">=10.0.0"
+  },
+  "gitHooks": {
+    "commit-msg": "node ./node_modules/@umijs/fabric/dist/verifyCommit.js"
   }
 }

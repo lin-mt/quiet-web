@@ -80,6 +80,11 @@ const GatewayRoute: React.FC<any> = () => {
       valueType: 'text',
     },
     {
+      title: 'Order',
+      dataIndex: 'order',
+      valueType: 'digit',
+    },
+    {
       title: 'Predicates',
       dataIndex: 'scope',
       search: false,

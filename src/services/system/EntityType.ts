@@ -39,6 +39,7 @@ export interface QuietRoute extends BaseEntity {
   environment: string;
   routeId: string;
   uri: string;
+  order: number;
   predicates: string[];
   filters: string[];
 }

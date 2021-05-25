@@ -157,6 +157,13 @@ const RouteForm: React.FC<RouteFormProps> = (props) => {
         >
           <Input placeholder={'请输入 uri'} />
         </Form.Item>
+        <Form.Item
+          label={'Order'}
+          name={'order'}
+          rules={[{ required: true, message: '请输入 order' }]}
+        >
+          <Input type={'number'} defaultValue={0} allowClear={false} placeholder={'请输入 order'} />
+        </Form.Item>
         <Form.Item label="Predicates">
           <Select
             mode="multiple"
