@@ -19,7 +19,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import RouteForm from '@/pages/system/route/components/RouteForm';
 import type { QuietRoute } from '@/services/system/EntityType';
 import { useModel } from 'umi';
-import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DICTIONARY } from '@/constant/system/ModelNames';
 import { DictionaryType } from '@/types/Type';
 import { DictionarySelect } from '@/pages/components/DictionarySelect';
 

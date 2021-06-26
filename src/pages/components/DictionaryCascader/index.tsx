@@ -3,7 +3,7 @@ import type { CascaderProps } from 'antd';
 import { Cascader, Empty, Spin } from 'antd';
 import type { DictionaryType } from '@/types/Type';
 import { useModel } from 'umi';
-import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DICTIONARY } from '@/constant/system/ModelNames';
 import type { QuietDictionary } from '@/services/system/EntityType';
 
 export interface DictionaryCascaderProps extends Omit<CascaderProps, 'options' | 'children'> {

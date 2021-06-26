@@ -3,7 +3,7 @@ import { Empty, Select, Spin } from 'antd';
 import type { SelectProps } from 'antd/es/select';
 import type { DictionaryType } from '@/types/Type';
 import { useModel } from 'umi';
-import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DICTIONARY } from '@/constant/system/ModelNames';
 import type { QuietDictionary } from '@/services/system/EntityType';
 
 export interface DictionarySelectProps<ValueType = any>
