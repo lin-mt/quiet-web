@@ -8,7 +8,7 @@ import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DictionaryCascader } from '@/pages/components/DictionaryCascader';
 import { buildDictionaryCascaderValue } from '@/utils/system/utils';
 import { useModel } from '@@/plugin-model/useModel';
-import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DICTIONARY } from '@/constant/system/ModelNames';
 
 interface TaskFormProps {
   visible: boolean;

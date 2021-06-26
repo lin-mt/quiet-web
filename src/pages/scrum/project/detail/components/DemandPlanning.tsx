@@ -10,7 +10,7 @@ import { CaretDownFilled, ForwardFilled } from '@ant-design/icons';
 import { scrollByIterationId } from '@/services/scrum/ScrumDemand';
 import { DroppableId, LoadingMoreContainer } from '@/pages/scrum/project/detail/components/Common';
 import { filterStyle } from '@/utils/RenderUtils';
-import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DICTIONARY } from '@/constant/system/ModelNames';
 import { DictionaryType } from '@/types/Type';
 
 export default forwardRef((_, ref) => {

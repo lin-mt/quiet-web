@@ -13,7 +13,7 @@ import { findProjectDetail } from '@/services/scrum/ScrumProject';
 import { findAllByTemplateId } from '@/services/scrum/ScrumPriority';
 import { start, end } from '@/services/scrum/ScrumIteration';
 import { useModel } from '@@/plugin-model/useModel';
-import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DICTIONARY } from '@/constant/system/ModelNames';
 import { DictionaryType } from '@/types/Type';
 import { findAllByIterationId } from '@/services/scrum/ScrumDemand';
 import { findAllTaskByDemandIds } from '@/services/scrum/ScrumTask';

@@ -3,7 +3,7 @@ import { allMyProjects } from '@/services/scrum/ScrumProject';
 import ProjectList from '@/pages/scrum/project/components/ProjectList';
 import type { ScrumProject } from '@/services/scrum/EntitiyType';
 import { useModel } from 'umi';
-import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DICTIONARY } from '@/constant/system/ModelNames';
 import { DictionaryType } from '@/types/Type';
 import { Empty, Spin } from 'antd';
 

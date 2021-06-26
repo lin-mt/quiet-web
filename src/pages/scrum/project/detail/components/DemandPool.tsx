@@ -10,7 +10,7 @@ import DemandCard from '@/pages/scrum/demand/components/DemandCard';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { DroppableId, LoadingMoreContainer } from '@/pages/scrum/project/detail/components/Common';
 import { DictionaryType } from '@/types/Type';
-import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DICTIONARY } from '@/constant/system/ModelNames';
 import { filterStyle } from '@/utils/RenderUtils';
 import type { QuietDictionary } from '@/services/system/EntityType';
 
