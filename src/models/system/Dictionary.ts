@@ -17,22 +17,22 @@ export default () => {
     [dictionaries],
   );
 
-  const buildDictionaryLabels = useCallback((quietDictionaries: QuietDictionary[]): Record<
-    string,
-    string
-  > => {
-    const datum: Record<string, string> = {};
-    quietDictionaries.forEach((dictionary) => {
-      if (dictionary.children) {
-        const childrenLabels: Record<string, string> = buildDictionaryLabels(dictionary.children);
-        Object.keys(childrenLabels).forEach((key) => {
-          datum[key] = childrenLabels[key];
-        });
-      }
-      datum[`${dictionary.type}.${dictionary.key}`] = dictionary.label;
-    });
-    return datum;
-  }, []);
+  const buildDictionaryLabels = useCallback(
+    (quietDictionaries: QuietDictionary[]): Record<string, string> => {
+      const datum: Record<string, string> = {};
+      quietDictionaries.forEach((dictionary) => {
+        if (dictionary.children) {
+          const childrenLabels: Record<string, string> = buildDictionaryLabels(dictionary.children);
+          Object.keys(childrenLabels).forEach((key) => {
+            datum[key] = childrenLabels[key];
+          });
+        }
+        datum[`${dictionary.type}.${dictionary.key}`] = dictionary.label;
+      });
+      return datum;
+    },
+    [],
+  );
 
   const getDictionaryLabels = useCallback(
     async (type: DictionaryType): Promise<Record<string, string>> => {
