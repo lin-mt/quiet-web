@@ -11,6 +11,8 @@ export default {
   'menu.system.client': 'ApplicationAuthorization',
   'menu.system.dictionary': 'DictionaryConfig',
   'menu.system.gateway-route': 'RouteConfig',
+  'menu.doc': 'DocumentManagement',
+  'menu.doc.project': 'ProjectDocumentation',
 
   'menu.welcome': 'Welcome',
   'menu.more-blocks': 'More Blocks',

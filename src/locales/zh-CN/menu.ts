@@ -11,6 +11,8 @@ export default {
   'menu.system.client': '应用授权',
   'menu.system.dictionary': '数据字典',
   'menu.system.gateway-route': '网关配置',
+  'menu.doc': '文档管理',
+  'menu.doc.project': '项目文档',
 
   'menu.welcome': '欢迎',
   'menu.more-blocks': '更多区块',

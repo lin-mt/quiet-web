@@ -13,6 +13,18 @@
     hideInMenu: true,
   },
   {
+    path: '/doc',
+    name: 'doc',
+    icon: 'file-text',
+    routes: [
+      {
+        path: '/doc/project',
+        name: 'project',
+        component: './doc/project',
+      },
+    ],
+  },
+  {
     path: '/system',
     name: 'system',
     icon: 'setting',
