@@ -3,6 +3,7 @@ import type { Result } from '@/types/Result';
 import type { ReactText } from 'react';
 import type { NoticeIconData, QuietUser, QuietUserRole } from '@/services/system/EntityType';
 import type { RequestData } from '@ant-design/pro-table/lib/typing';
+import { GET } from '@/utils/HttpUtils';
 
 export function listUsersByName(name: string): Promise<QuietUser[]> {
   return request<Result<QuietUser[]>>('/api/system/user/listUsersByName', {
@@ -49,9 +50,7 @@ export async function getNotices(options?: Record<string, any>) {
 }
 
 export async function queryCurrent(): Promise<QuietUser> {
-  return request<Result<QuietUser>>('/api/system/user/currentUserInfo', {
-    method: 'POSt',
-  }).then((res) => {
+  return GET<Result<QuietUser>>('').then((res) => {
     if (res && res.data && !res.data.avatar) {
       res.data.avatar =
         'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
