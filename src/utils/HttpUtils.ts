@@ -1,4 +1,5 @@
 import { request } from '@@/plugin-request/request';
+import qs from 'qs';
 
 function GET<T>(
   url: string,
@@ -6,7 +7,7 @@ function GET<T>(
 ): Promise<T> {
   return request<T>(url, {
     method: 'GET',
-    params,
+    params: new URLSearchParams(qs.stringify(params, { allowDots: true, arrayFormat: 'comma' })),
   });
 }
 
