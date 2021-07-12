@@ -1,5 +1,7 @@
 import { request } from '@@/plugin-request/request';
 import qs from 'qs';
+import type { RequestData } from '@ant-design/pro-table/lib/typing';
+import type { Result } from '@/types/Result';
 
 function GET<T>(
   url: string,
@@ -11,11 +13,19 @@ function GET<T>(
   });
 }
 
+async function PAGE<T>(url: string, params: any): Promise<Partial<RequestData<T>>> {
+  return await GET<Result<any>>(url, { ...params, ...params.params }).then(
+    (resData: Result<any>) => {
+      return { ...resData.data, data: resData.data.results };
+    },
+  );
+}
+
 function POST<T>(url: string, data: any): Promise<T> {
-  return request<T>(url, {
+  return request<Result<T>>(url, {
     method: 'POST',
     data,
-  });
+  }).then((resp) => resp.data);
 }
 
 function DELETE(url: string) {
@@ -25,10 +35,10 @@ function DELETE(url: string) {
 }
 
 function PUT<T>(url: string, data: any): Promise<T> {
-  return request<T>(url, {
+  return request<Result<T>>(url, {
     method: 'PUT',
     data,
-  });
+  }).then((resp) => resp.data);
 }
 
-export { GET, POST, DELETE, PUT };
+export { GET, PAGE, POST, DELETE, PUT };
