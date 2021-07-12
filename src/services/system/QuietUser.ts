@@ -7,11 +7,10 @@ import { GET } from '@/utils/HttpUtils';
 
 const baseUrl = '/api/system/user';
 
-export function listUsersByName(name: string): Promise<QuietUser[]> {
-  return request<Result<QuietUser[]>>(`${baseUrl}/listUsersByName`, {
-    method: 'POST',
-    data: { name },
-  }).then((resp) => resp.data);
+export function listUsersByName(keyword: string): Promise<QuietUser[]> {
+  return GET<Result<QuietUser[]>>(`${baseUrl}/listUsersByName`, { keyword }).then(
+    (resp) => resp.data,
+  );
 }
 
 export async function pageUser(params?: any): Promise<Partial<RequestData<QuietUser>>> {
