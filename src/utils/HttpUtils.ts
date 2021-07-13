@@ -2,6 +2,7 @@ import { request } from '@@/plugin-request/request';
 import qs from 'qs';
 import type { RequestData } from '@ant-design/pro-table/lib/typing';
 import type { Result } from '@/types/Result';
+import { ResultType } from '@/types/Result';
 
 function GET<T>(
   url: string,
@@ -19,11 +20,18 @@ function PAGE<T>(url: string, params: any): Promise<Partial<RequestData<T>>> {
   });
 }
 
-function POST<T>(url: string, data: any): Promise<T> {
+function POST<T>(url: string, data?: any): Promise<T> {
   return request<Result<T>>(url, {
     method: 'POST',
     data,
-  }).then((resp) => resp.data);
+  }).then((resp) => {
+    if (resp.data) {
+      return resp.data;
+    }
+    const typeResult: any = {};
+    typeResult.result = ResultType.SUCCESS === resp.result;
+    return typeResult;
+  });
 }
 
 function DELETE(url: string) {
