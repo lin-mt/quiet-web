@@ -7,18 +7,16 @@ function GET<T>(
   url: string,
   params?: Record<string, unknown> | URLSearchParams | undefined,
 ): Promise<T> {
-  return request<T>(url, {
+  return request<Result<T>>(url, {
     method: 'GET',
     params: new URLSearchParams(qs.stringify(params, { allowDots: true, arrayFormat: 'comma' })),
-  });
+  }).then((resp) => resp.data);
 }
 
-async function PAGE<T>(url: string, params: any): Promise<Partial<RequestData<T>>> {
-  return await GET<Result<any>>(url, { ...params, ...params.params }).then(
-    (resData: Result<any>) => {
-      return { ...resData.data, data: resData.data.results };
-    },
-  );
+function PAGE<T>(url: string, params: any): Promise<Partial<RequestData<T>>> {
+  return GET<any>(url, { ...params, ...params.params }).then((resData: any) => {
+    return { ...resData, data: resData.results };
+  });
 }
 
 function POST<T>(url: string, data: any): Promise<T> {
