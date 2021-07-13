@@ -8,9 +8,7 @@ import { GET } from '@/utils/HttpUtils';
 const baseUrl = '/api/system/user';
 
 export function listUsersByName(keyword: string): Promise<QuietUser[]> {
-  return GET<Result<QuietUser[]>>(`${baseUrl}/listUsersByName`, { keyword }).then(
-    (resp) => resp.data,
-  );
+  return GET<QuietUser[]>(`${baseUrl}/listUsersByName`, { keyword });
 }
 
 export async function pageUser(params?: any): Promise<Partial<RequestData<QuietUser>>> {
@@ -51,12 +49,11 @@ export async function getNotices(options?: Record<string, any>) {
 }
 
 export async function queryCurrent(): Promise<QuietUser> {
-  return GET<Result<QuietUser>>(`${baseUrl}/currentUserInfo`).then((res) => {
-    if (res && res.data && !res.data.avatar) {
-      res.data.avatar =
-        'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
+  return GET<QuietUser>(`${baseUrl}/currentUserInfo`).then((res) => {
+    if (res && !res.avatar) {
+      res.avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
     }
-    return res.data;
+    return res;
   });
 }
 

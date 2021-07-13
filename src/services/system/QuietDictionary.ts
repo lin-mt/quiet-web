@@ -1,48 +1,29 @@
-import { request } from 'umi';
-import type { Result } from '@/types/Result';
 import type { QuietDictionary } from '@/services/system/EntityType';
 import type { RequestData } from '@ant-design/pro-table/lib/typing';
+import { DELETE, GET, PAGE, POST, PUT } from '@/utils/HttpUtils';
+
+const baseUrl = '/api/system/dictionary';
 
 export function listByTypeForSelect(type: string): Promise<QuietDictionary[]> {
-  return request<Result<QuietDictionary[]>>('/api/system/dictionary/listByTypeForSelect', {
-    method: 'POST',
-    data: { type },
-  }).then((resp) => resp.data);
+  return GET<QuietDictionary[]>(`${baseUrl}/listByTypeForSelect`, { type });
 }
 
 export async function treeDictionaryByType(type: string | undefined): Promise<QuietDictionary[]> {
-  return request<Result<QuietDictionary[]>>('/api/system/dictionary/treeByType', {
-    method: 'POST',
-    data: { type },
-  }).then((resp) => resp.data);
+  return GET<QuietDictionary[]>(`${baseUrl}/treeByType`, { type });
 }
 
 export async function pageDictionary(params?: any): Promise<Partial<RequestData<QuietDictionary>>> {
-  return request<Result<Partial<RequestData<QuietDictionary>>>>('/api/system/dictionary/page', {
-    method: 'POST',
-    data: params,
-  }).then((resData) => {
-    return { ...resData.data, data: resData.data.results };
-  });
+  return PAGE<QuietDictionary>(`${baseUrl}/page`, params);
 }
 
 export async function saveDictionary(save: QuietDictionary): Promise<QuietDictionary> {
-  return request<Result<QuietDictionary>>('/api/system/dictionary/save', {
-    method: 'POST',
-    data: { save },
-  }).then((resp) => resp.data);
+  return POST<QuietDictionary>(`${baseUrl}`, save);
 }
 
 export async function updateDictionary(update: QuietDictionary): Promise<QuietDictionary> {
-  return request<Result<QuietDictionary>>('/api/system/dictionary/update', {
-    method: 'POST',
-    data: { update },
-  }).then((resp) => resp.data);
+  return PUT<QuietDictionary>(`${baseUrl}`, update);
 }
 
-export async function deleteDictionary(deleteId: string) {
-  return request('/api/system/dictionary/delete', {
-    method: 'POST',
-    data: { deleteId },
-  });
+export async function deleteDictionary(id: string) {
+  DELETE(`${baseUrl}/${id}`);
 }
