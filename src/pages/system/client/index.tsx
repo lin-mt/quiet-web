@@ -4,7 +4,7 @@ import { CloseOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import {
-  queryClient,
+  clientPage,
   deleteClient,
   removeClientAuthorizedGrantType,
   removeClientScope,
@@ -218,7 +218,7 @@ const ClientManagement: React.FC<any> = () => {
       <ProTable<QuietClient>
         actionRef={clientModalActionRef}
         rowKey={(record) => record.id}
-        request={(params, sorter, filter) => queryClient({ params, sorter, filter })}
+        request={(params, sorter, filter) => clientPage({ params, sorter, filter })}
         toolBarRender={() => [
           <Button
             type="primary"

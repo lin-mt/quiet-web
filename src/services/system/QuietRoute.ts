@@ -1,61 +1,38 @@
-import { request } from 'umi';
 import type { RequestData } from '@ant-design/pro-table/lib/typing';
 import type { QuietRoute } from '@/services/system/EntityType';
-import type { Result } from '@/types/Result';
+import { DELETE, PAGE, POST, PUT } from '@/utils/HttpUtils';
 
 const apiPrefix = '/api/system/route';
 
 export function publishRoute(environment: string) {
-  request(`${apiPrefix}/publishRoute`, {
-    method: 'POST',
-    data: { environment },
-  }).then(() => {
-    request('/api/actuator/gateway/refresh', {
-      method: 'POST',
-    });
+  POST(`${apiPrefix}/publishRoute`, { environment }).then((resp) => {
+    if (resp) {
+      // noinspection JSIgnoredPromiseFromCall
+      POST('/api/actuator/gateway/refresh');
+    }
   });
 }
 
 export function removePredicate(id: string, predicate: string) {
-  return request(`${apiPrefix}/removePredicate`, {
-    method: 'POST',
-    data: { id, predicate },
-  });
+  return POST(`${apiPrefix}/removePredicate`, { id, routePredicate: predicate });
 }
 
 export function removeFilter(id: string, filter: string) {
-  return request(`${apiPrefix}/removeFilter`, {
-    method: 'POST',
-    data: { id, filter },
-  });
+  return POST(`${apiPrefix}/removeFilter`, { id, routeFilter: filter });
 }
 
 export async function pageRoute(params?: any): Promise<Partial<RequestData<QuietRoute>>> {
-  return request<Result<Partial<RequestData<QuietRoute>>>>(`${apiPrefix}/page`, {
-    method: 'POST',
-    data: params,
-  }).then((resData) => {
-    return { ...resData.data, data: resData.data.results };
-  });
+  return PAGE<QuietRoute>(`${apiPrefix}/page`, params);
 }
 
 export async function saveRoute(save: QuietRoute): Promise<QuietRoute> {
-  return request<Result<QuietRoute>>(`${apiPrefix}/save`, {
-    method: 'POST',
-    data: { save },
-  }).then((resp) => resp.data);
+  return POST<QuietRoute>(`${apiPrefix}`, save);
 }
 
 export async function updateRoute(update: QuietRoute): Promise<QuietRoute> {
-  return request<Result<QuietRoute>>(`${apiPrefix}/update`, {
-    method: 'POST',
-    data: { update },
-  }).then((resp) => resp.data);
+  return PUT<QuietRoute>(`${apiPrefix}`, update);
 }
 
-export async function deleteRoute(deleteId: string) {
-  return request(`${apiPrefix}/delete`, {
-    method: 'POST',
-    data: { deleteId },
-  });
+export async function deleteRoute(id: string) {
+  return DELETE(`${apiPrefix}/${id}`);
 }

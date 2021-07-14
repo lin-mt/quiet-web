@@ -168,7 +168,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
         tableAlertRender={false}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) =>
-          pageUser({ departmentId: department?.id, ...params, params, sorter, filter })
+          pageUser({ id: department?.id, ...params, params, sorter, filter })
         }
         toolBarRender={() => [
           <span>已选 {selectedRowKeys.length} 项</span>,
