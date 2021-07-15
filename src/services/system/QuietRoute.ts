@@ -1,12 +1,13 @@
 import type { RequestData } from '@ant-design/pro-table/lib/typing';
 import type { QuietRoute } from '@/services/system/EntityType';
 import { DELETE, PAGE, POST, PUT } from '@/utils/HttpUtils';
+import { ResultType } from '@/types/Result';
 
 const apiPrefix = '/api/system/route';
 
 export function publishRoute(environment: string) {
-  POST(`${apiPrefix}/publishRoute`, { environment }).then((resp) => {
-    if (resp) {
+  POST(`${apiPrefix}/publishRoute`, { environment }).then((resp: any) => {
+    if (resp.result === ResultType.SUCCESS) {
       // noinspection JSIgnoredPromiseFromCall
       POST('/api/actuator/gateway/refresh');
     }
