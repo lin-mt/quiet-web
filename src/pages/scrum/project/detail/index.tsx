@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { findProjectDetail } from '@/services/scrum/ScrumProject';
+import { getProjectDetail } from '@/services/scrum/ScrumProject';
 import { Col, Descriptions, Empty, message, Row, Spin, Tag } from 'antd';
 import { tagColor } from '@/utils/RenderUtils';
 import DemandPool from '@/pages/scrum/project/detail/components/DemandPool';
@@ -28,7 +28,7 @@ const ProjectDetail: React.FC<any> = (props) => {
     setProjectId(props.location.query.projectId);
     if (projectId) {
       setLoading(true);
-      findProjectDetail(projectId).then(async (project) => {
+      getProjectDetail(projectId).then(async (project) => {
         setProjectDetail(project);
         const membersDatum: Record<string, QuietUser> = {};
         project.teams.forEach((team) => {

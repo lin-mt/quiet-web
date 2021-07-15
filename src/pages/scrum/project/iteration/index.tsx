@@ -9,7 +9,7 @@ import type {
 } from '@/services/scrum/EntitiyType';
 import type { ScrumVersion } from '@/services/scrum/EntitiyType';
 import type { QuietUser } from '@/services/system/EntityType';
-import { findProjectDetail } from '@/services/scrum/ScrumProject';
+import { getProjectDetail } from '@/services/scrum/ScrumProject';
 import { findAllByTemplateId } from '@/services/scrum/ScrumPriority';
 import { start, end } from '@/services/scrum/ScrumIteration';
 import { useModel } from '@@/plugin-model/useModel';
@@ -71,7 +71,7 @@ export default (props: PropsWithChildren<any>) => {
 
   const init = useCallback(() => {
     setLoading(true);
-    findProjectDetail(projectId).then(async (project) => {
+    getProjectDetail(projectId).then(async (project) => {
       // 加载团队成员信息
       const membersDatum: Record<string, QuietUser> = {};
       project.teams.forEach((team) => {

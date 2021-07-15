@@ -1,40 +1,24 @@
-import type { Result } from '@/types/Result';
-import { request } from 'umi';
 import type { ScrumIteration } from '@/services/scrum/EntitiyType';
+import { DELETE, POST, PUT } from '@/utils/HttpUtils';
 
 const apiPrefix = '/api/scrum/iteration';
 
 export function end(id: string) {
-  return request(`${apiPrefix}/end`, {
-    method: 'POST',
-    data: { id },
-  });
+  return POST(`${apiPrefix}/end`, { id });
 }
 
 export function start(id: string) {
-  return request(`${apiPrefix}/start`, {
-    method: 'POST',
-    data: { id },
-  });
+  return POST(`${apiPrefix}/start`, { id });
 }
 
-export function deleteIteration(deleteId: string) {
-  return request(`${apiPrefix}/delete`, {
-    method: 'POST',
-    data: { deleteId },
-  });
+export function deleteIteration(id: string) {
+  return DELETE(`${apiPrefix}/${id}`);
 }
 
 export function saveIteration(save: ScrumIteration): Promise<ScrumIteration> {
-  return request<Result<ScrumIteration>>(`${apiPrefix}/save`, {
-    method: 'POST',
-    data: { save },
-  }).then((resp) => resp.data);
+  return POST<ScrumIteration>(`${apiPrefix}`, save);
 }
 
 export function updateIteration(update: ScrumIteration): Promise<ScrumIteration> {
-  return request<Result<ScrumIteration>>(`${apiPrefix}/update`, {
-    method: 'POST',
-    data: { update },
-  }).then((resp) => resp.data);
+  return PUT<ScrumIteration>(`${apiPrefix}/update`, update);
 }

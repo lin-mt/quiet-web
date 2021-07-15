@@ -1,36 +1,23 @@
-import { request } from 'umi';
-import type { Result } from '@/types/Result';
 import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 import type { ScrumDemandFilter } from '@/pages/scrum/project/detail/components/DemandPool';
+import { DELETE, GET, POST, PUT } from '@/utils/HttpUtils';
 
 const apiPrefix = '/api/scrum/demand';
 
-export function findAllByIterationId(iterationId: string): Promise<ScrumDemand[]> {
-  return request<Result<ScrumDemand[]>>(`${apiPrefix}/findAllByIterationId`, {
-    method: 'POST',
-    data: { iterationId },
-  }).then((resp) => resp.data);
+export function findAllByIterationId(id: string): Promise<ScrumDemand[]> {
+  return GET<ScrumDemand[]>(`${apiPrefix}/all/${id}`);
 }
 
-export function deleteDemand(deleteId: string) {
-  return request(`${apiPrefix}/delete`, {
-    method: 'POST',
-    data: { deleteId },
-  });
+export function deleteDemand(id: string) {
+  DELETE(`${apiPrefix}/${id}`);
 }
 
 export function saveDemand(save: ScrumDemand): Promise<ScrumDemand> {
-  return request<Result<ScrumDemand>>(`${apiPrefix}/save`, {
-    method: 'POST',
-    data: { save },
-  }).then((resp) => resp.data);
+  return POST<ScrumDemand>(`${apiPrefix}`, save);
 }
 
 export function updateDemand(update: ScrumDemand): Promise<ScrumDemand> {
-  return request<Result<ScrumDemand>>(`${apiPrefix}/update`, {
-    method: 'POST',
-    data: { update },
-  }).then((resp) => resp.data);
+  return PUT<ScrumDemand>(`${apiPrefix}`, update);
 }
 
 export function findToBePlanned(
@@ -39,11 +26,11 @@ export function findToBePlanned(
   offset: number,
   limit: number,
 ): Promise<ScrumDemand[]> {
-  return request<Result<ScrumDemand[]>>(`${apiPrefix}/scrollToBePlanned`, {
-    method: 'POST',
-    data: { id: projectId, demandFilter: { planned: false, ...demandFilter }, offset, limit },
-  }).then((resData) => {
-    return resData.data;
+  return GET<ScrumDemand[]>(`${apiPrefix}/scrollToBePlanned`, {
+    id: projectId,
+    demandFilter: { planned: false, ...demandFilter },
+    offset,
+    limit,
   });
 }
 
@@ -52,10 +39,5 @@ export function scrollByIterationId(
   offset: number,
   limit?: number,
 ): Promise<ScrumDemand[]> {
-  return request<Result<ScrumDemand[]>>(`${apiPrefix}/scrollByIterationId`, {
-    method: 'POST',
-    data: { id: iterationId, offset, limit },
-  }).then((resData) => {
-    return resData.data;
-  });
+  return GET<ScrumDemand[]>(`${apiPrefix}/scrollByIterationId`, { id: iterationId, offset, limit });
 }

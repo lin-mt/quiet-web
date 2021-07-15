@@ -90,7 +90,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
 
   async function findTeamByTeamName(teamName: string) {
     return listTeamsByTeamName(teamName).then((resp) => {
-      return resp.data.map((team) => ({
+      return resp.map((team) => ({
         label: team.teamName,
         value: team.id,
       }));
