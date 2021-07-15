@@ -3,7 +3,7 @@ import { Button, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { deleteDepartment, queryDepartment } from '@/services/system/QuietDepartment';
+import { deleteDepartment, pageDepartment } from '@/services/system/QuietDepartment';
 import { PageContainer } from '@ant-design/pro-layout';
 import DepartmentForm from '@/pages/system/department/components/DepartmentForm';
 import DepartmentTree from '@/pages/system/department/components/DepartmentTree';
@@ -123,7 +123,7 @@ const PermissionConfig: React.FC<any> = () => {
       <ProTable<QuietDepartment>
         actionRef={departmentModalActionRef}
         rowKey={(record) => record.id}
-        request={(params, sorter, filter) => queryDepartment({ params, sorter, filter })}
+        request={(params, sorter, filter) => pageDepartment({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="tree" onClick={showAllDepartmentByTree}>
             所有部门

@@ -3,7 +3,7 @@ import { Button, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { deletePermission, queryPermission } from '@/services/system/QuietPermission';
+import { deletePermission, pagePermission } from '@/services/system/QuietPermission';
 import { PageContainer } from '@ant-design/pro-layout';
 import PermissionForm from '@/pages/system/permission/components/PermissionForm';
 import type { QuietPermission } from '@/services/system/EntityType';
@@ -108,7 +108,7 @@ const PermissionConfig: React.FC<any> = () => {
       <ProTable<QuietPermission>
         actionRef={permissionModalActionRef}
         rowKey={(record) => record.id}
-        request={(params, sorter, filter) => queryPermission({ params, sorter, filter })}
+        request={(params, sorter, filter) => pagePermission({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createPermission} icon={<PlusOutlined />}>
             新增配置

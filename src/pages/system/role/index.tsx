@@ -3,7 +3,7 @@ import { Button, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { queryRole, deleteRole } from '@/services/system/QuietRole';
+import { pageRole, deleteRole } from '@/services/system/QuietRole';
 import { PageContainer } from '@ant-design/pro-layout';
 import RoleTree from '@/pages/system/role/components/RoleTree';
 import RoleForm from '@/pages/system/role/components/RoleForm';
@@ -112,7 +112,7 @@ const RoleManagement: React.FC<any> = () => {
       <ProTable<QuietRole>
         actionRef={roleModalActionRef}
         rowKey={(record) => record.id}
-        request={(params, sorter, filter) => queryRole({ params, sorter, filter })}
+        request={(params, sorter, filter) => pageRole({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="tree" onClick={() => setRoleTreeVisible(true)}>
             所有角色
