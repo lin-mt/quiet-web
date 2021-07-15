@@ -28,8 +28,8 @@ function POST<T>(url: string, data?: any): Promise<T> {
     if (resp.data) {
       return resp.data;
     }
-    const typeResult: any = {};
-    typeResult.result = ResultType.SUCCESS === resp.result;
+    const typeResult: any = { ...resp };
+    typeResult.data = ResultType.SUCCESS === resp.result;
     return typeResult;
   });
 }
