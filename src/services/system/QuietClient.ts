@@ -28,5 +28,5 @@ export async function updateClient(data: QuietClient): Promise<QuietClient> {
 }
 
 export async function deleteClient(id: string) {
-  DELETE(`${baseUrl}/${id}`);
+  await DELETE(`${baseUrl}/${id}`);
 }

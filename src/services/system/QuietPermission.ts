@@ -17,5 +17,5 @@ export async function updatePermission(update: QuietPermission): Promise<QuietPe
 }
 
 export async function deletePermission(id: string) {
-  DELETE(`${baseUrl}/${id}`);
+  await DELETE(`${baseUrl}/${id}`);
 }
