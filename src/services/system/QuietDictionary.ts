@@ -25,5 +25,5 @@ export async function updateDictionary(update: QuietDictionary): Promise<QuietDi
 }
 
 export async function deleteDictionary(id: string) {
-  DELETE(`${baseUrl}/${id}`);
+  await DELETE(`${baseUrl}/${id}`);
 }

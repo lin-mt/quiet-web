@@ -33,5 +33,5 @@ export async function updateDepartment(update: QuietDepartment): Promise<QuietDe
 }
 
 export async function deleteDepartment(id: string) {
-  return DELETE(`${baseUrl}/${id}`);
+  await DELETE(`${baseUrl}/${id}`);
 }

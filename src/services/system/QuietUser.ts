@@ -19,7 +19,7 @@ export async function registeredUser(save: QuietUser): Promise<QuietUser> {
 }
 
 export async function deleteUser(id: string) {
-  DELETE(`${baseUrl}/${id}`);
+  await DELETE(`${baseUrl}/${id}`);
 }
 
 export async function updateUser(update: QuietUser): Promise<QuietUser> {

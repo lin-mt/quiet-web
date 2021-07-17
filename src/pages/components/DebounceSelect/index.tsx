@@ -2,6 +2,7 @@ import React from 'react';
 import { Empty, Select, Spin } from 'antd';
 import type { SelectProps } from 'antd/es/select';
 import debounce from 'lodash/debounce';
+import { multipleSelectTagRender } from '@/utils/RenderUtils';
 
 export interface DebounceSelectProps<ValueType = any>
   extends Omit<SelectProps<ValueType>, 'options' | 'children'> {
@@ -43,6 +44,7 @@ export function DebounceSelect<
       labelInValue
       filterOption={false}
       onSearch={debounceFetcher}
+      tagRender={multipleSelectTagRender}
       notFoundContent={<div style={{ textAlign: 'center' }}>{fetching ? <Spin /> : <Empty />}</div>}
       options={options}
       onBlur={() => setOptions([])}

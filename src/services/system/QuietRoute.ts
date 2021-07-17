@@ -35,5 +35,5 @@ export async function updateRoute(update: QuietRoute): Promise<QuietRoute> {
 }
 
 export async function deleteRoute(id: string) {
-  return DELETE(`${apiPrefix}/${id}`);
+  await DELETE(`${apiPrefix}/${id}`);
 }
