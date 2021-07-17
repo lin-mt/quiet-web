@@ -23,6 +23,9 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
       form.setFieldsValue({
         ...updateInfo,
         principal: { value: updateInfo.principal, label: updateInfo.principalName },
+        visitors: updateInfo.visitors?.map((user) => {
+          return { value: user.id, label: user.fullName };
+        }),
       });
     } else {
       form.setFieldsValue(undefined);
@@ -35,6 +38,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
     const submitValues = {
       ...values,
       principal: values.principal.value,
+      visitorIds: values.visitors?.map((user: { value: string }) => user.value),
     };
     if (updateInfo) {
       await updateProject({
@@ -118,6 +122,13 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
           rules={[{ required: true, message: '请选择文档负责人' }]}
         >
           <DebounceSelect placeholder={'请输入负责人用户名/姓名'} fetchOptions={findUserByName} />
+        </Form.Item>
+        <Form.Item label={'访问者'} name={'visitors'}>
+          <DebounceSelect
+            mode="multiple"
+            placeholder={'请输入访问者用户名/姓名'}
+            fetchOptions={findUserByName}
+          />
         </Form.Item>
         <Form.Item
           label={'项目备注'}

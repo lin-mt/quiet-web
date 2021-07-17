@@ -11,8 +11,8 @@ export function updateProject(update: DocProject): Promise<DocProject> {
   return PUT<DocProject>(`${apiPrefix}`, update);
 }
 
-export function deleteProject(id: string) {
-  DELETE(`${apiPrefix}/${id}`);
+export async function deleteProject(id: string) {
+  await DELETE(`${apiPrefix}/${id}`);
 }
 
 export function findProjectInfo(id: string): Promise<DocProject> {

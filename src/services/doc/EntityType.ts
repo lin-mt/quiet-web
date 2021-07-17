@@ -1,4 +1,9 @@
-import type { BaseEntity, ParentEntity, SerialEntity } from '@/services/system/EntityType';
+import type {
+  BaseEntity,
+  ParentEntity,
+  QuietUser,
+  SerialEntity,
+} from '@/services/system/EntityType';
 import type { HttpMethod } from '@/services/doc/Enums';
 import type { FieldType, FormDataType, QueryType } from '@/services/doc/Enums';
 
@@ -70,9 +75,10 @@ export interface DocApiResponse extends ParentEntity<DocApiResponse> {
 export interface DocProject extends SerialEntity {
   name: string;
   principal: string;
-  accessor: string[];
+  visitorIds: string[];
   principalName: string;
   remark: string;
+  visitors: QuietUser[];
 }
 
 export interface DocProjectConfig extends BaseEntity {

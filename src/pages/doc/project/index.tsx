@@ -19,7 +19,13 @@ const Project: React.FC<any> = () => {
   }
 
   useEffect(() => {
-    loadAllMyProject();
+    let isMounted = true;
+    if (isMounted) {
+      loadAllMyProject();
+    }
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (

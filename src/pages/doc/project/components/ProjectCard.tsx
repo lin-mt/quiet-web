@@ -22,18 +22,18 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
 
   async function handleEditClick() {
     setProjectFormVisible(true);
-    await reloadProjectInfo();
   }
 
   async function reloadProjectInfo() {
     setProjectInfo(await findProjectInfo(projectInfo.id));
   }
 
-  async function handleDeleteClick() {
-    await deleteProject(projectInfo.id);
-    if (afterDeleteAction) {
-      afterDeleteAction();
-    }
+  function handleDeleteClick() {
+    deleteProject(projectInfo.id).then(() => {
+      if (afterDeleteAction) {
+        afterDeleteAction();
+      }
+    });
   }
 
   return (
@@ -44,7 +44,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
         title={projectInfo.name}
         size={cardSize}
         extra={
-          <Link to={`/scrum/project/detail?projectId=${projectInfo.id}`}>
+          <Link to={`/doc/project/detail?projectId=${projectInfo.id}`}>
             <Button icon={<ForwardFilled />} type={'primary'} shape={'round'} size={'small'} />
           </Link>
         }
