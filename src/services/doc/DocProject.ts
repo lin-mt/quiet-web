@@ -1,39 +1,24 @@
-import { request } from 'umi';
-import type { Result } from '@/types/Result';
 import type { DocProject, MyDocProject } from '@/services/doc/EntityType';
+import { DELETE, GET, POST, PUT } from '@/utils/HttpUtils';
 
 const apiPrefix = '/api/doc/project';
 
 export function saveProject(save: DocProject): Promise<DocProject> {
-  return request<Result<DocProject>>(`${apiPrefix}/save`, {
-    method: 'POST',
-    data: { save },
-  }).then((resp) => resp.data);
+  return POST<DocProject>(`${apiPrefix}`, save);
 }
 
 export function updateProject(update: DocProject): Promise<DocProject> {
-  return request<Result<DocProject>>(`${apiPrefix}/update`, {
-    method: 'POST',
-    data: { update },
-  }).then((resp) => resp.data);
+  return PUT<DocProject>(`${apiPrefix}`, update);
 }
 
-export function deleteProject(deleteId: string) {
-  return request(`${apiPrefix}/delete`, {
-    method: 'POST',
-    data: { deleteId },
-  });
+export function deleteProject(id: string) {
+  DELETE(`${apiPrefix}/${id}`);
 }
 
 export function findProjectInfo(id: string): Promise<DocProject> {
-  return request<Result<DocProject>>(`${apiPrefix}/projectInfo`, {
-    method: 'POST',
-    data: { id },
-  }).then((resp) => resp.data);
+  return GET<DocProject>(`${apiPrefix}/${id}`);
 }
 
 export function myProjects() {
-  return request<Result<MyDocProject>>(`${apiPrefix}/myProject`, {
-    method: 'POST',
-  }).then((resp) => resp.data);
+  return GET<MyDocProject>(`${apiPrefix}/myProject`);
 }
