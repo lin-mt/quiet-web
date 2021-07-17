@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Input, Modal } from 'antd';
 import { saveTeam, updateTeam } from '@/services/system/QuietTeam';
 import { listUsersByName } from '@/services/system/QuietUser';
-import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import type { QuietTeam, QuietUser } from '@/services/system/EntityType';
 
@@ -141,7 +140,6 @@ const TeamForm: React.FC<TeamFormProps> = (props) => {
           >
             <DebounceSelect
               mode="multiple"
-              tagRender={multipleSelectTagRender}
               placeholder="请输入 ProductOwner 用户名/姓名"
               fetchOptions={findUserByName}
             />
@@ -155,7 +153,6 @@ const TeamForm: React.FC<TeamFormProps> = (props) => {
           >
             <DebounceSelect
               mode="multiple"
-              tagRender={multipleSelectTagRender}
               placeholder="请输入 ScrumMaster 用户名/姓名"
               fetchOptions={findUserByName}
             />
@@ -169,7 +166,6 @@ const TeamForm: React.FC<TeamFormProps> = (props) => {
           >
             <DebounceSelect
               mode="multiple"
-              tagRender={multipleSelectTagRender}
               placeholder="请输入团队成员 用户名/姓名"
               fetchOptions={findUserByName}
             />
