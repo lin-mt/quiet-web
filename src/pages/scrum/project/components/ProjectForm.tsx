@@ -3,7 +3,6 @@ import { Button, Form, Input, Modal } from 'antd';
 import { saveProject, updateProject } from '@/services/scrum/ScrumProject';
 import { listUsersByName } from '@/services/system/QuietUser';
 import { listTeamsByTeamName } from '@/services/system/QuietTeam';
-import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import { listEnabledByName } from '@/services/scrum/ScrumTemplate';
 import type { ScrumProject } from '@/services/scrum/EntitiyType';
@@ -161,7 +160,6 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
           <DebounceSelect
             mode={'multiple'}
             placeholder={'请输入团队名称'}
-            tagRender={multipleSelectTagRender}
             fetchOptions={findTeamByTeamName}
           />
         </Form.Item>
