@@ -34,8 +34,8 @@ function POST<T>(url: string, data?: any): Promise<T> {
   });
 }
 
-function DELETE(url: string) {
-  request(url, {
+async function DELETE(url: string) {
+  await request(url, {
     method: 'DELETE',
   });
 }

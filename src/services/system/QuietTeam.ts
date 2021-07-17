@@ -21,5 +21,5 @@ export async function updateTeam(update: QuietTeam): Promise<QuietTeam> {
 }
 
 export async function deleteTeam(id: string) {
-  DELETE(`${baseUrl}/${id}`);
+  await DELETE(`${baseUrl}/${id}`);
 }

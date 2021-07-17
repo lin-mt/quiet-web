@@ -21,5 +21,5 @@ export async function updateRole(update: QuietRole): Promise<QuietRole> {
 }
 
 export async function deleteRole(id: string) {
-  DELETE(`${baseUrl}/${id}`);
+  await DELETE(`${baseUrl}/${id}`);
 }
