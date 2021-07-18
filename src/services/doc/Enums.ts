@@ -13,6 +13,11 @@ export enum FormDataType {
   FILE,
 }
 
+export enum ApiState {
+  UNFINISHED,
+  FINISHED,
+}
+
 export enum HttpMethod {
   GET,
   HEAD,

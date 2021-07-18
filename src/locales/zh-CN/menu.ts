@@ -13,6 +13,7 @@ export default {
   'menu.system.gateway-route': '网关配置',
   'menu.doc': '文档管理',
   'menu.doc.project': '项目文档',
+  'menu.doc.project-detail': '项目详情',
 
   'menu.welcome': '欢迎',
   'menu.more-blocks': '更多区块',

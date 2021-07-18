@@ -22,6 +22,12 @@
         name: 'project',
         component: './doc/project',
       },
+      {
+        path: '/doc/project/detail',
+        name: 'project-detail',
+        component: './doc/project/detail',
+        hideInMenu: true,
+      },
     ],
   },
   {

@@ -6,8 +6,9 @@ import type {
 } from '@/services/system/EntityType';
 import type { HttpMethod } from '@/services/doc/Enums';
 import type { FieldType, FormDataType, QueryType } from '@/services/doc/Enums';
+import type { DataNode } from 'rc-tree/lib/interface';
 
-export interface DocApi extends SerialEntity {
+export interface DocApi extends SerialEntity, DataNode {
   name: string;
   url: string;
   method: HttpMethod;
@@ -39,7 +40,7 @@ export interface DocApiFormData extends BaseEntity {
   remark: string;
 }
 
-export interface DocApiGroup extends ParentEntity<DocApiGroup> {
+export interface DocApiGroup extends SerialEntity, DataNode {
   name: string;
   projectId: string;
 }

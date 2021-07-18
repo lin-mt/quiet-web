@@ -13,6 +13,7 @@ export default {
   'menu.system.gateway-route': 'RouteConfig',
   'menu.doc': 'DocumentManagement',
   'menu.doc.project': 'ProjectDocumentation',
+  'menu.doc.project-detail': 'ProjectDetail',
 
   'menu.welcome': 'Welcome',
   'menu.more-blocks': 'More Blocks',
