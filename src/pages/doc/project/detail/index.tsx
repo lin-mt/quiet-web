@@ -11,6 +11,7 @@ import {
   PicLeftOutlined,
 } from '@ant-design/icons';
 import { deleteApiGroup } from '@/services/doc/DocApiGroup';
+import ApiForm from '@/pages/doc/api/components/ApiForm';
 
 const { TabPane } = Tabs;
 
@@ -38,6 +39,7 @@ const ProjectDetails: React.FC<any> = (props) => {
   const unGroupKey = 'ungroup';
 
   const [apiGroupFormVisible, setApiGroupFormVisible] = useState<boolean>(false);
+  const [apiFormVisible, setApiFormVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>();
   const [apiGroupTreeData, setApiGroupTreeData] = useState<DocApiGroup[]>([]);
   const [selectedApiGroup, setSelectedApiGroup] = useState<DocApiGroup>();
@@ -53,7 +55,7 @@ const ProjectDetails: React.FC<any> = (props) => {
           return nodeProps.expanded ? <PicLeftOutlined /> : <PicCenterOutlined />;
         },
         children: resp.ungroup?.map((api) => {
-          return { ...api, key: api.id, title: api.name, isLeaf: false };
+          return { ...api, key: api.id, title: api.name, isLeaf: true, icon: <></> };
         }),
       };
       treeData.unshift(unGroupNode);
@@ -65,7 +67,7 @@ const ProjectDetails: React.FC<any> = (props) => {
             title: apiGroup.name,
             isLeaf: false,
             children: resp.grouped[apiGroup.id]?.map((api) => {
-              return { ...api, key: api.id, title: api.name, isLeaf: true };
+              return { ...api, key: api.id, title: api.name, isLeaf: true, icon: <></> };
             }),
           });
         });
@@ -98,16 +100,19 @@ const ProjectDetails: React.FC<any> = (props) => {
       {loading ? (
         <Empty />
       ) : (
-        <Tabs defaultActiveKey={'interface'} style={{ backgroundColor: '#fff' }}>
+        <Tabs
+          defaultActiveKey={'interface'}
+          style={{ backgroundColor: '#fff', minHeight: 'calc(100vh - 195px)' }}
+        >
           <TabPane tab={'接 口'} key={'interface'}>
             <Row gutter={20}>
               <Col flex={'300px'}>
                 <Space direction={'vertical'}>
                   <Space>
                     <Input.Search
+                      enterButton
                       placeholder="搜索接口"
                       onSearch={handleInterfaceSearch}
-                      enterButton
                     />
                     <Button type={'primary'} onClick={() => setApiGroupFormVisible(true)}>
                       添加分组
@@ -126,11 +131,14 @@ const ProjectDetails: React.FC<any> = (props) => {
                     <div>
                       <ApiTitle>{selectedApiGroup.title}</ApiTitle>
                       <Space style={{ float: 'right' }} size={'middle'}>
-                        <Button type={'primary'}>添加接口</Button>
+                        <Button type={'primary'} onClick={() => setApiFormVisible(true)}>
+                          添加接口
+                        </Button>
                         {selectedApiGroup.key !== unGroupKey && (
                           <>
                             <Button
                               icon={<EditOutlined />}
+                              type={'primary'}
                               title={'编辑接口'}
                               onClick={() => setApiGroupFormVisible(true)}
                             />
@@ -153,7 +161,7 @@ const ProjectDetails: React.FC<any> = (props) => {
                     <div>接口文档信息</div>
                   </Space>
                 ) : (
-                  <Empty description={'请选择分组'} />
+                  <Empty style={{ height: '100%' }} description={'请选择分组'} />
                 )}
               </Col>
             </Row>
@@ -169,6 +177,19 @@ const ProjectDetails: React.FC<any> = (props) => {
           onCancel={() => setApiGroupFormVisible(false)}
           visible={apiGroupFormVisible}
           updateInfo={selectedApiGroup}
+          afterAction={loadProjectApiInfo}
+        />
+      )}
+      {apiFormVisible && (
+        <ApiForm
+          projectId={projectId}
+          onCancel={() => setApiFormVisible(false)}
+          initApiGroups={
+            !selectedApiGroup || selectedApiGroup.key === unGroupKey
+              ? undefined
+              : [selectedApiGroup]
+          }
+          visible={apiFormVisible}
           afterAction={loadProjectApiInfo}
         />
       )}

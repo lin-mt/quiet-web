@@ -90,7 +90,7 @@ export default (props: ApiGroupFormProps) => {
         </Button>,
       ]}
     >
-      <Form form={form} name={'projectForm'} labelCol={{ span: 5 }}>
+      <Form form={form} name={'form'} labelCol={{ span: 5 }}>
         <Form.Item
           label={'分组名称'}
           name={'name'}
