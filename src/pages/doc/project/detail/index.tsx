@@ -131,8 +131,14 @@ const ProjectDetails: React.FC<any> = (props) => {
                   <Space direction={'vertical'} style={{ width: '100%' }}>
                     {!selectedApiGroup.isLeaf ? (
                       <>
-                        <div>
-                          <ApiTitle>{selectedApiGroup.title}</ApiTitle>
+                        <div style={{ height: 32 }}>
+                          <Space align={'end'}>
+                            <ApiTitle>{selectedApiGroup.title}</ApiTitle>
+                            <span style={{ fontSize: 12, color: '#1890ff' }}>
+                              共{selectedApiGroup.children ? selectedApiGroup.children.length : 0}
+                              个接口
+                            </span>
+                          </Space>
                           <Space style={{ float: 'right' }} size={'middle'}>
                             <Button type={'primary'} onClick={() => setApiFormVisible(true)}>
                               添加接口
