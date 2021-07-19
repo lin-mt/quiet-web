@@ -12,6 +12,7 @@ import {
 } from '@ant-design/icons';
 import { deleteApiGroup } from '@/services/doc/DocApiGroup';
 import ApiForm from '@/pages/doc/api/components/ApiForm';
+import ApiDetail from '@/pages/doc/api/components/ApiDetail';
 
 const { TabPane } = Tabs;
 
@@ -128,40 +129,46 @@ const ProjectDetails: React.FC<any> = (props) => {
               <Col flex={'auto'} style={{ paddingRight: 39 }}>
                 {selectedApiGroup ? (
                   <Space direction={'vertical'} style={{ width: '100%' }}>
-                    <div>
-                      <ApiTitle>{selectedApiGroup.title}</ApiTitle>
-                      <Space style={{ float: 'right' }} size={'middle'}>
-                        <Button type={'primary'} onClick={() => setApiFormVisible(true)}>
-                          添加接口
-                        </Button>
-                        {selectedApiGroup.key !== unGroupKey && (
-                          <>
-                            <Button
-                              icon={<EditOutlined />}
-                              type={'primary'}
-                              title={'编辑接口'}
-                              onClick={() => setApiGroupFormVisible(true)}
-                            />
-                            <Popconfirm
-                              title={`删除该分组之后，仅存在该分组中的接口将会移到未分组中`}
-                              placement={'topRight'}
-                              onConfirm={handleDeleteApiGroup}
-                            >
-                              <Button
-                                danger={true}
-                                icon={<DeleteOutlined />}
-                                type={'primary'}
-                                title={'删除分组'}
-                              />
-                            </Popconfirm>
-                          </>
-                        )}
-                      </Space>
-                    </div>
-                    <div>接口文档信息</div>
+                    {!selectedApiGroup.isLeaf ? (
+                      <>
+                        <div>
+                          <ApiTitle>{selectedApiGroup.title}</ApiTitle>
+                          <Space style={{ float: 'right' }} size={'middle'}>
+                            <Button type={'primary'} onClick={() => setApiFormVisible(true)}>
+                              添加接口
+                            </Button>
+                            {selectedApiGroup.key !== unGroupKey && (
+                              <>
+                                <Button
+                                  icon={<EditOutlined />}
+                                  type={'primary'}
+                                  title={'编辑接口'}
+                                  onClick={() => setApiGroupFormVisible(true)}
+                                />
+                                <Popconfirm
+                                  title={`删除该分组之后，仅存在该分组中的接口将会移到未分组中`}
+                                  placement={'topRight'}
+                                  onConfirm={handleDeleteApiGroup}
+                                >
+                                  <Button
+                                    danger={true}
+                                    icon={<DeleteOutlined />}
+                                    type={'primary'}
+                                    title={'删除分组'}
+                                  />
+                                </Popconfirm>
+                              </>
+                            )}
+                          </Space>
+                        </div>
+                        <div>接口文档表格信息</div>
+                      </>
+                    ) : (
+                      <ApiDetail />
+                    )}
                   </Space>
                 ) : (
-                  <Empty style={{ height: '100%' }} description={'请选择分组'} />
+                  <Empty style={{ height: '100%' }} description={'请选择分组或接口文档'} />
                 )}
               </Col>
             </Row>
