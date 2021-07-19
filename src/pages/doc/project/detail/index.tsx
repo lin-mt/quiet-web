@@ -40,6 +40,7 @@ const ProjectDetails: React.FC<any> = (props) => {
   const unGroupKey = 'ungroup';
 
   const [apiGroupFormVisible, setApiGroupFormVisible] = useState<boolean>(false);
+  const [apiGroupCreateFormVisible, setApiGroupCreateFormVisible] = useState<boolean>(false);
   const [apiFormVisible, setApiFormVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>();
   const [apiGroupTreeData, setApiGroupTreeData] = useState<DocApiGroup[]>([]);
@@ -115,7 +116,7 @@ const ProjectDetails: React.FC<any> = (props) => {
                       placeholder="搜索接口"
                       onSearch={handleInterfaceSearch}
                     />
-                    <Button type={'primary'} onClick={() => setApiGroupFormVisible(true)}>
+                    <Button type={'primary'} onClick={() => setApiGroupCreateFormVisible(true)}>
                       添加分组
                     </Button>
                   </Space>
@@ -190,6 +191,14 @@ const ProjectDetails: React.FC<any> = (props) => {
           onCancel={() => setApiGroupFormVisible(false)}
           visible={apiGroupFormVisible}
           updateInfo={selectedApiGroup}
+          afterAction={loadProjectApiInfo}
+        />
+      )}
+      {apiGroupCreateFormVisible && (
+        <ApiGroupForm
+          projectId={projectId}
+          onCancel={() => setApiGroupCreateFormVisible(false)}
+          visible={apiGroupCreateFormVisible}
           afterAction={loadProjectApiInfo}
         />
       )}
