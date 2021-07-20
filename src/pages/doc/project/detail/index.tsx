@@ -13,6 +13,7 @@ import {
 import { deleteApiGroup } from '@/services/doc/DocApiGroup';
 import ApiForm from '@/pages/doc/api/components/ApiForm';
 import ApiDetail from '@/pages/doc/api/components/ApiDetail';
+import ProTable from '@ant-design/pro-table';
 
 const { TabPane } = Tabs;
 
@@ -97,6 +98,41 @@ const ProjectDetails: React.FC<any> = (props) => {
     }
   }
 
+  const apiTableColumns = [
+    {
+      title: '接口名称',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: '接口路径',
+      key: 'path',
+      render: (_: any, record: { method: any; url: any }) => {
+        return (
+          <>
+            {record.method}
+            {record.url}
+          </>
+        );
+      },
+    },
+    {
+      title: '状态',
+      dataIndex: 'apiState',
+      key: 'apiState',
+    },
+    {
+      title: '接口分组',
+      dataIndex: 'apiGroupIds',
+      key: 'apiGroupIds',
+    },
+    {
+      title: '备注',
+      dataIndex: 'remark',
+      key: 'remark',
+    },
+  ];
+
   return (
     <DetailContainer>
       {loading ? (
@@ -168,7 +204,12 @@ const ProjectDetails: React.FC<any> = (props) => {
                             )}
                           </Space>
                         </div>
-                        <div>接口文档表格信息</div>
+                        <ProTable
+                          options={false}
+                          pagination={false}
+                          columns={apiTableColumns}
+                          dataSource={selectedApiGroup.children}
+                        />
                       </>
                     ) : (
                       <ApiDetail />

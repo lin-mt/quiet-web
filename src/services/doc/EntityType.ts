@@ -45,6 +45,7 @@ export interface DocApiFormData extends BaseEntity {
 export interface DocApiGroup extends SerialEntity, DataNode {
   name: string;
   projectId: string;
+  children: DocApi[];
 }
 
 export interface DocApiHeader extends BaseEntity {
