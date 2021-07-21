@@ -2,7 +2,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { message, notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history } from 'umi';
+import { history, Link } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import type { ResponseError } from 'umi-request';
@@ -13,7 +13,9 @@ import { LocalStorage, ResultCode, ResultUrl, System } from '@/constant';
 import type { RequestOptionsInit } from 'umi-request';
 import { request as umiReq } from 'umi';
 import type { QuietUser, TokenInfo } from '@/services/system/EntityType';
+import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 
+const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/login';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
@@ -34,7 +36,7 @@ export async function getInitialState(): Promise<{
     try {
       return await queryCurrent();
     } catch (error) {
-      history.push('/login');
+      history.push(loginPath);
     }
     return undefined;
   };
@@ -52,30 +54,6 @@ export async function getInitialState(): Promise<{
     settings: {},
   };
 }
-
-// https://umijs.org/zh-CN/plugins/plugin-layout
-export const layout: RunTimeLayoutConfig = ({ initialState }) => {
-  return {
-    rightContentRender: () => <RightContent />,
-    disableContentMargin: false,
-    // waterMarkProps: {
-    //   content: initialState?.currentUser?.username,
-    // },
-    footerRender: () => <Footer />,
-    onPageChange: () => {
-      const { location } = history;
-      // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
-        history.push(loginPath);
-      }
-    },
-    links: [],
-    menuHeaderRender: undefined,
-    // 自定义 403 页面
-    // unAccessible: <div>unAccessible</div>,
-    ...initialState?.settings,
-  };
-};
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -121,6 +99,7 @@ const refreshToken = () => {
 
 /**
  * 异常处理程序
+ * @see https://beta-pro.ant.design/docs/request-cn
  */
 const errorHandler = (error: ResponseError) => {
   const { response } = error;
@@ -227,4 +206,39 @@ export const request: RequestConfig = {
       return response;
     },
   ],
+};
+
+// ProLayout 支持的api https://procomponents.ant.design/components/layout
+export const layout: RunTimeLayoutConfig = ({ initialState }) => {
+  return {
+    rightContentRender: () => <RightContent />,
+    disableContentMargin: false,
+    waterMarkProps: {
+      content: initialState?.currentUser?.fullName,
+    },
+    footerRender: () => <Footer />,
+    onPageChange: () => {
+      const { location } = history;
+      // 如果没有登录，重定向到 login
+      if (!initialState?.currentUser && location.pathname !== loginPath) {
+        history.push(loginPath);
+      }
+    },
+    links: isDev
+      ? [
+          <Link to="/umi/plugin/openapi" target="_blank">
+            <LinkOutlined />
+            <span>OpenAPI 文档</span>
+          </Link>,
+          <Link to="/~docs">
+            <BookOutlined />
+            <span>业务组件文档</span>
+          </Link>,
+        ]
+      : [],
+    menuHeaderRender: undefined,
+    // 自定义 403 页面
+    // unAccessible: <div>unAccessible</div>,
+    ...initialState?.settings,
+  };
 };
