@@ -205,6 +205,7 @@ const ProjectDetails: React.FC<any> = (props) => {
                           </Space>
                         </div>
                         <ProTable
+                          search={false}
                           options={false}
                           pagination={false}
                           columns={apiTableColumns}
