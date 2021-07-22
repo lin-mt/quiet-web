@@ -98,7 +98,10 @@ const ProjectDetails: React.FC<any> = (props) => {
 
   function handleDeleteApiGroup() {
     if (selectedApiGroup) {
-      deleteApiGroup(selectedApiGroup.id).then(() => loadProjectApiInfo());
+      deleteApiGroup(selectedApiGroup.id).then(() => {
+        loadProjectApiInfo();
+        setSelectedApiGroup(undefined);
+      });
     }
   }
 
@@ -124,6 +127,7 @@ const ProjectDetails: React.FC<any> = (props) => {
     {
       title: '接口路径',
       key: 'path',
+      tooltip: true,
       render: (_: any, record: { method: any; url: any }) => {
         return (
           <>
@@ -145,32 +149,35 @@ const ProjectDetails: React.FC<any> = (props) => {
     },
     {
       title: '接口分组',
-      dataIndex: 'apiGroupIds',
-      key: 'apiGroupIds',
+      dataIndex: 'apiGroupId',
+      key: 'apiGroupId',
       render: (_, record) => {
-        const tags: DocApiGroup[][] = [];
-        record.apiGroups?.forEach((apiGroup, index) => {
-          if (index % 3 === 0) {
-            tags[Math.floor(index / 3)] = [];
-          }
-          tags[Math.floor(index / 3)][index % 3] = apiGroup;
-        });
-        return (
-          <Space direction={'vertical'} size={'small'}>
-            {tags.map((apiGroups) => {
-              return (
-                <Space size={'small'} key={`${apiGroups[0].id}group`}>
-                  {apiGroups.map((apiGroup) => (
-                    <Tag key={apiGroup.id} color={'blue'}>
-                      {apiGroup.name}
-                    </Tag>
-                  ))}
-                </Space>
-              );
-            })}
-          </Space>
-        );
+        return <>{record.apiGroup ? record.apiGroup.name : '未分组'}</>;
       },
+      // render: (_, record) => {
+      //   const tags: DocApiGroup[][] = [];
+      //   record.apiGroups?.forEach((apiGroup, index) => {
+      //     if (index % 3 === 0) {
+      //       tags[Math.floor(index / 3)] = [];
+      //     }
+      //     tags[Math.floor(index / 3)][index % 3] = apiGroup;
+      //   });
+      //   return (
+      //     <Space direction={'vertical'} size={'small'}>
+      //       {tags.map((apiGroups) => {
+      //         return (
+      //           <Space size={'small'} key={`${apiGroups[0].id}group`}>
+      //             {apiGroups.map((apiGroup) => (
+      //               <Tag key={apiGroup.id} color={'blue'}>
+      //                 {apiGroup.name}
+      //               </Tag>
+      //             ))}
+      //           </Space>
+      //         );
+      //       })}
+      //     </Space>
+      //   );
+      // },
     },
   ];
 
@@ -293,10 +300,8 @@ const ProjectDetails: React.FC<any> = (props) => {
         <ApiForm
           projectId={projectId}
           onCancel={() => setApiFormVisible(false)}
-          initApiGroups={
-            !selectedApiGroup || selectedApiGroup.key === unGroupKey
-              ? undefined
-              : [selectedApiGroup]
+          initApiGroup={
+            !selectedApiGroup || selectedApiGroup.key === unGroupKey ? undefined : selectedApiGroup
           }
           visible={apiFormVisible}
           afterAction={loadProjectApiInfo}

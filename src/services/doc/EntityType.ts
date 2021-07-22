@@ -14,11 +14,11 @@ export interface DocApi extends SerialEntity, DataNode {
   method: HttpMethod;
   projectId: string;
   authorId: string;
-  apiGroupIds: string[];
+  apiGroupId: string;
   visitorIds: string[];
   remark: string;
   visitors: QuietUser[];
-  apiGroups: DocApiGroup[];
+  apiGroup: DocApiGroup;
 }
 
 export interface DocApiBody extends ParentEntity<DocApiBody> {

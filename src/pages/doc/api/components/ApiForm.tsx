@@ -9,13 +9,13 @@ interface ApiFormProps {
   visible: boolean;
   projectId: string;
   onCancel: () => void;
-  initApiGroups?: DocApiGroup[];
+  initApiGroup?: DocApiGroup;
   updateInfo?: DocApi;
   afterAction?: () => void;
 }
 
 export default (props: ApiFormProps) => {
-  const { visible, projectId, onCancel, initApiGroups, updateInfo, afterAction } = props;
+  const { visible, projectId, onCancel, initApiGroup, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   const [form] = Form.useForm();
@@ -36,7 +36,7 @@ export default (props: ApiFormProps) => {
     const submitValues = {
       ...values,
       projectId,
-      apiGroupIds: values.apiGroupIds?.map((temp: { value: string }) => temp.value),
+      apiGroupId: values.apiGroupId?.value,
     };
     if (!submitValues.url.startsWith('/')) {
       submitValues.url = `/${submitValues.url}`;
@@ -111,10 +111,12 @@ export default (props: ApiFormProps) => {
         name={'form'}
         labelCol={{ span: 5 }}
         initialValues={{
-          apiGroupIds: initApiGroups?.map((apiGroup) => ({
-            value: apiGroup.id,
-            label: apiGroup.name,
-          })),
+          apiGroupId: initApiGroup
+            ? {
+                value: initApiGroup.id,
+                label: initApiGroup.name,
+              }
+            : undefined,
           method: 'GET',
         }}
       >
@@ -155,16 +157,8 @@ export default (props: ApiFormProps) => {
             placeholder="请输入"
           />
         </Form.Item>
-        <Form.Item
-          label={'接口分组'}
-          name={'apiGroupIds'}
-          rules={[{ max: 30, message: '接口分组不能超过 30', type: 'array' }]}
-        >
-          <DebounceSelect
-            mode={'multiple'}
-            placeholder="请输入分组名称"
-            fetchOptions={listApiGroupByName}
-          />
+        <Form.Item label={'接口分组'} name={'apiGroupId'}>
+          <DebounceSelect placeholder="请输入分组名称" fetchOptions={listApiGroupByName} />
         </Form.Item>
         <Form.Item
           label={'备注'}
