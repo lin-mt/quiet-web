@@ -38,6 +38,9 @@ export default (props: ApiFormProps) => {
       projectId,
       apiGroupIds: values.apiGroupIds?.map((temp: { value: string }) => temp.value),
     };
+    if (!submitValues.url.startsWith('/')) {
+      submitValues.url = `/${submitValues.url}`;
+    }
     if (updateInfo) {
       await updateApi({
         ...updateInfo,

@@ -1,8 +1,9 @@
+import type { Key } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Col, Empty, Input, Popconfirm, Row, Space, Tabs, Tree } from 'antd';
+import { Button, Col, Empty, Input, Popconfirm, Row, Space, Tabs, Tag, Tree } from 'antd';
 import styled from 'styled-components';
 import ApiGroupForm from '@/pages/doc/apiGroup/components/ApiGroupForm';
-import type { DocApiGroup } from '@/services/doc/EntityType';
+import type { DocApi, DocApiGroup } from '@/services/doc/EntityType';
 import { listApiInfoById } from '@/services/doc/DocProject';
 import {
   DeleteOutlined,
@@ -13,7 +14,9 @@ import {
 import { deleteApiGroup } from '@/services/doc/DocApiGroup';
 import ApiForm from '@/pages/doc/api/components/ApiForm';
 import ApiDetail from '@/pages/doc/api/components/ApiDetail';
+import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import { getMethodTagColor } from '@/utils/doc/utils';
 
 const { TabPane } = Tabs;
 
@@ -46,6 +49,7 @@ const ProjectDetails: React.FC<any> = (props) => {
   const [loading, setLoading] = useState<boolean>();
   const [apiGroupTreeData, setApiGroupTreeData] = useState<DocApiGroup[]>([]);
   const [selectedApiGroup, setSelectedApiGroup] = useState<DocApiGroup>();
+  const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
 
   const loadProjectApiInfo = useCallback(() => {
     listApiInfoById(projectId).then((resp) => {
@@ -98,11 +102,24 @@ const ProjectDetails: React.FC<any> = (props) => {
     }
   }
 
-  const apiTableColumns = [
+  const apiTableColumns: ProColumns<DocApi>[] = [
     {
       title: '接口名称',
       dataIndex: 'name',
       key: 'name',
+      render: (_, record) => {
+        return (
+          <a
+            onClick={() => {
+              setSelectedKeys([record.id]);
+              // @ts-ignore
+              setSelectedApiGroup(record);
+            }}
+          >
+            {record.name}
+          </a>
+        );
+      },
     },
     {
       title: '接口路径',
@@ -110,7 +127,7 @@ const ProjectDetails: React.FC<any> = (props) => {
       render: (_: any, record: { method: any; url: any }) => {
         return (
           <>
-            {record.method}
+            <Tag color={getMethodTagColor(record.method)}> {record.method}</Tag>
             {record.url}
           </>
         );
@@ -120,16 +137,40 @@ const ProjectDetails: React.FC<any> = (props) => {
       title: '状态',
       dataIndex: 'apiState',
       key: 'apiState',
+      valueType: 'select',
+      valueEnum: {
+        FINISH: { text: '已完成', status: 'Success' },
+        UNFINISHED: { text: '未完成', status: 'Processing' },
+      },
     },
     {
       title: '接口分组',
       dataIndex: 'apiGroupIds',
       key: 'apiGroupIds',
-    },
-    {
-      title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
+      render: (_, record) => {
+        const tags: DocApiGroup[][] = [];
+        record.apiGroups?.forEach((apiGroup, index) => {
+          if (index % 3 === 0) {
+            tags[Math.floor(index / 3)] = [];
+          }
+          tags[Math.floor(index / 3)][index % 3] = apiGroup;
+        });
+        return (
+          <Space direction={'vertical'} size={'small'}>
+            {tags.map((apiGroups) => {
+              return (
+                <Space size={'small'} key={`${apiGroups[0].id}group`}>
+                  {apiGroups.map((apiGroup) => (
+                    <Tag key={apiGroup.id} color={'blue'}>
+                      {apiGroup.name}
+                    </Tag>
+                  ))}
+                </Space>
+              );
+            })}
+          </Space>
+        );
+      },
     },
   ];
 
@@ -158,8 +199,12 @@ const ProjectDetails: React.FC<any> = (props) => {
                   </Space>
                   <Tree.DirectoryTree
                     treeData={apiGroupTreeData}
-                    // @ts-ignore
-                    onClick={(_, node) => setSelectedApiGroup(node)}
+                    selectedKeys={selectedKeys}
+                    onSelect={(keys, { node }) => {
+                      // @ts-ignore
+                      setSelectedApiGroup(node);
+                      setSelectedKeys(keys);
+                    }}
                   />
                 </Space>
               </Col>
@@ -204,7 +249,7 @@ const ProjectDetails: React.FC<any> = (props) => {
                             )}
                           </Space>
                         </div>
-                        <ProTable
+                        <ProTable<DocApi>
                           search={false}
                           options={false}
                           pagination={false}

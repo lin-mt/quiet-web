@@ -18,6 +18,7 @@ export interface DocApi extends SerialEntity, DataNode {
   visitorIds: string[];
   remark: string;
   visitors: QuietUser[];
+  apiGroups: DocApiGroup[];
 }
 
 export interface DocApiBody extends ParentEntity<DocApiBody> {
