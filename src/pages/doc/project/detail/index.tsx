@@ -48,7 +48,7 @@ const ProjectDetails: React.FC<any> = (props) => {
   const [apiFormVisible, setApiFormVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>();
   const [apiGroupTreeData, setApiGroupTreeData] = useState<DocApiGroup[]>([]);
-  const [selectedApiGroup, setSelectedApiGroup] = useState<DocApiGroup>();
+  const [selectedNode, setSelectedNode] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
 
   const loadProjectApiInfo = useCallback(() => {
@@ -97,10 +97,10 @@ const ProjectDetails: React.FC<any> = (props) => {
   function handleInterfaceSearch() {}
 
   function handleDeleteApiGroup() {
-    if (selectedApiGroup) {
-      deleteApiGroup(selectedApiGroup.id).then(() => {
+    if (selectedNode) {
+      deleteApiGroup(selectedNode.id).then(() => {
         loadProjectApiInfo();
-        setSelectedApiGroup(undefined);
+        setSelectedNode(undefined);
       });
     }
   }
@@ -116,7 +116,7 @@ const ProjectDetails: React.FC<any> = (props) => {
             onClick={() => {
               setSelectedKeys([record.id]);
               // @ts-ignore
-              setSelectedApiGroup(record);
+              setSelectedNode(record);
             }}
           >
             {record.name}
@@ -127,7 +127,6 @@ const ProjectDetails: React.FC<any> = (props) => {
     {
       title: '接口路径',
       key: 'path',
-      tooltip: true,
       render: (_: any, record: { method: any; url: any }) => {
         return (
           <>
@@ -209,22 +208,22 @@ const ProjectDetails: React.FC<any> = (props) => {
                     selectedKeys={selectedKeys}
                     onSelect={(keys, { node }) => {
                       // @ts-ignore
-                      setSelectedApiGroup(node);
+                      setSelectedNode(node);
                       setSelectedKeys(keys);
                     }}
                   />
                 </Space>
               </Col>
               <Col flex={'auto'} style={{ paddingRight: 39 }}>
-                {selectedApiGroup ? (
+                {selectedNode ? (
                   <Space direction={'vertical'} style={{ width: '100%' }}>
-                    {!selectedApiGroup.isLeaf ? (
+                    {!selectedNode.isLeaf ? (
                       <>
                         <div style={{ height: 32 }}>
                           <Space align={'end'}>
-                            <ApiTitle>{selectedApiGroup.title}</ApiTitle>
+                            <ApiTitle>{selectedNode.title}</ApiTitle>
                             <span style={{ fontSize: 12, color: '#1890ff' }}>
-                              共{selectedApiGroup.children ? selectedApiGroup.children.length : 0}
+                              共{selectedNode.children ? selectedNode.children.length : 0}
                               个接口
                             </span>
                           </Space>
@@ -232,7 +231,7 @@ const ProjectDetails: React.FC<any> = (props) => {
                             <Button type={'primary'} onClick={() => setApiFormVisible(true)}>
                               添加接口
                             </Button>
-                            {selectedApiGroup.key !== unGroupKey && (
+                            {selectedNode.key !== unGroupKey && (
                               <>
                                 <Button
                                   icon={<EditOutlined />}
@@ -261,11 +260,11 @@ const ProjectDetails: React.FC<any> = (props) => {
                           options={false}
                           pagination={false}
                           columns={apiTableColumns}
-                          dataSource={selectedApiGroup.children}
+                          dataSource={selectedNode.children}
                         />
                       </>
                     ) : (
-                      <ApiDetail />
+                      <ApiDetail apiId={selectedNode.id} />
                     )}
                   </Space>
                 ) : (
@@ -275,7 +274,7 @@ const ProjectDetails: React.FC<any> = (props) => {
             </Row>
           </TabPane>
           <TabPane tab={'设 置'} key={'setting'}>
-            {props.location.query.projectId}
+            projectId: {props.location.query.projectId}
           </TabPane>
         </Tabs>
       )}
@@ -284,7 +283,7 @@ const ProjectDetails: React.FC<any> = (props) => {
           projectId={projectId}
           onCancel={() => setApiGroupFormVisible(false)}
           visible={apiGroupFormVisible}
-          updateInfo={selectedApiGroup}
+          updateInfo={selectedNode}
           afterAction={loadProjectApiInfo}
         />
       )}
@@ -300,9 +299,7 @@ const ProjectDetails: React.FC<any> = (props) => {
         <ApiForm
           projectId={projectId}
           onCancel={() => setApiFormVisible(false)}
-          initApiGroup={
-            !selectedApiGroup || selectedApiGroup.key === unGroupKey ? undefined : selectedApiGroup
-          }
+          initApiGroup={!selectedNode || selectedNode.key === unGroupKey ? undefined : selectedNode}
           visible={apiFormVisible}
           afterAction={loadProjectApiInfo}
         />
