@@ -28,7 +28,7 @@ const DetailContainer = styled.div`
   background-color: white;
 `;
 
-const ApiTitle = styled.h2`
+export const ApiTitle = styled.h2`
   display: flex;
   align-items: center;
   height: 32px;
