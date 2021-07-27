@@ -141,7 +141,7 @@ export default (props: ApiFormProps) => {
           <Input
             addonBefore={
               <Form.Item name="method" noStyle>
-                <Select>
+                <Select style={{ width: 96 }}>
                   <Select.Option value={'GET'}>GET</Select.Option>
                   <Select.Option value={'HEAD'}>HEAD</Select.Option>
                   <Select.Option value={'POST'}>POST</Select.Option>

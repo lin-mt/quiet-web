@@ -264,7 +264,7 @@ const ProjectDetails: React.FC<any> = (props) => {
                         />
                       </>
                     ) : (
-                      <ApiDetail apiId={selectedNode.id} />
+                      <ApiDetail apiId={selectedNode.id} projectId={projectId} />
                     )}
                   </Space>
                 ) : (

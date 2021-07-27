@@ -1,5 +1,5 @@
-import type { DocApi } from '@/services/doc/EntityType';
-import { DELETE, POST, PUT } from '@/utils/HttpUtils';
+import type { ApiDetail, DocApi } from '@/services/doc/EntityType';
+import { DELETE, GET, POST, PUT } from '@/utils/HttpUtils';
 
 const apiPrefix = '/api/doc/api';
 
@@ -13,4 +13,8 @@ export function updateApi(update: DocApi): Promise<DocApi> {
 
 export async function deleteApi(id: string) {
   await DELETE(`${apiPrefix}/${id}`);
+}
+
+export async function getAiDetail(id: string): Promise<ApiDetail> {
+  return GET<ApiDetail>(`${apiPrefix}/detail/${id}`);
 }

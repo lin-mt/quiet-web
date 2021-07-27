@@ -7,6 +7,7 @@ import type {
 import type { HttpMethod } from '@/services/doc/Enums';
 import type { FieldType, FormDataType, QueryType } from '@/services/doc/Enums';
 import type { DataNode } from 'rc-tree/lib/interface';
+import type { ApiState } from '@/services/doc/Enums';
 
 export interface DocApi extends SerialEntity, DataNode {
   name: string;
@@ -14,6 +15,7 @@ export interface DocApi extends SerialEntity, DataNode {
   method: HttpMethod;
   projectId: string;
   authorId: string;
+  apiState: ApiState;
   apiGroupId: string;
   visitorIds: string[];
   remark: string;
@@ -52,7 +54,15 @@ export interface DocApiGroup extends SerialEntity, DataNode {
 export interface DocApiHeader extends BaseEntity {
   name: string;
   value: string;
+  example: string;
   required: boolean;
+  apiId: string;
+  remark: string;
+}
+
+export interface DocApiPathParam extends SerialEntity {
+  name: string;
+  example: string;
   apiId: string;
   remark: string;
 }
@@ -97,10 +107,21 @@ export interface DocProjectHeader extends BaseEntity {
   name: string;
   value: string;
   projectId: string;
-  remark: string;
+  remark?: string;
 }
 
 export interface MyDocProject {
   responsibleProjects: DocProject[];
   accessibleProjects: DocProject[];
+}
+
+export interface ApiDetail {
+  api: DocApi;
+  visitors?: QuietUser[];
+  apiPathParam?: DocApiPathParam[];
+  apiBody?: DocApiBody;
+  apiFormData?: DocApiFormData[];
+  apiHeader?: DocApiHeader[];
+  apiQuery?: DocApiQuery[];
+  apiResponse?: DocApiResponse;
 }
