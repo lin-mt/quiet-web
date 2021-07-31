@@ -147,9 +147,7 @@ export default (props: ApiFormProps) => {
                   <Select.Option value={'POST'}>POST</Select.Option>
                   <Select.Option value={'PUT'}>PUT</Select.Option>
                   <Select.Option value={'DELETE'}>DELETE</Select.Option>
-                  <Select.Option value={'CONNECT'}>CONNECT</Select.Option>
                   <Select.Option value={'OPTIONS'}>OPTIONS</Select.Option>
-                  <Select.Option value={'TRACE'}>TRACE</Select.Option>
                   <Select.Option value={'PATCH'}>PATCH</Select.Option>
                 </Select>
               </Form.Item>
