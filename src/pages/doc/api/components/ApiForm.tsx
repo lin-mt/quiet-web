@@ -4,6 +4,7 @@ import type { DocApi, DocApiGroup } from '@/services/doc/EntityType';
 import { saveApi, updateApi } from '@/services/doc/DocApi';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import { listApiGroupByProjectIdAndName } from '@/services/doc/DocApiGroup';
+import { HttpMethod } from '@/services/doc/Enums';
 
 interface ApiFormProps {
   visible: boolean;
@@ -141,18 +142,18 @@ export default (props: ApiFormProps) => {
           <Input
             addonBefore={
               <Form.Item name="method" noStyle>
-                <Select style={{ width: 96 }}>
-                  <Select.Option value={'GET'}>GET</Select.Option>
-                  <Select.Option value={'HEAD'}>HEAD</Select.Option>
-                  <Select.Option value={'POST'}>POST</Select.Option>
-                  <Select.Option value={'PUT'}>PUT</Select.Option>
-                  <Select.Option value={'DELETE'}>DELETE</Select.Option>
-                  <Select.Option value={'OPTIONS'}>OPTIONS</Select.Option>
-                  <Select.Option value={'PATCH'}>PATCH</Select.Option>
+                <Select style={{ width: 105 }}>
+                  <Select.Option value={HttpMethod.GET}>GET</Select.Option>
+                  <Select.Option value={HttpMethod.POST}>POST</Select.Option>
+                  <Select.Option value={HttpMethod.PUT}>PUT</Select.Option>
+                  <Select.Option value={HttpMethod.DELETE}>DELETE</Select.Option>
+                  <Select.Option value={HttpMethod.HEAD}>HEAD</Select.Option>
+                  <Select.Option value={HttpMethod.OPTIONS}>OPTIONS</Select.Option>
+                  <Select.Option value={HttpMethod.PATCH}>PATCH</Select.Option>
                 </Select>
               </Form.Item>
             }
-            placeholder="请输入"
+            placeholder="请输入请求地址"
           />
         </Form.Item>
         <Form.Item label={'接口分组'} name={'apiGroupId'}>
