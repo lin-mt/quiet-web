@@ -39,6 +39,8 @@ export default (props: ApiEditProps) => {
 
   const [reqParamSettingOptions, setReqParamSettingOptions] = useState<string[]>();
   const [reqParamSetting, setReqParamSetting] = useState<string>();
+  const [respSetting, setRespSetting] = useState<string>('JSON');
+  const [bodyTypeSetting, setBodyTypeSetting] = useState<string>('form');
   const [affixed, setAffixed] = useState<boolean>();
   const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -277,120 +279,143 @@ export default (props: ApiEditProps) => {
             <Radio.Group
               style={{ textAlign: 'left', paddingBottom: 12 }}
               options={['form', 'json', 'file', 'raw']}
-              defaultValue={'form'}
+              defaultValue={bodyTypeSetting}
+              value={bodyTypeSetting}
+              onChange={(e) => setBodyTypeSetting(e.target.value)}
             />
-            <Form.List name="apiFormData">
-              {(fields, { add, remove }) => (
-                <>
-                  <FieldFormItem>
-                    <Button
-                      type="primary"
-                      size={'small'}
-                      onClick={() => add({ required: 'true', type: FormDataType.TEXT })}
-                      icon={<PlusOutlined />}
-                    >
-                      添加form参数
-                    </Button>
-                  </FieldFormItem>
-                  {fields.map(({ key, name, fieldKey, ...restField }) => (
-                    <Row key={key} gutter={10} style={{ display: 'flex', alignItems: 'baseline' }}>
-                      <Col flex={1}>
-                        <FieldFormItem
-                          {...restField}
-                          name={[name, 'name']}
-                          fieldKey={[fieldKey, 'name']}
-                          rules={[
-                            { required: true, message: '请输入参数名称' },
-                            { max: 30, message: '参数长度不能超过 30', type: 'string' },
-                          ]}
-                        >
-                          <Input placeholder="参数名称" />
-                        </FieldFormItem>
-                      </Col>
-                      <Col style={{ width: '92px' }}>
-                        <FieldFormItem
-                          {...restField}
-                          name={[name, 'required']}
-                          fieldKey={[fieldKey, 'required']}
-                          rules={[{ required: true, message: '请选择是否必须' }]}
-                        >
-                          <Select style={{ width: '85px' }}>
-                            <Select.Option value={'true'}>必需</Select.Option>
-                            <Select.Option value={'false'}>非必需</Select.Option>
-                          </Select>
-                        </FieldFormItem>
-                      </Col>
-                      <Col flex={'92px'}>
-                        <FieldFormItem
-                          {...restField}
-                          name={[name, 'type']}
-                          fieldKey={[fieldKey, 'type']}
-                          rules={[{ required: true, message: '请选择参数类型' }]}
-                        >
-                          <Select style={{ width: '92px' }}>
-                            <Select.Option value={FormDataType.TEXT}>text</Select.Option>
-                            <Select.Option value={FormDataType.FILE}>file</Select.Option>
-                          </Select>
-                        </FieldFormItem>
-                      </Col>
-                      <Col flex={'100px'}>
-                        <FieldFormItem
-                          {...restField}
-                          name={[name, 'mixLength']}
-                          fieldKey={[fieldKey, 'mixLength']}
-                          rules={[{ min: 0, type: 'number', message: '最小长度不能小于 0' }]}
-                        >
-                          <InputNumber min={0} style={{ width: 100 }} placeholder="最小长度" />
-                        </FieldFormItem>
-                      </Col>
-                      <Col flex={'100px'}>
-                        <FieldFormItem
-                          {...restField}
-                          name={[name, 'maxLength']}
-                          fieldKey={[fieldKey, 'maxLength']}
-                          rules={[{ min: 0, type: 'number', message: '最大长度不能小于 0' }]}
-                        >
-                          <InputNumber min={0} style={{ width: 100 }} placeholder="最大长度" />
-                        </FieldFormItem>
-                      </Col>
-                      <Col flex={1}>
-                        <FieldFormItem
-                          {...restField}
-                          name={[name, 'example']}
-                          fieldKey={[fieldKey, 'example']}
-                          rules={[
-                            { max: 300, type: 'string', message: '参数示例长度不能超过 300' },
-                          ]}
-                        >
-                          <Input placeholder="参数示例" />
-                        </FieldFormItem>
-                      </Col>
-                      <Col flex={1}>
-                        <FieldFormItem
-                          {...restField}
-                          name={[name, 'remark']}
-                          fieldKey={[fieldKey, 'remark']}
-                          rules={[{ max: 300, type: 'string', message: '备注长度不能超过 300' }]}
-                        >
-                          <Input style={{ width: '100%' }} placeholder="备注" />
-                        </FieldFormItem>
-                      </Col>
-                      <Col flex={'22px'}>
-                        <DeleteOutlined onClick={() => remove(name)} />
-                      </Col>
-                      <FieldFormItem
-                        {...restField}
-                        hidden={true}
-                        name={[name, 'apiId']}
-                        fieldKey={[fieldKey, 'apiId']}
+            {bodyTypeSetting === 'form' && (
+              <Form.List name="apiFormData">
+                {(fields, { add, remove }) => (
+                  <>
+                    <FieldFormItem>
+                      <Button
+                        type="primary"
+                        size={'small'}
+                        onClick={() => add({ required: 'true', type: FormDataType.TEXT })}
+                        icon={<PlusOutlined />}
                       >
-                        <Input value={apiDetail.api.id} />
-                      </FieldFormItem>
-                    </Row>
-                  ))}
-                </>
-              )}
-            </Form.List>
+                        添加form参数
+                      </Button>
+                    </FieldFormItem>
+                    {fields.map(({ key, name, fieldKey, ...restField }) => (
+                      <Row
+                        key={key}
+                        gutter={10}
+                        style={{ display: 'flex', alignItems: 'baseline' }}
+                      >
+                        <Col flex={1}>
+                          <FieldFormItem
+                            {...restField}
+                            name={[name, 'name']}
+                            fieldKey={[fieldKey, 'name']}
+                            rules={[
+                              { required: true, message: '请输入参数名称' },
+                              { max: 30, message: '参数长度不能超过 30', type: 'string' },
+                            ]}
+                          >
+                            <Input placeholder="参数名称" />
+                          </FieldFormItem>
+                        </Col>
+                        <Col style={{ width: '92px' }}>
+                          <FieldFormItem
+                            {...restField}
+                            name={[name, 'required']}
+                            fieldKey={[fieldKey, 'required']}
+                            rules={[{ required: true, message: '请选择是否必须' }]}
+                          >
+                            <Select style={{ width: '85px' }}>
+                              <Select.Option value={'true'}>必需</Select.Option>
+                              <Select.Option value={'false'}>非必需</Select.Option>
+                            </Select>
+                          </FieldFormItem>
+                        </Col>
+                        <Col flex={'92px'}>
+                          <FieldFormItem
+                            {...restField}
+                            name={[name, 'type']}
+                            fieldKey={[fieldKey, 'type']}
+                            rules={[{ required: true, message: '请选择参数类型' }]}
+                          >
+                            <Select style={{ width: '92px' }}>
+                              <Select.Option value={FormDataType.TEXT}>text</Select.Option>
+                              <Select.Option value={FormDataType.FILE}>file</Select.Option>
+                            </Select>
+                          </FieldFormItem>
+                        </Col>
+                        <Col flex={'100px'}>
+                          <FieldFormItem
+                            {...restField}
+                            name={[name, 'mixLength']}
+                            fieldKey={[fieldKey, 'mixLength']}
+                            rules={[{ min: 0, type: 'number', message: '最小长度不能小于 0' }]}
+                          >
+                            <InputNumber min={0} style={{ width: 100 }} placeholder="最小长度" />
+                          </FieldFormItem>
+                        </Col>
+                        <Col flex={'100px'}>
+                          <FieldFormItem
+                            {...restField}
+                            name={[name, 'maxLength']}
+                            fieldKey={[fieldKey, 'maxLength']}
+                            rules={[{ min: 0, type: 'number', message: '最大长度不能小于 0' }]}
+                          >
+                            <InputNumber min={0} style={{ width: 100 }} placeholder="最大长度" />
+                          </FieldFormItem>
+                        </Col>
+                        <Col flex={1}>
+                          <FieldFormItem
+                            {...restField}
+                            name={[name, 'example']}
+                            fieldKey={[fieldKey, 'example']}
+                            rules={[
+                              { max: 300, type: 'string', message: '参数示例长度不能超过 300' },
+                            ]}
+                          >
+                            <Input placeholder="参数示例" />
+                          </FieldFormItem>
+                        </Col>
+                        <Col flex={1}>
+                          <FieldFormItem
+                            {...restField}
+                            name={[name, 'remark']}
+                            fieldKey={[fieldKey, 'remark']}
+                            rules={[{ max: 300, type: 'string', message: '备注长度不能超过 300' }]}
+                          >
+                            <Input style={{ width: '100%' }} placeholder="备注" />
+                          </FieldFormItem>
+                        </Col>
+                        <Col flex={'22px'}>
+                          <DeleteOutlined onClick={() => remove(name)} />
+                        </Col>
+                        <FieldFormItem
+                          {...restField}
+                          hidden={true}
+                          name={[name, 'apiId']}
+                          fieldKey={[fieldKey, 'apiId']}
+                        >
+                          <Input value={apiDetail.api.id} />
+                        </FieldFormItem>
+                      </Row>
+                    ))}
+                  </>
+                )}
+              </Form.List>
+            )}
+            {bodyTypeSetting === 'json' && <div>参数类型为 JSON</div>}
+            {bodyTypeSetting === 'file' && (
+              <FieldFormItem noStyle={true} name={'bodyFile'}>
+                <Input />
+              </FieldFormItem>
+            )}
+            {bodyTypeSetting === 'raw' && (
+              <FieldFormItem
+                noStyle={true}
+                name={'bodyRaw'}
+                rules={[{ max: 30, message: 'RAW 示例不能超过 30' }]}
+              >
+                <Input.TextArea rows={3} />
+              </FieldFormItem>
+            )}
           </EditContainer>
         )}
         {reqParamSetting === 'Query' && (
@@ -598,9 +623,36 @@ export default (props: ApiEditProps) => {
           </EditContainer>
         )}
         <ApiTitle style={{ marginTop: 30 }}>返回数据设置</ApiTitle>
-        <div>这是返回数据设置区域</div>
+        <Radio.Group
+          style={{ textAlign: 'center', width: '100%' }}
+          options={['JSON', 'RAW']}
+          value={respSetting}
+          optionType={'button'}
+          buttonStyle={'solid'}
+          onChange={(event) => setRespSetting(event.target.value)}
+        />
+        <EditContainer>
+          {respSetting === 'JSON' && 'JSON 返回值'}
+          {respSetting === 'RAW' && (
+            <FieldFormItem
+              noStyle={true}
+              name={'respExample'}
+              rules={[{ max: 30, message: 'RAW 示例不能超过 30' }]}
+            >
+              <Input.TextArea rows={3} />
+            </FieldFormItem>
+          )}
+        </EditContainer>
         <ApiTitle style={{ marginTop: 30 }}>备 注</ApiTitle>
-        <div>这是备注编辑区域</div>
+        <EditContainer>
+          <FieldFormItem
+            noStyle={true}
+            name={'remark'}
+            rules={[{ max: 300, message: '备注信息不能超过 300' }]}
+          >
+            <Input.TextArea rows={6} />
+          </FieldFormItem>
+        </EditContainer>
         <Affix offsetBottom={0} onChange={(af) => setAffixed(af)} style={{ marginTop: 30 }}>
           <SaveContainer style={{ backgroundColor: affixed ? 'rgb(230, 233, 236)' : undefined }}>
             <Button
