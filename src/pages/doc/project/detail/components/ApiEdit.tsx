@@ -1,12 +1,14 @@
 import { ApiTitle } from '@/pages/doc/project/detail';
-import { Button, Col, Form, Input, InputNumber, Radio, Row, Select, Space } from 'antd';
+import { Affix, Button, Col, Form, Input, InputNumber, Radio, Row, Select, Space } from 'antd';
 import type { ApiDetail } from '@/services/doc/EntityType';
 import styled from 'styled-components';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import { listApiGroupByProjectIdAndName } from '@/services/doc/DocApiGroup';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import type { ChangeEvent } from 'react';
 import { useEffect, useState } from 'react';
 import { ApiState, FormDataType, HttpMethod, QueryType } from '@/services/doc/Enums';
+import _ from 'lodash';
 
 interface ApiEditProps {
   apiId: string;
@@ -21,6 +23,12 @@ const EditContainer = styled.div`
   padding: 16px;
 `;
 
+const SaveContainer = styled.div`
+  height: 56px;
+  text-align: center;
+  padding-top: 12px;
+`;
+
 const FieldFormItem = styled(Form.Item)`
   margin-bottom: 16px;
 `;
@@ -31,6 +39,8 @@ export default (props: ApiEditProps) => {
 
   const [reqParamSettingOptions, setReqParamSettingOptions] = useState<string[]>();
   const [reqParamSetting, setReqParamSetting] = useState<string>();
+  const [affixed, setAffixed] = useState<boolean>();
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   function getReqParamSettingOptionsByMethod(method: HttpMethod | string): string[] {
     let dump = method;
@@ -83,17 +93,71 @@ export default (props: ApiEditProps) => {
     });
   }
 
+  const handlePath = (pathParam: string) => {
+    let path = _.trim(pathParam);
+    if (!path) {
+      return path;
+    }
+    if (path === '/') {
+      return '';
+    }
+    path = path[0] !== '/' ? `/${path}` : path;
+    path = path[path.length - 1] === '/' ? path.substr(0, path.length - 1) : path;
+    return path;
+  };
+
+  function handleApiUrlChange(event: ChangeEvent<HTMLInputElement>) {
+    let val = event.target.value;
+    const queue: { name: string; example: ''; remark: string; apiId: string }[] = [];
+    const insertParams = (name: string) => {
+      const findExist = _.find(apiDetailForm.getFieldValue('apiPathParam'), { name });
+      if (findExist) {
+        queue.push(findExist);
+      } else {
+        queue.push({ name, example: '', remark: '', apiId: apiDetail.api.id });
+      }
+    };
+    val = handlePath(val);
+    if (val && val.indexOf(':') !== -1) {
+      const paths = val.split('/');
+      let name: string;
+      let i: number;
+      for (i = 1; i < paths.length; i += 1) {
+        if (paths[i][0] === ':') {
+          name = paths[i].substr(1);
+          insertParams(name);
+        }
+      }
+    }
+    const insertParam = (str: any, match: string) => {
+      insertParams(match);
+    };
+    if (val && val.length > 3) {
+      // @ts-ignore
+      val.replace(/{(.+?)}/g, insertParam);
+    }
+    apiDetailForm.setFieldsValue({ ...apiDetailForm.getFieldsValue(), apiPathParam: queue });
+  }
+
+  async function handleSubmit() {
+    setSubmitting(true);
+    const values = await apiDetailForm.validateFields();
+    // eslint-disable-next-line no-console
+    console.log(values);
+    setSubmitting(false);
+  }
+
   return (
-    <Form name={'apiEdit'} labelCol={{ span: 5 }} form={apiDetailForm}>
+    <Form name={'apiEdit'} labelCol={{ span: 4 }} form={apiDetailForm}>
       <Space direction={'vertical'} style={{ width: '100%' }}>
         <ApiTitle>基本设置</ApiTitle>
-        <EditContainer style={{ paddingLeft: 300, paddingRight: 300 }}>
+        <EditContainer style={{ paddingLeft: 200, paddingRight: 200 }}>
           <FieldFormItem
             label={'接口名称'}
             name={'name'}
             rules={[
               { required: true, message: '请输入接口名称' },
-              { len: 30, message: '接口名称长度不能超过 30' },
+              { max: 30, message: '接口名称长度不能超过 30' },
             ]}
           >
             <Input placeholder={'请输入接口名称'} />
@@ -135,8 +199,57 @@ export default (props: ApiEditProps) => {
                 </Form.Item>
               }
               placeholder="请输入接口路径"
+              onChange={handleApiUrlChange}
             />
           </FieldFormItem>
+          <Form.List name="apiPathParam">
+            {(fields) => (
+              <>
+                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                  <Row key={key} gutter={10} style={{ display: 'flex', alignItems: 'baseline' }}>
+                    <Col span={4}>
+                      <FieldFormItem
+                        {...restField}
+                        name={[name, 'name']}
+                        fieldKey={[fieldKey, 'name']}
+                        rules={[{ required: true, message: '请输入参数名称' }]}
+                      >
+                        <Input placeholder="参数名称" disabled={true} />
+                      </FieldFormItem>
+                    </Col>
+                    <Col span={10}>
+                      <FieldFormItem
+                        {...restField}
+                        name={[name, 'example']}
+                        fieldKey={[fieldKey, 'example']}
+                        rules={[{ max: 300, type: 'string', message: '参数示例长度不能超过 300' }]}
+                      >
+                        <Input placeholder="参数示例" />
+                      </FieldFormItem>
+                    </Col>
+                    <Col span={10}>
+                      <FieldFormItem
+                        {...restField}
+                        name={[name, 'remark']}
+                        fieldKey={[fieldKey, 'remark']}
+                        rules={[{ max: 300, type: 'string', message: '备注长度不能超过 300' }]}
+                      >
+                        <Input style={{ width: '100%' }} placeholder="备注" />
+                      </FieldFormItem>
+                    </Col>
+                    <FieldFormItem
+                      {...restField}
+                      hidden={true}
+                      name={[name, 'apiId']}
+                      fieldKey={[fieldKey, 'apiId']}
+                    >
+                      <Input value={apiDetail.api.id} />
+                    </FieldFormItem>
+                  </Row>
+                ))}
+              </>
+            )}
+          </Form.List>
           <FieldFormItem
             label={'状态'}
             name={'apiState'}
@@ -149,7 +262,7 @@ export default (props: ApiEditProps) => {
             </Select>
           </FieldFormItem>
         </EditContainer>
-        <ApiTitle>请求参数设置</ApiTitle>
+        <ApiTitle style={{ marginTop: 30 }}>请求参数设置</ApiTitle>
         <Radio.Group
           style={{ textAlign: 'center', width: '100%' }}
           options={reqParamSettingOptions}
@@ -186,7 +299,10 @@ export default (props: ApiEditProps) => {
                           {...restField}
                           name={[name, 'name']}
                           fieldKey={[fieldKey, 'name']}
-                          rules={[{ required: true, message: '请输入参数名称' }]}
+                          rules={[
+                            { required: true, message: '请输入参数名称' },
+                            { max: 30, message: '参数长度不能超过 30', type: 'string' },
+                          ]}
                         >
                           <Input placeholder="参数名称" />
                         </FieldFormItem>
@@ -243,7 +359,7 @@ export default (props: ApiEditProps) => {
                           name={[name, 'example']}
                           fieldKey={[fieldKey, 'example']}
                           rules={[
-                            { len: 300, type: 'string', message: '参数示例长度不能超过 300' },
+                            { max: 300, type: 'string', message: '参数示例长度不能超过 300' },
                           ]}
                         >
                           <Input placeholder="参数示例" />
@@ -254,7 +370,7 @@ export default (props: ApiEditProps) => {
                           {...restField}
                           name={[name, 'remark']}
                           fieldKey={[fieldKey, 'remark']}
-                          rules={[{ len: 300, type: 'string', message: '备注长度不能超过 300' }]}
+                          rules={[{ max: 300, type: 'string', message: '备注长度不能超过 300' }]}
                         >
                           <Input style={{ width: '100%' }} placeholder="备注" />
                         </FieldFormItem>
@@ -357,7 +473,7 @@ export default (props: ApiEditProps) => {
                           name={[name, 'example']}
                           fieldKey={[fieldKey, 'example']}
                           rules={[
-                            { len: 300, type: 'string', message: '参数示例长度不能超过 300' },
+                            { max: 300, type: 'string', message: '参数示例长度不能超过 300' },
                           ]}
                         >
                           <Input placeholder="参数示例" />
@@ -368,7 +484,7 @@ export default (props: ApiEditProps) => {
                           {...restField}
                           name={[name, 'remark']}
                           fieldKey={[fieldKey, 'remark']}
-                          rules={[{ len: 300, type: 'string', message: '备注长度不能超过 300' }]}
+                          rules={[{ max: 300, type: 'string', message: '备注长度不能超过 300' }]}
                         >
                           <Input style={{ width: '100%' }} placeholder="备注" />
                         </FieldFormItem>
@@ -423,7 +539,7 @@ export default (props: ApiEditProps) => {
                           {...restField}
                           name={[name, 'value']}
                           fieldKey={[fieldKey, 'value']}
-                          rules={[{ len: 30, message: '参数值长度不能超过 30' }]}
+                          rules={[{ max: 30, message: '参数值长度不能超过 30' }]}
                         >
                           <Input placeholder="参数值" />
                         </FieldFormItem>
@@ -447,7 +563,7 @@ export default (props: ApiEditProps) => {
                           name={[name, 'example']}
                           fieldKey={[fieldKey, 'example']}
                           rules={[
-                            { len: 300, type: 'string', message: '参数示例长度不能超过 300' },
+                            { max: 300, type: 'string', message: '参数示例长度不能超过 300' },
                           ]}
                         >
                           <Input placeholder="参数示例" />
@@ -458,7 +574,7 @@ export default (props: ApiEditProps) => {
                           {...restField}
                           name={[name, 'remark']}
                           fieldKey={[fieldKey, 'remark']}
-                          rules={[{ len: 300, type: 'string', message: '备注长度不能超过 300' }]}
+                          rules={[{ max: 300, type: 'string', message: '备注长度不能超过 300' }]}
                         >
                           <Input style={{ width: '100%' }} placeholder="备注" />
                         </FieldFormItem>
@@ -481,10 +597,23 @@ export default (props: ApiEditProps) => {
             </Form.List>
           </EditContainer>
         )}
-        <ApiTitle>返回数据设置</ApiTitle>
+        <ApiTitle style={{ marginTop: 30 }}>返回数据设置</ApiTitle>
         <div>这是返回数据设置区域</div>
-        <ApiTitle>备 注</ApiTitle>
+        <ApiTitle style={{ marginTop: 30 }}>备 注</ApiTitle>
         <div>这是备注编辑区域</div>
+        <Affix offsetBottom={0} onChange={(af) => setAffixed(af)} style={{ marginTop: 30 }}>
+          <SaveContainer style={{ backgroundColor: affixed ? 'rgb(230, 233, 236)' : undefined }}>
+            <Button
+              type="primary"
+              loading={submitting}
+              key={'submit'}
+              htmlType={'submit'}
+              onClick={handleSubmit}
+            >
+              保存
+            </Button>
+          </SaveContainer>
+        </Affix>
       </Space>
     </Form>
   );
