@@ -1,8 +1,7 @@
 import {
   AlipayCircleOutlined,
-  LockTwoTone,
-  MailTwoTone,
-  MobileTwoTone,
+  LockOutlined,
+  MobileOutlined,
   TaobaoCircleOutlined,
   UserOutlined,
   WeiboCircleOutlined,
@@ -31,18 +30,6 @@ const LoginMessage: React.FC<{
   />
 );
 
-/**
- * 此方法会跳转到 redirect 参数所在的位置
- */
-const goto = () => {
-  if (!history) return;
-  setTimeout(() => {
-    const { query } = history.location;
-    const { redirect } = query as { redirect: string };
-    history.push(redirect || '/');
-  }, 10);
-};
-
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [userFormVisible, setUserFormVisible] = useState(false);
@@ -55,10 +42,10 @@ const Login: React.FC = () => {
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
-      setInitialState({
-        ...initialState,
+      await setInitialState((s) => ({
+        ...s,
         currentUser: userInfo,
-      });
+      }));
     }
   };
 
@@ -77,13 +64,22 @@ const Login: React.FC = () => {
           tokenInfo,
         });
         await fetchUserInfo();
-        goto();
+        /** 此方法会跳转到 redirect 参数所在的位置 */
+        if (!history) return;
+        const { query } = history.location;
+        const { redirect } = query as { redirect: string };
+        history.push(redirect || '/');
         return;
       }
       // 如果失败去设置用户错误信息
       setUserLoginState({ status: 'error' });
     } catch (error) {
-      message.error('登录失败，请重试！');
+      const defaultLoginFailureMessage = intl.formatMessage({
+        id: 'pages.login.failure',
+        defaultMessage: '登录失败，请重试！',
+      });
+
+      message.error(defaultLoginFailureMessage);
     }
     setSubmitting(false);
   };
@@ -92,7 +88,9 @@ const Login: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.lang}>{SelectLang && <SelectLang />}</div>
+      <div className={styles.lang} data-lang>
+        {SelectLang && <SelectLang />}
+      </div>
       <div className={styles.content}>
         <div className={styles.top}>
           <div className={styles.header}>
@@ -101,8 +99,11 @@ const Login: React.FC = () => {
               <span className={styles.title}>Quiet</span>
             </Link>
           </div>
-          <div className={styles.desc}>Quiet Web</div>
+          <div className={styles.desc}>
+            {intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
+          </div>
         </div>
+
         <div className={styles.main}>
           <ProForm
             initialValues={{
@@ -129,7 +130,7 @@ const Login: React.FC = () => {
               await handleSubmit(values);
             }}
           >
-            <Tabs activeKey={type} onChange={setType} centered={true}>
+            <Tabs activeKey={type} onChange={setType}>
               <Tabs.TabPane
                 key="account"
                 tab={intl.formatMessage({
@@ -184,7 +185,7 @@ const Login: React.FC = () => {
                   initialValue={'quiet'}
                   fieldProps={{
                     size: 'large',
-                    prefix: <LockTwoTone className={styles.prefixIcon} />,
+                    prefix: <LockOutlined className={styles.prefixIcon} />,
                   }}
                   placeholder={intl.formatMessage({
                     id: 'pages.login.password.placeholder',
@@ -211,7 +212,7 @@ const Login: React.FC = () => {
                 <ProFormText
                   fieldProps={{
                     size: 'large',
-                    prefix: <MobileTwoTone className={styles.prefixIcon} />,
+                    prefix: <MobileOutlined className={styles.prefixIcon} />,
                   }}
                   name="mobile"
                   placeholder={intl.formatMessage({
@@ -242,7 +243,7 @@ const Login: React.FC = () => {
                 <ProFormCaptcha
                   fieldProps={{
                     size: 'large',
-                    prefix: <MailTwoTone className={styles.prefixIcon} />,
+                    prefix: <LockOutlined className={styles.prefixIcon} />,
                   }}
                   captchaProps={{
                     size: 'large',
@@ -275,8 +276,8 @@ const Login: React.FC = () => {
                       ),
                     },
                   ]}
-                  onGetCaptcha={async (mobile) => {
-                    const result = await getFakeCaptcha(mobile);
+                  onGetCaptcha={async (phone) => {
+                    const result = await getFakeCaptcha(phone);
                     if (result === false) {
                       return;
                     }

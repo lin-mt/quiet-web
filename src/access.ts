@@ -1,4 +1,6 @@
-// src/access.ts
+/**
+ * @see https://umijs.org/zh-CN/plugins/plugin-access
+ * */
 import type { QuietRole, QuietUser } from '@/services/system/EntityType';
 
 export default function access(initialState: { currentUser?: QuietUser | undefined }) {
