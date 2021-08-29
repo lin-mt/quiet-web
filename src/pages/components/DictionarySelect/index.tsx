@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Empty, Select, Spin } from 'antd';
+import { Select } from 'antd';
 import type { SelectProps } from 'antd/es/select';
 import type { DictionaryType } from '@/types/Type';
 import { useModel } from 'umi';
@@ -22,11 +22,9 @@ export function DictionarySelect<
   ValueType extends { key?: string; label: React.ReactNode; value: string | number } = any,
 >({ type, allowClear = false, ...props }: DictionarySelectProps) {
   const { getDictionariesByType } = useModel(DICTIONARY);
-  const [loading, setLoading] = React.useState(false);
   const [options, setOptions] = React.useState<OptionType[]>([]);
 
   useEffect(() => {
-    setLoading(true);
     let isMounted = true;
 
     const buildOptions = (sources: QuietDictionary[]): OptionType[] => {
@@ -43,7 +41,6 @@ export function DictionarySelect<
     getDictionariesByType(type).then((dictionaries) => {
       if (isMounted) {
         setOptions(buildOptions(dictionaries));
-        setLoading(false);
       }
     });
     return () => {
@@ -51,12 +48,5 @@ export function DictionarySelect<
     };
   }, [getDictionariesByType, type]);
 
-  return (
-    <Select<ValueType>
-      allowClear={allowClear}
-      notFoundContent={<div style={{ textAlign: 'center' }}>{loading ? <Spin /> : <Empty />}</div>}
-      options={options}
-      {...props}
-    />
-  );
+  return <Select<ValueType> allowClear={allowClear} options={options} {...props} />;
 }
