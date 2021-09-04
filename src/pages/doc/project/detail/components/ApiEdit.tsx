@@ -9,6 +9,7 @@ import type { ChangeEvent } from 'react';
 import { useEffect, useState } from 'react';
 import { ApiState, FormDataType, HttpMethod, QueryType } from '@/services/doc/Enums';
 import _ from 'lodash';
+import JsonSchemaEditor from '@/pages/components/JsonSchemaEditor';
 
 interface ApiEditProps {
   apiId: string;
@@ -401,7 +402,16 @@ export default (props: ApiEditProps) => {
                 )}
               </Form.List>
             )}
-            {bodyTypeSetting === 'json' && <div>参数类型为 JSON</div>}
+            {bodyTypeSetting === 'json' && (
+              <div>
+                <JsonSchemaEditor
+                  onChange={(e) => {
+                    // eslint-disable-next-line no-console
+                    console.log(e);
+                  }}
+                />
+              </div>
+            )}
             {bodyTypeSetting === 'file' && (
               <FieldFormItem noStyle={true} name={'bodyFile'}>
                 <Input />
@@ -632,7 +642,16 @@ export default (props: ApiEditProps) => {
           onChange={(event) => setRespSetting(event.target.value)}
         />
         <EditContainer>
-          {respSetting === 'JSON' && 'JSON 返回值'}
+          {respSetting === 'JSON' && (
+            <>
+              <JsonSchemaEditor
+                onChange={(e) => {
+                  // eslint-disable-next-line no-console
+                  console.log(e);
+                }}
+              />
+            </>
+          )}
           {respSetting === 'RAW' && (
             <FieldFormItem
               noStyle={true}

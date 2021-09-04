@@ -1,0 +1,16 @@
+.json-schema-react-editor-adv-modal .other-row {
+  margin-bottom: 16px;
+}
+
+.json-schema-react-editor-adv-modal .other-label {
+  padding-right: 8px;
+  text-align: right;
+}
+
+.json-schema-react-editor-adv-modal .default-setting {
+  margin-bottom: 16px;
+  padding-left: 8px;
+  font-weight: 400;
+  font-size: 16px;
+  border-left: 3px solid #2395f1;
+}

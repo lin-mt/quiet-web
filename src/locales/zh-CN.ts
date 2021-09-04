@@ -1,5 +1,6 @@
 import component from './zh-CN/component';
 import globalHeader from './zh-CN/globalHeader';
+import jsonSchemaEditor from '@/locales/zh-CN/jsonSchemaEditor';
 import menu from './zh-CN/menu';
 import pwa from './zh-CN/pwa';
 import settingDrawer from './zh-CN/settingDrawer';
@@ -15,11 +16,12 @@ export default {
   'app.preview.down.block': '下载此页面到本地项目',
   'app.welcome.link.fetch-blocks': '获取全部区块',
   'app.welcome.link.block-list': '基于 block 开发，快速构建标准页面',
-  ...pages,
+  ...component,
   ...globalHeader,
+  ...jsonSchemaEditor,
   ...menu,
+  ...pwa,
   ...settingDrawer,
   ...settings,
-  ...pwa,
-  ...component,
+  ...pages,
 };
