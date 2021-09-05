@@ -34,7 +34,7 @@ export default (props: SchemaArrayProp) => {
             <Tooltip title={intl.formatMessage({ id: 'components.jsonSchemaEditor.unique.items' })}>
               <QuestionCircleOutlined style={{ width: '10px' }} />
             </Tooltip>
-            &nbsp; :
+            &nbsp;：
           </span>
         </Col>
         <Col span={18}>

@@ -2,6 +2,8 @@ import SchemaArray from './SchemaArray';
 import SchemaObject from './SchemaObject';
 import { useModel } from '@@/plugin-model/useModel';
 import { JSON_SCHEMA_EDITOR } from '@/constant/doc/ModelNames';
+import { useContext, useEffect, useState } from 'react';
+import { EditorContext } from '@/pages/components/JsonSchemaEditor';
 
 export const mapping = (name: any, data: any, showEdit: any, showAdv: any) => {
   switch (data.type) {
@@ -30,6 +32,16 @@ export default (props: SchemaJsonProp) => {
   const { schema } = useModel(JSON_SCHEMA_EDITOR);
   const { showAdv, showEdit } = props;
 
-  const item = mapping([], schema, showEdit, showAdv);
+  const context = useContext(EditorContext);
+
+  const [schemaVal, setSchemaVal] = useState<any>();
+
+  useEffect(() => {
+    if (schema[context.schemaId]) {
+      setSchemaVal(schema[context.schemaId]);
+    }
+  }, [context.schemaId, schema]);
+
+  const item = schemaVal ? mapping([], schemaVal, showEdit, showAdv) : '';
   return <div style={{ paddingTop: 8 }}>{item}</div>;
 };

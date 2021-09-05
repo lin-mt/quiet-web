@@ -3,6 +3,8 @@ import { PlusOutlined } from '@ant-design/icons';
 import { useModel } from '@@/plugin-model/useModel';
 import { useIntl } from 'umi';
 import { JSON_SCHEMA_EDITOR } from '@/constant/doc/ModelNames';
+import { useContext } from 'react';
+import { EditorContext } from '@/pages/components/JsonSchemaEditor';
 
 interface DropPlusProp {
   prefix: string[];
@@ -14,23 +16,25 @@ export default (props: DropPlusProp) => {
 
   const { prefix, name } = props;
 
-  const { addField, addChildField, setOpenValue } = useModel(JSON_SCHEMA_EDITOR);
+  const { addFieldWithId, addChildFieldWithId, setOpenValueWithId } = useModel(JSON_SCHEMA_EDITOR);
+
+  const context = useContext(EditorContext);
 
   const menu = (
     <Menu>
       <Menu.Item key={'sibling_node'}>
-        <span onClick={() => addField({ keys: prefix, name })}>
+        <span onClick={() => addFieldWithId(context.schemaId, { keys: prefix, name })}>
           {intl.formatMessage({ id: 'components.jsonSchemaEditor.sibling.node' })}
         </span>
       </Menu.Item>
       <Menu.Item key={'child_node'}>
         <span
           onClick={() => {
-            setOpenValue({
+            setOpenValueWithId(context.schemaId, {
               key: prefix.concat(name, 'properties'),
               value: true,
             });
-            addChildField({ keys: prefix.concat(name, 'properties') });
+            addChildFieldWithId(context.schemaId, { keys: prefix.concat(name, 'properties') });
           }}
         >
           {intl.formatMessage({ id: 'components.jsonSchemaEditor.child.node' })}

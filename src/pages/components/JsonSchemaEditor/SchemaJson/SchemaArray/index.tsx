@@ -31,12 +31,17 @@ export default (props: SchemaArrayProp) => {
 
   const { data, prefix, showAdv, showEdit } = props;
 
-  const { open, changeType, changeValue, setOpenValue, addChildField } =
+  const { open, changeTypeWithId, changeValueWithId, setOpenValueWithId, addChildFieldWithId } =
     useModel(JSON_SCHEMA_EDITOR);
 
   const [tagPaddingLeftStyle, setTagPaddingLeftStyle] = useState<CSSProperties>({});
+  const [openVal, setOpenVal] = useState();
 
   const context = useContext(EditorContext);
+
+  useEffect(() => {
+    setOpenVal(open[context.schemaId]);
+  }, [context.schemaId, open]);
 
   useEffect(() => {
     const { length } = props.prefix.filter((name) => name !== 'properties');
@@ -52,37 +57,37 @@ export default (props: SchemaArrayProp) => {
   // 修改数据类型
   const handleChangeType = (value: any) => {
     const keys = getPrefix().concat('type');
-    changeType({ keys, value });
+    changeTypeWithId(context.schemaId, { keys, value });
   };
 
   // 修改备注信息
   const handleChangeDesc = (e: any) => {
     const key = getPrefix().concat(`description`);
-    changeValue({ keys: key, value: e.target.value });
+    changeValueWithId(context.schemaId, { keys: key, value: e.target.value });
   };
 
   // 修改mock信息
   const handleChangeMock = (e: any) => {
     const key = getPrefix().concat('mock');
-    changeValue({ keys: key, value: e ? { mock: e } : '' });
+    changeValueWithId(context.schemaId, { keys: key, value: e ? { mock: e } : '' });
   };
 
   const handleChangeTitle = (e: any) => {
     const key = getPrefix().concat('title');
-    changeValue({ keys: key, value: e.target.value });
+    changeValueWithId(context.schemaId, { keys: key, value: e.target.value });
   };
 
   // 增加子节点
   const handleAddChildField = () => {
     const keyArr = getPrefix().concat('properties');
-    addChildField({ keys: keyArr });
-    setOpenValue({ key: keyArr, value: true });
+    addChildFieldWithId(context.schemaId, { keys: keyArr });
+    setOpenValueWithId(context.schemaId, { key: keyArr, value: true });
   };
 
   const handleClickIcon = () => {
     // 数据存储在 properties.name.properties下
     const keyArr = getPrefix().concat('properties');
-    setOpenValue({ key: keyArr });
+    setOpenValueWithId(context.schemaId, { key: keyArr });
   };
 
   const handleShowEdit = (name: string, type?: undefined) => {
@@ -94,7 +99,7 @@ export default (props: SchemaArrayProp) => {
   };
 
   const getOpenValue = (jsonPath: any) => {
-    return _.get(open, jsonPath);
+    return _.get(openVal, jsonPath);
   };
 
   const { items } = data;

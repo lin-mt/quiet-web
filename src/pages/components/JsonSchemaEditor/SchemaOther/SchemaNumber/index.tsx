@@ -23,9 +23,13 @@ export default (props: SchemaNumberProp) => {
   const { data } = props;
 
   const [checked, setChecked] = useState<boolean>(!_.isUndefined(props.data.enum));
-  const [enumVal, setEnumVal] = useState(
+  const [enumVal, setEnumVal] = useState<string>(
     _.isUndefined(props.data.enum) ? '' : props.data.enum.join('\n'),
   );
+
+  useEffect(() => {
+    setChecked(!_.isUndefined(props.data.enum));
+  }, [props.data.enum]);
 
   useEffect(() => {
     setEnumVal(_.isUndefined(props.data.enum) ? '' : props.data.enum.join('\n'));
@@ -38,22 +42,46 @@ export default (props: SchemaNumberProp) => {
     if (!boxCchecked) {
       const newData = _.cloneDeep(changeData);
       delete newData.enum;
+      delete newData.enumDesc;
       setEnumVal('');
       context.changeCustomValue(newData);
     }
   };
 
-  const changeEnumOtherValue = (value: any, changeData: any) => {
-    setEnumVal(value);
-    const newData = _.cloneDeep(changeData);
-    const arr = value.split('\n');
-    if (arr.length === 0 || (arr.length === 1 && !arr[0])) {
-      delete newData.enum;
-      context.changeCustomValue(newData);
-    } else {
-      newData.enum = arr.map((item: string | number) => +item);
-      context.changeCustomValue(newData);
+  const changeEnumOtherValue = (value: string, changeData: any) => {
+    let newEnumVal = value;
+    const inputArr = newEnumVal.split('\n');
+    if (changeData && changeData.type === 'number') {
+      if (enumVal.split('\n').length === inputArr.length) {
+        if (inputArr[inputArr.length - 1] === '') {
+          newEnumVal = newEnumVal.slice(0, newEnumVal.length - 1);
+        }
+      }
     }
+    setEnumVal(newEnumVal);
+    const arr = newEnumVal.split('\n');
+    const newData = _.cloneDeep(changeData);
+    const newEnum: number[] = [];
+    arr.forEach((item) => {
+      if (!Number.isNaN(Number(item))) {
+        newEnum.push(Number(item));
+      } else {
+        for (let i = 1; i < item.length + 1; i += 1) {
+          if (Number.isNaN(Number(item.slice(0, i))) && i > 1) {
+            newEnum.push(Number(item.slice(0, i - 1)));
+            break;
+          }
+        }
+      }
+    });
+    if (newEnum.length > 0 && newEnumVal !== '') {
+      newData.enum = newEnum;
+    } else {
+      delete newData.enum;
+      delete newData.enumDesc;
+      setEnumVal('');
+    }
+    context.changeCustomValue(newData);
   };
 
   const changeEnumDescOtherValue = (value: any, changeData: any) => {
@@ -92,9 +120,9 @@ export default (props: SchemaNumberProp) => {
                     id: 'components.jsonSchemaEditor.exclusive.minimum',
                   })}
                 >
-                  <QuestionCircleOutlined style={{ width: '10px' }} />
+                  <QuestionCircleOutlined />
                 </Tooltip>
-                &nbsp; :
+                &nbsp;：
               </span>
             </Col>
             <Col span={11}>
@@ -117,21 +145,16 @@ export default (props: SchemaNumberProp) => {
                     id: 'components.jsonSchemaEditor.exclusive.maximum',
                   })}
                 >
-                  <QuestionCircleOutlined style={{ width: '10px' }} />
+                  <QuestionCircleOutlined />
                 </Tooltip>
-                &nbsp; :
+                &nbsp;：
               </span>
             </Col>
             <Col span={11}>
               <Switch
                 checked={data.exclusiveMaximum}
                 onChange={(e) =>
-                  changeOtherValue(
-                    e,
-                    'components.jsonSchemaEditor.exclusive.maximum',
-                    data,
-                    context.changeCustomValue,
-                  )
+                  changeOtherValue(e, 'exclusiveMaximum', data, context.changeCustomValue)
                 }
               />
             </Col>
@@ -147,6 +170,7 @@ export default (props: SchemaNumberProp) => {
             <Col span={16}>
               <InputNumber
                 value={data.minimum}
+                style={{ width: '100%' }}
                 placeholder={intl.formatMessage({ id: 'components.jsonSchemaEditor.minimum' })}
                 onChange={(e) => changeOtherValue(e, 'minimum', data, context.changeCustomValue)}
               />
@@ -161,6 +185,7 @@ export default (props: SchemaNumberProp) => {
             <Col span={16}>
               <InputNumber
                 value={data.maximum}
+                style={{ width: '100%' }}
                 placeholder={intl.formatMessage({ id: 'components.jsonSchemaEditor.maximum' })}
                 onChange={(e) => changeOtherValue(e, 'maximum', data, context.changeCustomValue)}
               />
@@ -175,8 +200,8 @@ export default (props: SchemaNumberProp) => {
             <Checkbox
               checked={checked}
               onChange={(e) => onChangeCheckBox(e.target.checked, data)}
-            />{' '}
-            :
+            />
+            &nbsp;：
           </span>
         </Col>
         <Col span={20}>
@@ -185,16 +210,14 @@ export default (props: SchemaNumberProp) => {
             disabled={!checked}
             placeholder={intl.formatMessage({ id: 'components.jsonSchemaEditor.enum.msg' })}
             autoSize={{ minRows: 2, maxRows: 6 }}
-            onChange={(e) => {
-              changeEnumOtherValue(e.target.value, data);
-            }}
+            onChange={(e) => changeEnumOtherValue(e.target.value, data)}
           />
         </Col>
       </Row>
       {checked && (
         <Row className="other-row" align="middle">
           <Col span={4} className="other-label">
-            <span>{intl.formatMessage({ id: 'components.jsonSchemaEditor.enum.desc' })} ：</span>
+            <span>{intl.formatMessage({ id: 'components.jsonSchemaEditor.enum.desc' })}：</span>
           </Col>
           <Col span={20}>
             <TextArea
@@ -202,9 +225,7 @@ export default (props: SchemaNumberProp) => {
               disabled={!checked}
               placeholder={intl.formatMessage({ id: 'components.jsonSchemaEditor.enum.desc.msg' })}
               autoSize={{ minRows: 2, maxRows: 6 }}
-              onChange={(e) => {
-                changeEnumDescOtherValue(e.target.value, data);
-              }}
+              onChange={(e) => changeEnumDescOtherValue(e.target.value, data)}
             />
           </Col>
         </Row>

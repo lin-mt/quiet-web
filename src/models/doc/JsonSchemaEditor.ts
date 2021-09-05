@@ -30,15 +30,30 @@ interface SchemaProp {
 }
 
 export default () => {
-  const [schema, setSchema] = useState<SchemaProp>({
-    type: 'object',
-    properties: {},
-    required: [],
-  });
+  const [schema, setSchema] = useState<Record<string, SchemaProp>>({});
 
-  const [open, setOpen] = useState({
-    properties: true,
-  });
+  const [open, setOpen] = useState<Record<string, any>>({});
+
+  const initSchemaInfo = (id: string) => {
+    setSchema((prevState) => {
+      return {
+        ...prevState,
+        [id]: {
+          type: 'object',
+          properties: {},
+          required: [],
+        },
+      };
+    });
+    setOpen((prevState) => {
+      return {
+        ...prevState,
+        [id]: {
+          properties: true,
+        },
+      };
+    });
+  };
 
   const getParentKey = (keys: string[]): string[] => {
     if (!keys) {
@@ -56,10 +71,10 @@ export default () => {
     return _.set(state, parentKeys, _.uniq(requiredData));
   };
 
-  const changeEditorSchema = ({ value }: { value: any }) => {
+  const changeEditorSchemaWithId = (id: string, { value }: { value: any }) => {
     setSchema((prevState) => {
       const newVal = handleSchema(value);
-      return { ...prevState, ...newVal };
+      return { ...prevState, [id]: { ...newVal } };
     });
   };
 
@@ -72,9 +87,12 @@ export default () => {
     return _.set(state, parentKeys, _.uniq(filteredRequire));
   };
 
-  const changeName = ({ keys, name, value }: { keys: string[]; name: string; value: string }) => {
+  const changeNameWithId = (
+    id: string,
+    { keys, name, value }: { keys: string[]; name: string; value: string },
+  ) => {
     setSchema((prevState) => {
-      const clonedState = _.cloneDeep(prevState);
+      const clonedState = _.cloneDeep(prevState[id]);
       const items = _.get(clonedState, keys);
       const keyExists = Object.keys(items).indexOf(value) >= 0 && items[value] === 'object';
       if (keyExists || !_.has(items, name)) {
@@ -83,7 +101,7 @@ export default () => {
       items[value] = items[name];
       delete items[name];
       const newState = addRequiredFields(clonedState, keys, value);
-      return removeRequireField(newState, keys, name);
+      return { ...prevState, [id]: { ...removeRequireField(newState, keys, name) } };
     });
   };
 
@@ -93,47 +111,42 @@ export default () => {
     return clonedState;
   };
 
-  const changeValue = ({ keys, value }: { keys: string[]; value: any }) => {
+  const changeValueWithId = (id: string, { keys, value }: { keys: string[]; value: any }) => {
     setSchema((prevState) => {
-      const newSchema = _.cloneDeep(prevState);
+      const newSchema = _.cloneDeep(prevState[id]);
       if (value) {
         _.set(newSchema, keys, value);
-        return newSchema;
+        return { ...prevState, [id]: { ...newSchema } };
       }
-      return handleDelete(newSchema, { keys });
+      return { ...prevState, [id]: { ...handleDelete(newSchema, { keys }) } };
     });
   };
 
-  const changeType = ({ keys, value }: { keys: string[]; value: string }) => {
+  const changeTypeWithId = (id: string, { keys, value }: { keys: string[]; value: string }) => {
     setSchema((prevState) => {
       const parentKeys: string[] = getParentKey(keys);
-      const parentData = parentKeys.length ? _.get(prevState, parentKeys) : prevState;
-      const clonedState = _.cloneDeep(prevState);
+      const parentData = parentKeys.length ? _.get(prevState[id], parentKeys) : prevState[id];
+      const clonedState = _.cloneDeep(prevState[id]);
       if (parentData.type === value) {
-        return clonedState;
+        return { ...prevState, [id]: { ...clonedState } };
       }
       const description = parentData.description ? { description: parentData.description } : {};
       const newParentDataItem = { ...getDefaultSchema(value), ...description };
       if (parentKeys.length === 0) {
-        return { ...newParentDataItem };
+        return { ...prevState, [id]: { ...newParentDataItem } };
       }
-      return _.set(clonedState, parentKeys, newParentDataItem);
+      return { ...prevState, [id]: { ..._.set(clonedState, parentKeys, newParentDataItem) } };
     });
   };
 
-  const enableRequire = ({
-    keys,
-    name,
-    required,
-  }: {
-    keys: string[];
-    name: string;
-    required: boolean;
-  }) => {
+  const enableRequireWithid = (
+    id: string,
+    { keys, name, required }: { keys: string[]; name: string; required: boolean },
+  ) => {
     setSchema((prevState) => {
       const parentKeys: string[] = getParentKey(keys);
-      const clonedState = _.cloneDeep(prevState);
-      const parentData = parentKeys.length ? _.get(prevState, parentKeys) : prevState;
+      const clonedState = _.cloneDeep(prevState[id]);
+      const parentData = parentKeys.length ? _.get(prevState[id], parentKeys) : prevState[id];
       const requiredArray: string[] = [].concat(parentData.required || []);
       const requiredFieldIndex = requiredArray.indexOf(name);
       const foundRequired = requiredFieldIndex >= 0;
@@ -145,54 +158,61 @@ export default () => {
         requiredArray.push(name);
       }
       parentKeys.push('required');
-      return _.set(clonedState, parentKeys, requiredArray);
+      return { ...prevState, [id]: { ..._.set(clonedState, parentKeys, requiredArray) } };
     });
   };
 
-  const handleSchemaRequired = (schemaChange: SchemaProp, checked: boolean): any => {
-    const datum = schemaChange;
-    if (datum.type === 'object') {
-      const requiredTitle = getFieldsTitle(datum.properties);
+  const handleSchemaRequired = (oldSchema: SchemaProp, checked: boolean): any => {
+    const newSchema = _.cloneDeep(oldSchema);
+    if (newSchema.type === 'object') {
+      const requiredTitle = getFieldsTitle(newSchema.properties);
       if (checked) {
-        datum.required = requiredTitle;
+        newSchema.required = requiredTitle;
       } else {
-        delete datum.required;
+        delete newSchema.required;
       }
-      if (datum.properties) {
-        handleObject(datum.properties, checked);
-        return null;
+      if (newSchema.properties) {
+        newSchema.properties = handleObject(newSchema.properties, checked);
       }
-    } else if (datum.type === 'array') {
-      if (datum.items) {
-        return handleSchemaRequired(datum.items, checked);
+    } else if (newSchema.type === 'array') {
+      if (newSchema.items) {
+        newSchema.items = handleSchemaRequired(newSchema.items, checked);
       }
-    } else {
-      return schema;
     }
-    return null;
+    return newSchema;
   };
 
-  const requireAll = (required: boolean) => {
+  function handleObject(properties: Record<string, any>, checked: boolean) {
+    const newProperties = _.cloneDeep(properties);
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key in newProperties) {
+      if (newProperties[key].type === 'array' || newProperties[key].type === 'object')
+        newProperties[key] = handleSchemaRequired(newProperties[key], checked);
+    }
+    return newProperties;
+  }
+
+  const requireAllWithId = (id: string, required: boolean) => {
     setSchema((prevState) => {
-      const data = _.cloneDeep(prevState);
-      handleSchemaRequired(data, required);
-      return { ...data };
+      let schemaForChange = _.cloneDeep(prevState[id]);
+      schemaForChange = handleSchemaRequired(schemaForChange, required);
+      return { ...prevState, [id]: { ...schemaForChange } };
     });
   };
 
-  const deleteItem = ({ keys }: { keys: string[] }) => {
+  const deleteItemWithId = (id: string, { keys }: { keys: string[] }) => {
     setSchema((prevState) => {
-      const clonedState = _.clone(prevState);
+      const clonedState = _.clone(prevState[id]);
       _.unset(clonedState, keys);
-      return clonedState;
+      return { ...prevState, [id]: { ...clonedState } };
     });
   };
 
-  const addField = ({ keys, name }: { keys: string[]; name: string }) => {
+  const addFieldWithId = (id: string, { keys, name }: { keys: string[]; name: string }) => {
     setSchema((prevState) => {
       fieldNum += 1;
-      const clonedState = _.cloneDeep(prevState);
-      const propertiesData = _.get(prevState, keys);
+      const clonedState = _.cloneDeep(prevState[id]);
+      const propertiesData = _.get(prevState[id], keys);
       let newPropertiesData: Record<string, any> = {};
       const fieldName = `field_${fieldNum}`;
 
@@ -211,7 +231,7 @@ export default () => {
       }
 
       const newState = _.update(clonedState, keys, (n) => _.assign(n, newPropertiesData));
-      return addRequiredFields(newState, keys, fieldName);
+      return { ...prevState, [id]: { ...addRequiredFields(newState, keys, fieldName) } };
     });
   };
 
@@ -227,31 +247,23 @@ export default () => {
     );
   };
 
-  const addChildField = ({ keys }: { keys: string[] }) => {
+  const addChildFieldWithId = (id: string, { keys }: { keys: string[] }) => {
     setSchema((prevState) => {
       fieldNum += 1;
       const fieldName = `field_${fieldNum}`;
-      const originalState = _.clone(prevState);
-      handleAddChildField(prevState, keys, fieldName);
-      return addRequiredFields(originalState, keys, fieldName);
+      const originalState = _.clone(prevState[id]);
+      handleAddChildField(prevState[id], keys, fieldName);
+      return { ...prevState, [id]: { ...addRequiredFields(originalState, keys, fieldName) } };
     });
   };
 
-  const setOpenValue = ({ key, value }: { key: string[]; value?: boolean }) => {
+  const setOpenValueWithId = (id: string, { key, value }: { key: string[]; value?: boolean }) => {
     setOpen((prevState) => {
-      const clonedState = _.cloneDeep(prevState);
-      const status = _.isUndefined(value) ? !_.get(prevState, key) : value;
-      return _.set(clonedState, key, status);
+      const clonedState = _.cloneDeep(prevState[id]);
+      const status = _.isUndefined(value) ? !_.get(prevState[id], key) : value;
+      return { ...prevState, [id]: { ..._.set(clonedState, key, status) } };
     });
   };
-
-  function handleObject(properties: Record<string, any>, checked: boolean) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const key in properties) {
-      if (properties[key].type === 'array' || properties[key].type === 'object')
-        handleSchemaRequired(properties[key], checked);
-    }
-  }
 
   function getFieldsTitle(data: any): string[] {
     const requiredTitle: string[] = [];
@@ -264,15 +276,16 @@ export default () => {
   return {
     schema,
     open,
-    changeEditorSchema,
-    changeName,
-    changeValue,
-    changeType,
-    enableRequire,
-    requireAll,
-    deleteItem,
-    addField,
-    addChildField,
-    setOpenValue,
+    initSchemaInfo,
+    changeEditorSchemaWithId,
+    changeNameWithId,
+    changeValueWithId,
+    changeTypeWithId,
+    enableRequireWithid,
+    requireAllWithId,
+    deleteItemWithId,
+    addFieldWithId,
+    addChildFieldWithId,
+    setOpenValueWithId,
   };
 };

@@ -36,6 +36,7 @@ export default (props: SchemaStringProp) => {
     const newData = _.cloneDeep(changeData);
     if (arr.length === 0 || (arr.length === 1 && !arr[0])) {
       delete newData.enum;
+      delete newData.enumDesc;
       context.changeCustomValue(newData);
     } else {
       newData.enum = arr;
@@ -54,6 +55,7 @@ export default (props: SchemaStringProp) => {
     if (!boxChecked) {
       const newData = _.cloneDeep(changeData);
       delete newData.enum;
+      delete newData.enumDesc;
       context.changeCustomValue(newData);
     }
   };
@@ -65,7 +67,7 @@ export default (props: SchemaStringProp) => {
       </div>
       <Row className="other-row" align="middle">
         <Col span={4} className="other-label">
-          {intl.formatMessage({ id: 'components.jsonSchemaEditor.default' })} ：
+          {intl.formatMessage({ id: 'components.jsonSchemaEditor.default' })}：
         </Col>
         <Col span={20}>
           <Input
@@ -79,13 +81,13 @@ export default (props: SchemaStringProp) => {
         <Col span={12}>
           <Row align="middle">
             <Col span={8} className="other-label">
-              {intl.formatMessage({ id: 'components.jsonSchemaEditor.min.length' })} ：
+              {intl.formatMessage({ id: 'components.jsonSchemaEditor.min.length' })}：
             </Col>
             <Col span={16}>
               <InputNumber
                 style={{ width: '100%' }}
                 value={data.minLength}
-                placeholder="min.length"
+                placeholder={intl.formatMessage({ id: 'components.jsonSchemaEditor.min.length' })}
                 onChange={(e) => changeOtherValue(e, 'minLength', data)}
               />
             </Col>
@@ -94,13 +96,13 @@ export default (props: SchemaStringProp) => {
         <Col span={12}>
           <Row align="middle">
             <Col span={8} className="other-label">
-              {intl.formatMessage({ id: 'components.jsonSchemaEditor.max.length' })} ：
+              {intl.formatMessage({ id: 'components.jsonSchemaEditor.max.length' })}：
             </Col>
             <Col span={16}>
               <InputNumber
                 style={{ width: '100%' }}
                 value={data.maxLength}
-                placeholder="max.length"
+                placeholder={intl.formatMessage({ id: 'components.jsonSchemaEditor.max.length' })}
                 onChange={(e) => changeOtherValue(e, 'maxLength', data)}
               />
             </Col>
@@ -112,15 +114,15 @@ export default (props: SchemaStringProp) => {
           <span>
             Pattern&nbsp;
             <Tooltip title={intl.formatMessage({ id: 'components.jsonSchemaEditor.pattern' })}>
-              <QuestionCircleOutlined style={{ width: '8px' }} />
+              <QuestionCircleOutlined />
             </Tooltip>
-            &nbsp; :
+            &nbsp;：
           </span>
         </Col>
         <Col span={20}>
           <Input
             value={data.pattern}
-            placeholder="Pattern"
+            placeholder={intl.formatMessage({ id: 'components.jsonSchemaEditor.pattern' })}
             onChange={(e) => changeOtherValue(e.target.value, 'pattern', data)}
           />
         </Col>
@@ -132,8 +134,8 @@ export default (props: SchemaStringProp) => {
             <Checkbox
               checked={checked}
               onChange={(e) => onChangeCheckBox(e.target.checked, data)}
-            />{' '}
-            :
+            />
+            &nbsp;：
           </span>
         </Col>
         <Col span={20}>
@@ -142,16 +144,14 @@ export default (props: SchemaStringProp) => {
             disabled={!checked}
             placeholder={intl.formatMessage({ id: 'components.jsonSchemaEditor.enum.msg' })}
             autoSize={{ minRows: 2, maxRows: 6 }}
-            onChange={(e) => {
-              changeEnumOtherValue(e.target.value, data);
-            }}
+            onChange={(e) => changeEnumOtherValue(e.target.value, data)}
           />
         </Col>
       </Row>
       {checked && (
         <Row className="other-row" align="middle">
           <Col span={4} className="other-label">
-            <span>{intl.formatMessage({ id: 'components.jsonSchemaEditor.enum.desc' })} :</span>
+            <span>{intl.formatMessage({ id: 'components.jsonSchemaEditor.enum.desc' })}：</span>
           </Col>
           <Col span={20}>
             <Input.TextArea
@@ -159,21 +159,19 @@ export default (props: SchemaStringProp) => {
               disabled={!checked}
               placeholder={intl.formatMessage({ id: 'components.jsonSchemaEditor.enum.desc.msg' })}
               autoSize={{ minRows: 2, maxRows: 6 }}
-              onChange={(e) => {
-                changeEnumDescOtherValue(e.target.value, data);
-              }}
+              onChange={(e) => changeEnumDescOtherValue(e.target.value, data)}
             />
           </Col>
         </Row>
       )}
       <Row className="other-row" align="middle">
         <Col span={4} className="other-label">
-          <span>format :</span>
+          <span>format：</span>
         </Col>
         <Col span={20}>
           <Select
             showSearch
-            style={{ width: 150 }}
+            style={{ width: 200 }}
             value={data.format}
             allowClear={true}
             dropdownClassName="json-schema-react-editor-adv-modal-select"
@@ -181,9 +179,9 @@ export default (props: SchemaStringProp) => {
             optionFilterProp="children"
             optionLabelProp="value"
             onChange={(e) => changeOtherValue(e, 'format', data)}
-            filterOption={(input, option) => {
-              return option?.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-            }}
+            filterOption={(input, option) =>
+              option?.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
           >
             {format.map((item) => {
               return (

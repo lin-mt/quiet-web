@@ -30,15 +30,18 @@ interface EditorContextType {
   getOpenValue: (keys: string[]) => any;
   changeCustomValue: (newValue: any) => void;
   isMock: boolean;
+  schemaId: string;
 }
 
 export const EditorContext = createContext<EditorContextType>({
   changeCustomValue(): void {},
   getOpenValue(): any {},
   isMock: false,
+  schemaId: '',
 });
 
 interface EditorProp {
+  id: string;
   data?: string;
   onChange?: (e: any) => void;
   showEditor?: boolean;
@@ -48,10 +51,19 @@ interface EditorProp {
 export default (props: EditorProp) => {
   const intl = useIntl();
 
-  const { schema, open, changeEditorSchema, changeType, addChildField, changeValue, requireAll } =
-    useModel(JSON_SCHEMA_EDITOR);
+  const {
+    schema,
+    open,
+    initSchemaInfo,
+    changeEditorSchemaWithId,
+    changeTypeWithId,
+    addChildFieldWithId,
+    changeValueWithId,
+    requireAllWithId,
+  } = useModel(JSON_SCHEMA_EDITOR);
 
   const {
+    id,
     showEditor = props.showEditor ? props.showEditor : false,
     isMock = props.isMock ? props.isMock : false,
     onChange = props.onChange ? props.onChange : () => {},
@@ -73,18 +85,32 @@ export default (props: EditorProp) => {
   const [jsonSchemaData, setJsonSchemaData] = useState(null);
   const [jsonData, setJsonData] = useState(null);
   const [importJsonType, setImportJsonType] = useState<string | null>(null);
+  const [openVal, setOpenVal] = useState();
+  const [schemaVal, setSchemaVal] = useState<any>();
 
   useEffect(() => {
     if (typeof props.data === 'string') {
-      changeEditorSchema({ value: JSON.parse(props.data) });
+      changeEditorSchemaWithId(id, { value: JSON.parse(props.data) });
+    } else {
+      initSchemaInfo(id);
     }
   }, []);
 
   useEffect(() => {
-    if (onChange) {
-      onChange(schema);
+    if (onChange && !_.isEqual(schemaVal, schema[id])) {
+      onChange(schema[id]);
     }
-  }, [onChange, schema]);
+  }, [id, onChange, schema, schemaVal]);
+
+  useEffect(() => {
+    setOpenVal(open[id]);
+  }, [id, open]);
+
+  useEffect(() => {
+    if (schema[id]) {
+      setSchemaVal(schema[id]);
+    }
+  }, [id, schema]);
 
   // json 导入弹窗
   const showModal = () => {
@@ -99,12 +125,12 @@ export default (props: EditorProp) => {
         message.error('json 数据格式有误').then();
       }
       const jsonDataVal = GenerateSchema(jsonData);
-      changeEditorSchema({ value: jsonDataVal });
+      changeEditorSchemaWithId(id, { value: jsonDataVal });
     } else {
       if (!jsonSchemaData) {
         message.error('json 数据格式有误').then();
       }
-      changeEditorSchema({ value: jsonSchemaData });
+      changeEditorSchemaWithId(id, { value: jsonSchemaData });
     }
     setStateVal((prevState) => {
       return { ...prevState, visible: false };
@@ -121,14 +147,14 @@ export default (props: EditorProp) => {
   const handleParams = (e: string | undefined) => {
     if (!e) return;
     const jsonValue = handleSchema(JSON.parse(e));
-    changeEditorSchema({
+    changeEditorSchemaWithId(id, {
       value: jsonValue,
     });
   };
 
   // 修改数据类型
   const handleChangeType = (key: any, value: any) => {
-    changeType({ keys: [key], value });
+    changeTypeWithId(id, { keys: [key], value });
   };
 
   const handleImportJson = (e: string | undefined) => {
@@ -150,7 +176,7 @@ export default (props: EditorProp) => {
   };
   // 增加子节点
   const handleAddChildField = (key: any) => {
-    addChildField({ keys: [key] });
+    addChildFieldWithId(id, { keys: [key] });
     setStateVal((prevState) => {
       return { ...prevState, show: true };
     });
@@ -170,7 +196,7 @@ export default (props: EditorProp) => {
     } else {
       valueDatum = value;
     }
-    changeValue({ keys: key, value: valueDatum });
+    changeValueWithId(id, { keys: key, value: valueDatum });
   };
 
   // 备注/mock弹窗 点击ok 时
@@ -182,7 +208,7 @@ export default (props: EditorProp) => {
     if (name === 'mock') {
       value = value ? { mock: value } : '';
     }
-    changeValue({ keys: stateVal.descriptionKey, value });
+    changeValueWithId(id, { keys: stateVal.descriptionKey, value });
   };
 
   const handleEditCancel = () => {
@@ -230,11 +256,11 @@ export default (props: EditorProp) => {
   // 高级设置
   const handleAdvOk = () => {
     if (stateVal.itemKey.length === 0) {
-      changeEditorSchema({
+      changeEditorSchemaWithId(id, {
         value: stateVal.curItemCustomValue,
       });
     } else {
-      changeValue({
+      changeValueWithId(id, {
         keys: stateVal.itemKey,
         value: stateVal.curItemCustomValue,
       });
@@ -272,21 +298,24 @@ export default (props: EditorProp) => {
     setStateVal((prevState) => {
       return { ...prevState, checked: e };
     });
-    requireAll(e);
+    requireAllWithId(id, e);
   };
 
   const { visible, editVisible, advVisible, checked, editorModalName } = stateVal;
 
-  const disabled = !(schema.type === 'object' || schema.type === 'array');
+  const disabled = schemaVal && !(schemaVal.type === 'object' || schemaVal.type === 'array');
 
-  return (
+  return !schemaVal ? (
+    <></>
+  ) : (
     <EditorContext.Provider
       value={{
         getOpenValue: (keys) => {
-          return _.get(open, keys.join(JSONPATH_JOIN_CHAR));
+          return _.get(openVal, keys.join(JSONPATH_JOIN_CHAR));
         },
         changeCustomValue,
         isMock,
+        schemaId: id,
       }}
     >
       <div className="json-schema-react-editor">
@@ -405,7 +434,7 @@ export default (props: EditorProp) => {
             <Col span={8}>
               <Editor
                 className={'pretty-editor'}
-                value={JSON.stringify(schema, null, 2)}
+                value={JSON.stringify(schemaVal, null, 2)}
                 language={'json'}
                 options={{
                   scrollbar: {
@@ -424,7 +453,7 @@ export default (props: EditorProp) => {
               <Col span={8} className="col-item name-item col-item-name">
                 <Row justify="space-around" align="middle">
                   <Col flex={'16px'}>
-                    {schema.type === 'object' ? (
+                    {schemaVal.type === 'object' ? (
                       <span className="down-style" onClick={clickIcon}>
                         {stateVal.show ? (
                           <CaretDownOutlined className="icon-object" />
@@ -460,7 +489,7 @@ export default (props: EditorProp) => {
                 <Select
                   className="type-select-style"
                   onChange={(e) => handleChangeType(`type`, e)}
-                  value={schema.type || 'object'}
+                  value={schemaVal.type || 'object'}
                 >
                   {SCHEMA_TYPE.map((item) => {
                     return (
@@ -474,34 +503,38 @@ export default (props: EditorProp) => {
               {props.isMock && (
                 <Col span={3} className="col-item col-item-mock">
                   <MockSelect
-                    schema={schema}
-                    showEdit={() => showEdit([], 'mock', schema.mock, schema.type)}
+                    schema={schemaVal}
+                    showEdit={() => showEdit([], 'mock', schemaVal.mock, schemaVal.type)}
                     onChange={(value) => handleChangeValue(['mock'], value)}
                   />
                 </Col>
               )}
               <Col span={props.isMock ? 4 : 5} className="col-item col-item-mock">
                 <Input
-                  addonAfter={<EditOutlined onClick={() => showEdit([], 'title', schema.title)} />}
+                  addonAfter={
+                    <EditOutlined onClick={() => showEdit([], 'title', schemaVal.title)} />
+                  }
                   placeholder={intl.formatMessage({ id: 'components.jsonSchemaEditor.title' })}
-                  value={schema.title}
+                  value={schemaVal.title}
                   onChange={(e) => handleChangeValue(['title'], e.target.value)}
                 />
               </Col>
               <Col span={props.isMock ? 4 : 5} className="col-item col-item-desc">
                 <Input
                   addonAfter={
-                    <EditOutlined onClick={() => showEdit([], 'description', schema.description)} />
+                    <EditOutlined
+                      onClick={() => showEdit([], 'description', schemaVal.description)}
+                    />
                   }
                   placeholder={intl.formatMessage({
                     id: 'components.jsonSchemaEditor.description',
                   })}
-                  value={schema.description}
+                  value={schemaVal.description}
                   onChange={(e) => handleChangeValue(['description'], e.target.value)}
                 />
               </Col>
               <Col span={2} className="col-item col-item-setting">
-                <span className="adv-set" onClick={() => showAdv([], schema)}>
+                <span className="adv-set" onClick={() => showAdv([], schemaVal)}>
                   <Tooltip
                     placement="top"
                     title={intl.formatMessage({ id: 'components.jsonSchemaEditor.adv.setting' })}
@@ -509,7 +542,7 @@ export default (props: EditorProp) => {
                     <SettingOutlined />
                   </Tooltip>
                 </span>
-                {schema.type === 'object' ? (
+                {schemaVal.type === 'object' ? (
                   <span onClick={() => handleAddChildField('properties')}>
                     <Tooltip
                       placement="top"

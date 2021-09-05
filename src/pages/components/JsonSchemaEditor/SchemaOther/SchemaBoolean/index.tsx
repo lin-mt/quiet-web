@@ -11,9 +11,14 @@ interface SchemaBooleanProp {
   data: any;
 }
 
-const changeOtherValue = (value: any, name: any, changeData: any, change: any) => {
+const changeOtherValue = (value: string, name: any, changeData: any, change: any) => {
+  const valueForChange = value === 'true';
   const newData = _.cloneDeep(changeData);
-  newData[name] = value;
+  if (typeof value === 'undefined') {
+    delete newData[name];
+  } else {
+    newData[name] = valueForChange;
+  }
   change(newData);
 };
 
@@ -41,10 +46,9 @@ export default (props: SchemaBooleanProp) => {
         <Col span={20}>
           <Select
             value={value}
-            onChange={(e) =>
-              changeOtherValue(e === 'true', 'default', data, context.changeCustomValue)
-            }
+            allowClear={true}
             style={{ width: 200 }}
+            onChange={(e) => changeOtherValue(e, 'default', data, context.changeCustomValue)}
           >
             <Option value="true">true</Option>
             <Option value="false">false</Option>

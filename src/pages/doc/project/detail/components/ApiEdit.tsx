@@ -405,6 +405,7 @@ export default (props: ApiEditProps) => {
             {bodyTypeSetting === 'json' && (
               <div>
                 <JsonSchemaEditor
+                  id={'request-body'}
                   onChange={(e) => {
                     // eslint-disable-next-line no-console
                     console.log(e);
@@ -645,6 +646,7 @@ export default (props: ApiEditProps) => {
           {respSetting === 'JSON' && (
             <>
               <JsonSchemaEditor
+                id={'response-body'}
                 onChange={(e) => {
                   // eslint-disable-next-line no-console
                   console.log(e);

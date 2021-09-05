@@ -38,16 +38,17 @@ export default (props: SchemaItemProp) => {
 
   const {
     open,
-    changeType,
-    changeValue,
-    setOpenValue,
-    changeName,
-    deleteItem,
-    enableRequire,
-    addField,
+    changeTypeWithId,
+    changeValueWithId,
+    setOpenValueWithId,
+    changeNameWithId,
+    deleteItemWithId,
+    enableRequireWithid,
+    addFieldWithId,
   } = useModel(JSON_SCHEMA_EDITOR);
 
   const [tagPaddingLeftStyle, setTagPaddingLeftStyle] = useState<CSSProperties>({});
+  const [openVal, setOpenVal] = useState();
 
   const context = useContext(EditorContext);
 
@@ -57,6 +58,10 @@ export default (props: SchemaItemProp) => {
       paddingLeft: `${20 * (length + 1)}px`,
     });
   }, [props.prefix]);
+
+  useEffect(() => {
+    setOpenVal(open[context.schemaId]);
+  }, [context.schemaId, open]);
 
   const getPrefix = (): string[] => {
     return prefix.concat(name);
@@ -70,35 +75,35 @@ export default (props: SchemaItemProp) => {
       message.error(`The field "${value}" already exists.`).then();
     }
 
-    changeName({ keys: prefix, name, value });
+    changeNameWithId(context.schemaId, { keys: prefix, name, value });
   };
 
   // 修改备注信息
   const handleChangeDesc = (e: { target: { value: any } }) => {
     const key = getPrefix().concat('description');
-    changeValue({ keys: key, value: e.target.value });
+    changeValueWithId(context.schemaId, { keys: key, value: e.target.value });
   };
 
   // 修改mock 信息
   const handleChangeMock = (e: any) => {
     const key = getPrefix().concat('mock');
-    changeValue({ keys: key, value: e ? { mock: e } : '' });
+    changeValueWithId(context.schemaId, { keys: key, value: e ? { mock: e } : '' });
   };
 
   const handleChangeTitle = (e: { target: { value: any } }) => {
     const key = getPrefix().concat('title');
-    changeValue({ keys: key, value: e.target.value });
+    changeValueWithId(context.schemaId, { keys: key, value: e.target.value });
   };
 
   // 修改数据类型
   const handleChangeType = (e: any) => {
     const keys = getPrefix().concat('type');
-    changeType({ keys, value: e });
+    changeTypeWithId(context.schemaId, { keys, value: e });
   };
 
   const handleDeleteItem = () => {
-    deleteItem({ keys: getPrefix() });
-    enableRequire({ keys: prefix, name, required: false });
+    deleteItemWithId(context.schemaId, { keys: getPrefix() });
+    enableRequireWithid(context.schemaId, { keys: prefix, name, required: false });
   };
 
   /*
@@ -116,27 +121,27 @@ export default (props: SchemaItemProp) => {
 
   //  增加子节点
   const handleAddField = () => {
-    addField({ keys: prefix, name });
+    addFieldWithId(context.schemaId, { keys: prefix, name });
   };
 
   // 控制三角形按钮
   const handleClickIcon = () => {
     // 数据存储在 properties.xxx.properties 下
     const keyArr: string[] = getPrefix().concat('properties');
-    setOpenValue({ key: keyArr });
+    setOpenValueWithId(context.schemaId, { key: keyArr });
   };
 
   // 修改是否必须
   const handleEnableRequire = (e: { target: { checked: any } }) => {
     const required = e.target.checked;
-    enableRequire({ keys: prefix, name, required });
+    enableRequireWithid(context.schemaId, { keys: prefix, name, required });
   };
 
   const prefixArray = prefix.concat(name);
 
   const value = data.properties[name];
-  const show = _.get(open, prefix);
-  const showIcon = _.get(open, prefix.concat(name, 'properties'));
+  const show = _.get(openVal, prefix);
+  const showIcon = _.get(openVal, prefix.concat(name, 'properties'));
 
   return show ? (
     <div>
