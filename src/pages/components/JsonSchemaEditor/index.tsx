@@ -19,8 +19,7 @@ import './index.css';
 import { useIntl } from 'umi';
 import { JSON_SCHEMA_EDITOR } from '@/constant/doc/ModelNames';
 import Editor from '@monaco-editor/react';
-
-const GenerateSchema = require('generate-schema/src/schemas/json.js');
+import { createSchema } from 'genson-js';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -82,8 +81,8 @@ export default (props: EditorProp) => {
     editorModalName: '', // 弹窗名称 description | mock
     mock: '',
   });
-  const [jsonSchemaData, setJsonSchemaData] = useState(null);
-  const [jsonData, setJsonData] = useState(null);
+  const [jsonSchemaData, setJsonSchemaData] = useState<string | undefined>();
+  const [jsonData, setJsonData] = useState<string | undefined>();
   const [importJsonType, setImportJsonType] = useState<string | null>(null);
   const [openVal, setOpenVal] = useState();
   const [schemaVal, setSchemaVal] = useState<any>();
@@ -122,15 +121,29 @@ export default (props: EditorProp) => {
   const handleOk = () => {
     if (importJsonType !== 'schema') {
       if (!jsonData) {
-        message.error('json 数据格式有误').then();
+        return;
       }
-      const jsonDataVal = GenerateSchema(jsonData);
+      let jsonObject = null;
+      try {
+        jsonObject = JSON.parse(jsonData);
+      } catch (ex) {
+        message.error('json 数据格式有误').then();
+        return;
+      }
+      const jsonDataVal = createSchema(jsonObject);
       changeEditorSchemaWithId(id, { value: jsonDataVal });
     } else {
       if (!jsonSchemaData) {
-        message.error('json 数据格式有误').then();
+        return;
       }
-      changeEditorSchemaWithId(id, { value: jsonSchemaData });
+      let jsonObject = null;
+      try {
+        jsonObject = JSON.parse(jsonSchemaData);
+      } catch (ex) {
+        message.error('json 数据格式有误').then();
+        return;
+      }
+      changeEditorSchemaWithId(id, { value: jsonObject });
     }
     setStateVal((prevState) => {
       return { ...prevState, visible: false };
@@ -159,19 +172,19 @@ export default (props: EditorProp) => {
 
   const handleImportJson = (e: string | undefined) => {
     if (!e) {
-      setJsonData(null);
+      setJsonData(undefined);
     }
     if (typeof e === 'string') {
-      setJsonData(JSON.parse(e));
+      setJsonData(e);
     }
   };
 
   const handleImportJsonSchema = (e: string | undefined) => {
     if (!e) {
-      setJsonSchemaData(null);
+      setJsonSchemaData(undefined);
     }
     if (typeof e === 'string') {
-      setJsonSchemaData(JSON.parse(e));
+      setJsonSchemaData(e);
     }
   };
   // 增加子节点
