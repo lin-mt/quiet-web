@@ -24,7 +24,7 @@ import { DictionaryType } from '@/types/Type';
 import { DictionarySelect } from '@/pages/components/DictionarySelect';
 
 const GatewayRoute: React.FC<any> = () => {
-  const { getDictionaryLabels } = useModel(DICTIONARY);
+  const { getDictionaryLabelByType } = useModel(DICTIONARY);
 
   const [updateRouteInfo, setUpdateRouteInfo] = useState<QuietRoute>();
   const [routeFormVisible, setRouteModalVisible] = useState<boolean>(false);
@@ -33,10 +33,10 @@ const GatewayRoute: React.FC<any> = () => {
   const routeModalActionRef = useRef<ActionType>();
 
   useEffect(() => {
-    getDictionaryLabels(DictionaryType.Environment).then((labels) => {
+    getDictionaryLabelByType(DictionaryType.Environment).then((labels) => {
       setEnvironmentLabels(labels);
     });
-  }, [getDictionaryLabels]);
+  }, [getDictionaryLabelByType]);
 
   async function confirmRemoveRouteFilter(id: string, filter: string) {
     await removeFilter(id, filter);
