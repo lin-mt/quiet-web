@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Select } from 'antd';
 import type { SelectProps } from 'antd/es/select';
 import type { DictionaryType } from '@/types/Type';
 import { useModel } from 'umi';
 import { DICTIONARY } from '@/constant/system/ModelNames';
-import type { QuietDictionary } from '@/services/system/EntityType';
 
 export interface DictionarySelectProps<ValueType = any>
   extends Omit<SelectProps<ValueType>, 'options' | 'children'> {
@@ -21,32 +20,28 @@ type OptionType = {
 export function DictionarySelect<
   ValueType extends { key?: string; label: React.ReactNode; value: string | number } = any,
 >({ type, allowClear = false, ...props }: DictionarySelectProps) {
-  const { getDictionariesByType } = useModel(DICTIONARY);
+  const { getDictionaryByType } = useModel(DICTIONARY);
   const [options, setOptions] = React.useState<OptionType[]>([]);
 
-  useEffect(() => {
-    let isMounted = true;
+  function initOptions() {
+    if (!options || options.length === 0) {
+      getDictionaryByType(type)
+        .then((resp) => {
+          const datumOptions: OptionType[] = [];
+          resp.forEach((dictionary) => {
+            datumOptions.push({
+              key: dictionary.id,
+              value: `${dictionary.type}.${dictionary.key}`,
+              label: dictionary.label,
+            });
+          });
+          return datumOptions;
+        })
+        .then((ops) => setOptions(ops));
+    }
+  }
 
-    const buildOptions = (sources: QuietDictionary[]): OptionType[] => {
-      const datumOptions: OptionType[] = [];
-      sources.forEach((dictionary) => {
-        datumOptions.push({
-          key: dictionary.id,
-          value: `${dictionary.type}.${dictionary.key}`,
-          label: dictionary.label,
-        });
-      });
-      return datumOptions;
-    };
-    getDictionariesByType(type).then((dictionaries) => {
-      if (isMounted) {
-        setOptions(buildOptions(dictionaries));
-      }
-    });
-    return () => {
-      isMounted = false;
-    };
-  }, [getDictionariesByType, type]);
-
-  return <Select<ValueType> allowClear={allowClear} options={options} {...props} />;
+  return (
+    <Select<ValueType> allowClear={allowClear} onClick={initOptions} options={options} {...props} />
+  );
 }

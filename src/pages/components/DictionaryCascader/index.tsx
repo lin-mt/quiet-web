@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import type { CascaderProps } from 'antd';
 import { Cascader, Empty, Spin } from 'antd';
 import type { DictionaryType } from '@/types/Type';
@@ -24,41 +24,36 @@ export function DictionaryCascader({
   defaultValue,
   ...props
 }: DictionaryCascaderProps) {
-  const { getDictionariesByType } = useModel(DICTIONARY);
+  const { getDictionaryByType } = useModel(DICTIONARY);
   const [loading, setLoading] = React.useState(false);
   const [options, setOptions] = React.useState<OptionType[]>([]);
 
-  useEffect(() => {
-    setLoading(true);
-    let isMounted = true;
-
-    const buildOptions = (sources: QuietDictionary[]): OptionType[] => {
-      const datumOptions: OptionType[] = [];
-      sources.forEach((dictionary) => {
-        datumOptions.push({
-          key: dictionary.id,
-          value: `${dictionary.type}.${dictionary.key}`,
-          label: dictionary.label,
-          children: dictionary.children ? buildOptions(dictionary.children) : undefined,
-        });
+  const buildOptions = (sources: QuietDictionary[]): OptionType[] => {
+    const datumOptions: OptionType[] = [];
+    sources.forEach((dictionary) => {
+      datumOptions.push({
+        key: dictionary.id,
+        value: `${dictionary.type}.${dictionary.key}`,
+        label: dictionary.label,
+        children: dictionary.children ? buildOptions(dictionary.children) : undefined,
       });
-      return datumOptions;
-    };
-
-    getDictionariesByType(type).then((dictionaries) => {
-      if (isMounted) {
-        setOptions(buildOptions(dictionaries));
-        setLoading(false);
-      }
     });
-    return () => {
-      isMounted = false;
-    };
-  }, [getDictionariesByType, type]);
+    return datumOptions;
+  };
+
+  function loadData() {
+    setLoading(true);
+    getDictionaryByType(type)
+      .then((resp) => {
+        return buildOptions(resp);
+      })
+      .then((ops) => setOptions(ops));
+  }
 
   return (
     <Cascader
       allowClear={allowClear}
+      loadData={loadData}
       notFoundContent={<div style={{ textAlign: 'center' }}>{loading ? <Spin /> : <Empty />}</div>}
       options={options}
       {...props}
