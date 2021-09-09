@@ -5,7 +5,7 @@ import { listByTypeForSelect } from '@/services/system/QuietDictionary';
 
 export default () => {
   const [dictionaries, setDictionaries] = useState<Record<string, QuietDictionary[]>>({});
-  const [dictionaryLabels, setDictionarylabels] = useState<Record<string, Record<string, string>>>(
+  const [dictionaryLabels, setDictionaryLabels] = useState<Record<string, Record<string, string>>>(
     {},
   );
 
@@ -40,7 +40,7 @@ export default () => {
     let dicLabels: Record<string, string> = dictionaryLabels[type];
     if (!dicLabels) {
       dicLabels = buildLabels(await getDictionaryByType(type));
-      setDictionarylabels((prevState) => {
+      setDictionaryLabels((prevState) => {
         return { ...prevState, [type]: dicLabels };
       });
     }
