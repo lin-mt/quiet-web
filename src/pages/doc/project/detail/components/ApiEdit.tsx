@@ -144,10 +144,13 @@ export default (props: ApiEditProps) => {
 
   async function handleSubmit() {
     setSubmitting(true);
-    const values = await apiDetailForm.validateFields();
-    // eslint-disable-next-line no-console
-    console.log(values);
-    setSubmitting(false);
+    try {
+      const values = await apiDetailForm.validateFields();
+      // eslint-disable-next-line no-console
+      console.log(values);
+    } catch (e) {
+      setSubmitting(false);
+    }
   }
 
   return (
