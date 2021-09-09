@@ -49,7 +49,7 @@ interface DemandAndTaskFilter {
 export default (props: PropsWithChildren<any>) => {
   const { projectId, iterationId } = props.location.query;
 
-  const { getDictionaryLabels } = useModel(DICTIONARY);
+  const { getDictionaryLabelByType } = useModel(DICTIONARY);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [demandAndTaskLoading, setDemandAndTaskLoading] = useState<boolean>(true);
@@ -100,16 +100,16 @@ export default (props: PropsWithChildren<any>) => {
         setVersions(iterationsAddToChildren(projectVersions));
       });
       // 查询需求类型
-      await getDictionaryLabels(DictionaryType.DemandType).then((labels) =>
+      await getDictionaryLabelByType(DictionaryType.DemandType).then((labels) =>
         setDemandTypeLabels(labels),
       );
       // 查询任务类型
-      await getDictionaryLabels(DictionaryType.TaskType).then((labels) =>
+      await getDictionaryLabelByType(DictionaryType.TaskType).then((labels) =>
         setTaskTypeLabels(labels),
       );
       setLoading(false);
     });
-  }, [getDictionaryLabels, projectId]);
+  }, [getDictionaryLabelByType, projectId]);
 
   const loadDemandsAndTasks = useCallback(() => {
     if (selectedIterationId) {

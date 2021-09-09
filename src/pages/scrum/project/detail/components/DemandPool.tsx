@@ -23,7 +23,7 @@ export interface ScrumDemandFilter {
 export default forwardRef((_, ref) => {
   const limit = 6;
   const { projectId, priorities, priorityColors } = useModel(PROJECT_DETAIL);
-  const { getDictionaryLabels, getDictionariesByType } = useModel(DICTIONARY);
+  const { getDictionaryLabelByType, getDictionaryByType } = useModel(DICTIONARY);
 
   const [offset, setOffset] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -69,19 +69,18 @@ export default forwardRef((_, ref) => {
         setOffset(demands.length);
         setHasMore(limit === demands.length);
       });
-      await getDictionaryLabels(DictionaryType.DemandType).then((labels) =>
-        setDemandTypeLabels(labels),
-      );
-      await getDictionariesByType(DictionaryType.DemandType).then((dictionaries) => {
-        setDemandType(dictionaries);
-      });
       setLoading(false);
     }
-  }, [demandFilter, getDictionariesByType, getDictionaryLabels, projectId]);
+  }, [demandFilter, projectId]);
 
   useEffect(() => {
     refreshToBePlanned().then();
   }, [refreshToBePlanned]);
+
+  useEffect(() => {
+    getDictionaryByType(DictionaryType.DemandType).then((resp) => setDemandType(resp));
+    getDictionaryLabelByType(DictionaryType.DemandType).then((resp) => setDemandTypeLabels(resp));
+  }, [getDictionaryByType, getDictionaryLabelByType]);
 
   function loadMoreDemandsToBePlanned() {
     if (hasMore && projectId) {

@@ -18,7 +18,7 @@ export default forwardRef((_, ref) => {
 
   const { projectId, versions, priorityColors, selectedIterationId, setSelectedIterationId } =
     useModel(PROJECT_DETAIL);
-  const { getDictionaryLabels } = useModel(DICTIONARY);
+  const { getDictionaryLabelByType } = useModel(DICTIONARY);
 
   const [offset, setOffset] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -60,13 +60,13 @@ export default forwardRef((_, ref) => {
         setIterationDemands(demands);
         setOffset(demands.length);
         setHasMore(limit === demands.length);
-        await getDictionaryLabels(DictionaryType.DemandType).then((labels) =>
+        await getDictionaryLabelByType(DictionaryType.DemandType).then((labels) =>
           setDemandTypeLabels(labels),
         );
         setLoading(false);
       });
     }
-  }, [getDictionaryLabels, selectedIterationId]);
+  }, [getDictionaryLabelByType, selectedIterationId]);
 
   function loadMoreDemandsInIteration() {
     if (hasMore && selectedIterationId) {

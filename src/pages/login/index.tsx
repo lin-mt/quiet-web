@@ -58,7 +58,7 @@ const Login: React.FC = () => {
         tokenInfo.token_expire_time =
           Date.parse(new Date().toString()) + tokenInfo.expires_in * 1000;
         localStorage.setItem(LocalStorage.TokenInfo, JSON.stringify(tokenInfo));
-        setInitialState({
+        await setInitialState({
           ...initialState,
           // @ts-ignore
           tokenInfo,
@@ -88,9 +88,7 @@ const Login: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.lang} data-lang>
-        {SelectLang && <SelectLang />}
-      </div>
+      <div className={styles.lang}>{SelectLang && <SelectLang />}</div>
       <div className={styles.content}>
         <div className={styles.top}>
           <div className={styles.header}>

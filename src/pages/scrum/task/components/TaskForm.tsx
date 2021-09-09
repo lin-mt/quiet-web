@@ -23,7 +23,7 @@ interface TaskFormProps {
 export default (props: TaskFormProps) => {
   const { visible, onCancel, updateInfo, demandId, executors, taskStepId, afterAction } = props;
 
-  const { getDictionariesByType } = useModel(DICTIONARY);
+  const { getDictionaryByType } = useModel(DICTIONARY);
 
   const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -31,7 +31,7 @@ export default (props: TaskFormProps) => {
 
   useEffect(() => {
     if (updateInfo) {
-      getDictionariesByType(DictionaryType.TaskType).then((dictionaries) => {
+      getDictionaryByType(DictionaryType.TaskType).then((dictionaries) => {
         const newUpdateInfo: any = { ...updateInfo };
         newUpdateInfo.type = buildDictionaryCascaderValue(dictionaries, updateInfo.type);
         form.setFieldsValue(newUpdateInfo);
@@ -39,7 +39,7 @@ export default (props: TaskFormProps) => {
     } else {
       form.setFieldsValue(undefined);
     }
-  }, [form, getDictionariesByType, updateInfo]);
+  }, [form, getDictionaryByType, updateInfo]);
 
   async function handleSubmit() {
     const values = await form.validateFields();
