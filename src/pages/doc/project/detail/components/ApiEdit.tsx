@@ -17,11 +17,12 @@ interface ApiEditProps {
   apiDetail: ApiDetail;
 }
 
-const EditContainer = styled.div`
+const EditContainer = styled.div.attrs((props: { hide: boolean }) => props)`
   border-radius: 6px;
   background: rgba(230, 233, 236, 0.67);
   width: 100%;
   padding: 16px;
+  display: ${(props) => (props.hide ? 'none' : undefined)};
 `;
 
 const SaveContainer = styled.div`
@@ -146,9 +147,13 @@ export default (props: ApiEditProps) => {
     setSubmitting(true);
     try {
       const values = await apiDetailForm.validateFields();
+      values.method = HttpMethod[values.method];
+      values.state = ApiState[values.state];
       // eslint-disable-next-line no-console
       console.log(values);
     } catch (e) {
+      setSubmitting(false);
+    } finally {
       setSubmitting(false);
     }
   }
@@ -278,8 +283,8 @@ export default (props: ApiEditProps) => {
           buttonStyle={'solid'}
           onChange={(event) => setReqParamSetting(event.target.value)}
         />
-        {reqParamSetting === 'Body' && (
-          <EditContainer>
+        <div>
+          <EditContainer hide={reqParamSetting !== 'Body'}>
             <Radio.Group
               style={{ textAlign: 'left', paddingBottom: 12 }}
               options={['form', 'json', 'file', 'raw']}
@@ -406,15 +411,13 @@ export default (props: ApiEditProps) => {
               </Form.List>
             )}
             {bodyTypeSetting === 'json' && (
-              <div>
-                <JsonSchemaEditor
-                  id={'request-body'}
-                  onChange={(e) => {
-                    // eslint-disable-next-line no-console
-                    console.log(e);
-                  }}
-                />
-              </div>
+              <JsonSchemaEditor
+                id={'request-body'}
+                onChange={(e) => {
+                  // eslint-disable-next-line no-console
+                  console.log(e);
+                }}
+              />
             )}
             {bodyTypeSetting === 'file' && (
               <FieldFormItem noStyle={true} name={'bodyFile'}>
@@ -431,9 +434,7 @@ export default (props: ApiEditProps) => {
               </FieldFormItem>
             )}
           </EditContainer>
-        )}
-        {reqParamSetting === 'Query' && (
-          <EditContainer>
+          <EditContainer hide={reqParamSetting !== 'Query'}>
             <Form.List name="apiQuery">
               {(fields, { add, remove }) => (
                 <>
@@ -545,9 +546,7 @@ export default (props: ApiEditProps) => {
               )}
             </Form.List>
           </EditContainer>
-        )}
-        {reqParamSetting === 'Headers' && (
-          <EditContainer>
+          <EditContainer hide={reqParamSetting !== 'Headers'}>
             <Form.List name="apiHeader">
               {(fields, { add, remove }) => (
                 <>
@@ -635,7 +634,7 @@ export default (props: ApiEditProps) => {
               )}
             </Form.List>
           </EditContainer>
-        )}
+        </div>
         <ApiTitle style={{ marginTop: 30 }}>返回数据设置</ApiTitle>
         <Radio.Group
           style={{ textAlign: 'center', width: '100%' }}
