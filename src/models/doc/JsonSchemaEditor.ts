@@ -3,8 +3,6 @@ import { handleSchema } from '@/pages/components/JsonSchemaEditor/utils';
 import _ from 'lodash';
 import { getDefaultSchema } from '@/pages/components/JsonSchemaEditor/constants';
 
-let fieldNum = 0;
-
 interface SchemaProp {
   title?: string;
   type: string;
@@ -29,10 +27,22 @@ interface SchemaProp {
   uniqueItems?: boolean;
 }
 
+const fieldNums: Record<string, number> = {};
+
 export default () => {
   const [schema, setSchema] = useState<Record<string, SchemaProp>>({});
 
   const [open, setOpen] = useState<Record<string, any>>({});
+
+  const getAndAddFieldNum = (id: string): number => {
+    const num = fieldNums[id];
+    if (!num) {
+      fieldNums[id] = 1;
+      return 0;
+    }
+    fieldNums[id] = num + 1;
+    return num;
+  };
 
   const initSchemaInfo = (id: string) => {
     setSchema((prevState) => {
@@ -210,11 +220,10 @@ export default () => {
 
   const addFieldWithId = (id: string, { keys, name }: { keys: string[]; name: string }) => {
     setSchema((prevState) => {
-      fieldNum += 1;
       const clonedState = _.cloneDeep(prevState[id]);
       const propertiesData = _.get(prevState[id], keys);
       let newPropertiesData: Record<string, any> = {};
-      const fieldName = `field_${fieldNum}`;
+      const fieldName = `field_${getAndAddFieldNum(id)}`;
 
       if (name) {
         // eslint-disable-next-line guard-for-in,no-restricted-syntax
@@ -249,8 +258,7 @@ export default () => {
 
   const addChildFieldWithId = (id: string, { keys }: { keys: string[] }) => {
     setSchema((prevState) => {
-      fieldNum += 1;
-      const fieldName = `field_${fieldNum}`;
+      const fieldName = `field_${getAndAddFieldNum(id)}`;
       const originalState = _.clone(prevState[id]);
       handleAddChildField(prevState[id], keys, fieldName);
       return { ...prevState, [id]: { ...addRequiredFields(originalState, keys, fieldName) } };
