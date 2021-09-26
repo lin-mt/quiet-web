@@ -1,5 +1,19 @@
 import { ApiTitle } from '@/pages/doc/project/detail';
-import { Affix, Button, Col, Form, Input, InputNumber, Radio, Row, Select, Space } from 'antd';
+import {
+  Affix,
+  AutoComplete,
+  Button,
+  Checkbox,
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  Radio,
+  Row,
+  Select,
+  Space,
+  Tooltip,
+} from 'antd';
 import type { ApiDetail } from '@/services/doc/EntityType';
 import styled from 'styled-components';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
@@ -41,7 +55,9 @@ export default (props: ApiEditProps) => {
 
   const [reqParamSettingOptions, setReqParamSettingOptions] = useState<string[]>();
   const [reqParamSetting, setReqParamSetting] = useState<string>();
+  const [reqJsonBodyJsonSchema, setReqJsonBodyJsonSchema] = useState<string | undefined>();
   const [respSetting, setRespSetting] = useState<string>('JSON');
+  const [respJsonSchema, setRespJsonSchema] = useState<string | undefined>();
   const [bodyTypeSetting, setBodyTypeSetting] = useState<string>('form');
   const [affixed, setAffixed] = useState<boolean>();
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -149,12 +165,25 @@ export default (props: ApiEditProps) => {
       const values = await apiDetailForm.validateFields();
       values.method = HttpMethod[values.method];
       values.state = ApiState[values.state];
+      if (reqJsonBodyJsonSchema) {
+        values.apiBody = reqJsonBodyJsonSchema;
+      }
+      if (respJsonSchema) {
+        values.respBody = respJsonSchema;
+      }
       // eslint-disable-next-line no-console
       console.log(values);
     } catch (e) {
       setSubmitting(false);
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  function handleBodyTypeChange(value: string) {
+    setBodyTypeSetting(value);
+    if (value !== 'json') {
+      setReqJsonBodyJsonSchema(undefined);
     }
   }
 
@@ -290,7 +319,7 @@ export default (props: ApiEditProps) => {
               options={['form', 'json', 'file', 'raw']}
               defaultValue={bodyTypeSetting}
               value={bodyTypeSetting}
-              onChange={(e) => setBodyTypeSetting(e.target.value)}
+              onChange={(e) => handleBodyTypeChange(e.target.value)}
             />
             {bodyTypeSetting === 'form' && (
               <Form.List name="apiFormData">
@@ -300,7 +329,7 @@ export default (props: ApiEditProps) => {
                       <Button
                         type="primary"
                         size={'small'}
-                        onClick={() => add({ required: 'true', type: FormDataType.TEXT })}
+                        onClick={() => add({ required: true, type: FormDataType.TEXT })}
                         icon={<PlusOutlined />}
                       >
                         添加form参数
@@ -325,17 +354,17 @@ export default (props: ApiEditProps) => {
                             <Input placeholder="参数名称" />
                           </FieldFormItem>
                         </Col>
-                        <Col style={{ width: '92px' }}>
+                        <Col>
                           <FieldFormItem
                             {...restField}
                             name={[name, 'required']}
                             fieldKey={[fieldKey, 'required']}
+                            valuePropName={'checked'}
                             rules={[{ required: true, message: '请选择是否必须' }]}
                           >
-                            <Select style={{ width: '85px' }}>
-                              <Select.Option value={'true'}>必需</Select.Option>
-                              <Select.Option value={'false'}>非必需</Select.Option>
-                            </Select>
+                            <Tooltip title={'是否必须'}>
+                              <Checkbox />
+                            </Tooltip>
                           </FieldFormItem>
                         </Col>
                         <Col flex={'92px'}>
@@ -412,11 +441,10 @@ export default (props: ApiEditProps) => {
             )}
             {bodyTypeSetting === 'json' && (
               <JsonSchemaEditor
+                isMock={true}
+                data={reqJsonBodyJsonSchema}
                 id={'request-body'}
-                onChange={(e) => {
-                  // eslint-disable-next-line no-console
-                  console.log(e);
-                }}
+                onChange={(e) => setReqJsonBodyJsonSchema(e)}
               />
             )}
             {bodyTypeSetting === 'file' && (
@@ -442,7 +470,7 @@ export default (props: ApiEditProps) => {
                     <Button
                       type="primary"
                       size={'small'}
-                      onClick={() => add({ required: 'true', type: QueryType.STRING })}
+                      onClick={() => add({ required: true, type: QueryType.STRING })}
                       icon={<PlusOutlined />}
                     >
                       添加Query参数
@@ -460,17 +488,17 @@ export default (props: ApiEditProps) => {
                           <Input placeholder="参数名称" />
                         </FieldFormItem>
                       </Col>
-                      <Col style={{ width: '92px' }}>
+                      <Col>
                         <FieldFormItem
                           {...restField}
                           name={[name, 'required']}
                           fieldKey={[fieldKey, 'required']}
+                          valuePropName={'checked'}
                           rules={[{ required: true, message: '请选择是否必须' }]}
                         >
-                          <Select style={{ width: '85px' }}>
-                            <Select.Option value={'true'}>必需</Select.Option>
-                            <Select.Option value={'false'}>非必需</Select.Option>
-                          </Select>
+                          <Tooltip title={'是否必须'}>
+                            <Checkbox />
+                          </Tooltip>
                         </FieldFormItem>
                       </Col>
                       <Col flex={'92px'}>
@@ -490,21 +518,27 @@ export default (props: ApiEditProps) => {
                       <Col flex={'100px'}>
                         <FieldFormItem
                           {...restField}
-                          name={[name, 'mixLength']}
-                          fieldKey={[fieldKey, 'mixLength']}
-                          rules={[{ min: 0, type: 'number', message: '最小长度不能小于 0' }]}
+                          name={[name, 'mix']}
+                          fieldKey={[fieldKey, 'mix']}
                         >
-                          <InputNumber min={0} style={{ width: 100 }} placeholder="最小长度" />
+                          <InputNumber
+                            min={0}
+                            style={{ width: 130 }}
+                            placeholder="最小长度（值）"
+                          />
                         </FieldFormItem>
                       </Col>
                       <Col flex={'100px'}>
                         <FieldFormItem
                           {...restField}
-                          name={[name, 'maxLength']}
-                          fieldKey={[fieldKey, 'maxLength']}
-                          rules={[{ min: 0, type: 'number', message: '最大长度不能小于 0' }]}
+                          name={[name, 'max']}
+                          fieldKey={[fieldKey, 'max']}
                         >
-                          <InputNumber min={0} style={{ width: 100 }} placeholder="最大长度" />
+                          <InputNumber
+                            min={0}
+                            style={{ width: 130 }}
+                            placeholder="最大长度（值）"
+                          />
                         </FieldFormItem>
                       </Col>
                       <Col flex={1}>
@@ -554,7 +588,7 @@ export default (props: ApiEditProps) => {
                     <Button
                       type="primary"
                       size={'small'}
-                      onClick={() => add({ required: 'true' })}
+                      onClick={() => add({ required: true })}
                       icon={<PlusOutlined />}
                     >
                       添加Header
@@ -562,14 +596,63 @@ export default (props: ApiEditProps) => {
                   </FieldFormItem>
                   {fields.map(({ key, name, fieldKey, ...restField }) => (
                     <Row key={key} gutter={10} style={{ display: 'flex', alignItems: 'baseline' }}>
-                      <Col flex={1}>
+                      <Col flex={'220px'}>
                         <FieldFormItem
                           {...restField}
                           name={[name, 'name']}
                           fieldKey={[fieldKey, 'name']}
                           rules={[{ required: true, message: '请输入参数名称' }]}
                         >
-                          <Input placeholder="参数名称" />
+                          <AutoComplete
+                            placeholder={'参数名称'}
+                            options={[
+                              { value: 'Accept' },
+                              { value: 'Accept-Charset' },
+                              { value: 'Accept-Encoding' },
+                              { value: 'Accept-Language' },
+                              { value: 'Accept-Datetime' },
+                              { value: 'Authorization' },
+                              { value: 'Cache-Control' },
+                              { value: 'Connection' },
+                              { value: 'Cookie' },
+                              { value: 'Content-Disposition' },
+                              { value: 'Content-Length' },
+                              { value: 'Content-MD5' },
+                              { value: 'Content-Type' },
+                              { value: 'Date' },
+                              { value: 'Expect' },
+                              { value: 'From' },
+                              { value: 'Host' },
+                              { value: 'If-Match' },
+                              { value: 'If-Modified-Since' },
+                              { value: 'If-None-Match' },
+                              { value: 'If-Range' },
+                              { value: 'If-Unmodified-Since' },
+                              { value: 'Max-Forwards' },
+                              { value: 'Origin' },
+                              { value: 'Pragma' },
+                              { value: 'Proxy-Authorization' },
+                              { value: 'Range' },
+                              { value: 'Referer' },
+                              { value: 'TE' },
+                              { value: 'User-Agent' },
+                              { value: 'Upgrade' },
+                              { value: 'Via' },
+                              { value: 'Warning' },
+                              { value: 'X-Requested-With' },
+                              { value: 'DNT' },
+                              { value: 'X-Forwarded-For' },
+                              { value: 'X-Forwarded-Host' },
+                              { value: 'X-Forwarded-Proto' },
+                              { value: 'Front-End-Https' },
+                              { value: 'X-Http-Method-Override' },
+                              { value: 'X-ATT-DeviceId' },
+                              { value: 'X-Wap-Profile' },
+                              { value: 'Proxy-Connection' },
+                              { value: 'X-UIDH' },
+                              { value: 'X-Csrf-Token' },
+                            ]}
+                          />
                         </FieldFormItem>
                       </Col>
                       <Col flex={1}>
@@ -582,20 +665,20 @@ export default (props: ApiEditProps) => {
                           <Input placeholder="参数值" />
                         </FieldFormItem>
                       </Col>
-                      <Col style={{ width: '92px' }}>
+                      <Col>
                         <FieldFormItem
                           {...restField}
                           name={[name, 'required']}
                           fieldKey={[fieldKey, 'required']}
+                          valuePropName={'checked'}
                           rules={[{ required: true, message: '请选择是否必须' }]}
                         >
-                          <Select style={{ width: '85px' }}>
-                            <Select.Option value={'true'}>必需</Select.Option>
-                            <Select.Option value={'false'}>非必需</Select.Option>
-                          </Select>
+                          <Tooltip title={'是否必须'}>
+                            <Checkbox />
+                          </Tooltip>
                         </FieldFormItem>
                       </Col>
-                      <Col flex={1}>
+                      <Col flex={2}>
                         <FieldFormItem
                           {...restField}
                           name={[name, 'example']}
@@ -607,7 +690,7 @@ export default (props: ApiEditProps) => {
                           <Input placeholder="参数示例" />
                         </FieldFormItem>
                       </Col>
-                      <Col flex={1}>
+                      <Col flex={3}>
                         <FieldFormItem
                           {...restField}
                           name={[name, 'remark']}
@@ -642,24 +725,28 @@ export default (props: ApiEditProps) => {
           value={respSetting}
           optionType={'button'}
           buttonStyle={'solid'}
-          onChange={(event) => setRespSetting(event.target.value)}
+          onChange={(event) => {
+            setRespSetting(event.target.value);
+            if (event.target.value !== 'JSON') {
+              setRespJsonSchema(undefined);
+            }
+          }}
         />
         <EditContainer>
           {respSetting === 'JSON' && (
             <>
               <JsonSchemaEditor
+                isMock={true}
+                data={respJsonSchema}
                 id={'response-body'}
-                onChange={(e) => {
-                  // eslint-disable-next-line no-console
-                  console.log(e);
-                }}
+                onChange={(e) => setRespJsonSchema(e)}
               />
             </>
           )}
           {respSetting === 'RAW' && (
             <FieldFormItem
               noStyle={true}
-              name={'respExample'}
+              name={'respRaw'}
               rules={[{ max: 30, message: 'RAW 示例不能超过 30' }]}
             >
               <Input.TextArea rows={3} />
