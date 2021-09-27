@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { CascaderProps } from 'antd';
 import { Cascader, Empty, Spin } from 'antd';
 import type { DictionaryType } from '@/types/Type';
@@ -28,32 +28,33 @@ export function DictionaryCascader({
   const [loading, setLoading] = React.useState(false);
   const [options, setOptions] = React.useState<OptionType[]>([]);
 
-  const buildOptions = (sources: QuietDictionary[]): OptionType[] => {
-    const datumOptions: OptionType[] = [];
-    sources.forEach((dictionary) => {
-      datumOptions.push({
-        key: dictionary.id,
-        value: `${dictionary.type}.${dictionary.key}`,
-        label: dictionary.label,
-        children: dictionary.children ? buildOptions(dictionary.children) : undefined,
+  useEffect(() => {
+    const buildOptions = (sources: QuietDictionary[]): OptionType[] => {
+      const datumOptions: OptionType[] = [];
+      sources.forEach((dictionary) => {
+        datumOptions.push({
+          key: dictionary.id,
+          value: `${dictionary.type}.${dictionary.key}`,
+          label: dictionary.label,
+          children: dictionary.children ? buildOptions(dictionary.children) : undefined,
+        });
       });
-    });
-    return datumOptions;
-  };
-
-  function loadData() {
+      return datumOptions;
+    };
     setLoading(true);
     getDictionaryByType(type)
       .then((resp) => {
         return buildOptions(resp);
       })
-      .then((ops) => setOptions(ops));
-  }
+      .then((ops) => {
+        setOptions(ops);
+        setLoading(false);
+      });
+  }, [getDictionaryByType, type]);
 
   return (
     <Cascader
       allowClear={allowClear}
-      loadData={loadData}
       notFoundContent={<div style={{ textAlign: 'center' }}>{loading ? <Spin /> : <Empty />}</div>}
       options={options}
       {...props}
