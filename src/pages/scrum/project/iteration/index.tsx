@@ -99,17 +99,18 @@ export default (props: PropsWithChildren<any>) => {
       await findDetailsByProjectId(projectId).then((projectVersions) => {
         setVersions(iterationsAddToChildren(projectVersions));
       });
-      // 查询需求类型
-      await getDictionaryLabelByType(DictionaryType.DemandType).then((labels) =>
-        setDemandTypeLabels(labels),
-      );
-      // 查询任务类型
-      await getDictionaryLabelByType(DictionaryType.TaskType).then((labels) =>
-        setTaskTypeLabels(labels),
-      );
       setLoading(false);
     });
-  }, [getDictionaryLabelByType, projectId]);
+  }, [projectId]);
+
+  useEffect(() => {
+    // 查询需求类型
+    getDictionaryLabelByType(DictionaryType.DemandType).then((labels) =>
+      setDemandTypeLabels(labels),
+    );
+    // 查询任务类型
+    getDictionaryLabelByType(DictionaryType.TaskType).then((labels) => setTaskTypeLabels(labels));
+  }, [getDictionaryLabelByType]);
 
   const loadDemandsAndTasks = useCallback(() => {
     if (selectedIterationId) {

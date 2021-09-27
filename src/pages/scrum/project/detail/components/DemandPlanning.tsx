@@ -60,13 +60,16 @@ export default forwardRef((_, ref) => {
         setIterationDemands(demands);
         setOffset(demands.length);
         setHasMore(limit === demands.length);
-        await getDictionaryLabelByType(DictionaryType.DemandType).then((labels) =>
-          setDemandTypeLabels(labels),
-        );
         setLoading(false);
       });
     }
-  }, [getDictionaryLabelByType, selectedIterationId]);
+  }, [selectedIterationId]);
+
+  useEffect(() => {
+    getDictionaryLabelByType(DictionaryType.DemandType).then((labels) =>
+      setDemandTypeLabels(labels),
+    );
+  }, [getDictionaryLabelByType]);
 
   function loadMoreDemandsInIteration() {
     if (hasMore && selectedIterationId) {

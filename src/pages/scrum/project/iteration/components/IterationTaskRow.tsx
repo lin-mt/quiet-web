@@ -81,6 +81,10 @@ export default ({
   }
 
   function handleOnDragEnd({ destination, source, draggableId }: DropResult) {
+    if (taskDragDisabled) {
+      message.warn('迭代未开始或已结束，无法修改任务状态').then();
+      return;
+    }
     if (!destination) {
       return;
     }
@@ -151,12 +155,7 @@ export default ({
                 if (tasks) {
                   taskInfos = tasks.map((task, taskIndex) => {
                     return (
-                      <Draggable
-                        draggableId={task.id}
-                        index={taskIndex}
-                        key={task.id}
-                        isDragDisabled={taskDragDisabled}
-                      >
+                      <Draggable draggableId={task.id} index={taskIndex} key={task.id}>
                         {(provided) => (
                           <div
                             {...provided.draggableProps}
