@@ -16,6 +16,12 @@ function GET<T>(
 
 function PAGE<T>(url: string, params: any): Promise<Partial<RequestData<T>>> {
   return GET<any>(url, { ...params, ...params.params }).then((resData: any) => {
+    return { ...resData, data: resData.content };
+  });
+}
+
+function PAGE_RESULT<T>(url: string, params: any): Promise<Partial<RequestData<T>>> {
+  return GET<any>(url, { ...params, ...params.params }).then((resData: any) => {
     return { ...resData, data: resData.results };
   });
 }
@@ -47,4 +53,4 @@ function PUT<T>(url: string, data: any): Promise<T> {
   }).then((resp) => resp.data);
 }
 
-export { GET, PAGE, POST, DELETE, PUT };
+export { GET, PAGE, PAGE_RESULT, POST, DELETE, PUT };

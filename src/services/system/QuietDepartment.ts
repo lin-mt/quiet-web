@@ -1,6 +1,6 @@
 import type { RequestData } from '@ant-design/pro-table/lib/typing';
 import type { QuietDepartment, QuietUser } from '@/services/system/EntityType';
-import { DELETE, GET, PAGE, POST, PUT } from '@/utils/HttpUtils';
+import { DELETE, GET, PAGE, PAGE_RESULT, POST, PUT } from '@/utils/HttpUtils';
 
 const baseUrl = '/api/system/department';
 
@@ -13,7 +13,7 @@ export function addUsers(departmentId: string, userIds: string[]) {
 }
 
 export function pageUser(params?: any): Promise<Partial<RequestData<QuietUser>>> {
-  return PAGE<QuietUser>(`${baseUrl}/pageUser`, params);
+  return PAGE_RESULT<QuietUser>(`${baseUrl}/pageUser`, params);
 }
 
 export async function treeDepartment(): Promise<QuietDepartment[]> {
