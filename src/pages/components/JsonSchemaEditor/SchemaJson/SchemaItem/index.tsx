@@ -43,7 +43,7 @@ export default (props: SchemaItemProp) => {
     setOpenValueWithId,
     changeNameWithId,
     deleteItemWithId,
-    enableRequireWithid,
+    enableRequireWithId,
     addFieldWithId,
   } = useModel(JSON_SCHEMA_EDITOR);
 
@@ -103,7 +103,7 @@ export default (props: SchemaItemProp) => {
 
   const handleDeleteItem = () => {
     deleteItemWithId(context.schemaId, { keys: getPrefix() });
-    enableRequireWithid(context.schemaId, { keys: prefix, name, required: false });
+    enableRequireWithId(context.schemaId, { keys: prefix, name, required: false });
   };
 
   /*
@@ -134,7 +134,7 @@ export default (props: SchemaItemProp) => {
   // 修改是否必须
   const handleEnableRequire = (e: { target: { checked: any } }) => {
     const required = e.target.checked;
-    enableRequireWithid(context.schemaId, { keys: prefix, name, required });
+    enableRequireWithId(context.schemaId, { keys: prefix, name, required });
   };
 
   const prefixArray = prefix.concat(name);

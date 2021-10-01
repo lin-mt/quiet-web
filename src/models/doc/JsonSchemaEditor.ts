@@ -149,7 +149,7 @@ export default () => {
     });
   };
 
-  const enableRequireWithid = (
+  const enableRequireWithId = (
     id: string,
     { keys, name, required }: { keys: string[]; name: string; required: boolean },
   ) => {
@@ -289,7 +289,7 @@ export default () => {
     changeNameWithId,
     changeValueWithId,
     changeTypeWithId,
-    enableRequireWithid,
+    enableRequireWithId,
     requireAllWithId,
     deleteItemWithId,
     addFieldWithId,
