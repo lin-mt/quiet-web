@@ -127,11 +127,11 @@ const ProjectDetails: React.FC<any> = (props) => {
     {
       title: '接口路径',
       key: 'path',
-      render: (_: any, record: { method: any; url: any }) => {
+      render: (_: any, record: { method: any; path: any }) => {
         return (
           <>
             <Tag color={getMethodTagColor(record.method)}> {record.method}</Tag>
-            {record.url}
+            {record.path}
           </>
         );
       },

@@ -39,8 +39,8 @@ export default (props: ApiFormProps) => {
       projectId,
       apiGroupId: values.apiGroupId?.value,
     };
-    if (!submitValues.url.startsWith('/')) {
-      submitValues.url = `/${submitValues.url}`;
+    if (!submitValues.path.startsWith('/')) {
+      submitValues.path = `/${submitValues.path}`;
     }
     if (updateInfo) {
       await updateApi({
@@ -133,7 +133,7 @@ export default (props: ApiFormProps) => {
         </Form.Item>
         <Form.Item
           label={'接口地址'}
-          name={'url'}
+          name={'path'}
           rules={[
             { required: true, message: '请输入接口地址' },
             { max: 300, message: '接口地址长度不能超过 300', type: 'string' },

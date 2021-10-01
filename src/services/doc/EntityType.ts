@@ -11,7 +11,7 @@ import type { ApiState } from '@/services/doc/Enums';
 
 export interface DocApi extends SerialEntity, DataNode {
   name: string;
-  url: string;
+  path: string;
   method: HttpMethod;
   projectId: string;
   authorId: string;
@@ -98,7 +98,7 @@ export interface DocProject extends SerialEntity {
 
 export interface DocProjectConfig extends BaseEntity {
   name: string;
-  baseUrl: string;
+  basePath: string;
   projectId: string;
   remark: string;
 }

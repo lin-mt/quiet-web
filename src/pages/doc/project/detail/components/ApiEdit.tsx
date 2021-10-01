@@ -84,7 +84,7 @@ export default (props: ApiEditProps) => {
       name: apiDetail.api.name,
       apiState: ApiState[apiDetail.api.apiState],
       method: HttpMethod[apiDetail.api.method],
-      url: apiDetail.api.url,
+      path: apiDetail.api.path,
       apiGroupId: apiDetail?.api.apiGroup
         ? {
             value: apiDetail?.api.apiGroup.id,
@@ -100,7 +100,7 @@ export default (props: ApiEditProps) => {
     apiDetail.api.apiState,
     apiDetail.api.method,
     apiDetail.api.name,
-    apiDetail.api.url,
+    apiDetail.api.path,
     apiDetailForm,
   ]);
 
@@ -126,7 +126,7 @@ export default (props: ApiEditProps) => {
     return path;
   };
 
-  function handleApiUrlChange(event: ChangeEvent<HTMLInputElement>) {
+  function handleApiPathChange(event: ChangeEvent<HTMLInputElement>) {
     let val = event.target.value;
     const queue: { name: string; example: ''; remark: string; apiId: string }[] = [];
     const insertParams = (name: string) => {
@@ -211,7 +211,7 @@ export default (props: ApiEditProps) => {
           </FieldFormItem>
           <FieldFormItem
             label={'接口路径'}
-            name={'url'}
+            name={'path'}
             rules={[
               { required: true, message: '请输入接口地址' },
               { max: 300, message: '接口地址长度不能超过 300', type: 'string' },
@@ -239,7 +239,7 @@ export default (props: ApiEditProps) => {
                 </Form.Item>
               }
               placeholder="请输入接口路径"
-              onChange={handleApiUrlChange}
+              onChange={handleApiPathChange}
             />
           </FieldFormItem>
           <Form.List name="apiPathParam">
