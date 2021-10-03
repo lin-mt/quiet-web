@@ -9,7 +9,7 @@ import type { ResponseError } from 'umi-request';
 import { queryCurrent } from './services/system/QuietUser';
 import type { Result } from '@/types/Result';
 import { ResultType } from '@/types/Result';
-import { LocalStorage, ResultCode, ResultUrl, System } from '@/constant';
+import { LocalStorage, ResultUrl, System } from '@/constant';
 import type { RequestOptionsInit } from 'umi-request';
 import { request as umiReq } from 'umi';
 import type { QuietUser, TokenInfo } from '@/services/system/EntityType';
@@ -197,7 +197,7 @@ export const request: RequestConfig = {
             }
           }
           if (data.code) {
-            if (ResultCode.NoLogin === data.code && history.location.pathname !== ResultUrl.Login) {
+            if (history.location.pathname !== ResultUrl.Login) {
               history.push(ResultUrl.Login);
             }
           }
