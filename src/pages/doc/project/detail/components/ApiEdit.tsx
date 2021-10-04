@@ -26,7 +26,6 @@ import _ from 'lodash';
 import JsonSchemaEditor from '@/pages/components/JsonSchemaEditor';
 
 interface ApiEditProps {
-  apiId: string;
   projectId: string;
   apiDetail: ApiDetail;
 }
@@ -85,32 +84,20 @@ export default (props: ApiEditProps) => {
       apiState: ApiState[apiDetail.api.apiState],
       method: HttpMethod[apiDetail.api.method],
       path: apiDetail.api.path,
-      apiGroupId: apiDetail?.api.apiGroup
+      apiGroupId: apiDetail.api.apiGroup
         ? {
-            value: apiDetail?.api.apiGroup.id,
-            label: apiDetail?.api.apiGroup.name,
+            value: apiDetail.api.apiGroup.id,
+            label: apiDetail.api.apiGroup.name,
           }
         : undefined,
     });
     const options = getReqParamSettingOptionsByMethod(apiDetail.api.method);
     setReqParamSettingOptions(options);
     setReqParamSetting(options[0]);
-  }, [
-    apiDetail.api.apiGroup,
-    apiDetail.api.apiState,
-    apiDetail.api.method,
-    apiDetail.api.name,
-    apiDetail.api.path,
-    apiDetailForm,
-  ]);
+  }, [apiDetail, apiDetailForm]);
 
   function listApiGroupByName(name: string) {
-    return listApiGroupByProjectIdAndName(projectId, name).then((resp) => {
-      return resp.map((apiGroup) => ({
-        label: apiGroup.name,
-        value: apiGroup.id,
-      }));
-    });
+    return listApiGroupByProjectIdAndName(projectId, name);
   }
 
   const handlePath = (pathParam: string) => {
@@ -128,13 +115,13 @@ export default (props: ApiEditProps) => {
 
   function handleApiPathChange(event: ChangeEvent<HTMLInputElement>) {
     let val = event.target.value;
-    const queue: { name: string; example: ''; remark: string; apiId: string }[] = [];
+    const queue: { name: string; example: ''; remark: string }[] = [];
     const insertParams = (name: string) => {
       const findExist = _.find(apiDetailForm.getFieldValue('apiPathParam'), { name });
       if (findExist) {
         queue.push(findExist);
       } else {
-        queue.push({ name, example: '', remark: '', apiId: apiDetail.api.id });
+        queue.push({ name, example: '', remark: '' });
       }
     };
     val = handlePath(val);
@@ -165,6 +152,7 @@ export default (props: ApiEditProps) => {
       const values = await apiDetailForm.validateFields();
       values.method = HttpMethod[values.method];
       values.state = ApiState[values.state];
+      values.apiGroupId = values.apiGroupId.value;
       if (reqJsonBodyJsonSchema) {
         values.apiBody = reqJsonBodyJsonSchema;
       }
@@ -254,7 +242,7 @@ export default (props: ApiEditProps) => {
                         fieldKey={[fieldKey, 'name']}
                         rules={[{ required: true, message: '请输入参数名称' }]}
                       >
-                        <Input placeholder="参数名称" disabled={true} />
+                        <Input disabled={true} />
                       </FieldFormItem>
                     </Col>
                     <Col span={10}>
@@ -277,14 +265,6 @@ export default (props: ApiEditProps) => {
                         <Input style={{ width: '100%' }} placeholder="备注" />
                       </FieldFormItem>
                     </Col>
-                    <FieldFormItem
-                      {...restField}
-                      hidden={true}
-                      name={[name, 'apiId']}
-                      fieldKey={[fieldKey, 'apiId']}
-                    >
-                      <Input value={apiDetail.api.id} />
-                    </FieldFormItem>
                   </Row>
                 ))}
               </>
@@ -425,14 +405,6 @@ export default (props: ApiEditProps) => {
                         <Col flex={'22px'}>
                           <DeleteOutlined onClick={() => remove(name)} />
                         </Col>
-                        <FieldFormItem
-                          {...restField}
-                          hidden={true}
-                          name={[name, 'apiId']}
-                          fieldKey={[fieldKey, 'apiId']}
-                        >
-                          <Input value={apiDetail.api.id} />
-                        </FieldFormItem>
                       </Row>
                     ))}
                   </>
@@ -566,14 +538,6 @@ export default (props: ApiEditProps) => {
                       <Col flex={'22px'}>
                         <DeleteOutlined onClick={() => remove(name)} />
                       </Col>
-                      <FieldFormItem
-                        {...restField}
-                        hidden={true}
-                        name={[name, 'apiId']}
-                        fieldKey={[fieldKey, 'apiId']}
-                      >
-                        <Input value={apiDetail.api.id} />
-                      </FieldFormItem>
                     </Row>
                   ))}
                 </>
@@ -703,14 +667,6 @@ export default (props: ApiEditProps) => {
                       <Col flex={'22px'}>
                         <DeleteOutlined onClick={() => remove(name)} />
                       </Col>
-                      <FieldFormItem
-                        {...restField}
-                        hidden={true}
-                        name={[name, 'apiId']}
-                        fieldKey={[fieldKey, 'apiId']}
-                      >
-                        <Input value={apiDetail.api.id} />
-                      </FieldFormItem>
                     </Row>
                   ))}
                 </>

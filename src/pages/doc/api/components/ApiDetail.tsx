@@ -25,7 +25,7 @@ export default (props: ApiDetailProps) => {
         <ApiPreview apiId={apiId} />
       </Tabs.TabPane>
       <Tabs.TabPane key={'edit'} tab={'编辑'}>
-        {apiDetail && <ApiEdit projectId={projectId} apiId={apiId} apiDetail={apiDetail} />}
+        {apiDetail && <ApiEdit projectId={projectId} apiDetail={apiDetail} />}
       </Tabs.TabPane>
       <Tabs.TabPane key={'run'} tab={'运行'}>
         运行
