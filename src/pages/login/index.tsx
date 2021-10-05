@@ -44,7 +44,7 @@ const Login: React.FC = () => {
     if (userInfo) {
       await setInitialState((s) => ({
         ...s,
-        currentUser: userInfo,
+        current_user: userInfo,
       }));
     }
   };
@@ -61,7 +61,7 @@ const Login: React.FC = () => {
         await setInitialState({
           ...initialState,
           // @ts-ignore
-          tokenInfo,
+          token_info: tokenInfo,
         });
         await fetchUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位置 */
@@ -179,7 +179,7 @@ const Login: React.FC = () => {
                   ]}
                 />
                 <ProFormText.Password
-                  name="secretCode"
+                  name="secret_code"
                   initialValue={'quiet'}
                   fieldProps={{
                     size: 'large',

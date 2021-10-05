@@ -80,7 +80,7 @@ const RoleForm: React.FC<RoleFormProps> = (props) => {
         <Col>
           <Form.Item
             label="角色名"
-            name="roleName"
+            name="role_name"
             rules={[
               { required: true, message: '请输入角色名' },
               { max: 30, message: '角色名称长度不能超过 30' },
@@ -92,7 +92,7 @@ const RoleForm: React.FC<RoleFormProps> = (props) => {
         <Col>
           <Form.Item
             label="角色中文名"
-            name="roleCnName"
+            name="role_cn_name"
             rules={[
               { required: true, message: '请输入角色中文名' },
               { max: 30, message: '角色中文名称长度不能超过 30' },

@@ -37,7 +37,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout') {
-        setInitialState((s) => ({ ...s, currentUser: undefined }));
+        setInitialState((s) => ({ ...s, current_user: undefined }));
         loginOut().then(() => notification.info({ message: '退出成功' }));
         return;
       }
@@ -62,9 +62,9 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     return loading;
   }
 
-  const { currentUser } = initialState;
+  const { current_user } = initialState;
 
-  if (!currentUser || !currentUser.username) {
+  if (!current_user || !current_user.username) {
     return loading;
   }
 
@@ -93,8 +93,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   return (
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
-        <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
-        <span className={`${styles.name} anticon`}>{currentUser.fullName}</span>
+        <Avatar size="small" className={styles.avatar} src={current_user.avatar} alt="avatar" />
+        <span className={`${styles.name} anticon`}>{current_user.full_name}</span>
       </span>
     </HeaderDropdown>
   );
