@@ -2,12 +2,12 @@ export interface BaseEntity {
   id: string;
   creator: string;
   updater: string;
-  gmtCreate: string;
-  gmtUpdate: string;
+  gmt_create: string;
+  gmt_update: string;
 }
 
 export interface SerialEntity extends BaseEntity {
-  serialNumber: number;
+  serial_number: number;
 }
 
 export interface KeyEntity {
@@ -15,29 +15,29 @@ export interface KeyEntity {
 }
 
 export interface ParentEntity<T> extends BaseEntity {
-  parentId: number;
+  parent_id: number;
   children: T[];
 }
 
 export interface QuietClient extends BaseEntity {
-  clientId: string;
-  clientName: string;
-  resourceIds: string[];
-  secretRequired: string;
-  clientSecret: string;
+  client_id: string;
+  client_name: string;
+  resource_ids: string[];
+  secret_required: string;
+  client_secret: string;
   scoped: string;
   scope: string[];
-  authorizedGrantTypes: string[];
-  registeredRedirectUri: string[];
-  accessTokenValiditySeconds: number;
-  refreshTokenValiditySeconds: number;
-  autoApprove: string;
+  authorized_grant_types: string[];
+  registered_redirect_uri: string[];
+  access_token_validity_seconds: number;
+  refresh_token_validity_seconds: number;
+  auto_approve: string;
   remake: string;
 }
 
 export interface QuietRoute extends BaseEntity {
   environment: string;
-  routeId: string;
+  route_id: string;
   uri: string;
   order: number;
   predicates: string[];
@@ -55,29 +55,29 @@ export interface TokenInfo extends BaseEntity {
 
 export interface QuietUser extends BaseEntity {
   username: string;
-  fullName: string;
+  full_name: string;
   avatar?: string;
   gender?: string;
-  phoneNumber?: string;
-  emailAddress?: string;
-  accountExpired?: string;
-  accountLocked?: string;
-  credentialsExpired?: string;
+  phone_number?: string;
+  email_address?: string;
+  account_expired?: string;
+  account_locked?: string;
+  credentials_expired?: string;
   enabled: string;
-  unreadCount: number;
+  unread_count: number;
   authorities: QuietRole[];
 }
 
 export interface QuietRole extends BaseEntity {
-  parentId?: string;
-  roleName: string;
-  roleCnName?: string;
+  parent_id?: string;
+  role_name: string;
+  role_cn_name?: string;
   remark?: string;
 }
 
 export interface QuietUserRole extends BaseEntity {
-  userId: string;
-  roleId: string;
+  user_id: string;
+  role_id: string;
 }
 
 export interface QuietDictionary extends ParentEntity<QuietDictionary> {
@@ -88,26 +88,26 @@ export interface QuietDictionary extends ParentEntity<QuietDictionary> {
 }
 
 export interface QuietTeam extends BaseEntity {
-  teamName: string;
+  team_name: string;
   slogan?: string;
-  productOwners?: QuietUser[];
-  scrumMasters?: QuietUser[];
+  product_owners?: QuietUser[];
+  scrum_masters?: QuietUser[];
   members?: QuietUser[];
 }
 
 export interface QuietPermission extends BaseEntity {
-  applicationName: string;
-  urlPattern: string;
-  preFilterValue?: string;
-  preFilterFilterTarget?: string;
-  preAuthorizeValue?: string;
-  postFilterValue?: string;
-  postAuthorizeValue?: string;
+  application_name: string;
+  url_pattern: string;
+  pre_filter_value?: string;
+  pre_filter_filter_target?: string;
+  pre_authorize_value?: string;
+  post_filter_value?: string;
+  post_authorize_value?: string;
 }
 
 export interface QuietDepartment extends BaseEntity {
-  departmentName: string;
-  parentId?: string;
+  department_name: string;
+  parent_id?: string;
   remark?: string;
 }
 
@@ -119,7 +119,7 @@ export interface NoticeIconData extends BaseEntity {
   type: string;
   read?: boolean;
   description: string;
-  clickClose?: boolean;
+  click_close?: boolean;
   extra: any;
   status: string;
 }

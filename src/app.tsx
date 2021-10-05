@@ -9,14 +9,13 @@ import type { ResponseError } from 'umi-request';
 import { queryCurrent } from './services/system/QuietUser';
 import type { Result } from '@/types/Result';
 import { ResultType } from '@/types/Result';
-import { LocalStorage, ResultUrl, System } from '@/constant';
+import { LocalStorage, System, Url } from '@/constant';
 import type { RequestOptionsInit } from 'umi-request';
 import { request as umiReq } from 'umi';
 import type { QuietUser, TokenInfo } from '@/services/system/EntityType';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 
 const isDev = process.env.NODE_ENV === 'development';
-const loginPath = '/login';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -28,24 +27,24 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: QuietUser;
-  tokenInfo?: TokenInfo;
+  current_user?: QuietUser;
+  token_info?: TokenInfo;
   fetchUserInfo?: () => Promise<QuietUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
       return await queryCurrent();
     } catch (error) {
-      history.push(loginPath);
+      history.push(Url.Login);
     }
     return undefined;
   };
   // 如果是登录页面，不执行
-  if (history.location.pathname !== loginPath) {
+  if (history.location.pathname !== Url.Login) {
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
-      currentUser,
+      current_user: currentUser,
       settings: {},
     };
   }
@@ -196,11 +195,6 @@ export const request: RequestConfig = {
               default:
             }
           }
-          if (data.code) {
-            if (history.location.pathname !== ResultUrl.Login) {
-              history.push(ResultUrl.Login);
-            }
-          }
         }
       }
       return response;
@@ -214,14 +208,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     // waterMarkProps: {
-    // content: initialState?.currentUser?.fullName,
+    // content: initialState?.currentUser?.full_name,
     // },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
-        history.push(loginPath);
+      if (!initialState?.current_user && location.pathname !== Url.Login) {
+        history.push(Url.Login);
       }
     },
     links: isDev

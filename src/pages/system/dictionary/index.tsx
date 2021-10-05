@@ -40,7 +40,7 @@ const Dictionary: React.FC<any> = () => {
     },
     {
       title: '父 ID',
-      dataIndex: 'parentId',
+      dataIndex: 'parent_id',
       valueType: 'text',
       copyable: true,
     },
@@ -52,15 +52,15 @@ const Dictionary: React.FC<any> = () => {
     },
     {
       title: '创建时间',
-      dataIndex: 'gmtCreate',
-      key: 'gmtCreate',
+      dataIndex: 'gmt_create',
+      key: 'gmt_create',
       valueType: 'dateTime',
       search: false,
     },
     {
       title: '更新时间',
-      dataIndex: 'gmtUpdate',
-      key: 'gmtUpdate',
+      dataIndex: 'gmt_update',
+      key: 'gmt_update',
       valueType: 'dateTime',
       search: false,
     },
@@ -96,8 +96,8 @@ const Dictionary: React.FC<any> = () => {
   ];
 
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
-    gmtCreate: { show: false },
-    gmtUpdate: { show: false },
+    gmt_create: { show: false },
+    gmt_update: { show: false },
   });
 
   function createDictionary() {

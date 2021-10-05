@@ -15,13 +15,23 @@ function GET<T>(
 }
 
 function PAGE<T>(url: string, params: any): Promise<Partial<RequestData<T>>> {
-  return GET<any>(url, { ...params, ...params.params }).then((resData: any) => {
+  const pageParam = {
+    ...params.params,
+    page_size: params.params.pageSize,
+  };
+  delete pageParam.pageSize;
+  return GET<any>(url, pageParam).then((resData: any) => {
     return { ...resData, data: resData.content };
   });
 }
 
 function PAGE_RESULT<T>(url: string, params: any): Promise<Partial<RequestData<T>>> {
-  return GET<any>(url, { ...params, ...params.params }).then((resData: any) => {
+  const pageParam = {
+    ...params.params,
+    page_size: params.params.pageSize,
+  };
+  delete pageParam.pageSize;
+  return GET<any>(url, pageParam).then((resData: any) => {
     return { ...resData, data: resData.results };
   });
 }

@@ -27,7 +27,6 @@ const RoleTree: React.FC<RoleTreeProps> = (props) => {
       if (data) {
         for (let i = 0; i < data.length; i += 1) {
           buildResult[i].key = data[i].id;
-          buildResult[i].title = data[i].roleName;
           if (data[i].children) {
             buildResult[i].children = buildRoleTreeNodes(data[i].children);
           } else {

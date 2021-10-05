@@ -2,7 +2,7 @@ export const LocalStorage = {
   TokenInfo: 'token_info',
 };
 
-export const ResultUrl = {
+export const Url = {
   Login: '/login',
 };
 

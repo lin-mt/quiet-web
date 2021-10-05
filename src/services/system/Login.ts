@@ -5,7 +5,7 @@ import type { TokenInfo } from '@/services/system/EntityType';
 
 export interface LoginParams {
   username: string;
-  secretCode: string;
+  secret_code: string;
   mobile: string;
   captcha: string;
   type: string;
@@ -21,7 +21,7 @@ export async function accountLogin(params: LoginParams) {
 export async function oauthToken(params: LoginParams) {
   const oauthData = {
     ...params,
-    password: params.secretCode,
+    password: params.secret_code,
     grant_type: System.GrantType.Password,
   };
   return request<TokenInfo>('/api/system/oauth/token', {

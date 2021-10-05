@@ -2,24 +2,24 @@ import type { QuietRole } from '@/services/system/EntityType';
 import type { RequestData } from '@ant-design/pro-table/lib/typing';
 import { DELETE, GET, PAGE, POST, PUT } from '@/utils/HttpUtils';
 
-const baseUrl = '/api/system/role';
+const base_path = '/api/system/role';
 
 export async function treeRole(): Promise<QuietRole[]> {
-  return GET<QuietRole[]>(`${baseUrl}/tree`);
+  return GET<QuietRole[]>(`${base_path}/tree`);
 }
 
 export async function pageRole(params?: any): Promise<Partial<RequestData<QuietRole>>> {
-  return PAGE<QuietRole>(`${baseUrl}/page`, params);
+  return PAGE<QuietRole>(`${base_path}/page`, params);
 }
 
 export async function saveRole(save: QuietRole): Promise<QuietRole> {
-  return POST<QuietRole>(`${baseUrl}`, save);
+  return POST<QuietRole>(`${base_path}`, save);
 }
 
 export async function updateRole(update: QuietRole): Promise<QuietRole> {
-  return PUT<QuietRole>(`${baseUrl}`, update);
+  return PUT<QuietRole>(`${base_path}`, update);
 }
 
 export async function deleteRole(id: string) {
-  await DELETE(`${baseUrl}/${id}`);
+  await DELETE(`${base_path}/${id}`);
 }
