@@ -20,18 +20,18 @@ const TeamForm: React.FC<TeamFormProps> = (props) => {
 
   useEffect(() => {
     if (updateInfo) {
-      const formProductOwners = updateInfo.productOwners?.map((user: QuietUser) => {
-        return { value: user.id, label: user.fullName };
+      const formProductOwners = updateInfo.product_owners?.map((user: QuietUser) => {
+        return { value: user.id, label: user.full_name };
       });
-      const formScrumMasters = updateInfo.scrumMasters?.map((user: QuietUser) => {
-        return { value: user.id, label: user.fullName };
+      const formScrumMasters = updateInfo.scrum_masters?.map((user: QuietUser) => {
+        return { value: user.id, label: user.full_name };
       });
       const formMembers = updateInfo.members?.map((user: QuietUser) => {
-        return { value: user.id, label: user.fullName };
+        return { value: user.id, label: user.full_name };
       });
       const datumUpdateInfo: any = { ...updateInfo };
-      datumUpdateInfo.productOwners = formProductOwners;
-      datumUpdateInfo.scrumMasters = formScrumMasters;
+      datumUpdateInfo.product_owners = formProductOwners;
+      datumUpdateInfo.scrum_masters = formScrumMasters;
       datumUpdateInfo.members = formMembers;
       form.setFieldsValue(datumUpdateInfo);
     } else {
@@ -44,10 +44,10 @@ const TeamForm: React.FC<TeamFormProps> = (props) => {
     setSubmitting(true);
     const submitValues = {
       ...values,
-      productOwners: values.productOwners?.map((user: { value: string }) => {
+      product_owners: values.product_owners?.map((user: { value: string }) => {
         return { id: user.value };
       }),
-      scrumMasters: values.scrumMasters?.map((user: { value: string }) => {
+      scrum_masters: values.scrum_masters?.map((user: { value: string }) => {
         return { id: user.value };
       }),
       members: values.members?.map((user: { value: string }) => {
@@ -65,7 +65,7 @@ const TeamForm: React.FC<TeamFormProps> = (props) => {
     setSubmitting(false);
     onCancel();
     if (afterAction) {
-      afterAction();
+      // afterAction();
     }
   }
 
@@ -91,7 +91,7 @@ const TeamForm: React.FC<TeamFormProps> = (props) => {
   async function findUserByName(name: string) {
     return listUsersByName(name).then((resp) => {
       return resp.map((user) => ({
-        label: user.fullName,
+        label: user.full_name,
         value: user.id,
       }));
     });
@@ -123,7 +123,7 @@ const TeamForm: React.FC<TeamFormProps> = (props) => {
         <Col>
           <Form.Item
             label="团队名称"
-            name="teamName"
+            name="team_name"
             rules={[
               { required: true, message: '请输入团队名称' },
               { max: 16, message: '团队名称长度不能超过 16' },
@@ -134,7 +134,7 @@ const TeamForm: React.FC<TeamFormProps> = (props) => {
         </Col>
         <Col>
           <Form.Item
-            name={'productOwners'}
+            name={'product_owners'}
             label="ProductOwners"
             rules={[{ required: true, message: '请选择 PO' }]}
           >
@@ -147,7 +147,7 @@ const TeamForm: React.FC<TeamFormProps> = (props) => {
         </Col>
         <Col>
           <Form.Item
-            name={'scrumMasters'}
+            name={'scrum_masters'}
             label="ScrumMaster"
             rules={[{ required: true, message: '请选择 SM' }]}
           >

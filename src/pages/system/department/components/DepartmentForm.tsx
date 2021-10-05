@@ -80,7 +80,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = (props) => {
         <Col>
           <Form.Item
             label="部门名称"
-            name="departmentName"
+            name="department_name"
             rules={[
               { required: true, message: '请输入部门名称' },
               { max: 10, message: '部门名称长度不能超过 10' },
@@ -90,7 +90,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = (props) => {
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label="父级部门 ID" name="parentId">
+          <Form.Item label="父级部门 ID" name="parent_id">
             <Input placeholder="请输入父级部门 ID" />
           </Form.Item>
         </Col>

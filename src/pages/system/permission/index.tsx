@@ -21,25 +21,25 @@ const PermissionConfig: React.FC<any> = () => {
     },
     {
       title: '应用名称',
-      dataIndex: 'applicationName',
+      dataIndex: 'application_name',
       valueType: 'text',
       copyable: true,
     },
     {
       title: 'urlPattern',
-      dataIndex: 'urlPattern',
+      dataIndex: 'url_pattern',
       valueType: 'text',
       ellipsis: true,
       copyable: true,
     },
     {
       title: 'reqMethod',
-      dataIndex: 'requestMethod',
+      dataIndex: 'request_method',
       valueType: 'text',
     },
     {
       title: 'roleId',
-      dataIndex: 'roleId',
+      dataIndex: 'role_id',
       valueType: 'text',
       copyable: true,
     },
@@ -51,15 +51,15 @@ const PermissionConfig: React.FC<any> = () => {
     },
     {
       title: '创建时间',
-      dataIndex: 'gmtCreate',
-      key: 'gmtCreate',
+      dataIndex: 'gmt_create',
+      key: 'gmt_create',
       valueType: 'dateTime',
       search: false,
     },
     {
       title: '更新时间',
-      dataIndex: 'gmtUpdate',
-      key: 'gmtUpdate',
+      dataIndex: 'gmt_update',
+      key: 'gmt_update',
       valueType: 'dateTime',
       search: false,
     },
@@ -94,8 +94,8 @@ const PermissionConfig: React.FC<any> = () => {
   ];
 
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
-    gmtCreate: { show: false },
-    gmtUpdate: { show: false },
+    gmt_create: { show: false },
+    gmt_update: { show: false },
   });
 
   function createPermission() {

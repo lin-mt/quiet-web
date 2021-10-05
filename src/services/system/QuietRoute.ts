@@ -3,10 +3,10 @@ import type { QuietRoute } from '@/services/system/EntityType';
 import { DELETE, PAGE, POST, PUT } from '@/utils/HttpUtils';
 import { ResultType } from '@/types/Result';
 
-const apiPrefix = '/api/system/route';
+const base_path = '/api/system/route';
 
 export function publishRoute(environment: string) {
-  POST(`${apiPrefix}/publishRoute`, { environment }).then((resp: any) => {
+  POST(`${base_path}/publish-route`, { environment }).then((resp: any) => {
     if (resp.result === ResultType.SUCCESS) {
       // noinspection JSIgnoredPromiseFromCall
       POST('/api/actuator/gateway/refresh');
@@ -15,25 +15,25 @@ export function publishRoute(environment: string) {
 }
 
 export function removePredicate(id: string, predicate: string) {
-  return POST(`${apiPrefix}/removePredicate`, { id, routePredicate: predicate });
+  return POST(`${base_path}/remove-predicate`, { id, route_predicate: predicate });
 }
 
 export function removeFilter(id: string, filter: string) {
-  return POST(`${apiPrefix}/removeFilter`, { id, routeFilter: filter });
+  return POST(`${base_path}/remove-filter`, { id, route_filter: filter });
 }
 
 export async function pageRoute(params?: any): Promise<Partial<RequestData<QuietRoute>>> {
-  return PAGE<QuietRoute>(`${apiPrefix}/page`, params);
+  return PAGE<QuietRoute>(`${base_path}/page`, params);
 }
 
 export async function saveRoute(save: QuietRoute): Promise<QuietRoute> {
-  return POST<QuietRoute>(`${apiPrefix}`, save);
+  return POST<QuietRoute>(`${base_path}`, save);
 }
 
 export async function updateRoute(update: QuietRoute): Promise<QuietRoute> {
-  return PUT<QuietRoute>(`${apiPrefix}`, update);
+  return PUT<QuietRoute>(`${base_path}`, update);
 }
 
 export async function deleteRoute(id: string) {
-  await DELETE(`${apiPrefix}/${id}`);
+  await DELETE(`${base_path}/${id}`);
 }

@@ -51,7 +51,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
     },
     {
       title: '姓名',
-      dataIndex: 'fullName',
+      dataIndex: 'full_name',
       valueType: 'text',
     },
     {
@@ -67,31 +67,31 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
     },
     {
       title: '电话号码',
-      dataIndex: 'phoneNumber',
+      dataIndex: 'phone_number',
       valueType: 'text',
       copyable: true,
     },
     {
       title: '邮箱',
-      dataIndex: 'emailAddress',
+      dataIndex: 'email_address',
       valueType: 'text',
       copyable: true,
     },
     {
       title: '账号到期',
-      dataIndex: 'accountExpired',
+      dataIndex: 'account_expired',
       valueType: 'select',
       valueEnum: accountExpiredStatus,
     },
     {
       title: '账号被锁',
-      dataIndex: 'accountLocked',
+      dataIndex: 'account_locked',
       valueType: 'select',
       valueEnum: accountLockedStatus,
     },
     {
       title: '密码过期',
-      dataIndex: 'credentialsExpired',
+      dataIndex: 'credentials_expired',
       valueType: 'select',
       valueEnum: credentialsExpiredStatus,
     },
@@ -148,7 +148,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
     if (selectedRowKeys.length > 0) {
       setConfirmRemoveUsersVisible(true);
     } else {
-      message.info('请选择要移除的部门成员');
+      message.info('请选择要移除的部门成员').then();
     }
   }
 
@@ -157,7 +157,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
       destroyOnClose
       width={'80%'}
       footer={null}
-      title={`部门 ${department?.departmentName} 的成员信息`}
+      title={`部门 ${department?.department_name} 的成员信息`}
       visible={visible}
       onCancel={handleOnCancel}
       onOk={handleOnOk}

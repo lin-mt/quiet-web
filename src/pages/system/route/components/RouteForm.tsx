@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Modal, Select } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Select } from 'antd';
 import { saveRoute, updateRoute } from '@/services/system/QuietRoute';
 import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import type { QuietRoute } from '@/services/system/EntityType';
@@ -129,7 +129,7 @@ const RouteForm: React.FC<RouteFormProps> = (props) => {
       <Form form={form} name={'routeForm'} labelCol={{ span: 5 }}>
         <Form.Item
           label={'网关路由ID'}
-          name={'routeId'}
+          name={'route_id'}
           rules={[
             { required: true, message: '请输入路由ID' },
             { max: 60, message: '路由ID长度不能超过 60' },
@@ -162,7 +162,7 @@ const RouteForm: React.FC<RouteFormProps> = (props) => {
           name={'order'}
           rules={[{ required: true, message: '请输入 order' }]}
         >
-          <Input type={'number'} defaultValue={0} allowClear={false} placeholder={'请输入 order'} />
+          <InputNumber style={{ width: '100%' }} placeholder={'请输入 order'} />
         </Form.Item>
         <Form.Item label="Predicates">
           <Select

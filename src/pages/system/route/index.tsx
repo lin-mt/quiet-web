@@ -65,7 +65,7 @@ const GatewayRoute: React.FC<any> = () => {
     },
     {
       title: '路由ID',
-      dataIndex: 'routeId',
+      dataIndex: 'route_id',
       valueType: 'text',
     },
     {
@@ -99,7 +99,7 @@ const GatewayRoute: React.FC<any> = () => {
                   onClose={(e) => e.preventDefault()}
                   closeIcon={
                     <Popconfirm
-                      title={`确定移除路由 ${record.routeId} 的 Predicate 配置 ${predicate} 吗？`}
+                      title={`确定移除路由 ${record.route_id} 的 Predicate 配置 ${predicate} 吗？`}
                       icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                       /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
                       onConfirm={confirmRemoveRoutePredicate.bind(this, record.id, predicate)}
@@ -130,7 +130,7 @@ const GatewayRoute: React.FC<any> = () => {
                   onClose={(e) => e.preventDefault()}
                   closeIcon={
                     <Popconfirm
-                      title={`确定移除路由 ${record.routeId} 的 Filter 配置 ${filter} 吗？`}
+                      title={`确定移除路由 ${record.route_id} 的 Filter 配置 ${filter} 吗？`}
                       icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                       onConfirm={confirmRemoveRouteFilter.bind(
                         /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
@@ -157,15 +157,15 @@ const GatewayRoute: React.FC<any> = () => {
     },
     {
       title: '创建时间',
-      dataIndex: 'gmtCreate',
-      key: 'gmtCreate',
+      dataIndex: 'gmt_create',
+      key: 'gmt_create',
       valueType: 'dateTime',
       search: false,
     },
     {
       title: '更新时间',
-      dataIndex: 'gmtUpdate',
-      key: 'gmtUpdate',
+      dataIndex: 'gmt_update',
+      key: 'gmt_update',
       valueType: 'dateTime',
       search: false,
     },
@@ -201,8 +201,8 @@ const GatewayRoute: React.FC<any> = () => {
   ];
 
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
-    gmtCreate: { show: false },
-    gmtUpdate: { show: false },
+    gmt_create: { show: false },
+    gmt_update: { show: false },
   });
 
   return (

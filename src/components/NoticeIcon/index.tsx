@@ -72,7 +72,7 @@ const getUnreadData = (noticeData: Record<string, API.NoticeIconItem[]>) => {
 
 const NoticeIconView = () => {
   const { initialState } = useModel('@@initialState');
-  const { currentUser } = initialState || {};
+  const { current_user } = initialState || {};
   const [notices, setNotices] = useState<API.NoticeIconItem[]>([]);
 
   useEffect(() => {
@@ -110,7 +110,7 @@ const NoticeIconView = () => {
   return (
     <NoticeIcon
       className={styles.action}
-      count={currentUser && currentUser.unreadCount}
+      count={current_user && current_user.unread_count}
       onItemClick={(item) => {
         changeReadState(item.id!);
       }}
