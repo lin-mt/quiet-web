@@ -36,8 +36,8 @@ export default (props: ApiFormProps) => {
     setSubmitting(true);
     const submitValues = {
       ...values,
-      projectId,
-      apiGroupId: values.apiGroupId?.value,
+      project_id: projectId,
+      api_group_id: values.api_group_id?.value,
     };
     if (!submitValues.path.startsWith('/')) {
       submitValues.path = `/${submitValues.path}`;
@@ -112,7 +112,7 @@ export default (props: ApiFormProps) => {
         name={'form'}
         labelCol={{ span: 5 }}
         initialValues={{
-          apiGroupId: initApiGroup
+          api_group_id: initApiGroup
             ? {
                 value: initApiGroup.id,
                 label: initApiGroup.name,
@@ -156,7 +156,7 @@ export default (props: ApiFormProps) => {
             placeholder="请输入请求地址"
           />
         </Form.Item>
-        <Form.Item label={'接口分组'} name={'apiGroupId'}>
+        <Form.Item label={'接口分组'} name={'api_group_id'}>
           <DebounceSelect placeholder="请输入分组名称" fetchOptions={listApiGroupByName} />
         </Form.Item>
         <Form.Item

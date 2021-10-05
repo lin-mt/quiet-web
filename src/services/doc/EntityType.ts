@@ -13,41 +13,39 @@ export interface DocApi extends SerialEntity, DataNode {
   name: string;
   path: string;
   method: HttpMethod;
-  projectId: string;
-  authorId: string;
-  apiState: ApiState;
-  apiGroupId: string;
-  visitorIds: string[];
+  project_id: string;
+  author_id: string;
+  api_state: ApiState;
+  api_group_id: string;
+  visitor_ids: string[];
   remark: string;
   visitors: QuietUser[];
-  apiGroup: DocApiGroup;
+  api_group: DocApiGroup;
 }
 
 export interface DocApiBody extends ParentEntity<DocApiBody> {
   name: string;
-  maxLength: string;
-  minLength: string;
+  max_length: string;
+  min_length: string;
   type: FieldType;
   required: boolean;
   example: string;
-  apiId: string;
   remark: string;
 }
 
 export interface DocApiFormData extends BaseEntity {
   name: string;
-  maxLength: string;
-  minLength: string;
+  max_length: string;
+  min_length: string;
   type: FormDataType;
   required: boolean;
   example: string;
-  apiId: string;
   remark: string;
 }
 
 export interface DocApiGroup extends SerialEntity, DataNode {
   name: string;
-  projectId: string;
+  project_id: string;
   children: DocApi[];
 }
 
@@ -56,72 +54,61 @@ export interface DocApiHeader extends BaseEntity {
   value: string;
   example: string;
   required: boolean;
-  apiId: string;
   remark: string;
 }
 
 export interface DocApiPathParam extends SerialEntity {
   name: string;
   example: string;
-  apiId: string;
   remark: string;
 }
 
 export interface DocApiQuery extends BaseEntity {
   name: string;
-  maxLength: string;
-  minLength: string;
+  max: string;
+  min: string;
   type: QueryType;
   required: boolean;
   example: string;
-  apiId: string;
   remark: string;
 }
 
 export interface DocApiResponse extends ParentEntity<DocApiResponse> {
   name: string;
   type: FieldType;
-  notNull: boolean;
+  not_null: boolean;
   example: string;
-  apiId: string;
   remark: string;
 }
 
 export interface DocProject extends SerialEntity {
   name: string;
   principal: string;
-  visitorIds: string[];
-  principalName: string;
+  visitor_ids: string[];
+  principal_name: string;
   remark: string;
   visitors: QuietUser[];
 }
 
 export interface DocProjectConfig extends BaseEntity {
   name: string;
-  basePath: string;
-  projectId: string;
+  base_path: string;
+  project_id: string;
   remark: string;
 }
 
-export interface DocProjectHeader extends BaseEntity {
-  name: string;
-  value: string;
-  projectId: string;
-  remark?: string;
-}
-
 export interface MyDocProject {
-  responsibleProjects: DocProject[];
-  accessibleProjects: DocProject[];
+  responsible_projects: DocProject[];
+  accessible_projects: DocProject[];
 }
 
 export interface ApiDetail {
   api: DocApi;
   visitors?: QuietUser[];
-  apiPathParam?: DocApiPathParam[];
-  apiBody?: DocApiBody;
-  apiFormData?: DocApiFormData[];
-  apiHeader?: DocApiHeader[];
-  apiQuery?: DocApiQuery[];
-  apiResponse?: DocApiResponse;
+  api_path_param?: DocApiPathParam[];
+  api_body?: DocApiBody;
+  api_form_data?: DocApiFormData[];
+  api_header?: DocApiHeader[];
+  api_query?: DocApiQuery[];
+  api_response?: DocApiResponse;
 }

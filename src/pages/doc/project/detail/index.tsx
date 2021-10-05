@@ -66,8 +66,8 @@ const ProjectDetails: React.FC<any> = (props) => {
         }),
       };
       treeData.unshift(unGroupNode);
-      if (resp.apiGroups) {
-        resp.apiGroups.forEach((apiGroup) => {
+      if (resp.api_groups) {
+        resp.api_groups.forEach((apiGroup) => {
           treeData.push({
             ...apiGroup,
             key: apiGroup.id,
@@ -138,8 +138,8 @@ const ProjectDetails: React.FC<any> = (props) => {
     },
     {
       title: '状态',
-      dataIndex: 'apiState',
-      key: 'apiState',
+      dataIndex: 'api_state',
+      key: 'api_state',
       valueType: 'select',
       valueEnum: {
         FINISH: { text: '已完成', status: 'Success' },
@@ -148,10 +148,10 @@ const ProjectDetails: React.FC<any> = (props) => {
     },
     {
       title: '接口分组',
-      dataIndex: 'apiGroupId',
-      key: 'apiGroupId',
+      dataIndex: 'api_group_id',
+      key: 'api_group_id',
       render: (_, record) => {
-        return <>{record.apiGroup ? record.apiGroup.name : '未分组'}</>;
+        return <>{record.api_group ? record.api_group.name : '未分组'}</>;
       },
       // render: (_, record) => {
       //   const tags: DocApiGroup[][] = [];

@@ -32,7 +32,7 @@ export default (props: ApiGroupFormProps) => {
     setSubmitting(true);
     const submitValues = {
       ...values,
-      projectId,
+      project_id: projectId,
     };
     if (updateInfo) {
       await updateApiGroup({

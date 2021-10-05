@@ -75,7 +75,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
       >
         <Space direction={'vertical'}>
           <Typography.Text style={{ color: '#108EE9' }}>
-            {projectInfo.principalName}
+            {projectInfo.principal_name}
           </Typography.Text>
           <Typography.Paragraph
             type={'secondary'}

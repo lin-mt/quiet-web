@@ -22,9 +22,9 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
     if (updateInfo) {
       form.setFieldsValue({
         ...updateInfo,
-        principal: { value: updateInfo.principal, label: updateInfo.principalName },
+        principal: { value: updateInfo.principal, label: updateInfo.principal_name },
         visitors: updateInfo.visitors?.map((user) => {
-          return { value: user.id, label: user.fullName };
+          return { value: user.id, label: user.full_name };
         }),
       });
     } else {
@@ -38,7 +38,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
     const submitValues = {
       ...values,
       principal: values.principal.value,
-      visitorIds: values.visitors?.map((user: { value: string }) => user.value),
+      visitor_ids: values.visitors?.map((user: { value: string }) => user.value),
     };
     if (updateInfo) {
       await updateProject({
@@ -77,7 +77,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
   async function findUserByName(name: string) {
     return listUsersByName(name).then((resp) => {
       return resp.map((user) => ({
-        label: user.fullName,
+        label: user.full_name,
         value: user.id,
       }));
     });

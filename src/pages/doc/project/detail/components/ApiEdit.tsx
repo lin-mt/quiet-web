@@ -50,7 +50,7 @@ const FieldFormItem = styled(Form.Item)`
 
 export default (props: ApiEditProps) => {
   const { apiDetail, projectId } = props;
-  const [apiDetailForm] = Form.useForm();
+  const [apiEditForm] = Form.useForm();
 
   const [reqParamSettingOptions, setReqParamSettingOptions] = useState<string[]>();
   const [reqParamSetting, setReqParamSetting] = useState<string>();
@@ -79,22 +79,22 @@ export default (props: ApiEditProps) => {
   }
 
   useEffect(() => {
-    apiDetailForm.setFieldsValue({
+    apiEditForm.setFieldsValue({
       name: apiDetail.api.name,
-      apiState: ApiState[apiDetail.api.apiState],
+      api_state: ApiState[apiDetail.api.api_state],
       method: HttpMethod[apiDetail.api.method],
       path: apiDetail.api.path,
-      apiGroupId: apiDetail.api.apiGroup
+      api_group_id: apiDetail.api.api_group
         ? {
-            value: apiDetail.api.apiGroup.id,
-            label: apiDetail.api.apiGroup.name,
+            value: apiDetail.api.api_group.id,
+            label: apiDetail.api.api_group.name,
           }
         : undefined,
     });
     const options = getReqParamSettingOptionsByMethod(apiDetail.api.method);
     setReqParamSettingOptions(options);
     setReqParamSetting(options[0]);
-  }, [apiDetail, apiDetailForm]);
+  }, [apiDetail, apiEditForm]);
 
   function listApiGroupByName(name: string) {
     return listApiGroupByProjectIdAndName(projectId, name);
@@ -117,7 +117,7 @@ export default (props: ApiEditProps) => {
     let val = event.target.value;
     const queue: { name: string; example: ''; remark: string }[] = [];
     const insertParams = (name: string) => {
-      const findExist = _.find(apiDetailForm.getFieldValue('apiPathParam'), { name });
+      const findExist = _.find(apiEditForm.getFieldValue('api_path_param'), { name });
       if (findExist) {
         queue.push(findExist);
       } else {
@@ -143,21 +143,21 @@ export default (props: ApiEditProps) => {
       // @ts-ignore
       val.replace(/{(.+?)}/g, insertParam);
     }
-    apiDetailForm.setFieldsValue({ ...apiDetailForm.getFieldsValue(), apiPathParam: queue });
+    apiEditForm.setFieldsValue({ ...apiEditForm.getFieldsValue(), api_path_param: queue });
   }
 
   async function handleSubmit() {
     setSubmitting(true);
     try {
-      const values = await apiDetailForm.validateFields();
+      const values = await apiEditForm.validateFields();
       values.method = HttpMethod[values.method];
       values.state = ApiState[values.state];
-      values.apiGroupId = values.apiGroupId.value;
+      values.api_group_id = values.api_group_id.value;
       if (reqJsonBodyJsonSchema) {
-        values.apiBody = reqJsonBodyJsonSchema;
+        values.api_body = reqJsonBodyJsonSchema;
       }
       if (respJsonSchema) {
-        values.respBody = respJsonSchema;
+        values.resp_body = respJsonSchema;
       }
       // eslint-disable-next-line no-console
       console.log(values);
@@ -176,7 +176,7 @@ export default (props: ApiEditProps) => {
   }
 
   return (
-    <Form name={'apiEdit'} labelCol={{ span: 4 }} form={apiDetailForm}>
+    <Form name={'apiEditForm'} labelCol={{ span: 4 }} form={apiEditForm}>
       <Space direction={'vertical'} style={{ width: '100%' }}>
         <ApiTitle>基本设置</ApiTitle>
         <EditContainer style={{ paddingLeft: 200, paddingRight: 200 }}>
@@ -190,7 +190,7 @@ export default (props: ApiEditProps) => {
           >
             <Input placeholder={'请输入接口名称'} />
           </FieldFormItem>
-          <FieldFormItem label={'分组'} name={'apiGroupId'}>
+          <FieldFormItem label={'分组'} name={'api_group_id'}>
             <DebounceSelect
               allowClear={true}
               placeholder="请输入分组名称"
@@ -230,7 +230,7 @@ export default (props: ApiEditProps) => {
               onChange={handleApiPathChange}
             />
           </FieldFormItem>
-          <Form.List name="apiPathParam">
+          <Form.List name="api_path_param">
             {(fields) => (
               <>
                 {fields.map(({ key, name, fieldKey, ...restField }) => (
@@ -272,7 +272,7 @@ export default (props: ApiEditProps) => {
           </Form.List>
           <FieldFormItem
             label={'状态'}
-            name={'apiState'}
+            name={'api_state'}
             style={{ marginBottom: 0 }}
             rules={[{ required: true, message: '请选择接口状态' }]}
           >
@@ -302,7 +302,7 @@ export default (props: ApiEditProps) => {
               onChange={(e) => handleBodyTypeChange(e.target.value)}
             />
             {bodyTypeSetting === 'form' && (
-              <Form.List name="apiFormData">
+              <Form.List name="api_form_data">
                 {(fields, { add, remove }) => (
                   <>
                     <FieldFormItem>
@@ -363,8 +363,8 @@ export default (props: ApiEditProps) => {
                         <Col flex={'100px'}>
                           <FieldFormItem
                             {...restField}
-                            name={[name, 'mixLength']}
-                            fieldKey={[fieldKey, 'mixLength']}
+                            name={[name, 'mix_length']}
+                            fieldKey={[fieldKey, 'mix_length']}
                             rules={[{ min: 0, type: 'number', message: '最小长度不能小于 0' }]}
                           >
                             <InputNumber min={0} style={{ width: 100 }} placeholder="最小长度" />
@@ -420,14 +420,14 @@ export default (props: ApiEditProps) => {
               />
             )}
             {bodyTypeSetting === 'file' && (
-              <FieldFormItem noStyle={true} name={'bodyFile'}>
+              <FieldFormItem noStyle={true} name={'body_file'}>
                 <Input />
               </FieldFormItem>
             )}
             {bodyTypeSetting === 'raw' && (
               <FieldFormItem
                 noStyle={true}
-                name={'bodyRaw'}
+                name={'body_raw'}
                 rules={[{ max: 30, message: 'RAW 示例不能超过 30' }]}
               >
                 <Input.TextArea rows={3} />
@@ -435,7 +435,7 @@ export default (props: ApiEditProps) => {
             )}
           </EditContainer>
           <EditContainer hide={reqParamSetting !== 'Query'}>
-            <Form.List name="apiQuery">
+            <Form.List name="api_query">
               {(fields, { add, remove }) => (
                 <>
                   <FieldFormItem>
@@ -545,7 +545,7 @@ export default (props: ApiEditProps) => {
             </Form.List>
           </EditContainer>
           <EditContainer hide={reqParamSetting !== 'Headers'}>
-            <Form.List name="apiHeader">
+            <Form.List name="api_header">
               {(fields, { add, remove }) => (
                 <>
                   <FieldFormItem>
@@ -702,7 +702,7 @@ export default (props: ApiEditProps) => {
           {respSetting === 'RAW' && (
             <FieldFormItem
               noStyle={true}
-              name={'respRaw'}
+              name={'resp_raw'}
               rules={[{ max: 30, message: 'RAW 示例不能超过 30' }]}
             >
               <Input.TextArea rows={3} />

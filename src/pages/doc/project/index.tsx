@@ -12,8 +12,8 @@ const Project: React.FC<any> = () => {
   function loadAllMyProject() {
     setLoading(true);
     myProjects().then((resp) => {
-      setResponsibleProjects(resp.responsibleProjects);
-      setAccessibleProjects(resp.accessibleProjects);
+      setResponsibleProjects(resp.responsible_projects);
+      setAccessibleProjects(resp.accessible_projects);
       setLoading(false);
     });
   }
