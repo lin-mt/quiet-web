@@ -15,7 +15,7 @@ export default () => {
     if (ps) {
       const datum: Record<string, string> = {};
       ps.forEach((p) => {
-        datum[p.id] = p.colorHex;
+        datum[p.id] = p.color_hex;
       });
       setPriorityColors(datum);
     }

@@ -54,7 +54,7 @@ export default forwardRef((_, ref) => {
     },
     addDemand: (newDemand: ScrumDemand, index: number) => {
       const demandForAdd = newDemand;
-      demandForAdd.iterationId = undefined;
+      demandForAdd.iteration_id = undefined;
       const newToBePlanned = Array.from(toBePlanned);
       newToBePlanned.splice(index, 0, demandForAdd);
       setToBePlanned(newToBePlanned);
@@ -149,7 +149,7 @@ export default forwardRef((_, ref) => {
                   <Draggable
                     draggableId={demand.id}
                     index={index}
-                    isDragDisabled={!!demand.iterationId}
+                    isDragDisabled={!!demand.iteration_id}
                   >
                     {(demandProvider) => (
                       <div
@@ -161,7 +161,7 @@ export default forwardRef((_, ref) => {
                           <DemandCard
                             demand={demand}
                             cardStyle={
-                              demand.iterationId
+                              demand.iteration_id
                                 ? {
                                     backgroundColor: '#ececec',
                                     cursor: 'pointer',

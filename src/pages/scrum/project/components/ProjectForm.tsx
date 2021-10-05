@@ -24,10 +24,10 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
     if (updateInfo) {
       form.setFieldsValue({
         ...updateInfo,
-        templateId: { value: updateInfo.templateId, label: updateInfo.templateName },
-        manager: { value: updateInfo.manager, label: updateInfo.managerName },
-        selectTeams: updateInfo.teams?.map((team) => {
-          return { value: team.id, label: team.teamName };
+        template_id: { value: updateInfo.template_id, label: updateInfo.template_name },
+        manager: { value: updateInfo.manager, label: updateInfo.manager_name },
+        select_teams: updateInfo.teams?.map((team) => {
+          return { value: team.id, label: team.team_name };
         }),
       });
     } else {
@@ -40,9 +40,9 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
     setSubmitting(true);
     const submitValues = {
       ...values,
-      templateId: values.templateId.value,
+      template_id: values.template_id.value,
       manager: values.manager.value,
-      teamIds: values.selectTeams.map((v: { value: any }) => v.value),
+      team_ids: values.select_teams.map((v: { value: any }) => v.value),
     };
     if (updateInfo) {
       await updateProject({
@@ -81,7 +81,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
   async function findUserByName(name: string) {
     return listUsersByName(name).then((resp) => {
       return resp.map((user) => ({
-        label: user.fullName,
+        label: user.full_name,
         value: user.id,
       }));
     });
@@ -90,7 +90,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
   async function findTeamByTeamName(teamName: string) {
     return listTeamsByTeamName(teamName).then((resp) => {
       return resp.map((team) => ({
-        label: team.teamName,
+        label: team.team_name,
         value: team.id,
       }));
     });
@@ -140,7 +140,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
         </Form.Item>
         <Form.Item
           label={'任务模版'}
-          name={'templateId'}
+          name={'template_id'}
           rules={[{ required: true, message: '请选择任务模板' }]}
         >
           <DebounceSelect fetchOptions={findByTemplateName} placeholder="请选择" />
@@ -154,7 +154,7 @@ const ProjectForm: React.FC<ProjectFormProps> = (props) => {
         </Form.Item>
         <Form.Item
           label={'负责团队'}
-          name={'selectTeams'}
+          name={'select_teams'}
           rules={[{ required: true, message: '请选择负责该项目的团队' }]}
         >
           <DebounceSelect

@@ -24,10 +24,10 @@ export default (props: IterationFormProps) => {
 
   async function handleSubmit() {
     const values = await form.validateFields();
-    values.planStartDate = formatDate(values.planStartDate);
-    values.planEndDate = formatDate(values.planEndDate);
+    values.plan_start_date = formatDate(values.plan_start_date);
+    values.plan_end_date = formatDate(values.plan_end_date);
     if (!updateInfo) {
-      values.versionId = versionId;
+      values.version_id = versionId;
     }
     setSubmitting(true);
     if (updateInfo) {
@@ -99,14 +99,14 @@ export default (props: IterationFormProps) => {
         </Form.Item>
         <Form.Item
           label={'计划开始日期'}
-          name={'planStartDate'}
+          name={'plan_start_date'}
           rules={[{ required: true, message: '请选择计划开始日期' }]}
         >
           <DatePicker style={{ width: '100%' }} placeholder={'请选择计划开始日期'} />
         </Form.Item>
         <Form.Item
           label={'计划结束日期'}
-          name={'planEndDate'}
+          name={'plan_end_date'}
           rules={[{ required: true, message: '请选择计划结束日期' }]}
         >
           <DatePicker style={{ width: '100%' }} placeholder={'请选择计划结束日期'} />
@@ -120,7 +120,7 @@ export default (props: IterationFormProps) => {
           ]}
         >
           {
-            // todo 使用富文本
+            // todo 使用Markdown
           }
           <Input.TextArea placeholder="请输入备注信息" rows={3} />
         </Form.Item>

@@ -50,7 +50,7 @@ export default ({
     <CustomStyleCard
       style={cardStyle}
       size={'small'}
-      color={priorityColors[demand.priorityId]}
+      color={priorityColors[demand.priority_id]}
       bodyStyle={{ padding: '9px' }}
     >
       <Row>

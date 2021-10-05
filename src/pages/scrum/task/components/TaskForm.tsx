@@ -52,8 +52,8 @@ export default (props: TaskFormProps) => {
         ...values,
       });
     } else {
-      values.demandId = demandId;
-      values.taskStepId = taskStepId;
+      values.demand_id = demandId;
+      values.task_step_id = taskStepId;
       newTaskInfo = await saveTask(values);
     }
     setSubmitting(false);
@@ -124,14 +124,14 @@ export default (props: TaskFormProps) => {
         </Form.Item>
         <Form.Item
           label={'执行者'}
-          name={'executorId'}
+          name={'executor_id'}
           rules={[{ required: true, message: '请选择执行者' }]}
         >
           <Select
             showSearch={true}
             placeholder="请选择执行者"
             options={executors.map((executor) => ({
-              label: executor.fullName,
+              label: executor.full_name,
               value: executor.id,
             }))}
           />
@@ -143,7 +143,7 @@ export default (props: TaskFormProps) => {
             placeholder="请选择参与者"
             tagRender={multipleSelectTagRender}
             options={executors.map((executor) => ({
-              label: executor.fullName,
+              label: executor.full_name,
               value: executor.id,
             }))}
           />
@@ -157,7 +157,7 @@ export default (props: TaskFormProps) => {
           ]}
         >
           {
-            // todo 使用富文本
+            // todo 使用Markdown
           }
           <Input.TextArea placeholder="请输入备注信息" rows={3} />
         </Form.Item>

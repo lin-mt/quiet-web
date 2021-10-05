@@ -82,7 +82,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
         }
       >
         <Space direction={'vertical'}>
-          <Typography.Text style={{ color: '#108EE9' }}>{projectInfo.managerName}</Typography.Text>
+          <Typography.Text style={{ color: '#108EE9' }}>{projectInfo.manager_name}</Typography.Text>
           <Typography.Paragraph
             type={'secondary'}
             ellipsis={{

@@ -100,9 +100,9 @@ export default ({
       return true;
     });
     if (operatingTask) {
-      operatingTask.taskStepId = destination.droppableId;
+      operatingTask.task_step_id = destination.droppableId;
       updateTask(operatingTask).then((result) => {
-        if (result.taskStepId !== destination.droppableId) {
+        if (result.task_step_id !== destination.droppableId) {
           message.error('操作失败，请联系管理员！').then(() => window.location.reload());
         }
       });
@@ -166,7 +166,7 @@ export default ({
                               cardStyle={{ marginTop: taskIndex === 0 ? 0 : 6 }}
                               task={task}
                               taskType={taskTypeLabels[task.type]}
-                              executorName={members[task.executorId].fullName}
+                              executorName={members[task.executor_id].full_name}
                               onEditClick={() => handleTaskCardEdit(task)}
                               onDeleteClick={() => handleTaskCardDelete(task)}
                             />

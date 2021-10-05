@@ -45,7 +45,7 @@ export default forwardRef((_, ref) => {
     },
     addDemand: (newDemand: ScrumDemand, index: number) => {
       const demandForAdd = newDemand;
-      demandForAdd.iterationId = selectedIterationId;
+      demandForAdd.iteration_id = selectedIterationId;
       const newToBePlanned = Array.from(iterationDemands);
       newToBePlanned.splice(index, 0, demandForAdd);
       setIterationDemands(newToBePlanned);

@@ -45,8 +45,8 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
   }
 
   const enableStateChangeable =
-    templateInfo.taskSteps &&
-    templateInfo.taskSteps.length > 0 &&
+    templateInfo.task_steps &&
+    templateInfo.task_steps.length > 0 &&
     templateInfo.priorities &&
     templateInfo.priorities.length > 0;
 

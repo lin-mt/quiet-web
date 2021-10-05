@@ -2,42 +2,46 @@ import type { ScrumDemand } from '@/services/scrum/EntitiyType';
 import type { ScrumDemandFilter } from '@/pages/scrum/project/detail/components/DemandPool';
 import { DELETE, GET, POST, PUT } from '@/utils/HttpUtils';
 
-const apiPrefix = '/api/scrum/demand';
+const base_path = '/api/scrum/demand';
 
 export function findAllByIterationId(id: string): Promise<ScrumDemand[]> {
-  return GET<ScrumDemand[]>(`${apiPrefix}/all/${id}`);
+  return GET<ScrumDemand[]>(`${base_path}/all/${id}`);
 }
 
 export function deleteDemand(id: string) {
-  DELETE(`${apiPrefix}/${id}`);
+  DELETE(`${base_path}/${id}`);
 }
 
 export function saveDemand(save: ScrumDemand): Promise<ScrumDemand> {
-  return POST<ScrumDemand>(`${apiPrefix}`, save);
+  return POST<ScrumDemand>(`${base_path}`, save);
 }
 
 export function updateDemand(update: ScrumDemand): Promise<ScrumDemand> {
-  return PUT<ScrumDemand>(`${apiPrefix}`, update);
+  return PUT<ScrumDemand>(`${base_path}`, update);
 }
 
 export function findToBePlanned(
-  projectId: string,
-  demandFilter: ScrumDemandFilter,
+  project_id: string,
+  demand_filter: ScrumDemandFilter,
   offset: number,
   limit: number,
 ): Promise<ScrumDemand[]> {
-  return GET<ScrumDemand[]>(`${apiPrefix}/scrollToBePlanned`, {
-    id: projectId,
-    demandFilter: { planned: false, ...demandFilter },
+  return GET<ScrumDemand[]>(`${base_path}/scroll-to-be-planned`, {
+    id: project_id,
+    demand_filter: { planned: false, ...demand_filter },
     offset,
     limit,
   });
 }
 
 export function scrollByIterationId(
-  iterationId: string,
+  iteration_id: string,
   offset: number,
   limit?: number,
 ): Promise<ScrumDemand[]> {
-  return GET<ScrumDemand[]>(`${apiPrefix}/scrollByIterationId`, { id: iterationId, offset, limit });
+  return GET<ScrumDemand[]>(`${base_path}/scroll-by-iteration-id`, {
+    id: iteration_id,
+    offset,
+    limit,
+  });
 }

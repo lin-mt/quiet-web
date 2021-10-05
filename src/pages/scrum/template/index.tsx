@@ -9,8 +9,8 @@ const Project: React.FC<any> = () => {
 
   function loadAllTemplate() {
     allTemplates().then((resp) => {
-      setTemplateCreated(resp.templateCreated);
-      setTemplateSelectable(resp.templateSelectable);
+      setTemplateCreated(resp.template_created);
+      setTemplateSelectable(resp.template_selectable);
     });
   }
 

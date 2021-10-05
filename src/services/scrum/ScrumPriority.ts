@@ -1,24 +1,24 @@
 import type { ScrumPriority } from '@/services/scrum/EntitiyType';
 import { DELETE, GET, POST, PUT } from '@/utils/HttpUtils';
 
-const apiPrefix = '/api/scrum/priority';
+const base_path = '/api/scrum/priority';
 
 export function findAllByTemplateId(id: string): Promise<ScrumPriority[]> {
-  return GET<ScrumPriority[]>(`${apiPrefix}/allByTemplateId/${id}`);
+  return GET<ScrumPriority[]>(`${base_path}/all-by-template-id/${id}`);
 }
 
 export function savePriority(save: ScrumPriority): Promise<ScrumPriority> {
-  return POST<ScrumPriority>(`${apiPrefix}`, save);
+  return POST<ScrumPriority>(`${base_path}`, save);
 }
 
 export function updatePriority(update: ScrumPriority): Promise<ScrumPriority> {
-  return PUT<ScrumPriority>(`${apiPrefix}`, update);
+  return PUT<ScrumPriority>(`${base_path}`, update);
 }
 
 export function deletePriority(id: string) {
-  return DELETE(`${apiPrefix}/${id}`);
+  return DELETE(`${base_path}/${id}`);
 }
 
 export function batchUpdatePriorities(data: ScrumPriority[]): Promise<ScrumPriority[]> {
-  return PUT<ScrumPriority[]>(`${apiPrefix}/batch`, { data });
+  return PUT<ScrumPriority[]>(`${base_path}/batch`, { data });
 }

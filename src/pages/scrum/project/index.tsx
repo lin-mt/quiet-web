@@ -12,8 +12,8 @@ const Project: React.FC<any> = () => {
   function loadAllMyProject() {
     setLoading(true);
     allMyProjects().then((resp) => {
-      setProjectManaged(resp.projectManaged);
-      setProjectInvolved(resp.projectInvolved);
+      setProjectManaged(resp.project_managed);
+      setProjectInvolved(resp.project_involved);
       setLoading(false);
     });
   }

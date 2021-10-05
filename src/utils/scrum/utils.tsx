@@ -34,7 +34,7 @@ export function disableVersionNode(nodes: ScrumVersion[]): ScrumVersion[] {
     if (newNode.children && newNode.children.length > 0) {
       newNode.children = disableVersionNode(newNode.children);
     }
-    if (!newNode.versionId) {
+    if (!newNode.version_id) {
       newNode.disabled = true;
     }
     return newNode;

@@ -40,10 +40,10 @@ const MainContainer = styled.div`
 `;
 
 interface DemandAndTaskFilter {
-  demandTitle?: string;
-  priorityId?: string;
-  demandType?: string;
-  executorId?: string;
+  demand_title?: string;
+  priority_id?: string;
+  demand_type?: string;
+  executor_id?: string;
 }
 
 export default (props: PropsWithChildren<any>) => {
@@ -83,16 +83,16 @@ export default (props: PropsWithChildren<any>) => {
       });
       setMembers(membersDatum);
       // 加载优先级ID与颜色的对应关系
-      await findAllByTemplateId(project.project.templateId).then((scrumPriorities) => {
+      await findAllByTemplateId(project.project.template_id).then((scrumPriorities) => {
         setPriorities(scrumPriorities);
         const datum: Record<string, string> = {};
         scrumPriorities.forEach((priority) => {
-          datum[priority.id] = priority.colorHex;
+          datum[priority.id] = priority.color_hex;
         });
         setPriorityColors(datum);
       });
       // 加载任务步骤
-      await getAllTaskStepByTemplateId(project.project.templateId).then((scrumTaskSteps) => {
+      await getAllTaskStepByTemplateId(project.project.template_id).then((scrumTaskSteps) => {
         setTaskSteps(scrumTaskSteps);
       });
       // 加载版本信息
@@ -147,12 +147,12 @@ export default (props: PropsWithChildren<any>) => {
     const scrumDemands: ScrumDemand[] = [];
     const demandIds: string[] = [];
     const scrumDemandTasks: Record<string, Record<string, ScrumTask[]>> = {};
-    if (filter.executorId) {
+    if (filter.executor_id) {
       Object.keys(allDemandTasks).forEach((demandId) => {
         const demandTasksDatum: Record<string, ScrumTask[]> = {};
         Object.keys(allDemandTasks[demandId]).forEach((taskStepId) => {
           allDemandTasks[demandId][taskStepId].forEach((task) => {
-            if (task.executorId === filter.executorId) {
+            if (task.executor_id === filter.executor_id) {
               if (!demandTasksDatum[taskStepId]) {
                 demandTasksDatum[taskStepId] = [];
               }
@@ -167,16 +167,16 @@ export default (props: PropsWithChildren<any>) => {
       });
     }
     allDemands.forEach((demand) => {
-      if (filter.executorId && !demandIds.includes(demand.id)) {
+      if (filter.executor_id && !demandIds.includes(demand.id)) {
         return;
       }
-      if (filter.demandTitle && !demand.title.includes(filter.demandTitle)) {
+      if (filter.demand_title && !demand.title.includes(filter.demand_title)) {
         return;
       }
-      if (filter.demandType && demand.type !== filter.demandType) {
+      if (filter.demand_type && demand.type !== filter.demand_type) {
         return;
       }
-      if (filter.priorityId && demand.priorityId !== filter.priorityId) {
+      if (filter.priority_id && demand.priority_id !== filter.priority_id) {
         return;
       }
       scrumDemands.push(demand);
@@ -187,10 +187,10 @@ export default (props: PropsWithChildren<any>) => {
   function getIterationOperationTooltip(): string {
     if (selectedIterationId) {
       const iterationInfo = selectedIteration();
-      if (!iterationInfo?.startTime) {
+      if (!iterationInfo?.start_time) {
         return '开始迭代';
       }
-      if (iterationInfo?.endTime) {
+      if (iterationInfo?.end_time) {
         return '迭代已结束';
       }
       return '结束迭代';
@@ -205,7 +205,7 @@ export default (props: PropsWithChildren<any>) => {
   async function handleStartIteration() {
     if (selectedIterationId) {
       const iterationInfo = selectedIteration();
-      if (!iterationInfo?.startTime) {
+      if (!iterationInfo?.start_time) {
         await start(selectedIterationId);
         findDetailsByProjectId(projectId).then((projectVersions) => {
           setVersions(iterationsAddToChildren(projectVersions));
@@ -216,11 +216,11 @@ export default (props: PropsWithChildren<any>) => {
 
   function taskCanBeCreated(): boolean {
     const iterationInfo = selectedIteration();
-    if (!iterationInfo?.startTime) {
+    if (!iterationInfo?.start_time) {
       message.warn('迭代还未开始，无法创建任务').then();
       return false;
     }
-    if (iterationInfo?.endTime) {
+    if (iterationInfo?.end_time) {
       message.warn('迭代已结束，无法创建任务').then();
       return false;
     }
@@ -230,7 +230,7 @@ export default (props: PropsWithChildren<any>) => {
   async function endSelectedIteration() {
     if (selectedIterationId) {
       const iterationInfo = selectedIteration();
-      if (iterationInfo?.startTime && !iterationInfo?.endTime) {
+      if (iterationInfo?.start_time && !iterationInfo?.end_time) {
         await end(selectedIterationId);
         findDetailsByProjectId(projectId).then((projectVersions) => {
           setVersions(iterationsAddToChildren(projectVersions));
@@ -243,7 +243,7 @@ export default (props: PropsWithChildren<any>) => {
   return (
     <>
       <QueryFilter submitter={false}>
-        <ProFormField name={'iterationId'} label={'当前迭代'} initialValue={iterationId}>
+        <ProFormField name={'iteration_id'} label={'当前迭代'} initialValue={iterationId}>
           <TreeSelect<string>
             virtual={false}
             treeIcon={true}
@@ -258,17 +258,17 @@ export default (props: PropsWithChildren<any>) => {
         <Tooltip title={getIterationOperationTooltip} placement={'right'}>
           <Popconfirm
             title={'结束当前迭代，未完成的需求将会进入下一个迭代'}
-            disabled={!selectedIteration()?.startTime || !!selectedIteration()?.endTime}
+            disabled={!selectedIteration()?.start_time || !!selectedIteration()?.end_time}
             onConfirm={endSelectedIteration}
           >
             <Button
               loading={loading}
               type={'primary'}
               style={{ width: 50 }}
-              disabled={!selectedIterationId || !!selectedIteration()?.endTime}
-              danger={!!selectedIteration()?.startTime}
+              disabled={!selectedIterationId || !!selectedIteration()?.end_time}
+              danger={!!selectedIteration()?.start_time}
               onClick={handleStartIteration}
-              icon={selectedIteration()?.startTime ? <PauseOutlined /> : <FastForwardOutlined />}
+              icon={selectedIteration()?.start_time ? <PauseOutlined /> : <FastForwardOutlined />}
             />
           </Popconfirm>
         </Tooltip>
@@ -278,14 +278,14 @@ export default (props: PropsWithChildren<any>) => {
         onFinish={filterDemandAndTask}
         onReset={() => setSelectedIterationId(iterationId)}
       >
-        <ProFormText name={'demandTitle'} label={'需求标题'} />
+        <ProFormText name={'demand_title'} label={'需求标题'} />
         <ProFormSelect
-          name={'priorityId'}
+          name={'priority_id'}
           label={'优先级'}
           options={priorities.map((priority) => ({ label: priority.name, value: priority.id }))}
         />
         <ProFormSelect
-          name={'demandType'}
+          name={'demand_type'}
           label={'需求类型'}
           options={Object.keys(demandTypeLabels).map((key) => ({
             label: demandTypeLabels[key],
@@ -293,10 +293,10 @@ export default (props: PropsWithChildren<any>) => {
           }))}
         />
         <ProFormSelect
-          name={'executorId'}
+          name={'executor_id'}
           label={'执行者'}
           options={Object.keys(members).map((memberId) => ({
-            label: members[memberId].fullName,
+            label: members[memberId].full_name,
             value: memberId,
           }))}
         />
@@ -326,7 +326,7 @@ export default (props: PropsWithChildren<any>) => {
                   key={demand.id}
                   demand={demand}
                   taskDragDisabled={
-                    !selectedIteration()?.startTime || !!selectedIteration()?.endTime
+                    !selectedIteration()?.start_time || !!selectedIteration()?.end_time
                   }
                   taskCanBeCreated={taskCanBeCreated}
                   members={members}

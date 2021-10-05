@@ -97,11 +97,11 @@ export default () => {
               const nodeValues: any = {
                 ...node,
                 // @ts-ignore
-                planStartDate: toMomentDate(node.planStartDate),
+                plan_start_date: toMomentDate(node.plan_start_date),
                 // @ts-ignore
-                planEndDate: toMomentDate(node.planEndDate),
+                plan_end_date: toMomentDate(node.plan_end_date),
               };
-              const isVersionNode = !nodeValues.versionId;
+              const isVersionNode = !nodeValues.version_id;
               const showAddVersion =
                 isVersionNode &&
                 (!nodeValues.children ||
@@ -121,10 +121,10 @@ export default () => {
                     <Descriptions column={1} size={'small'} style={{ width: '360px' }}>
                       <Descriptions.Item label="备注">{nodeValues.remark}</Descriptions.Item>
                       <Descriptions.Item label="计划开始日期">
-                        {formatDate(nodeValues.planStartDate)}
+                        {formatDate(nodeValues.plan_start_date)}
                       </Descriptions.Item>
                       <Descriptions.Item label="计划开始日期">
-                        {formatDate(nodeValues.planEndDate)}
+                        {formatDate(nodeValues.plan_end_date)}
                       </Descriptions.Item>
                       <Descriptions.Item>
                         <Space>

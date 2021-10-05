@@ -1,28 +1,28 @@
 import type { AllTemplate, ScrumTemplate } from '@/services/scrum/EntitiyType';
 import { DELETE, GET, POST, PUT } from '@/utils/HttpUtils';
 
-const apiPrefix = '/api/scrum/template';
+const base_path = '/api/scrum/template';
 
 export function listEnabledByName(name: string): Promise<ScrumTemplate[]> {
-  return GET<ScrumTemplate[]>(`${apiPrefix}/listEnabledByName`, { name });
+  return GET<ScrumTemplate[]>(`${base_path}/list-enabled-by-name`, { name });
 }
 
 export function saveTemplate(save: ScrumTemplate): Promise<ScrumTemplate> {
-  return POST<ScrumTemplate>(`${apiPrefix}`, save);
+  return POST<ScrumTemplate>(`${base_path}`, save);
 }
 
 export function updateTemplate(update: ScrumTemplate): Promise<ScrumTemplate> {
-  return PUT<ScrumTemplate>(`${apiPrefix}`, update);
+  return PUT<ScrumTemplate>(`${base_path}`, update);
 }
 
 export function deleteTemplate(id: string) {
-  DELETE(`${apiPrefix}/${id}`);
+  DELETE(`${base_path}/${id}`);
 }
 
 export function allTemplates(): Promise<AllTemplate> {
-  return GET<AllTemplate>(`${apiPrefix}/allTemplates`);
+  return GET<AllTemplate>(`${base_path}/all-templates`);
 }
 
 export function templateDetailInfo(id: string): Promise<ScrumTemplate> {
-  return GET<ScrumTemplate>(`${apiPrefix}/${id}`);
+  return GET<ScrumTemplate>(`${base_path}/${id}`);
 }
