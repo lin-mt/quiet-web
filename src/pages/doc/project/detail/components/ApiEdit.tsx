@@ -12,7 +12,6 @@ import {
   Row,
   Select,
   Space,
-  Tooltip,
 } from 'antd';
 import type { ApiDetail } from '@/services/doc/EntityType';
 import styled from 'styled-components';
@@ -21,8 +20,10 @@ import { listApiGroupByProjectIdAndName } from '@/services/doc/DocApiGroup';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ChangeEvent } from 'react';
 import { useEffect, useState } from 'react';
-import { ApiState, FormDataType, HttpMethod, QueryType } from '@/services/doc/Enums';
+import { ApiState, FormParamType, HttpMethod, QueryParamType } from '@/services/doc/Enums';
 import _ from 'lodash';
+import { updateApi } from '@/services/doc/DocApi';
+import { saveApiInfo, updateApiInfo } from '@/services/doc/DocApiInfo';
 import JsonSchemaEditor from '@/pages/components/JsonSchemaEditor';
 
 interface ApiEditProps {
@@ -54,9 +55,9 @@ export default (props: ApiEditProps) => {
 
   const [reqParamSettingOptions, setReqParamSettingOptions] = useState<string[]>();
   const [reqParamSetting, setReqParamSetting] = useState<string>();
-  const [reqJsonBodyJsonSchema, setReqJsonBodyJsonSchema] = useState<string | undefined>();
+  const [reqJsonBody, setReqJsonBody] = useState<string | undefined>();
   const [respSetting, setRespSetting] = useState<string>('JSON');
-  const [respJsonSchema, setRespJsonSchema] = useState<string | undefined>();
+  const [respJsonBody, setRespJsonBody] = useState<string | undefined>();
   const [bodyTypeSetting, setBodyTypeSetting] = useState<string>('form');
   const [affixed, setAffixed] = useState<boolean>();
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -90,6 +91,7 @@ export default (props: ApiEditProps) => {
             label: apiDetail.api.api_group.name,
           }
         : undefined,
+      ...apiDetail.api_info,
     });
     const options = getReqParamSettingOptionsByMethod(apiDetail.api.method);
     setReqParamSettingOptions(options);
@@ -150,19 +152,22 @@ export default (props: ApiEditProps) => {
     setSubmitting(true);
     try {
       const values = await apiEditForm.validateFields();
-      values.method = HttpMethod[values.method];
-      values.state = ApiState[values.state];
-      values.api_group_id = values.api_group_id.value;
-      if (reqJsonBodyJsonSchema) {
-        values.api_body = reqJsonBodyJsonSchema;
-      }
-      if (respJsonSchema) {
-        values.resp_body = respJsonSchema;
-      }
+      values.id = apiDetail.api.id;
+      values.api_group_id = values.api_group_id?.value;
+      values.req_json_body = reqJsonBody;
+      values.resp_json_body = respJsonBody;
       // eslint-disable-next-line no-console
       console.log(values);
+      await updateApi({ ...apiDetail.api, ...values });
+      delete values.id;
+      if (apiDetail.api_info) {
+        await updateApiInfo({ ...apiDetail.api_info, ...values });
+      } else {
+        await saveApiInfo({ ...values, api_id: apiDetail.api.id });
+      }
     } catch (e) {
       setSubmitting(false);
+      throw e;
     } finally {
       setSubmitting(false);
     }
@@ -171,7 +176,7 @@ export default (props: ApiEditProps) => {
   function handleBodyTypeChange(value: string) {
     setBodyTypeSetting(value);
     if (value !== 'json') {
-      setReqJsonBodyJsonSchema(undefined);
+      setReqJsonBody(undefined);
     }
   }
 
@@ -230,7 +235,7 @@ export default (props: ApiEditProps) => {
               onChange={handleApiPathChange}
             />
           </FieldFormItem>
-          <Form.List name="api_path_param">
+          <Form.List name="path_param">
             {(fields) => (
               <>
                 {fields.map(({ key, name, fieldKey, ...restField }) => (
@@ -302,14 +307,14 @@ export default (props: ApiEditProps) => {
               onChange={(e) => handleBodyTypeChange(e.target.value)}
             />
             {bodyTypeSetting === 'form' && (
-              <Form.List name="api_form_data">
+              <Form.List name="req_form">
                 {(fields, { add, remove }) => (
                   <>
                     <FieldFormItem>
                       <Button
                         type="primary"
                         size={'small'}
-                        onClick={() => add({ required: true, type: FormDataType.TEXT })}
+                        onClick={() => add({ required: true, type: FormParamType.TEXT })}
                         icon={<PlusOutlined />}
                       >
                         添加form参数
@@ -340,11 +345,8 @@ export default (props: ApiEditProps) => {
                             name={[name, 'required']}
                             fieldKey={[fieldKey, 'required']}
                             valuePropName={'checked'}
-                            rules={[{ required: true, message: '请选择是否必须' }]}
                           >
-                            <Tooltip title={'是否必须'}>
-                              <Checkbox />
-                            </Tooltip>
+                            <Checkbox />
                           </FieldFormItem>
                         </Col>
                         <Col flex={'92px'}>
@@ -355,8 +357,8 @@ export default (props: ApiEditProps) => {
                             rules={[{ required: true, message: '请选择参数类型' }]}
                           >
                             <Select style={{ width: '92px' }}>
-                              <Select.Option value={FormDataType.TEXT}>text</Select.Option>
-                              <Select.Option value={FormDataType.FILE}>file</Select.Option>
+                              <Select.Option value={FormParamType.TEXT}>text</Select.Option>
+                              <Select.Option value={FormParamType.FILE}>file</Select.Option>
                             </Select>
                           </FieldFormItem>
                         </Col>
@@ -373,8 +375,8 @@ export default (props: ApiEditProps) => {
                         <Col flex={'100px'}>
                           <FieldFormItem
                             {...restField}
-                            name={[name, 'maxLength']}
-                            fieldKey={[fieldKey, 'maxLength']}
+                            name={[name, 'max_length']}
+                            fieldKey={[fieldKey, 'max_length']}
                             rules={[{ min: 0, type: 'number', message: '最大长度不能小于 0' }]}
                           >
                             <InputNumber min={0} style={{ width: 100 }} placeholder="最大长度" />
@@ -414,20 +416,22 @@ export default (props: ApiEditProps) => {
             {bodyTypeSetting === 'json' && (
               <JsonSchemaEditor
                 isMock={true}
-                data={reqJsonBodyJsonSchema}
+                data={reqJsonBody}
                 id={'request-body'}
-                onChange={(e) => setReqJsonBodyJsonSchema(e)}
+                onChange={(e) => {
+                  setReqJsonBody(e);
+                }}
               />
             )}
             {bodyTypeSetting === 'file' && (
-              <FieldFormItem noStyle={true} name={'body_file'}>
+              <FieldFormItem noStyle={true} name={'req_file'}>
                 <Input />
               </FieldFormItem>
             )}
             {bodyTypeSetting === 'raw' && (
               <FieldFormItem
                 noStyle={true}
-                name={'body_raw'}
+                name={'req_raw'}
                 rules={[{ max: 30, message: 'RAW 示例不能超过 30' }]}
               >
                 <Input.TextArea rows={3} />
@@ -435,14 +439,14 @@ export default (props: ApiEditProps) => {
             )}
           </EditContainer>
           <EditContainer hide={reqParamSetting !== 'Query'}>
-            <Form.List name="api_query">
+            <Form.List name="req_query">
               {(fields, { add, remove }) => (
                 <>
                   <FieldFormItem>
                     <Button
                       type="primary"
                       size={'small'}
-                      onClick={() => add({ required: true, type: QueryType.STRING })}
+                      onClick={() => add({ required: true, type: QueryParamType.STRING })}
                       icon={<PlusOutlined />}
                     >
                       添加Query参数
@@ -466,11 +470,8 @@ export default (props: ApiEditProps) => {
                           name={[name, 'required']}
                           fieldKey={[fieldKey, 'required']}
                           valuePropName={'checked'}
-                          rules={[{ required: true, message: '请选择是否必须' }]}
                         >
-                          <Tooltip title={'是否必须'}>
-                            <Checkbox />
-                          </Tooltip>
+                          <Checkbox />
                         </FieldFormItem>
                       </Col>
                       <Col flex={'92px'}>
@@ -481,9 +482,9 @@ export default (props: ApiEditProps) => {
                           rules={[{ required: true, message: '请选择参数类型' }]}
                         >
                           <Select style={{ width: '92px' }}>
-                            <Select.Option value={QueryType.STRING}>string</Select.Option>
-                            <Select.Option value={QueryType.NUMBER}>number</Select.Option>
-                            <Select.Option value={QueryType.INTEGER}>int</Select.Option>
+                            <Select.Option value={QueryParamType.STRING}>string</Select.Option>
+                            <Select.Option value={QueryParamType.NUMBER}>number</Select.Option>
+                            <Select.Option value={QueryParamType.INTEGER}>int</Select.Option>
                           </Select>
                         </FieldFormItem>
                       </Col>
@@ -545,7 +546,7 @@ export default (props: ApiEditProps) => {
             </Form.List>
           </EditContainer>
           <EditContainer hide={reqParamSetting !== 'Headers'}>
-            <Form.List name="api_header">
+            <Form.List name="headers">
               {(fields, { add, remove }) => (
                 <>
                   <FieldFormItem>
@@ -635,11 +636,8 @@ export default (props: ApiEditProps) => {
                           name={[name, 'required']}
                           fieldKey={[fieldKey, 'required']}
                           valuePropName={'checked'}
-                          rules={[{ required: true, message: '请选择是否必须' }]}
                         >
-                          <Tooltip title={'是否必须'}>
-                            <Checkbox />
-                          </Tooltip>
+                          <Checkbox />
                         </FieldFormItem>
                       </Col>
                       <Col flex={2}>
@@ -684,7 +682,7 @@ export default (props: ApiEditProps) => {
           onChange={(event) => {
             setRespSetting(event.target.value);
             if (event.target.value !== 'JSON') {
-              setRespJsonSchema(undefined);
+              setRespJsonBody(undefined);
             }
           }}
         />
@@ -693,9 +691,10 @@ export default (props: ApiEditProps) => {
             <>
               <JsonSchemaEditor
                 isMock={true}
-                data={respJsonSchema}
                 id={'response-body'}
-                onChange={(e) => setRespJsonSchema(e)}
+                onChange={(e) => {
+                  setRespJsonBody(e);
+                }}
               />
             </>
           )}

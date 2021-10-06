@@ -284,6 +284,7 @@ export default () => {
   return {
     schema,
     open,
+    setSchema,
     initSchemaInfo,
     changeEditorSchemaWithId,
     changeNameWithId,

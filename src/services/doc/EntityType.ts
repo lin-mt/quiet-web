@@ -1,13 +1,8 @@
-import type {
-  BaseEntity,
-  ParentEntity,
-  QuietUser,
-  SerialEntity,
-} from '@/services/system/EntityType';
+import type { BaseEntity, QuietUser, SerialEntity } from '@/services/system/EntityType';
 import type { HttpMethod } from '@/services/doc/Enums';
-import type { FieldType, FormDataType, QueryType } from '@/services/doc/Enums';
 import type { DataNode } from 'rc-tree/lib/interface';
 import type { ApiState } from '@/services/doc/Enums';
+import type { FormParamType, QueryParamType } from '@/services/doc/Enums';
 
 export interface DocApi extends SerialEntity, DataNode {
   name: string;
@@ -23,33 +18,17 @@ export interface DocApi extends SerialEntity, DataNode {
   api_group: DocApiGroup;
 }
 
-export interface DocApiBody extends ParentEntity<DocApiBody> {
+export interface FormParam {
   name: string;
   max_length: string;
   min_length: string;
-  type: FieldType;
+  type: FormParamType;
   required: boolean;
   example: string;
   remark: string;
 }
 
-export interface DocApiFormData extends BaseEntity {
-  name: string;
-  max_length: string;
-  min_length: string;
-  type: FormDataType;
-  required: boolean;
-  example: string;
-  remark: string;
-}
-
-export interface DocApiGroup extends SerialEntity, DataNode {
-  name: string;
-  project_id: string;
-  children: DocApi[];
-}
-
-export interface DocApiHeader extends BaseEntity {
+export interface Header {
   name: string;
   value: string;
   example: string;
@@ -57,28 +36,39 @@ export interface DocApiHeader extends BaseEntity {
   remark: string;
 }
 
-export interface DocApiPathParam extends SerialEntity {
+export interface PathParam {
   name: string;
   example: string;
   remark: string;
 }
 
-export interface DocApiQuery extends BaseEntity {
+export interface QueryParam {
   name: string;
   max: string;
   min: string;
-  type: QueryType;
+  type: QueryParamType;
   required: boolean;
   example: string;
   remark: string;
 }
 
-export interface DocApiResponse extends ParentEntity<DocApiResponse> {
+export interface DocApiInfo extends BaseEntity {
+  api_id: string;
+  path_param: PathParam[];
+  req_json_body: Record<string, any>;
+  req_form: FormParam[];
+  req_file: string;
+  req_raw: string;
+  req_query: QueryParam[];
+  headers: Header[];
+  resp_json_body: Record<string, any>;
+  resp_raw: string;
+}
+
+export interface DocApiGroup extends SerialEntity, DataNode {
   name: string;
-  type: FieldType;
-  not_null: boolean;
-  example: string;
-  remark: string;
+  project_id: string;
+  children: DocApi[];
 }
 
 export interface DocProject extends SerialEntity {
@@ -104,11 +94,6 @@ export interface MyDocProject {
 
 export interface ApiDetail {
   api: DocApi;
+  api_info?: DocApiInfo;
   visitors?: QuietUser[];
-  api_path_param?: DocApiPathParam[];
-  api_body?: DocApiBody;
-  api_form_data?: DocApiFormData[];
-  api_header?: DocApiHeader[];
-  api_query?: DocApiQuery[];
-  api_response?: DocApiResponse;
 }

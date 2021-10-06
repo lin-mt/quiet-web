@@ -1,35 +1,25 @@
-export enum FieldType {
-  STRING,
-  OBJECT,
-  ARRAY,
-  NUMBER,
-  INTEGER,
-  BOOLEAN,
-  ENUM,
-}
-
-export enum FormDataType {
-  TEXT,
-  FILE,
+export enum FormParamType {
+  TEXT = 'TEXT',
+  FILE = 'FILE',
 }
 
 export enum ApiState {
-  UNFINISHED,
-  FINISHED,
+  UNFINISHED = 'UNFINISHED',
+  FINISHED = 'FINISHED',
 }
 
 export enum HttpMethod {
-  GET,
-  HEAD,
-  POST,
-  PUT,
-  DELETE,
-  OPTIONS,
-  PATCH,
+  GET = 'GET',
+  HEAD = 'HEAD',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
+  OPTIONS = 'OPTIONS',
+  PATCH = 'PATCH',
 }
 
-export enum QueryType {
-  STRING,
-  INTEGER,
-  NUMBER,
+export enum QueryParamType {
+  STRING = 'STRING',
+  INTEGER = 'INTEGER',
+  NUMBER = 'NUMBER',
 }
