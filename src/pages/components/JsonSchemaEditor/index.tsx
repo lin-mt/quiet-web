@@ -41,7 +41,6 @@ export const EditorContext = createContext<EditorContextType>({
 
 interface EditorProp {
   id: string;
-  data?: string;
   onChange?: (e: any) => void;
   showEditor?: boolean;
   isMock?: boolean;
@@ -88,11 +87,7 @@ export default (props: EditorProp) => {
   const [schemaVal, setSchemaVal] = useState<any>();
 
   useEffect(() => {
-    if (typeof props.data === 'string') {
-      changeEditorSchemaWithId(id, { value: JSON.parse(props.data) });
-    } else {
-      initSchemaInfo(id);
-    }
+    initSchemaInfo(id);
   }, []);
 
   useEffect(() => {

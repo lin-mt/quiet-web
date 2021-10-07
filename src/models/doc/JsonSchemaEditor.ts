@@ -45,6 +45,9 @@ export default () => {
   };
 
   const initSchemaInfo = (id: string) => {
+    if (schema[id]) {
+      return;
+    }
     setSchema((prevState) => {
       return {
         ...prevState,

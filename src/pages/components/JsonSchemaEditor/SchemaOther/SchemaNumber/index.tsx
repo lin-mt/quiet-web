@@ -37,9 +37,9 @@ export default (props: SchemaNumberProp) => {
 
   const context = useContext(EditorContext);
 
-  const onChangeCheckBox = (boxCchecked: boolean, changeData: any) => {
-    setChecked(boxCchecked);
-    if (!boxCchecked) {
+  const onChangeCheckBox = (boxChecked: boolean, changeData: any) => {
+    setChecked(boxChecked);
+    if (!boxChecked) {
       const newData = _.cloneDeep(changeData);
       delete newData.enum;
       delete newData.enumDesc;

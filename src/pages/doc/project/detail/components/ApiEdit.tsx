@@ -25,6 +25,8 @@ import _ from 'lodash';
 import { updateApi } from '@/services/doc/DocApi';
 import { saveApiInfo, updateApiInfo } from '@/services/doc/DocApiInfo';
 import JsonSchemaEditor from '@/pages/components/JsonSchemaEditor';
+import { useModel } from '@@/plugin-model/useModel';
+import { JSON_SCHEMA_EDITOR } from '@/constant/doc/ModelNames';
 
 interface ApiEditProps {
   projectId: string;
@@ -50,15 +52,19 @@ const FieldFormItem = styled(Form.Item)`
 `;
 
 export default (props: ApiEditProps) => {
+  const JSON_SCHEMA_REQ_JSON_BODY = 'request-json-body';
+  const JSON_SCHEMA_RESP_JSON_BODY = 'response-json-body';
   const { apiDetail, projectId } = props;
+
+  const { changeEditorSchemaWithId } = useModel(JSON_SCHEMA_EDITOR);
   const [apiEditForm] = Form.useForm();
 
   const [reqParamSettingOptions, setReqParamSettingOptions] = useState<string[]>();
   const [reqParamSetting, setReqParamSetting] = useState<string>();
   const [reqJsonBody, setReqJsonBody] = useState<string | undefined>();
-  const [respSetting, setRespSetting] = useState<string>('JSON');
+  const [respTypeSetting, setRespTypeSetting] = useState<string>('JSON');
   const [respJsonBody, setRespJsonBody] = useState<string | undefined>();
-  const [bodyTypeSetting, setBodyTypeSetting] = useState<string>('form');
+  const [reqBodyTypeSetting, setReqBodyTypeSetting] = useState<string>('form');
   const [affixed, setAffixed] = useState<boolean>();
   const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -96,7 +102,42 @@ export default (props: ApiEditProps) => {
     const options = getReqParamSettingOptionsByMethod(apiDetail.api.method);
     setReqParamSettingOptions(options);
     setReqParamSetting(options[0]);
-  }, [apiDetail, apiEditForm]);
+  }, [
+    apiDetail.api.api_group,
+    apiDetail.api.api_state,
+    apiDetail.api.method,
+    apiDetail.api.name,
+    apiDetail.api.path,
+    apiDetail.api_info,
+    apiEditForm,
+  ]);
+
+  useEffect(() => {
+    if (apiDetail.api_info?.req_form) {
+      setReqBodyTypeSetting('form');
+    }
+    if (apiDetail.api_info?.req_json_body) {
+      setReqBodyTypeSetting('json');
+      changeEditorSchemaWithId(JSON_SCHEMA_REQ_JSON_BODY, {
+        value: apiDetail.api_info.req_json_body,
+      });
+    }
+    if (apiDetail.api_info?.req_file) {
+      setReqBodyTypeSetting('file');
+    }
+    if (apiDetail.api_info?.req_raw) {
+      setReqBodyTypeSetting('raw');
+    }
+    if (apiDetail.api_info?.resp_json_body) {
+      setRespTypeSetting('JSON');
+      changeEditorSchemaWithId(JSON_SCHEMA_RESP_JSON_BODY, {
+        value: apiDetail.api_info.resp_json_body,
+      });
+    }
+    if (apiDetail.api_info?.resp_raw) {
+      setRespTypeSetting('RAW');
+    }
+  }, []);
 
   function listApiGroupByName(name: string) {
     return listApiGroupByProjectIdAndName(projectId, name);
@@ -145,7 +186,7 @@ export default (props: ApiEditProps) => {
       // @ts-ignore
       val.replace(/{(.+?)}/g, insertParam);
     }
-    apiEditForm.setFieldsValue({ ...apiEditForm.getFieldsValue(), api_path_param: queue });
+    apiEditForm.setFieldsValue({ ...apiEditForm.getFieldsValue(), path_param: queue });
   }
 
   async function handleSubmit() {
@@ -154,8 +195,20 @@ export default (props: ApiEditProps) => {
       const values = await apiEditForm.validateFields();
       values.id = apiDetail.api.id;
       values.api_group_id = values.api_group_id?.value;
-      values.req_json_body = reqJsonBody;
-      values.resp_json_body = respJsonBody;
+      if (respTypeSetting === 'JSON') {
+        values.resp_json_body = respJsonBody;
+        values.resp_raw = null;
+      } else {
+        values.resp_json_body = null;
+      }
+      if (reqBodyTypeSetting === 'json') {
+        values.req_json_body = reqJsonBody;
+        values.req_form = null;
+        values.req_file = null;
+        values.req_raw = null;
+      } else {
+        values.req_json_body = null;
+      }
       // eslint-disable-next-line no-console
       console.log(values);
       await updateApi({ ...apiDetail.api, ...values });
@@ -173,10 +226,29 @@ export default (props: ApiEditProps) => {
     }
   }
 
-  function handleBodyTypeChange(value: string) {
-    setBodyTypeSetting(value);
+  function handleReqBodyTypeChange(value: string) {
+    setReqBodyTypeSetting(value);
     if (value !== 'json') {
       setReqJsonBody(undefined);
+    } else {
+      if (apiDetail.api_info) {
+        changeEditorSchemaWithId(JSON_SCHEMA_REQ_JSON_BODY, {
+          value: apiDetail.api_info.req_json_body,
+        });
+      }
+    }
+  }
+
+  function handleRespTypeChange(value: string) {
+    setRespTypeSetting(value);
+    if (value !== 'JSON') {
+      setRespJsonBody(undefined);
+    } else {
+      if (apiDetail.api_info) {
+        changeEditorSchemaWithId(JSON_SCHEMA_RESP_JSON_BODY, {
+          value: apiDetail.api_info.resp_json_body,
+        });
+      }
     }
   }
 
@@ -302,11 +374,11 @@ export default (props: ApiEditProps) => {
             <Radio.Group
               style={{ textAlign: 'left', paddingBottom: 12 }}
               options={['form', 'json', 'file', 'raw']}
-              defaultValue={bodyTypeSetting}
-              value={bodyTypeSetting}
-              onChange={(e) => handleBodyTypeChange(e.target.value)}
+              defaultValue={reqBodyTypeSetting}
+              value={reqBodyTypeSetting}
+              onChange={(e) => handleReqBodyTypeChange(e.target.value)}
             />
-            {bodyTypeSetting === 'form' && (
+            {reqBodyTypeSetting === 'form' && (
               <Form.List name="req_form">
                 {(fields, { add, remove }) => (
                   <>
@@ -413,22 +485,22 @@ export default (props: ApiEditProps) => {
                 )}
               </Form.List>
             )}
-            {bodyTypeSetting === 'json' && (
+            {reqBodyTypeSetting === 'json' && (
               <JsonSchemaEditor
                 isMock={true}
-                data={reqJsonBody}
-                id={'request-body'}
+                id={JSON_SCHEMA_REQ_JSON_BODY}
                 onChange={(e) => {
+                  console.log('req', e);
                   setReqJsonBody(e);
                 }}
               />
             )}
-            {bodyTypeSetting === 'file' && (
+            {reqBodyTypeSetting === 'file' && (
               <FieldFormItem noStyle={true} name={'req_file'}>
                 <Input />
               </FieldFormItem>
             )}
-            {bodyTypeSetting === 'raw' && (
+            {reqBodyTypeSetting === 'raw' && (
               <FieldFormItem
                 noStyle={true}
                 name={'req_raw'}
@@ -676,29 +748,25 @@ export default (props: ApiEditProps) => {
         <Radio.Group
           style={{ textAlign: 'center', width: '100%' }}
           options={['JSON', 'RAW']}
-          value={respSetting}
+          value={respTypeSetting}
           optionType={'button'}
           buttonStyle={'solid'}
-          onChange={(event) => {
-            setRespSetting(event.target.value);
-            if (event.target.value !== 'JSON') {
-              setRespJsonBody(undefined);
-            }
-          }}
+          onChange={(e) => handleRespTypeChange(e.target.value)}
         />
         <EditContainer>
-          {respSetting === 'JSON' && (
+          {respTypeSetting === 'JSON' && (
             <>
               <JsonSchemaEditor
                 isMock={true}
-                id={'response-body'}
+                id={JSON_SCHEMA_RESP_JSON_BODY}
                 onChange={(e) => {
+                  console.log('resp', e);
                   setRespJsonBody(e);
                 }}
               />
             </>
           )}
-          {respSetting === 'RAW' && (
+          {respTypeSetting === 'RAW' && (
             <FieldFormItem
               noStyle={true}
               name={'resp_raw'}
