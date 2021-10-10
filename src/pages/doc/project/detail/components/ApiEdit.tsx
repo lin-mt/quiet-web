@@ -24,9 +24,7 @@ import { ApiState, FormParamType, HttpMethod, QueryParamType } from '@/services/
 import _ from 'lodash';
 import { updateApi } from '@/services/doc/DocApi';
 import { saveApiInfo, updateApiInfo } from '@/services/doc/DocApiInfo';
-import JsonSchemaEditor from '@/pages/components/JsonSchemaEditor';
-import { useModel } from '@@/plugin-model/useModel';
-import { JSON_SCHEMA_EDITOR } from '@/constant/doc/ModelNames';
+import JsonSchemaEditor from 'json-schema-editor-visualm';
 
 interface ApiEditProps {
   projectId: string;
@@ -52,18 +50,15 @@ const FieldFormItem = styled(Form.Item)`
 `;
 
 export default (props: ApiEditProps) => {
-  const JSON_SCHEMA_REQ_JSON_BODY = 'request-json-body';
-  const JSON_SCHEMA_RESP_JSON_BODY = 'response-json-body';
   const { apiDetail, projectId } = props;
 
-  const { changeEditorSchemaWithId } = useModel(JSON_SCHEMA_EDITOR);
   const [apiEditForm] = Form.useForm();
 
   const [reqParamSettingOptions, setReqParamSettingOptions] = useState<string[]>();
   const [reqParamSetting, setReqParamSetting] = useState<string>();
-  const [reqJsonBody, setReqJsonBody] = useState<string | undefined>();
+  const [reqJsonBody, setReqJsonBody] = useState<any>(apiDetail.api_info?.req_json_body);
   const [respTypeSetting, setRespTypeSetting] = useState<string>('JSON');
-  const [respJsonBody, setRespJsonBody] = useState<string | undefined>();
+  const [respJsonBody, setRespJsonBody] = useState<any>(apiDetail.api_info?.resp_json_body);
   const [reqBodyTypeSetting, setReqBodyTypeSetting] = useState<string>('form');
   const [affixed, setAffixed] = useState<boolean>();
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -118,9 +113,6 @@ export default (props: ApiEditProps) => {
     }
     if (apiDetail.api_info?.req_json_body) {
       setReqBodyTypeSetting('json');
-      changeEditorSchemaWithId(JSON_SCHEMA_REQ_JSON_BODY, {
-        value: apiDetail.api_info.req_json_body,
-      });
     }
     if (apiDetail.api_info?.req_file) {
       setReqBodyTypeSetting('file');
@@ -130,9 +122,6 @@ export default (props: ApiEditProps) => {
     }
     if (apiDetail.api_info?.resp_json_body) {
       setRespTypeSetting('JSON');
-      changeEditorSchemaWithId(JSON_SCHEMA_RESP_JSON_BODY, {
-        value: apiDetail.api_info.resp_json_body,
-      });
     }
     if (apiDetail.api_info?.resp_raw) {
       setRespTypeSetting('RAW');
@@ -209,8 +198,6 @@ export default (props: ApiEditProps) => {
       } else {
         values.req_json_body = null;
       }
-      // eslint-disable-next-line no-console
-      console.log(values);
       await updateApi({ ...apiDetail.api, ...values });
       delete values.id;
       if (apiDetail.api_info) {
@@ -231,11 +218,7 @@ export default (props: ApiEditProps) => {
     if (value !== 'json') {
       setReqJsonBody(undefined);
     } else {
-      if (apiDetail.api_info) {
-        changeEditorSchemaWithId(JSON_SCHEMA_REQ_JSON_BODY, {
-          value: apiDetail.api_info.req_json_body,
-        });
-      }
+      setReqJsonBody(apiDetail.api_info?.req_json_body);
     }
   }
 
@@ -244,11 +227,7 @@ export default (props: ApiEditProps) => {
     if (value !== 'JSON') {
       setRespJsonBody(undefined);
     } else {
-      if (apiDetail.api_info) {
-        changeEditorSchemaWithId(JSON_SCHEMA_RESP_JSON_BODY, {
-          value: apiDetail.api_info.resp_json_body,
-        });
-      }
+      setRespJsonBody(apiDetail.api_info?.resp_json_body);
     }
   }
 
@@ -488,9 +467,8 @@ export default (props: ApiEditProps) => {
             {reqBodyTypeSetting === 'json' && (
               <JsonSchemaEditor
                 isMock={true}
-                id={JSON_SCHEMA_REQ_JSON_BODY}
+                data={JSON.parse(JSON.stringify(apiDetail.api_info?.req_json_body))}
                 onChange={(e) => {
-                  console.log('req', e);
                   setReqJsonBody(e);
                 }}
               />
@@ -758,9 +736,8 @@ export default (props: ApiEditProps) => {
             <>
               <JsonSchemaEditor
                 isMock={true}
-                id={JSON_SCHEMA_RESP_JSON_BODY}
+                data={JSON.parse(JSON.stringify(apiDetail.api_info?.resp_json_body))}
                 onChange={(e) => {
-                  console.log('resp', e);
                   setRespJsonBody(e);
                 }}
               />
