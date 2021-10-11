@@ -25,6 +25,7 @@ import _ from 'lodash';
 import { updateApi } from '@/services/doc/DocApi';
 import { saveApiInfo, updateApiInfo } from '@/services/doc/DocApiInfo';
 import JsonSchemaEditor from 'json-schema-editor-visualm';
+import type { Header } from '@/services/doc/EntityType';
 
 interface ApiEditProps {
   projectId: string;
@@ -215,11 +216,26 @@ export default (props: ApiEditProps) => {
 
   function handleReqBodyTypeChange(value: string) {
     setReqBodyTypeSetting(value);
+    let headers: Header[] = apiEditForm.getFieldValue('headers');
     if (value !== 'json') {
       setReqJsonBody(undefined);
+      headers = headers.filter(
+        (header) => header.name !== 'Content-Type' && header.value === 'application/json',
+      );
     } else {
       setReqJsonBody(apiDetail.api_info?.req_json_body);
+      if (!headers) {
+        headers = [];
+      }
+      const contentType = headers.find((header) => header.name === 'Content-Type');
+      headers = headers.filter((header) => header.name !== 'Content-Type');
+      if (contentType) {
+        headers.push({ ...contentType, value: 'application/json', required: true });
+      } else {
+        headers.push({ name: 'Content-Type', value: 'application/json', required: true });
+      }
     }
+    apiEditForm.setFieldsValue({ ...apiEditForm.getFieldsValue(), headers });
   }
 
   function handleRespTypeChange(value: string) {
@@ -688,18 +704,6 @@ export default (props: ApiEditProps) => {
                           valuePropName={'checked'}
                         >
                           <Checkbox />
-                        </FieldFormItem>
-                      </Col>
-                      <Col flex={2}>
-                        <FieldFormItem
-                          {...restField}
-                          name={[name, 'example']}
-                          fieldKey={[fieldKey, 'example']}
-                          rules={[
-                            { max: 300, type: 'string', message: '参数示例长度不能超过 300' },
-                          ]}
-                        >
-                          <Input placeholder="参数示例" />
                         </FieldFormItem>
                       </Col>
                       <Col flex={3}>

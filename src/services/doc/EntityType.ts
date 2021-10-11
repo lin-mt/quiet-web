@@ -31,9 +31,8 @@ export interface FormParam {
 export interface Header {
   name: string;
   value: string;
-  example: string;
   required: boolean;
-  remark: string;
+  remark?: string;
 }
 
 export interface PathParam {
