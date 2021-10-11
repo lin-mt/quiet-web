@@ -120,7 +120,7 @@ const Dictionary: React.FC<any> = () => {
           </Button>,
         ]}
         columns={columns}
-        columnsStateMap={columnsStateMap}
+        columnsState={{ value: columnsStateMap }}
         onColumnsStateChange={(map) => setColumnsStateMap(map)}
       />
       {dictionaryFormVisible && (
