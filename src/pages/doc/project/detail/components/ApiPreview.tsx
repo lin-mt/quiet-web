@@ -1,15 +1,22 @@
 import { ApiTitle } from '@/pages/doc/project/detail';
-import { Space } from 'antd';
+import { Descriptions, Row, Space } from 'antd';
+import type { ApiDetail } from '@/services/doc/EntityType';
 
 interface ApiPreviewProps {
-  apiId?: string;
+  apiDetail: ApiDetail;
 }
 
 export default (props: ApiPreviewProps) => {
+  const { apiDetail } = props;
+
   return (
     <Space direction={'vertical'}>
-      <ApiTitle>基本信息{props.apiId}</ApiTitle>
-      <div>这是基本信息</div>
+      <ApiTitle>基本信息</ApiTitle>
+      <Row>
+        <Descriptions bordered={true} size={'middle'}>
+          <Descriptions.Item label={'接口名称'}>{apiDetail.api.name}</Descriptions.Item>
+        </Descriptions>
+      </Row>
       <ApiTitle>备注</ApiTitle>
       <div>这是备注信息</div>
       <ApiTitle>请求参数</ApiTitle>

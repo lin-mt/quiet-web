@@ -1,6 +1,6 @@
 import type { Key } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Col, Empty, Input, Popconfirm, Row, Space, Tabs, Tag, Tree } from 'antd';
+import { Button, Empty, Input, Popconfirm, Space, Tabs, Tag, Tree } from 'antd';
 import styled from 'styled-components';
 import ApiGroupForm from '@/pages/doc/apiGroup/components/ApiGroupForm';
 import type { DocApi, DocApiGroup } from '@/services/doc/EntityType';
@@ -37,6 +37,13 @@ export const ApiTitle = styled.h2`
   padding-left: 8px;
   font-weight: 399;
   margin: 0;
+`;
+
+const InterfaceContainer = styled(Space)`
+  width: 100%;
+  > :nth-child(2) {
+    width: 100%;
+  }
 `;
 
 const ProjectDetails: React.FC<any> = (props) => {
@@ -190,8 +197,8 @@ const ProjectDetails: React.FC<any> = (props) => {
           style={{ backgroundColor: '#fff', minHeight: 'calc(100vh - 195px)' }}
         >
           <TabPane tab={'接 口'} key={'interface'}>
-            <Row gutter={20}>
-              <Col flex={'300px'}>
+            <InterfaceContainer direction={'horizontal'} align={'start'}>
+              <div style={{ width: 300 }}>
                 <Space direction={'vertical'}>
                   <Space>
                     <Input.Search
@@ -213,12 +220,12 @@ const ProjectDetails: React.FC<any> = (props) => {
                     }}
                   />
                 </Space>
-              </Col>
-              <Col flex={'auto'} style={{ paddingRight: 39 }}>
+              </div>
+              <div style={{ paddingRight: 39 }}>
                 {selectedNode ? (
                   <Space direction={'vertical'} style={{ width: '100%' }}>
                     {!selectedNode.isLeaf ? (
-                      <>
+                      <div>
                         <div style={{ height: 32 }}>
                           <Space align={'end'}>
                             <ApiTitle>{selectedNode.title}</ApiTitle>
@@ -262,7 +269,7 @@ const ProjectDetails: React.FC<any> = (props) => {
                           columns={apiTableColumns}
                           dataSource={selectedNode.children}
                         />
-                      </>
+                      </div>
                     ) : (
                       <ApiDetail apiId={selectedNode.id} projectId={projectId} />
                     )}
@@ -270,8 +277,8 @@ const ProjectDetails: React.FC<any> = (props) => {
                 ) : (
                   <Empty style={{ height: '100%' }} description={'请选择分组或接口文档'} />
                 )}
-              </Col>
-            </Row>
+              </div>
+            </InterfaceContainer>
           </TabPane>
           <TabPane tab={'设 置'} key={'setting'}>
             projectId: {props.location.query.projectId}
