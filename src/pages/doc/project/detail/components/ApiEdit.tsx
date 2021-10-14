@@ -24,7 +24,7 @@ import { ApiState, FormParamType, HttpMethod, QueryParamType } from '@/services/
 import _ from 'lodash';
 import { updateApi } from '@/services/doc/DocApi';
 import { saveApiInfo, updateApiInfo } from '@/services/doc/DocApiInfo';
-import JsonSchemaEditor from 'json-schema-editor-visualm';
+import JsonSchemaEditor from '@quiet-front-end/quiet-json-schema-editor-visual';
 import type { Header } from '@/services/doc/EntityType';
 
 interface ApiEditProps {
