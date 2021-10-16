@@ -87,6 +87,7 @@ export default (props: ApiEditProps) => {
       api_state: ApiState[apiDetail.api.api_state],
       method: HttpMethod[apiDetail.api.method],
       path: apiDetail.api.path,
+      remark: apiDetail.api.remark,
       api_group_id: apiDetail.api.api_group
         ? {
             value: apiDetail.api.api_group.id,

@@ -1,8 +1,23 @@
 import { ApiTitle } from '@/pages/doc/project/detail';
-import { Badge, Descriptions, Space, Tag } from 'antd';
-import type { ApiDetail } from '@/services/doc/EntityType';
+import { Badge, Descriptions, Empty, Space, Table, Tag, Typography } from 'antd';
+import type { ApiDetail, FormParam, Header, PathParam } from '@/services/doc/EntityType';
 import { getMethodTagColor } from '@/utils/doc/utils';
 import { ApiState } from '@/services/doc/Enums';
+import styled from 'styled-components';
+import { ColumnsType } from 'antd/lib/table/interface';
+import { QueryParam } from '@/services/doc/EntityType';
+import { SchemaTable } from '@/pages/doc/project/detail/components/SchemaTable';
+
+const ContentContainer = styled.div`
+  padding: 10px;
+`;
+
+const ReqTitle = styled.h3`
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 23px;
+  color: rgba(39, 56, 72, 0.92);
+`;
 
 interface ApiPreviewProps {
   apiDetail: ApiDetail;
@@ -11,30 +26,178 @@ interface ApiPreviewProps {
 export default (props: ApiPreviewProps) => {
   const { apiDetail } = props;
 
+  const pathColumns: ColumnsType<PathParam> = [
+    { title: '参数名称', dataIndex: 'name' },
+    {
+      title: '参数示例',
+      dataIndex: 'example',
+    },
+    { title: '备注', dataIndex: 'remark' },
+  ];
+
+  const headerColumns: ColumnsType<Header> = [
+    {
+      title: '参数名称',
+      dataIndex: 'name',
+    },
+    {
+      title: '参数值',
+      dataIndex: 'value',
+    },
+    {
+      title: '是否必须',
+      dataIndex: 'required',
+      render: (required) => (required ? '是' : '否'),
+    },
+    {
+      title: '备注',
+      dataIndex: 'remark',
+    },
+  ];
+
+  const queryColumns: ColumnsType<QueryParam> = [
+    {
+      title: '参数名称',
+      dataIndex: 'name',
+    },
+    {
+      title: '是否必须',
+      dataIndex: 'required',
+      render: (required) => (required ? '是' : '否'),
+    },
+    {
+      title: '参数类型',
+      dataIndex: 'type',
+      render: (text) => text.toLowerCase(),
+    },
+    {
+      title: '最小长度（值）',
+      dataIndex: 'min',
+    },
+    { title: '最大长度（值）', dataIndex: 'max' },
+    {
+      title: '示例参数',
+      dataIndex: 'example',
+    },
+    {
+      title: '备注',
+      dataIndex: 'remark',
+    },
+  ];
+
+  const reqFormColumns: ColumnsType<FormParam> = [
+    {
+      title: '参数名称',
+      dataIndex: 'name',
+    },
+    {
+      title: '是否必须',
+      dataIndex: 'required',
+      render: (required) => (required ? '是' : '否'),
+    },
+    {
+      title: '参数类型',
+      dataIndex: 'type',
+    },
+    {
+      title: '最小长度',
+      dataIndex: 'min_length',
+    },
+    { title: '最大长度', dataIndex: 'max_length' },
+    {
+      title: '示例参数',
+      dataIndex: 'example',
+    },
+    {
+      title: '备注',
+      dataIndex: 'remark',
+    },
+  ];
   return (
-    <Space direction={'vertical'}>
+    <Space direction={'vertical'} style={{ width: '100%', marginBottom: 30 }} size={'middle'}>
       <ApiTitle>基本信息</ApiTitle>
-      <Descriptions bordered={true} size={'middle'} style={{ padding: 20 }} column={2}>
-        <Descriptions.Item label={'接口名称'}>{apiDetail.api.name}</Descriptions.Item>
-        <Descriptions.Item label={'创建人'}>{apiDetail.api.creator_full_name}</Descriptions.Item>
-        <Descriptions.Item label={'状态'}>
-          <Badge
-            status={apiDetail.api.api_state === ApiState.FINISHED ? 'success' : 'processing'}
-            text={apiDetail.api.api_state === ApiState.FINISHED ? '完成' : '未完成'}
-          />
-        </Descriptions.Item>
-        <Descriptions.Item label={'更新时间'}>{apiDetail.api.gmt_update}</Descriptions.Item>
-        <Descriptions.Item label={'接口路径'}>
-          <Tag color={getMethodTagColor(apiDetail.api.method)}>{apiDetail.api.method}</Tag>
-          {apiDetail.api.path}
-        </Descriptions.Item>
-      </Descriptions>
+      <ContentContainer>
+        <Descriptions bordered={true} size={'middle'} column={2}>
+          <Descriptions.Item label={'接口名称'}>{apiDetail.api.name}</Descriptions.Item>
+          <Descriptions.Item label={'创建人'}>{apiDetail.api.creator_full_name}</Descriptions.Item>
+          <Descriptions.Item label={'状态'}>
+            <Badge
+              status={apiDetail.api.api_state === ApiState.FINISHED ? 'success' : 'processing'}
+              text={apiDetail.api.api_state === ApiState.FINISHED ? '完成' : '未完成'}
+            />
+          </Descriptions.Item>
+          <Descriptions.Item label={'更新时间'}>{apiDetail.api.gmt_update}</Descriptions.Item>
+          <Descriptions.Item label={'接口路径'}>
+            <Space direction={'horizontal'}>
+              <Tag color={getMethodTagColor(apiDetail.api.method)}>{apiDetail.api.method}</Tag>
+              <Typography.Text copyable={true}>{apiDetail.api.path}</Typography.Text>
+            </Space>
+          </Descriptions.Item>
+        </Descriptions>
+      </ContentContainer>
       <ApiTitle>备注</ApiTitle>
-      <div>这是备注信息</div>
+      <ContentContainer>
+        {apiDetail.api.remark ? (
+          apiDetail.api.remark
+        ) : (
+          <Empty description={'无备注信息'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        )}
+      </ContentContainer>
       <ApiTitle>请求参数</ApiTitle>
-      <div>这是请求参数信息</div>
+      <ContentContainer>
+        {apiDetail.api_info?.path_param && (
+          <>
+            <ReqTitle>路径参数:</ReqTitle>
+            <Table
+              bordered={true}
+              pagination={false}
+              size={'small'}
+              rowKey={(header) => header.name}
+              dataSource={apiDetail.api_info?.path_param}
+              columns={pathColumns}
+            />
+          </>
+        )}
+        <ReqTitle style={{ marginTop: apiDetail.api_info?.path_param ? 20 : 0 }}>Headers:</ReqTitle>
+        <Table
+          bordered={true}
+          pagination={false}
+          size={'small'}
+          rowKey={(header) => header.name}
+          dataSource={apiDetail.api_info?.headers}
+          columns={headerColumns}
+        />
+        <ReqTitle style={{ marginTop: 20 }}>Query:</ReqTitle>
+        <Table
+          bordered={true}
+          pagination={false}
+          size={'small'}
+          rowKey={(query) => query.name}
+          dataSource={apiDetail.api_info?.req_query}
+          columns={queryColumns}
+        />
+        <ReqTitle style={{ marginTop: 20 }}>Body:</ReqTitle>
+        {apiDetail.api_info?.req_form ? (
+          <Table
+            bordered={true}
+            pagination={false}
+            size={'small'}
+            rowKey={(form) => form.name}
+            dataSource={apiDetail.api_info.req_form}
+            columns={reqFormColumns}
+          />
+        ) : (
+          <SchemaTable dataSource={apiDetail.api_info?.req_json_body} />
+        )}
+      </ContentContainer>
       <ApiTitle>返回数据</ApiTitle>
-      <div>这是返回数据</div>
+      <ContentContainer>
+        {apiDetail.api_info?.resp_json_body ? (
+          <SchemaTable dataSource={apiDetail.api_info.resp_json_body} />
+        ) : (
+          apiDetail.api_info?.resp_raw
+        )}
+      </ContentContainer>
     </Space>
   );
 };

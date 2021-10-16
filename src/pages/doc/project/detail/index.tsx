@@ -197,7 +197,7 @@ const ProjectDetails: React.FC<any> = (props) => {
           style={{ backgroundColor: '#fff', minHeight: 'calc(100vh - 195px)' }}
         >
           <TabPane tab={'接 口'} key={'interface'}>
-            <InterfaceContainer direction={'horizontal'} align={'start'}>
+            <InterfaceContainer direction={'horizontal'} align={'start'} size={'large'}>
               <div style={{ width: 300 }}>
                 <Space direction={'vertical'}>
                   <Space>
@@ -223,7 +223,7 @@ const ProjectDetails: React.FC<any> = (props) => {
               </div>
               <div style={{ paddingRight: 39 }}>
                 {selectedNode ? (
-                  <Space direction={'vertical'} style={{ width: '100%' }}>
+                  <div style={{ width: '100%' }}>
                     {!selectedNode.isLeaf ? (
                       <div>
                         <div style={{ height: 32 }}>
@@ -273,7 +273,7 @@ const ProjectDetails: React.FC<any> = (props) => {
                     ) : (
                       <ApiDetail apiId={selectedNode.id} projectId={projectId} />
                     )}
-                  </Space>
+                  </div>
                 ) : (
                   <Empty style={{ height: '100%' }} description={'请选择分组或接口文档'} />
                 )}
