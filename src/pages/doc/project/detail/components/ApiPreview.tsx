@@ -4,8 +4,8 @@ import type { ApiDetail, FormParam, Header, PathParam } from '@/services/doc/Ent
 import { getMethodTagColor } from '@/utils/doc/utils';
 import { ApiState } from '@/services/doc/Enums';
 import styled from 'styled-components';
-import { ColumnsType } from 'antd/lib/table/interface';
-import { QueryParam } from '@/services/doc/EntityType';
+import type { ColumnsType } from 'antd/lib/table/interface';
+import type { QueryParam } from '@/services/doc/EntityType';
 import { SchemaTable } from '@/pages/doc/project/detail/components/SchemaTable';
 
 const ContentContainer = styled.div`
