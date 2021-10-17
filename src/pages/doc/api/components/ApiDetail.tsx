@@ -8,10 +8,11 @@ import { getAiDetail } from '@/services/doc/DocApi';
 interface ApiDetailProps {
   apiId: string;
   projectId: string;
+  afterUpdate?: () => void;
 }
 
 export default (props: ApiDetailProps) => {
-  const { apiId, projectId } = props;
+  const { apiId, projectId, afterUpdate } = props;
 
   const [apiDetail, setApiDetail] = useState<ApiDetail>();
 
@@ -25,7 +26,18 @@ export default (props: ApiDetailProps) => {
         {apiDetail && <ApiPreview apiDetail={apiDetail} />}
       </Tabs.TabPane>
       <Tabs.TabPane key={'edit'} tab={'编 辑'}>
-        {apiDetail && <ApiEdit projectId={projectId} apiDetail={apiDetail} />}
+        {apiDetail && (
+          <ApiEdit
+            projectId={projectId}
+            apiDetail={apiDetail}
+            afterUpdate={(newApiDetail) => {
+              if (apiDetail?.api.name !== newApiDetail.api.name && afterUpdate) {
+                afterUpdate();
+              }
+              setApiDetail({ ...newApiDetail });
+            }}
+          />
+        )}
       </Tabs.TabPane>
       <Tabs.TabPane key={'run'} tab={'运 行'}>
         运行

@@ -271,7 +271,11 @@ const ProjectDetails: React.FC<any> = (props) => {
                         />
                       </div>
                     ) : (
-                      <ApiDetail apiId={selectedNode.id} projectId={projectId} />
+                      <ApiDetail
+                        apiId={selectedNode.id}
+                        projectId={projectId}
+                        afterUpdate={() => loadProjectApiInfo()}
+                      />
                     )}
                   </div>
                 ) : (

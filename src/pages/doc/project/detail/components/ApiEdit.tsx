@@ -8,6 +8,7 @@ import {
   Form,
   Input,
   InputNumber,
+  message,
   Radio,
   Row,
   Select,
@@ -30,6 +31,7 @@ import type { Header } from '@/services/doc/EntityType';
 interface ApiEditProps {
   projectId: string;
   apiDetail: ApiDetail;
+  afterUpdate?: (newApiDetail: ApiDetail) => void;
 }
 
 const EditContainer = styled.div.attrs((props: { hide: boolean }) => props)`
@@ -51,7 +53,7 @@ const FieldFormItem = styled(Form.Item)`
 `;
 
 export default (props: ApiEditProps) => {
-  const { apiDetail, projectId } = props;
+  const { apiDetail, projectId, afterUpdate } = props;
 
   const [apiEditForm] = Form.useForm();
 
@@ -65,16 +67,16 @@ export default (props: ApiEditProps) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   function getReqParamSettingOptionsByMethod(method: HttpMethod | string): string[] {
-    let dump = method;
+    let datum = method;
     if (typeof method === 'string') {
-      dump = HttpMethod[method];
+      datum = HttpMethod[method];
     }
     const options = ['Query', 'Headers'];
     if (
-      dump === HttpMethod.PUT ||
-      dump === HttpMethod.DELETE ||
-      dump === HttpMethod.POST ||
-      dump === HttpMethod.PATCH
+      datum === HttpMethod.PUT ||
+      datum === HttpMethod.DELETE ||
+      datum === HttpMethod.POST ||
+      datum === HttpMethod.PATCH
     ) {
       options.unshift('Body');
     }
@@ -201,17 +203,22 @@ export default (props: ApiEditProps) => {
       } else {
         values.req_json_body = null;
       }
-      await updateApi({ ...apiDetail.api, ...values });
+      const newApiDetail = { ...apiDetail };
+      newApiDetail.api = await updateApi({ ...apiDetail.api, ...values });
       delete values.id;
       if (apiDetail.api_info) {
-        await updateApiInfo({ ...apiDetail.api_info, ...values });
+        newApiDetail.api_info = await updateApiInfo({ ...apiDetail.api_info, ...values });
       } else {
-        await saveApiInfo({ ...values, api_id: apiDetail.api.id });
+        newApiDetail.api_info = await saveApiInfo({ ...values, api_id: apiDetail.api.id });
+      }
+      if (afterUpdate) {
+        afterUpdate(newApiDetail);
       }
     } catch (e) {
       setSubmitting(false);
       throw e;
     } finally {
+      message.success('更新成功');
       setSubmitting(false);
     }
   }
@@ -485,7 +492,11 @@ export default (props: ApiEditProps) => {
             {reqBodyTypeSetting === 'json' && (
               <JsonSchemaEditor
                 isMock={true}
-                data={JSON.parse(JSON.stringify(apiDetail.api_info?.req_json_body))}
+                data={
+                  apiDetail.api_info?.req_json_body
+                    ? JSON.parse(JSON.stringify(apiDetail.api_info?.req_json_body))
+                    : undefined
+                }
                 onChange={(e) => {
                   setReqJsonBody(e);
                 }}
@@ -742,7 +753,11 @@ export default (props: ApiEditProps) => {
             <>
               <JsonSchemaEditor
                 isMock={true}
-                data={JSON.parse(JSON.stringify(apiDetail.api_info?.resp_json_body))}
+                data={
+                  apiDetail.api_info?.resp_json_body
+                    ? JSON.parse(JSON.stringify(apiDetail.api_info?.resp_json_body))
+                    : undefined
+                }
                 onChange={(e) => {
                   setRespJsonBody(e);
                 }}

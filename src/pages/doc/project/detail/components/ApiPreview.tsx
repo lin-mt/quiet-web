@@ -2,7 +2,7 @@ import { ApiTitle } from '@/pages/doc/project/detail';
 import { Badge, Descriptions, Empty, Space, Table, Tag, Typography } from 'antd';
 import type { ApiDetail, FormParam, Header, PathParam } from '@/services/doc/EntityType';
 import { getMethodTagColor } from '@/utils/doc/utils';
-import { ApiState } from '@/services/doc/Enums';
+import { ApiState, HttpMethod } from '@/services/doc/Enums';
 import styled from 'styled-components';
 import type { ColumnsType } from 'antd/lib/table/interface';
 import type { QueryParam } from '@/services/doc/EntityType';
@@ -176,8 +176,10 @@ export default (props: ApiPreviewProps) => {
           dataSource={apiDetail.api_info?.req_query}
           columns={queryColumns}
         />
-        <ReqTitle style={{ marginTop: 20 }}>Body:</ReqTitle>
-        {apiDetail.api_info?.req_form ? (
+        {[HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.POST].includes(
+          HttpMethod[apiDetail.api.method],
+        ) && <ReqTitle style={{ marginTop: 20 }}>Body:</ReqTitle>}
+        {apiDetail.api_info?.req_form && (
           <Table
             bordered={true}
             pagination={false}
@@ -186,16 +188,28 @@ export default (props: ApiPreviewProps) => {
             dataSource={apiDetail.api_info.req_form}
             columns={reqFormColumns}
           />
-        ) : (
+        )}
+        {apiDetail.api_info?.req_json_body && (
           <SchemaTable dataSource={apiDetail.api_info?.req_json_body} />
         )}
+        {apiDetail.api_info?.req_file && apiDetail.api_info.req_file}
+        {apiDetail.api_info?.req_raw && apiDetail.api_info.req_raw}
+        {[HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.POST].includes(
+          HttpMethod[apiDetail.api.method],
+        ) &&
+          !apiDetail.api_info?.req_form &&
+          !apiDetail.api_info?.req_json_body &&
+          !apiDetail.api_info?.req_file &&
+          !apiDetail.api_info?.req_raw && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
       </ContentContainer>
       <ApiTitle>返回数据</ApiTitle>
       <ContentContainer>
-        {apiDetail.api_info?.resp_json_body ? (
+        {apiDetail.api_info?.resp_json_body && (
           <SchemaTable dataSource={apiDetail.api_info.resp_json_body} />
-        ) : (
-          apiDetail.api_info?.resp_raw
+        )}
+        {apiDetail.api_info?.resp_raw && apiDetail.api_info?.resp_raw}
+        {!apiDetail.api_info?.resp_json_body && !apiDetail.api_info?.resp_raw && (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
       </ContentContainer>
     </Space>
