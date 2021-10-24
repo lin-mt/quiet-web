@@ -30,11 +30,11 @@ export default (props: ApiDetailProps) => {
           <ApiEdit
             projectId={projectId}
             apiDetail={apiDetail}
-            afterUpdate={(newApiDetail) => {
-              if (apiDetail?.api.name !== newApiDetail.api.name && afterUpdate) {
+            afterUpdate={() => {
+              getAiDetail(apiId).then((detail) => setApiDetail(detail));
+              if (afterUpdate) {
                 afterUpdate();
               }
-              setApiDetail({ ...newApiDetail });
             }}
           />
         )}

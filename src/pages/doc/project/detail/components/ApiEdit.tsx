@@ -31,7 +31,7 @@ import type { Header } from '@/services/doc/EntityType';
 interface ApiEditProps {
   projectId: string;
   apiDetail: ApiDetail;
-  afterUpdate?: (newApiDetail: ApiDetail) => void;
+  afterUpdate?: () => void;
 }
 
 const EditContainer = styled.div.attrs((props: { hide: boolean }) => props)`
@@ -203,16 +203,15 @@ export default (props: ApiEditProps) => {
       } else {
         values.req_json_body = null;
       }
-      const newApiDetail = { ...apiDetail };
-      newApiDetail.api = await updateApi({ ...apiDetail.api, ...values });
+      await updateApi({ ...apiDetail.api, ...values });
       delete values.id;
       if (apiDetail.api_info) {
-        newApiDetail.api_info = await updateApiInfo({ ...apiDetail.api_info, ...values });
+        await updateApiInfo({ ...apiDetail.api_info, ...values });
       } else {
-        newApiDetail.api_info = await saveApiInfo({ ...values, api_id: apiDetail.api.id });
+        await saveApiInfo({ ...values, api_id: apiDetail.api.id });
       }
       if (afterUpdate) {
-        afterUpdate(newApiDetail);
+        afterUpdate();
       }
     } catch (e) {
       setSubmitting(false);
