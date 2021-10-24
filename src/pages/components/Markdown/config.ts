@@ -7,15 +7,18 @@ import highlight from '@bytemd/plugin-highlight';
 import math from '@bytemd/plugin-math'; // 数学公式
 import mediumZoom from '@bytemd/plugin-medium-zoom';
 import mermaid from '@bytemd/plugin-mermaid'; // 图表 / 流程图
+import mermaid_zhHans from '@bytemd/plugin-mermaid/lib/locales/zh_Hans.json';
+import math_zhHans from '@bytemd/plugin-math/lib/locales/zh_Hans.json';
+import gfm_zhHans from '@bytemd/plugin-gfm/lib/locales/zh_Hans.json';
 
 export const plugins = [
   breaks(),
   footnotes(),
   frontmatter(),
   gemoji(),
-  gfm(),
+  gfm({ locale: gfm_zhHans }),
   highlight(),
-  math(),
+  math({ locale: math_zhHans }),
   mediumZoom(),
-  mermaid(),
+  mermaid({ locale: mermaid_zhHans }),
 ];
