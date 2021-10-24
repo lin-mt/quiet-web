@@ -27,6 +27,7 @@ import { updateApi } from '@/services/doc/DocApi';
 import { saveApiInfo, updateApiInfo } from '@/services/doc/DocApiInfo';
 import JsonSchemaEditor from '@quiet-front-end/json-schema-editor-visual';
 import type { Header } from '@/services/doc/EntityType';
+import MarkdownEditor from '@/pages/components/Markdown/MarkdownEditor';
 
 interface ApiEditProps {
   projectId: string;
@@ -217,7 +218,7 @@ export default (props: ApiEditProps) => {
       setSubmitting(false);
       throw e;
     } finally {
-      message.success('更新成功');
+      message.success('保存成功');
       setSubmitting(false);
     }
   }
@@ -774,15 +775,13 @@ export default (props: ApiEditProps) => {
           )}
         </EditContainer>
         <ApiTitle style={{ marginTop: 30 }}>备 注</ApiTitle>
-        <EditContainer>
-          <FieldFormItem
-            noStyle={true}
-            name={'remark'}
-            rules={[{ max: 300, message: '备注信息不能超过 300' }]}
-          >
-            <Input.TextArea rows={6} />
-          </FieldFormItem>
-        </EditContainer>
+        <FieldFormItem
+          noStyle={true}
+          name={'remark'}
+          rules={[{ max: 300, message: '备注信息不能超过 300' }]}
+        >
+          <MarkdownEditor maxLength={300} value={apiDetail.api.remark} />
+        </FieldFormItem>
         <Affix offsetBottom={0} onChange={(af) => setAffixed(af)} style={{ marginTop: 30 }}>
           <SaveContainer style={{ backgroundColor: affixed ? 'rgb(230, 233, 236)' : undefined }}>
             <Button

@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import type { ColumnsType } from 'antd/lib/table/interface';
 import type { QueryParam } from '@/services/doc/EntityType';
 import { SchemaTable } from '@/pages/doc/project/detail/components/SchemaTable';
+import MarkdownViewer from '@/pages/components/Markdown/MarkdownViewer';
 
 const ContentContainer = styled.div`
   padding: 10px;
@@ -136,9 +137,9 @@ export default (props: ApiPreviewProps) => {
         </Descriptions>
       </ContentContainer>
       <ApiTitle>备注</ApiTitle>
-      <ContentContainer>
+      <ContentContainer style={{ borderStyle: 'solid', borderWidth: 1, borderColor: '#f0f0f0' }}>
         {apiDetail.api.remark ? (
-          apiDetail.api.remark
+          <MarkdownViewer value={apiDetail.api.remark} />
         ) : (
           <Empty description={'无备注信息'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
