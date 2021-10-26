@@ -8,8 +8,10 @@ import { listApiInfoById } from '@/services/doc/DocProject';
 import {
   DeleteOutlined,
   EditOutlined,
+  FileTextOutlined,
   PicCenterOutlined,
   PicLeftOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 import { deleteApiGroup } from '@/services/doc/DocApiGroup';
 import ApiForm from '@/pages/doc/api/components/ApiForm';
@@ -196,7 +198,16 @@ const ProjectDetails: React.FC<any> = (props) => {
           defaultActiveKey={'interface'}
           style={{ backgroundColor: '#fff', minHeight: 'calc(100vh - 195px)' }}
         >
-          <TabPane tab={'接 口'} key={'interface'}>
+          <TabPane
+            tab={
+              <span>
+                &nbsp;
+                <FileTextOutlined />
+                接口&nbsp;
+              </span>
+            }
+            key={'interface'}
+          >
             <InterfaceContainer direction={'horizontal'} align={'start'} size={'large'}>
               <div style={{ width: 300 }}>
                 <Space direction={'vertical'}>
@@ -284,7 +295,16 @@ const ProjectDetails: React.FC<any> = (props) => {
               </div>
             </InterfaceContainer>
           </TabPane>
-          <TabPane tab={'设 置'} key={'setting'}>
+          <TabPane
+            tab={
+              <span>
+                &nbsp;
+                <SettingOutlined />
+                设置&nbsp;
+              </span>
+            }
+            key={'setting'}
+          >
             projectId: {props.location.query.projectId}
           </TabPane>
         </Tabs>

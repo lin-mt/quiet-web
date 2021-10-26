@@ -4,6 +4,8 @@ import ApiEdit from '@/pages/doc/project/detail/components/ApiEdit';
 import { useEffect, useState } from 'react';
 import type { ApiDetail } from '@/services/doc/EntityType';
 import { getAiDetail } from '@/services/doc/DocApi';
+import ApiRun from '@/pages/doc/project/detail/components/ApiRun';
+import { EditOutlined, EyeOutlined, SendOutlined } from '@ant-design/icons';
 
 interface ApiDetailProps {
   apiId: string;
@@ -22,10 +24,28 @@ export default (props: ApiDetailProps) => {
 
   return (
     <Tabs defaultActiveKey={'preview'} tabBarStyle={{ marginTop: -12 }}>
-      <Tabs.TabPane key={'preview'} tab={'预 览'}>
+      <Tabs.TabPane
+        key={'preview'}
+        tab={
+          <span>
+            &nbsp;
+            <EyeOutlined />
+            预览&nbsp;
+          </span>
+        }
+      >
         {apiDetail && <ApiPreview apiDetail={apiDetail} />}
       </Tabs.TabPane>
-      <Tabs.TabPane key={'edit'} tab={'编 辑'}>
+      <Tabs.TabPane
+        key={'edit'}
+        tab={
+          <span>
+            &nbsp;
+            <EditOutlined />
+            编辑&nbsp;
+          </span>
+        }
+      >
         {apiDetail && (
           <ApiEdit
             projectId={projectId}
@@ -39,8 +59,17 @@ export default (props: ApiDetailProps) => {
           />
         )}
       </Tabs.TabPane>
-      <Tabs.TabPane key={'run'} tab={'运 行'}>
-        运行
+      <Tabs.TabPane
+        key={'run'}
+        tab={
+          <span>
+            &nbsp;
+            <SendOutlined />
+            运行&nbsp;
+          </span>
+        }
+      >
+        {apiDetail && <ApiRun />}
       </Tabs.TabPane>
     </Tabs>
   );
