@@ -139,9 +139,6 @@ export default (props: ApiPreviewProps) => {
       <ApiTitle>备注</ApiTitle>
       <ContentContainer
         style={{
-          borderStyle: 'solid',
-          borderWidth: 1,
-          borderColor: '#f0f0f0',
           marginLeft: 10,
           marginRight: 10,
         }}
