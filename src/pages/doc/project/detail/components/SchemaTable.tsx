@@ -1,5 +1,8 @@
+/**
+ * copy from https://github.com/YMFE/yapi
+ */
 import _ from 'lodash';
-import { ColumnsType } from 'antd/es/table';
+import type { ColumnsType } from 'antd/es/table';
 import { Table } from 'antd';
 
 let fieldNum = 1;
@@ -74,16 +77,17 @@ const columns: ColumnsType<any> = [
     dataIndex: 'sub',
     key: 'sub',
     render: (text, record) => {
-      let result = text || record;
+      const result = text || record;
 
       return Object.keys(result).map((item, index) => {
-        let name = messageMap[item];
-        let value = result[item];
-        let isShow = !_.isUndefined(result[item]) && !_.isUndefined(name);
+        const name = messageMap[item];
+        const value = result[item];
+        const isShow = !_.isUndefined(result[item]) && !_.isUndefined(name);
+        const key = `${name}${index}`;
 
         return (
           isShow && (
-            <p key={index}>
+            <p key={key}>
               <span style={{ fontWeight: 700 }}>{name}: </span>
               <span>{value.toString()}</span>
             </p>
@@ -97,7 +101,7 @@ const columns: ColumnsType<any> = [
 //  自动添加type
 
 function checkJsonSchema(json: { description: any; type: any; properties: any }) {
-  let newJson = Object.assign({}, json);
+  const newJson = Object.assign({}, json);
   if (_.isUndefined(json.type) && _.isObject(json.properties)) {
     newJson.type = 'object';
   }
@@ -105,16 +109,46 @@ function checkJsonSchema(json: { description: any; type: any; properties: any })
   return newJson;
 }
 
+// @ts-ignore
+const Schema = (data, key) => {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  const result = mapping(data, key);
+  if (data.type !== 'object') {
+    const desc = result.desc;
+    const d = result.default;
+    const children = result.children;
+
+    delete result.desc;
+    delete result.default;
+    delete result.children;
+    let item = {
+      type: data.type,
+      key,
+      desc,
+      default: d,
+      sub: result,
+    };
+
+    if (_.isArray(children)) {
+      item = Object.assign({}, item, { children });
+    }
+
+    return item;
+  }
+
+  return result;
+};
+
 const SchemaObject = (data: { properties: any; required: any }, key: string) => {
   let { properties, required } = data;
   properties = properties || {};
   required = required || [];
-  let result: { name: string; key: string; desc: any; required: boolean }[] = [];
+  const result: { name: string; key: string; desc: any; required: boolean }[] = [];
   Object.keys(properties).map((name, index) => {
-    let value = properties[name];
-    let copiedState = checkJsonSchema(JSON.parse(JSON.stringify(value)));
+    const value = properties[name];
+    const copiedState = checkJsonSchema(JSON.parse(JSON.stringify(value)));
 
-    let optionForm = Schema(copiedState, key + '-' + index);
+    const optionForm = Schema(copiedState, key + '-' + index);
     let item = {
       name,
       key: key + '-' + index,
@@ -172,9 +206,10 @@ const SchemaArray = (
 ) => {
   data.items = data.items || { type: 'string' };
   // @ts-ignore
-  let items = checkJsonSchema(data.items);
+  const items = checkJsonSchema(data.items);
   // @ts-ignore
-  let optionForm = mapping(items, index);
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  const optionForm = mapping(items, index);
   //  处理array嵌套array的问题
   // @ts-ignore
   let children = optionForm;
@@ -320,37 +355,9 @@ const mapping = function (
 };
 
 // @ts-ignore
-const Schema = (data, key) => {
-  let result = mapping(data, key);
-  if (data.type !== 'object') {
-    let desc = result.desc;
-    let d = result.default;
-    let children = result.children;
-
-    delete result.desc;
-    delete result.default;
-    delete result.children;
-    let item = {
-      type: data.type,
-      key,
-      desc,
-      default: d,
-      sub: result,
-    };
-
-    if (_.isArray(children)) {
-      item = Object.assign({}, item, { children });
-    }
-
-    return item;
-  }
-
-  return result;
-};
-
-// @ts-ignore
 const schemaTransformToTable = (schema) => {
   try {
+    // eslint-disable-next-line no-param-reassign
     schema = checkJsonSchema(schema);
     let result = Schema(schema, 0);
     result = _.isArray(result) ? result : [result];
