@@ -254,6 +254,7 @@ const ProjectDetails: React.FC<any> = (props) => {
                         </div>
                         <div style={{ marginTop: 10 }}>
                           <Table<DocApi>
+                            size={'middle'}
                             pagination={false}
                             columns={apiTableColumns}
                             dataSource={selectedNode.children}
