@@ -1,4 +1,4 @@
-import { Tabs } from 'antd';
+import { Menu } from 'antd';
 import ApiPreview from '@/pages/doc/project/detail/components/ApiPreview';
 import ApiEdit from '@/pages/doc/project/detail/components/ApiEdit';
 import { useEffect, useState } from 'react';
@@ -6,6 +6,7 @@ import type { ApiDetail } from '@/services/doc/EntityType';
 import { getAiDetail } from '@/services/doc/DocApi';
 import ApiRun from '@/pages/doc/project/detail/components/ApiRun';
 import { EditOutlined, EyeOutlined, SendOutlined } from '@ant-design/icons';
+import type { MenuInfo } from 'rc-menu/lib/interface';
 
 interface ApiDetailProps {
   apiId: string;
@@ -17,36 +18,32 @@ export default (props: ApiDetailProps) => {
   const { apiId, projectId, afterUpdate } = props;
 
   const [apiDetail, setApiDetail] = useState<ApiDetail>();
+  const [current, setCurrent] = useState<string>('preview');
 
   useEffect(() => {
     getAiDetail(apiId).then((detail) => setApiDetail(detail));
   }, [apiId]);
 
+  function handleCurrentMenuChange(info: MenuInfo) {
+    setCurrent(info.key);
+  }
+
   return (
-    <Tabs defaultActiveKey={'preview'} tabBarStyle={{ marginTop: -12 }}>
-      <Tabs.TabPane
-        key={'preview'}
-        tab={
-          <span>
-            &nbsp;
-            <EyeOutlined />
-            预览&nbsp;
-          </span>
-        }
-      >
-        {apiDetail && <ApiPreview apiDetail={apiDetail} />}
-      </Tabs.TabPane>
-      <Tabs.TabPane
-        key={'edit'}
-        tab={
-          <span>
-            &nbsp;
-            <EditOutlined />
-            编辑&nbsp;
-          </span>
-        }
-      >
-        {apiDetail && (
+    <>
+      <Menu selectedKeys={[current]} onClick={handleCurrentMenuChange} mode={'horizontal'}>
+        <Menu.Item key={'preview'} icon={<EyeOutlined />}>
+          预览
+        </Menu.Item>
+        <Menu.Item key={'edit'} icon={<EditOutlined />}>
+          编辑
+        </Menu.Item>
+        <Menu.Item key={'run'} icon={<SendOutlined />}>
+          运行
+        </Menu.Item>
+      </Menu>
+      <div style={{ marginTop: 10 }}>
+        {current === 'preview' && apiDetail && <ApiPreview apiDetail={apiDetail} />}
+        {current === 'edit' && apiDetail && (
           <ApiEdit
             projectId={projectId}
             apiDetail={apiDetail}
@@ -58,19 +55,8 @@ export default (props: ApiDetailProps) => {
             }}
           />
         )}
-      </Tabs.TabPane>
-      <Tabs.TabPane
-        key={'run'}
-        tab={
-          <span>
-            &nbsp;
-            <SendOutlined />
-            运行&nbsp;
-          </span>
-        }
-      >
-        {apiDetail && <ApiRun />}
-      </Tabs.TabPane>
-    </Tabs>
+        {current === 'run' && apiDetail && <ApiRun />}
+      </div>
+    </>
   );
 };

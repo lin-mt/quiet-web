@@ -1,6 +1,6 @@
 import type { Key } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Empty, Input, Popconfirm, Space, Tabs, Tag, Tree } from 'antd';
+import { Badge, Button, Empty, Input, Menu, Popconfirm, Space, Table, Tag, Tree } from 'antd';
 import styled from 'styled-components';
 import ApiGroupForm from '@/pages/doc/apiGroup/components/ApiGroupForm';
 import type { DocApi, DocApiGroup } from '@/services/doc/EntityType';
@@ -16,11 +16,10 @@ import {
 import { deleteApiGroup } from '@/services/doc/DocApiGroup';
 import ApiForm from '@/pages/doc/api/components/ApiForm';
 import ApiDetail from '@/pages/doc/api/components/ApiDetail';
-import type { ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
 import { getMethodTagColor } from '@/utils/doc/utils';
-
-const { TabPane } = Tabs;
+import type { MenuInfo } from 'rc-menu/es/interface';
+import type { ColumnType } from 'antd/lib/table/interface';
+import { ApiState } from '@/services/doc/Enums';
 
 const DetailContainer = styled.div`
   margin-top: -24px;
@@ -59,6 +58,7 @@ const ProjectDetails: React.FC<any> = (props) => {
   const [apiGroupTreeData, setApiGroupTreeData] = useState<DocApiGroup[]>([]);
   const [selectedNode, setSelectedNode] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
+  const [current, setCurrent] = useState<string>('interface');
 
   const loadProjectApiInfo = useCallback(() => {
     listApiInfoById(projectId).then((resp) => {
@@ -114,7 +114,7 @@ const ProjectDetails: React.FC<any> = (props) => {
     }
   }
 
-  const apiTableColumns: ProColumns<DocApi>[] = [
+  const apiTableColumns: ColumnType<DocApi>[] = [
     {
       title: '接口名称',
       dataIndex: 'name',
@@ -149,10 +149,13 @@ const ProjectDetails: React.FC<any> = (props) => {
       title: '状态',
       dataIndex: 'api_state',
       key: 'api_state',
-      valueType: 'select',
-      valueEnum: {
-        FINISH: { text: '已完成', status: 'Success' },
-        UNFINISHED: { text: '未完成', status: 'Processing' },
+      render: (_: any, record) => {
+        return (
+          <Badge
+            status={record.api_state === ApiState.FINISHED ? 'success' : 'processing'}
+            text={record.api_state === ApiState.FINISHED ? '完成' : '未完成'}
+          />
+        );
       },
     },
     {
@@ -162,54 +165,30 @@ const ProjectDetails: React.FC<any> = (props) => {
       render: (_, record) => {
         return <>{record.api_group ? record.api_group.name : '未分组'}</>;
       },
-      // render: (_, record) => {
-      //   const tags: DocApiGroup[][] = [];
-      //   record.apiGroups?.forEach((apiGroup, index) => {
-      //     if (index % 3 === 0) {
-      //       tags[Math.floor(index / 3)] = [];
-      //     }
-      //     tags[Math.floor(index / 3)][index % 3] = apiGroup;
-      //   });
-      //   return (
-      //     <Space direction={'vertical'} size={'small'}>
-      //       {tags.map((apiGroups) => {
-      //         return (
-      //           <Space size={'small'} key={`${apiGroups[0].id}group`}>
-      //             {apiGroups.map((apiGroup) => (
-      //               <Tag key={apiGroup.id} color={'blue'}>
-      //                 {apiGroup.name}
-      //               </Tag>
-      //             ))}
-      //           </Space>
-      //         );
-      //       })}
-      //     </Space>
-      //   );
-      // },
     },
   ];
+
+  function handleCurrentMenuChange(info: MenuInfo) {
+    setCurrent(info.key);
+  }
 
   return (
     <DetailContainer>
       {loading ? (
         <Empty />
       ) : (
-        <Tabs
-          defaultActiveKey={'interface'}
-          style={{ backgroundColor: '#fff', minHeight: 'calc(100vh - 195px)' }}
-        >
-          <TabPane
-            tab={
-              <span>
-                &nbsp;
-                <FileTextOutlined />
-                接口&nbsp;
-              </span>
-            }
-            key={'interface'}
-          >
+        <div style={{ backgroundColor: '#fff', minHeight: 'calc(100vh - 195px)' }}>
+          <Menu selectedKeys={[current]} onClick={handleCurrentMenuChange} mode={'horizontal'}>
+            <Menu.Item key={'interface'} icon={<FileTextOutlined />}>
+              接口
+            </Menu.Item>
+            <Menu.Item key={'setting'} icon={<SettingOutlined />}>
+              设置
+            </Menu.Item>
+          </Menu>
+          {current === 'interface' && (
             <InterfaceContainer direction={'horizontal'} align={'start'} size={'large'}>
-              <div style={{ width: 300 }}>
+              <div style={{ width: 300, marginTop: 15 }}>
                 <Space direction={'vertical'}>
                   <Space>
                     <Input.Search
@@ -236,7 +215,7 @@ const ProjectDetails: React.FC<any> = (props) => {
                 {selectedNode ? (
                   <div style={{ width: '100%' }}>
                     {!selectedNode.isLeaf ? (
-                      <div>
+                      <div style={{ marginTop: 15 }}>
                         <div style={{ height: 32 }}>
                           <Space align={'end'}>
                             <ApiTitle>{selectedNode.title}</ApiTitle>
@@ -273,13 +252,13 @@ const ProjectDetails: React.FC<any> = (props) => {
                             )}
                           </Space>
                         </div>
-                        <ProTable<DocApi>
-                          search={false}
-                          options={false}
-                          pagination={false}
-                          columns={apiTableColumns}
-                          dataSource={selectedNode.children}
-                        />
+                        <div style={{ marginTop: 10 }}>
+                          <Table<DocApi>
+                            pagination={false}
+                            columns={apiTableColumns}
+                            dataSource={selectedNode.children}
+                          />
+                        </div>
                       </div>
                     ) : (
                       <ApiDetail
@@ -294,20 +273,9 @@ const ProjectDetails: React.FC<any> = (props) => {
                 )}
               </div>
             </InterfaceContainer>
-          </TabPane>
-          <TabPane
-            tab={
-              <span>
-                &nbsp;
-                <SettingOutlined />
-                设置&nbsp;
-              </span>
-            }
-            key={'setting'}
-          >
-            projectId: {props.location.query.projectId}
-          </TabPane>
-        </Tabs>
+          )}
+          {current === 'setting' && <>projectId: {props.location.query.projectId}</>}
+        </div>
       )}
       {apiGroupFormVisible && (
         <ApiGroupForm
