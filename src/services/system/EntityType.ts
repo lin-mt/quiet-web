@@ -1,9 +1,9 @@
 export interface BaseEntity {
-  id: string;
-  creator: string;
-  updater: string;
-  gmt_create: string;
-  gmt_update: string;
+  id?: string;
+  creator?: string;
+  updater?: string;
+  gmt_create?: string;
+  gmt_update?: string;
 }
 
 export interface SerialEntity extends BaseEntity {

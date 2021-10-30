@@ -187,11 +187,20 @@ export const request: RequestConfig = {
                 message.warning(data.message);
                 break;
               case ResultType.FAILURE:
-                message.error(`${data.code ? `错误码：${data.code} ` : ` `} ${data.message}`);
+                message.error(`${data.code ? `错误码：${data.code} ` : ` `}\r\n${data.message}`);
                 break;
               case ResultType.EXCEPTION:
-                message.error(`${data.code ? `异常码：${data.code} ` : ` `} ${data.message}`);
-                break;
+                message.error({
+                  content: (
+                    <span>
+                      {data.code ? `异常码：${data.code}` : ``}
+                      <br /> 异常信息：{data.message}
+                    </span>
+                  ),
+                });
+                throw new Error(
+                  `${data.code ? `异常码：${data.code}` : ``}\n异常信息：${data.message}`,
+                );
               default:
             }
           }
