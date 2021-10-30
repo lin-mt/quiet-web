@@ -3,6 +3,7 @@ import type { HttpMethod } from '@/services/doc/Enums';
 import type { DataNode } from 'rc-tree/lib/interface';
 import type { ApiState } from '@/services/doc/Enums';
 import type { FormParamType, QueryParamType } from '@/services/doc/Enums';
+import type { HttpProtocol } from '@/services/doc/Enums';
 
 export interface DocApi extends SerialEntity, DataNode {
   name: string;
@@ -96,4 +97,18 @@ export interface ApiDetail {
   api: DocApi;
   api_info?: DocApiInfo;
   visitors?: QuietUser[];
+}
+
+export interface Cookie {
+  name: string;
+  value: string;
+}
+
+export interface DocProjectEnvironment extends BaseEntity {
+  name: string;
+  project_id: string;
+  protocol: HttpProtocol;
+  base_path: string;
+  headers?: Header[];
+  cookies?: Cookie[];
 }

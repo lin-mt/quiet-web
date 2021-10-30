@@ -16,6 +16,7 @@ import {
 import { deleteApiGroup } from '@/services/doc/DocApiGroup';
 import ApiForm from '@/pages/doc/api/components/ApiForm';
 import ApiDetail from '@/pages/doc/api/components/ApiDetail';
+import Setting from '@/pages/doc/project/detail/setting';
 import { getMethodTagColor } from '@/utils/doc/utils';
 import type { MenuInfo } from 'rc-menu/es/interface';
 import type { ColumnType } from 'antd/lib/table/interface';
@@ -58,7 +59,7 @@ const ProjectDetails: React.FC<any> = (props) => {
   const [apiGroupTreeData, setApiGroupTreeData] = useState<DocApiGroup[]>([]);
   const [selectedNode, setSelectedNode] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
-  const [current, setCurrent] = useState<string>('interface');
+  const [current, setCurrent] = useState<string>('setting');
 
   const loadProjectApiInfo = useCallback(() => {
     listApiInfoById(projectId).then((resp) => {
@@ -275,7 +276,11 @@ const ProjectDetails: React.FC<any> = (props) => {
               </div>
             </InterfaceContainer>
           )}
-          {current === 'setting' && <>projectId: {props.location.query.projectId}</>}
+          {current === 'setting' && (
+            <div style={{ marginTop: 10 }}>
+              <Setting projectId={projectId} />
+            </div>
+          )}
         </div>
       )}
       {apiGroupFormVisible && (

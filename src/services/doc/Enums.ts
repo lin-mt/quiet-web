@@ -23,3 +23,8 @@ export enum QueryParamType {
   INTEGER = 'INTEGER',
   NUMBER = 'NUMBER',
 }
+
+export enum HttpProtocol {
+  HTTP = 'HTTP',
+  HTTPS = 'HTTPS',
+}
