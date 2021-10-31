@@ -13,8 +13,9 @@ import {
   Row,
   Select,
   Space,
+  Tooltip,
 } from 'antd';
-import type { ApiDetail } from '@/services/doc/EntityType';
+import type { ApiDetail, DocProject } from '@/services/doc/EntityType';
 import styled from 'styled-components';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import { listApiGroupByProjectIdAndName } from '@/services/doc/DocApiGroup';
@@ -33,6 +34,7 @@ import { REQUEST_HEADER } from '@/constant/doc/Values';
 interface ApiEditProps {
   projectId: string;
   apiDetail: ApiDetail;
+  projectInfo: DocProject;
   afterUpdate?: () => void;
 }
 
@@ -55,7 +57,7 @@ const FieldFormItem = styled(Form.Item)`
 `;
 
 export default (props: ApiEditProps) => {
-  const { apiDetail, projectId, afterUpdate } = props;
+  const { apiDetail, projectInfo, projectId, afterUpdate } = props;
 
   const [apiEditForm] = Form.useForm();
 
@@ -279,38 +281,50 @@ export default (props: ApiEditProps) => {
               fetchOptions={listApiGroupByName}
             />
           </FieldFormItem>
-          <FieldFormItem
-            label={'接口路径'}
-            name={'path'}
-            rules={[
-              { required: true, message: '请输入接口地址' },
-              { max: 300, message: '接口地址长度不能超过 300', type: 'string' },
-            ]}
-          >
-            <Input
-              addonBefore={
-                <Form.Item name="method" noStyle>
-                  <Select
-                    style={{ width: 105 }}
-                    onChange={(method: HttpMethod) => {
-                      const options: string[] = getReqParamSettingOptionsByMethod(method);
-                      setReqParamSettingOptions(options);
-                      setReqParamSetting(options[0]);
-                    }}
-                  >
-                    <Select.Option value={HttpMethod.GET}>GET</Select.Option>
-                    <Select.Option value={HttpMethod.POST}>POST</Select.Option>
-                    <Select.Option value={HttpMethod.PUT}>PUT</Select.Option>
-                    <Select.Option value={HttpMethod.DELETE}>DELETE</Select.Option>
-                    <Select.Option value={HttpMethod.HEAD}>HEAD</Select.Option>
-                    <Select.Option value={HttpMethod.OPTIONS}>OPTIONS</Select.Option>
-                    <Select.Option value={HttpMethod.PATCH}>PATCH</Select.Option>
-                  </Select>
-                </Form.Item>
-              }
-              placeholder="请输入接口路径"
-              onChange={handleApiPathChange}
-            />
+          <FieldFormItem label={'接口路径'}>
+            <Input.Group compact>
+              <Form.Item name="method" noStyle>
+                <Select
+                  style={{ width: '15%' }}
+                  onChange={(method: HttpMethod) => {
+                    const options: string[] = getReqParamSettingOptionsByMethod(method);
+                    setReqParamSettingOptions(options);
+                    setReqParamSetting(options[0]);
+                  }}
+                >
+                  <Select.Option value={HttpMethod.GET}>GET</Select.Option>
+                  <Select.Option value={HttpMethod.POST}>POST</Select.Option>
+                  <Select.Option value={HttpMethod.PUT}>PUT</Select.Option>
+                  <Select.Option value={HttpMethod.DELETE}>DELETE</Select.Option>
+                  <Select.Option value={HttpMethod.HEAD}>HEAD</Select.Option>
+                  <Select.Option value={HttpMethod.OPTIONS}>OPTIONS</Select.Option>
+                  <Select.Option value={HttpMethod.PATCH}>PATCH</Select.Option>
+                </Select>
+              </Form.Item>
+              <Tooltip title="接口基本路径，可在 项目设置 里修改">
+                <div style={{ width: '25%' }}>
+                  <Input
+                    disabled
+                    style={{ color: 'rgba(0,0,0,0.69)' }}
+                    value={projectInfo.base_path}
+                  />
+                </div>
+              </Tooltip>
+              <Form.Item
+                name={'path'}
+                noStyle={true}
+                rules={[
+                  { required: true, message: '接口地址不能为空' },
+                  { max: 300, message: '接口地址长度不能超过 300', type: 'string' },
+                ]}
+              >
+                <Input
+                  style={{ width: '60%' }}
+                  placeholder={'请输入接口地址'}
+                  onChange={handleApiPathChange}
+                />
+              </Form.Item>
+            </Input.Group>
           </FieldFormItem>
           <Form.List name="path_param">
             {(fields) => (

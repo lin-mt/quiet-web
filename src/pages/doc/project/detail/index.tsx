@@ -78,11 +78,15 @@ const ProjectDetails: React.FC<any> = (props) => {
       treeData.unshift(unGroupNode);
       if (resp.api_groups) {
         resp.api_groups.forEach((apiGroup) => {
+          if (!apiGroup.id) {
+            return;
+          }
           treeData.push({
             ...apiGroup,
             key: apiGroup.id,
             title: apiGroup.name,
             isLeaf: false,
+            // @ts-ignore
             children: resp.grouped[apiGroup.id]?.map((api) => {
               return { ...api, key: api.id, title: api.name, isLeaf: true, icon: <></> };
             }),
@@ -124,6 +128,7 @@ const ProjectDetails: React.FC<any> = (props) => {
         return (
           <a
             onClick={() => {
+              // @ts-ignore
               setSelectedKeys([record.id]);
               // @ts-ignore
               setSelectedNode(record);

@@ -2,11 +2,12 @@ import { Menu } from 'antd';
 import ApiPreview from '@/pages/doc/project/detail/components/ApiPreview';
 import ApiEdit from '@/pages/doc/project/detail/components/ApiEdit';
 import { useEffect, useState } from 'react';
-import type { ApiDetail } from '@/services/doc/EntityType';
-import { getAiDetail } from '@/services/doc/DocApi';
+import type { ApiDetail, DocProject } from '@/services/doc/EntityType';
+import { getApiDetail } from '@/services/doc/DocApi';
 import ApiRun from '@/pages/doc/project/detail/components/ApiRun';
 import { EditOutlined, EyeOutlined, SendOutlined } from '@ant-design/icons';
 import type { MenuInfo } from 'rc-menu/lib/interface';
+import { getProjectInfo } from '@/services/doc/DocProject';
 
 interface ApiDetailProps {
   apiId: string;
@@ -18,11 +19,13 @@ export default (props: ApiDetailProps) => {
   const { apiId, projectId, afterUpdate } = props;
 
   const [apiDetail, setApiDetail] = useState<ApiDetail>();
+  const [projectInfo, setProjectInfo] = useState<DocProject>();
   const [current, setCurrent] = useState<string>('preview');
 
   useEffect(() => {
-    getAiDetail(apiId).then((detail) => setApiDetail(detail));
-  }, [apiId]);
+    getApiDetail(apiId).then((detail) => setApiDetail(detail));
+    getProjectInfo(projectId).then((info) => setProjectInfo(info));
+  }, [apiId, projectId]);
 
   function handleCurrentMenuChange(info: MenuInfo) {
     setCurrent(info.key);
@@ -42,13 +45,16 @@ export default (props: ApiDetailProps) => {
         </Menu.Item>
       </Menu>
       <div style={{ marginTop: 10 }}>
-        {current === 'preview' && apiDetail && <ApiPreview apiDetail={apiDetail} />}
-        {current === 'edit' && apiDetail && (
+        {current === 'preview' && apiDetail && projectInfo && (
+          <ApiPreview apiDetail={apiDetail} projectInfo={projectInfo} />
+        )}
+        {current === 'edit' && apiDetail && projectInfo && (
           <ApiEdit
             projectId={projectId}
             apiDetail={apiDetail}
+            projectInfo={projectInfo}
             afterUpdate={() => {
-              getAiDetail(apiId).then((detail) => setApiDetail(detail));
+              getApiDetail(apiId).then((detail) => setApiDetail(detail));
               if (afterUpdate) {
                 afterUpdate();
               }

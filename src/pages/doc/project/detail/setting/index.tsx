@@ -10,7 +10,7 @@ export default function Config(props: ProjectSettingProp) {
   return (
     <div style={{ marginRight: 30 }}>
       <Tabs defaultActiveKey="config" size={'small'} type={'card'}>
-        <Tabs.TabPane tab="项目配置" key="config">
+        <Tabs.TabPane tab="项目设置" key="config">
           <ProjectConfig projectId={props.projectId} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="环境配置" key="environment">

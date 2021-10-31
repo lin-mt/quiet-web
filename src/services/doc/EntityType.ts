@@ -74,10 +74,11 @@ export interface DocApiGroup extends SerialEntity, DataNode {
 
 export interface DocProject extends SerialEntity {
   name: string;
+  base_path?: string;
   principal: string;
   visitor_ids: string[];
-  principal_name: string;
-  remark: string;
+  principal_name?: string;
+  remark?: string;
   visitors: QuietUser[];
 }
 

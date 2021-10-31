@@ -15,6 +15,6 @@ export async function deleteApi(id: string) {
   await DELETE(`${base_path}/${id}`);
 }
 
-export async function getAiDetail(id: string): Promise<ApiDetail> {
+export async function getApiDetail(id: string): Promise<ApiDetail> {
   return GET<ApiDetail>(`${base_path}/detail/${id}`);
 }

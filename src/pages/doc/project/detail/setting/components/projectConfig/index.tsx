@@ -59,7 +59,7 @@ export default function ProjectConfig(props: ProjectConfigProp) {
           />
         </Form.Item>
         <Form.Item label={'接口基本路径'} name={'base_path'}>
-          <Input placeholder="请输入" />
+          <Input placeholder="请输入基本路径" />
         </Form.Item>
         <Form.Item
           label={'项目名称'}

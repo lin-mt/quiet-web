@@ -1,6 +1,12 @@
 import { ApiTitle } from '@/pages/doc/project/detail';
 import { Badge, Descriptions, Empty, Space, Table, Tag, Typography } from 'antd';
-import type { ApiDetail, FormParam, Header, PathParam } from '@/services/doc/EntityType';
+import type {
+  ApiDetail,
+  DocProject,
+  FormParam,
+  Header,
+  PathParam,
+} from '@/services/doc/EntityType';
 import { getMethodTagColor } from '@/utils/doc/utils';
 import { ApiState, HttpMethod } from '@/services/doc/Enums';
 import styled from 'styled-components';
@@ -22,10 +28,11 @@ const ReqTitle = styled.h3`
 
 interface ApiPreviewProps {
   apiDetail: ApiDetail;
+  projectInfo: DocProject;
 }
 
 export default (props: ApiPreviewProps) => {
-  const { apiDetail } = props;
+  const { apiDetail, projectInfo } = props;
 
   const pathColumns: ColumnsType<PathParam> = [
     { title: '参数名称', dataIndex: 'name' },
@@ -131,7 +138,10 @@ export default (props: ApiPreviewProps) => {
           <Descriptions.Item label={'接口路径'}>
             <Space direction={'horizontal'}>
               <Tag color={getMethodTagColor(apiDetail.api.method)}>{apiDetail.api.method}</Tag>
-              <Typography.Text copyable={true}>{apiDetail.api.path}</Typography.Text>
+              <Typography.Text copyable={true}>
+                {projectInfo.base_path}
+                {apiDetail.api.path}
+              </Typography.Text>
             </Space>
           </Descriptions.Item>
         </Descriptions>
