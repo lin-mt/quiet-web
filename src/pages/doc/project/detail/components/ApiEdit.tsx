@@ -8,7 +8,6 @@ import {
   Form,
   Input,
   InputNumber,
-  message,
   Radio,
   Row,
   Select,
@@ -221,7 +220,6 @@ export default (props: ApiEditProps) => {
       setSubmitting(false);
       throw e;
     } finally {
-      message.success('保存成功');
       setSubmitting(false);
     }
   }

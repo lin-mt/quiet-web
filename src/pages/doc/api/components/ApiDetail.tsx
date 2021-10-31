@@ -20,7 +20,7 @@ export default (props: ApiDetailProps) => {
 
   const [apiDetail, setApiDetail] = useState<ApiDetail>();
   const [projectInfo, setProjectInfo] = useState<DocProject>();
-  const [current, setCurrent] = useState<string>('preview');
+  const [current, setCurrent] = useState<string>('run');
 
   useEffect(() => {
     getApiDetail(apiId).then((detail) => setApiDetail(detail));

@@ -59,7 +59,7 @@ const ProjectDetails: React.FC<any> = (props) => {
   const [apiGroupTreeData, setApiGroupTreeData] = useState<DocApiGroup[]>([]);
   const [selectedNode, setSelectedNode] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
-  const [current, setCurrent] = useState<string>('setting');
+  const [current, setCurrent] = useState<string>('interface');
 
   const loadProjectApiInfo = useCallback(() => {
     listApiInfoById(projectId).then((resp) => {
