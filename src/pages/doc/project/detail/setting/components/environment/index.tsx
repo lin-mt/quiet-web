@@ -42,7 +42,7 @@ export default function (props: EnvironmentProp) {
   const newEnv: DocProjectEnvironment = {
     id: newKey,
     name: '新环境',
-    protocol: HttpProtocol.HTTPS,
+    protocol: HttpProtocol.HTTP,
     base_path: '127.0.0.1',
     project_id: props.projectId,
     headers: [],

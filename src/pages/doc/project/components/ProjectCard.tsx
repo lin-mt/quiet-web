@@ -3,7 +3,7 @@ import { Link } from 'umi';
 import { Button, Popconfirm, Space, Typography } from 'antd';
 import { DeleteFilled, EditFilled, ForwardFilled } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { deleteProject, findProjectInfo } from '@/services/doc/DocProject';
+import { deleteProject, getProjectInfo } from '@/services/doc/DocProject';
 import ProjectForm from '@/pages/doc/project/components/ProjectForm';
 import type { DocProject } from '@/services/doc/EntityType';
 
@@ -25,7 +25,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
   }
 
   async function reloadProjectInfo() {
-    setProjectInfo(await findProjectInfo(projectInfo.id));
+    setProjectInfo(await getProjectInfo(projectInfo.id));
   }
 
   function handleDeleteClick() {

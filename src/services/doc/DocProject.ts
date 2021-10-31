@@ -22,7 +22,7 @@ export async function deleteProject(id: string) {
   await DELETE(`${base_path}/${id}`);
 }
 
-export function findProjectInfo(id: string): Promise<DocProject> {
+export function getProjectInfo(id: string): Promise<DocProject> {
   return GET<DocProject>(`${base_path}/${id}`);
 }
 
