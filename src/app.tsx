@@ -113,6 +113,10 @@ const errorHandler = (error: ResponseError) => {
   throw error;
 };
 
+const successMsgSet = new Set<string>();
+const failureMsgSet = new Set<string>();
+const warningMsgSet = new Set<string>();
+
 export const request: RequestConfig = {
   errorHandler,
   requestInterceptors: [
@@ -181,13 +185,33 @@ export const request: RequestConfig = {
           if (data.result && data.message) {
             switch (data.result) {
               case ResultType.SUCCESS:
-                message.success(data.message);
+                successMsgSet.add(data.message);
+                setTimeout(() => {
+                  for (const msg of successMsgSet) {
+                    message.success(msg);
+                  }
+                  successMsgSet.clear();
+                }, successMsgSet.size * 500);
                 break;
               case ResultType.WARNING:
-                message.warning(data.message);
+                warningMsgSet.add(data.message);
+                setTimeout(() => {
+                  for (const msg of warningMsgSet) {
+                    message.warn(msg);
+                  }
+                  warningMsgSet.clear();
+                }, warningMsgSet.size * 500);
                 break;
               case ResultType.FAILURE:
-                message.error(`${data.code ? `错误码：${data.code} ` : ` `}\r\n${data.message}`);
+                failureMsgSet.add(
+                  `${data.code ? `错误码：${data.code} ` : ` `}\r\n${data.message}`,
+                );
+                setTimeout(() => {
+                  for (const msg of failureMsgSet) {
+                    message.error(msg);
+                  }
+                  failureMsgSet.clear();
+                }, failureMsgSet.size * 500);
                 break;
               case ResultType.EXCEPTION:
                 message.error({
