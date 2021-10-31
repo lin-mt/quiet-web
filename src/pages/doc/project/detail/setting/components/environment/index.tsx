@@ -1,4 +1,15 @@
-import { AutoComplete, Button, Form, Input, message, Select, Space, Tabs, Typography } from 'antd';
+import {
+  AutoComplete,
+  Button,
+  Form,
+  Input,
+  message,
+  Popconfirm,
+  Select,
+  Space,
+  Tabs,
+  Typography,
+} from 'antd';
 import React, { useEffect, useState } from 'react';
 import type { DocProjectEnvironment } from '@/services/doc/EntityType';
 import {
@@ -70,18 +81,20 @@ export default function (props: EnvironmentProp) {
     setActiveKey(newKey);
   }
 
-  function deleteEnvironment(e: React.MouseEvent | React.KeyboardEvent | string) {
-    const deleteKey = e.toString();
-    if (deleteKey === activeKey) {
+  function deleteEnvironment(id: string | undefined) {
+    if (!id) {
+      return;
+    }
+    if (id === activeKey) {
       setActiveKey(undefined);
     }
-    if (deleteKey === newKey) {
+    if (id === newKey) {
       const environmentsClone = _.clone(environments);
       environmentsClone.pop();
       setEnvironments(environmentsClone);
     } else {
-      deleteProjectEnvironment(deleteKey).then(() => {
-        if (deleteKey === activeKey) {
+      deleteProjectEnvironment(id).then(() => {
+        if (id === activeKey) {
           if (environments.length > 0) {
             setActiveKey(environments[0].id);
           }
@@ -99,7 +112,6 @@ export default function (props: EnvironmentProp) {
         addEnvironment();
         break;
       case 'remove':
-        deleteEnvironment(e);
         break;
     }
   }
@@ -168,7 +180,14 @@ export default function (props: EnvironmentProp) {
                 </Typography.Text>
               }
               key={environment.id}
-              closeIcon={<DeleteOutlinedHoverRed />}
+              closeIcon={
+                <Popconfirm
+                  title={`确认删除环境配置：${environment.name} 吗？`}
+                  onConfirm={() => deleteEnvironment(environment.id)}
+                >
+                  <DeleteOutlinedHoverRed />
+                </Popconfirm>
+              }
             >
               <Form
                 form={form}
