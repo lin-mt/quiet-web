@@ -61,7 +61,9 @@ export default (props: ApiDetailProps) => {
             }}
           />
         )}
-        {current === 'run' && apiDetail && <ApiRun />}
+        {current === 'run' && apiDetail && projectInfo && (
+          <ApiRun apiDetail={apiDetail} projectInfo={projectInfo} />
+        )}
       </div>
     </>
   );

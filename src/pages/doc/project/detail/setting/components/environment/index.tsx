@@ -7,6 +7,7 @@ import {
   Popconfirm,
   Select,
   Space,
+  Spin,
   Tabs,
   Typography,
 } from 'antd';
@@ -38,6 +39,8 @@ export default function (props: EnvironmentProp) {
   const [form] = Form.useForm();
   const [environments, setEnvironments] = useState<DocProjectEnvironment[]>([]);
   const [activeKey, setActiveKey] = useState<string | undefined>();
+  const [init, setInit] = useState<boolean>(false);
+
   const newKey = 'new_key';
   const newEnv: DocProjectEnvironment = {
     id: newKey,
@@ -50,7 +53,9 @@ export default function (props: EnvironmentProp) {
   };
 
   useEffect(() => {
-    listByProjectId(props.projectId).then((resp) => setEnvironments(resp));
+    listByProjectId(props.projectId)
+      .then((resp) => setEnvironments(resp))
+      .finally(() => setInit(true));
   }, [props.projectId]);
 
   useEffect(() => {
@@ -148,197 +153,206 @@ export default function (props: EnvironmentProp) {
 
   return (
     <div>
-      <Tabs
-        tabPosition={'left'}
-        type={'editable-card'}
-        onEdit={handleTabEdit}
-        activeKey={activeKey}
-        tabBarStyle={{ width: 200 }}
-        onTabClick={(key) => {
-          environments.forEach((environment) => {
-            if (environment.id === key) {
-              setActiveKey(key);
-            }
-          });
-        }}
-        addIcon={
-          <span>
-            <PlusOutlined />
-            新增环境
-          </span>
-        }
-      >
-        {environments.map((environment) => {
-          return (
-            <Tabs.TabPane
-              tab={
-                <Typography.Text
-                  ellipsis={{ tooltip: true }}
-                  style={{ width: 136, color: activeKey === environment.id ? '#1890ff' : 'black' }}
-                >
-                  {environment.name}
-                </Typography.Text>
+      {init ? (
+        <Tabs
+          tabPosition={'left'}
+          type={'editable-card'}
+          onEdit={handleTabEdit}
+          activeKey={activeKey}
+          tabBarStyle={{ width: 200 }}
+          onTabClick={(key) => {
+            environments.forEach((environment) => {
+              if (environment.id === key) {
+                setActiveKey(key);
               }
-              key={environment.id}
-              closeIcon={
-                <Popconfirm
-                  title={`确认删除环境配置：${environment.name} 吗？`}
-                  onConfirm={() => deleteEnvironment(environment.id)}
-                >
-                  <DeleteOutlinedHoverRed />
-                </Popconfirm>
-              }
-            >
-              <Form
-                form={form}
-                layout={'vertical'}
-                autoComplete="off"
-                initialValues={environment}
-                style={{ width: 700 }}
-                onFinish={handleFormFinish}
-              >
-                <Form.Item hidden={true} name={'id'}>
-                  <Input />
-                </Form.Item>
-                <Form.Item hidden={true} name={'project_id'}>
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  name={'name'}
-                  label={'环境名称'}
-                  rules={[{ required: true }, { type: 'string', max: 30 }]}
-                >
-                  <Input
-                    placeholder={'请输入环境名称'}
-                    onChange={(event) => {
-                      const newEnvironments: DocProjectEnvironment[] = [];
-                      environments.forEach((datum) => {
-                        if (datum.id === environment.id) {
-                          const newDatum = _.clone(datum);
-                          newDatum.name = event.target.value;
-                          newEnvironments.push(newDatum);
-                        } else {
-                          newEnvironments.push(datum);
-                        }
-                      });
-                      setEnvironments(newEnvironments);
+            });
+          }}
+          addIcon={
+            <span>
+              <PlusOutlined />
+              新增环境
+            </span>
+          }
+        >
+          {environments.map((environment) => {
+            return (
+              <Tabs.TabPane
+                tab={
+                  <Typography.Text
+                    ellipsis={{ tooltip: true }}
+                    style={{
+                      width: 136,
+                      color: activeKey === environment.id ? '#1890ff' : 'black',
                     }}
-                  />
-                </Form.Item>
-                <Form.Item
-                  name={'base_path'}
-                  label={'环境域名'}
-                  rules={[{ required: true }, { type: 'string', max: 90 }]}
+                  >
+                    {environment.name}
+                  </Typography.Text>
+                }
+                key={environment.id}
+                closeIcon={
+                  <Popconfirm
+                    title={`确认删除环境配置：${environment.name} 吗？`}
+                    onConfirm={() => deleteEnvironment(environment.id)}
+                  >
+                    <DeleteOutlinedHoverRed />
+                  </Popconfirm>
+                }
+              >
+                <Form
+                  form={form}
+                  layout={'vertical'}
+                  autoComplete="off"
+                  initialValues={environment}
+                  style={{ width: 700 }}
+                  onFinish={handleFormFinish}
                 >
-                  <Input
-                    placeholder={'请输入环境域名'}
-                    addonBefore={
-                      <Form.Item name={'protocol'} noStyle={true}>
-                        <Select style={{ width: 88 }}>
-                          <Select.Option value={HttpProtocol.HTTP}>http://</Select.Option>
-                          <Select.Option value={HttpProtocol.HTTPS}>https://</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    }
-                  />
-                </Form.Item>
-                <Form.Item label={'Header'}>
-                  <Form.List name={'headers'}>
-                    {(fields, { add, remove }) => (
-                      <>
-                        {fields.map(({ key, name, fieldKey, ...restField }) => (
-                          <Form.Item style={{ marginBottom: 16 }} key={name}>
-                            <Space align={'center'} size={101}>
-                              <Form.Item
-                                {...restField}
-                                name={[name, 'name']}
-                                fieldKey={[fieldKey, 'name']}
-                                noStyle={true}
-                              >
-                                <AutoComplete
-                                  placeholder={'请输入header名称'}
-                                  style={{ width: 178 }}
-                                  options={REQUEST_HEADER}
-                                />
-                              </Form.Item>
-                              <Space>
+                  <Form.Item hidden={true} name={'id'}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item hidden={true} name={'project_id'}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name={'name'}
+                    label={'环境名称'}
+                    rules={[{ required: true }, { type: 'string', max: 30 }]}
+                  >
+                    <Input
+                      placeholder={'请输入环境名称'}
+                      onChange={(event) => {
+                        const newEnvironments: DocProjectEnvironment[] = [];
+                        environments.forEach((datum) => {
+                          if (datum.id === environment.id) {
+                            const newDatum = _.clone(datum);
+                            newDatum.name = event.target.value;
+                            newEnvironments.push(newDatum);
+                          } else {
+                            newEnvironments.push(datum);
+                          }
+                        });
+                        setEnvironments(newEnvironments);
+                      }}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name={'base_path'}
+                    label={'环境域名'}
+                    rules={[{ required: true }, { type: 'string', max: 90 }]}
+                  >
+                    <Input
+                      placeholder={'请输入环境域名'}
+                      addonBefore={
+                        <Form.Item name={'protocol'} noStyle={true}>
+                          <Select style={{ width: 88 }}>
+                            <Select.Option value={HttpProtocol.HTTP}>http://</Select.Option>
+                            <Select.Option value={HttpProtocol.HTTPS}>https://</Select.Option>
+                          </Select>
+                        </Form.Item>
+                      }
+                    />
+                  </Form.Item>
+                  <Form.Item label={'Header'}>
+                    <Form.List name={'headers'}>
+                      {(fields, { add, remove }) => (
+                        <>
+                          {fields.map(({ key, name, fieldKey, ...restField }) => (
+                            <Form.Item style={{ marginBottom: 16 }} key={name}>
+                              <Space align={'center'} size={101}>
                                 <Form.Item
                                   {...restField}
-                                  name={[name, 'value']}
-                                  fieldKey={[fieldKey, 'value']}
+                                  name={[name, 'name']}
+                                  fieldKey={[fieldKey, 'name']}
                                   noStyle={true}
                                 >
-                                  <Input placeholder={'请输入header值'} style={{ width: 399 }} />
+                                  <AutoComplete
+                                    placeholder={'请输入header名称'}
+                                    style={{ width: 178 }}
+                                    options={REQUEST_HEADER}
+                                  />
                                 </Form.Item>
-                                <DeleteOutlinedHoverRed onClick={() => remove(name)} />
+                                <Space>
+                                  <Form.Item
+                                    {...restField}
+                                    name={[name, 'value']}
+                                    fieldKey={[fieldKey, 'value']}
+                                    noStyle={true}
+                                  >
+                                    <Input placeholder={'请输入header值'} style={{ width: 399 }} />
+                                  </Form.Item>
+                                  <DeleteOutlinedHoverRed onClick={() => remove(name)} />
+                                </Space>
                               </Space>
-                            </Space>
-                          </Form.Item>
-                        ))}
-                        <Button
-                          size={'small'}
-                          type={'primary'}
-                          icon={<PlusOutlined />}
-                          onClick={() => add({ name: '', value: '' })}
-                        >
-                          添加请求头
-                        </Button>
-                      </>
-                    )}
-                  </Form.List>
-                </Form.Item>
-                <Form.Item label={'Cookie'}>
-                  <Form.List name={'cookies'}>
-                    {(fields, { add, remove }, { errors }) => (
-                      <>
-                        {fields.map(({ key, name, fieldKey, ...restField }) => (
-                          <Form.Item style={{ marginBottom: 16 }} key={name}>
-                            <Space align={'center'} size={101}>
-                              <Form.Item
-                                {...restField}
-                                name={[name, 'name']}
-                                fieldKey={[fieldKey, 'name']}
-                                noStyle={true}
-                              >
-                                <Input placeholder={'请输入cookie名称'} />
-                              </Form.Item>
-                              <Space>
+                            </Form.Item>
+                          ))}
+                          <Button
+                            size={'small'}
+                            type={'primary'}
+                            icon={<PlusOutlined />}
+                            onClick={() => add({ name: '', value: '' })}
+                          >
+                            添加请求头
+                          </Button>
+                        </>
+                      )}
+                    </Form.List>
+                  </Form.Item>
+                  <Form.Item label={'Cookie'}>
+                    <Form.List name={'cookies'}>
+                      {(fields, { add, remove }, { errors }) => (
+                        <>
+                          {fields.map(({ key, name, fieldKey, ...restField }) => (
+                            <Form.Item style={{ marginBottom: 16 }} key={name}>
+                              <Space align={'center'} size={101}>
                                 <Form.Item
                                   {...restField}
-                                  name={[name, 'value']}
-                                  fieldKey={[fieldKey, 'value']}
+                                  name={[name, 'name']}
+                                  fieldKey={[fieldKey, 'name']}
                                   noStyle={true}
                                 >
-                                  <Input placeholder={'请输入cookie值'} style={{ width: 399 }} />
+                                  <Input placeholder={'请输入cookie名称'} />
                                 </Form.Item>
-                                <DeleteOutlinedHoverRed onClick={() => remove(name)} />
+                                <Space>
+                                  <Form.Item
+                                    {...restField}
+                                    name={[name, 'value']}
+                                    fieldKey={[fieldKey, 'value']}
+                                    noStyle={true}
+                                  >
+                                    <Input placeholder={'请输入cookie值'} style={{ width: 399 }} />
+                                  </Form.Item>
+                                  <DeleteOutlinedHoverRed onClick={() => remove(name)} />
+                                </Space>
                               </Space>
-                            </Space>
-                          </Form.Item>
-                        ))}
-                        <Button
-                          size={'small'}
-                          type={'primary'}
-                          icon={<PlusOutlined />}
-                          onClick={() => add({ name: '', value: '' })}
-                        >
-                          添加 Cookie
-                        </Button>
-                        <Form.ErrorList errors={errors} />
-                      </>
-                    )}
-                  </Form.List>
-                </Form.Item>
-                <Form.Item style={{ textAlign: 'center' }}>
-                  <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
-                    保存
-                  </Button>
-                </Form.Item>
-              </Form>
-            </Tabs.TabPane>
-          );
-        })}
-      </Tabs>
+                            </Form.Item>
+                          ))}
+                          <Button
+                            size={'small'}
+                            type={'primary'}
+                            icon={<PlusOutlined />}
+                            onClick={() => add({ name: '', value: '' })}
+                          >
+                            添加 Cookie
+                          </Button>
+                          <Form.ErrorList errors={errors} />
+                        </>
+                      )}
+                    </Form.List>
+                  </Form.Item>
+                  <Form.Item style={{ textAlign: 'center' }}>
+                    <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
+                      保存
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </Tabs.TabPane>
+            );
+          })}
+        </Tabs>
+      ) : (
+        <div style={{ marginTop: 50, textAlign: 'center', width: 920 }}>
+          <Spin spinning={!init} />
+        </div>
+      )}
     </div>
   );
 }
