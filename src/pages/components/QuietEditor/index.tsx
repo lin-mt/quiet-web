@@ -1,3 +1,4 @@
+import type { OnChange, OnMount } from '@monaco-editor/react';
 import Editor from '@monaco-editor/react';
 
 interface QuietEditorProp {
@@ -8,6 +9,10 @@ interface QuietEditorProp {
   readonly?: boolean;
   lineNumbers?: 'on' | 'off' | 'relative' | 'interval';
   folding?: boolean;
+  onMount?: OnMount;
+  onChange?: OnChange;
+  paddingBottom?: number;
+  paddingTop?: number;
   renderLineHighlight?: 'all' | 'line' | 'none' | 'gutter';
 }
 
@@ -20,6 +25,10 @@ export function QuietEditor(props: QuietEditorProp) {
     folding = true,
     language,
     readonly = false,
+    onMount,
+    onChange,
+    paddingBottom,
+    paddingTop,
     renderLineHighlight = 'all',
   } = props;
 
@@ -29,14 +38,16 @@ export function QuietEditor(props: QuietEditorProp) {
       width={width}
       defaultValue={defaultValue}
       defaultLanguage={language}
+      onMount={onMount}
+      onChange={onChange}
       options={{
         // 只读
         readOnly: readonly,
         // 关闭行数显示
         lineNumbers: lineNumbers,
         padding: {
-          bottom: 13,
-          top: 13,
+          bottom: paddingBottom,
+          top: paddingTop,
         },
         smoothScrolling: true,
         // 编辑器中字体大小
