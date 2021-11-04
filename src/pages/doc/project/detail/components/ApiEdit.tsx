@@ -200,11 +200,24 @@ export default (props: ApiEditProps) => {
       }
       if (reqBodyTypeSetting === 'json') {
         values.req_json_body = reqJsonBody;
-        values.req_form = null;
-        values.req_file = null;
-        values.req_raw = null;
-      } else {
-        values.req_json_body = null;
+        values.req_form = [];
+        values.req_file = '';
+        values.req_raw = '';
+      }
+      if (reqBodyTypeSetting === 'form') {
+        values.req_json_body = {};
+        values.req_file = '';
+        values.req_raw = '';
+      }
+      if (reqBodyTypeSetting === 'file') {
+        values.req_json_body = {};
+        values.req_form = [];
+        values.req_raw = '';
+      }
+      if (reqBodyTypeSetting === 'raw') {
+        values.req_json_body = {};
+        values.req_form = [];
+        values.req_file = '';
       }
       await updateApi({ ...apiDetail.api, ...values });
       delete values.id;
@@ -229,9 +242,11 @@ export default (props: ApiEditProps) => {
     let headers: Header[] = apiEditForm.getFieldValue('headers');
     if (value !== 'json') {
       setReqJsonBody(undefined);
-      headers = headers.filter(
-        (header) => header.name !== 'Content-Type' && header.value === 'application/json',
-      );
+      if (headers) {
+        headers = headers.filter(
+          (header) => header.name !== 'Content-Type' && header.value === 'application/json',
+        );
+      }
     } else {
       setReqJsonBody(apiDetail.api_info?.req_json_body);
       if (!headers) {
