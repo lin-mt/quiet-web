@@ -26,6 +26,7 @@ export interface FormParam {
   min_length: string;
   type: FormParamType;
   required: boolean;
+  content_type: string;
   example: string;
   remark: string;
 }

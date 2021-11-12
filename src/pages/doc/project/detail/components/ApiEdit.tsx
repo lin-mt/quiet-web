@@ -5,9 +5,11 @@ import {
   Button,
   Checkbox,
   Col,
+  Dropdown,
   Form,
   Input,
   InputNumber,
+  Menu,
   Radio,
   Row,
   Select,
@@ -18,7 +20,7 @@ import type { ApiDetail, DocProject } from '@/services/doc/EntityType';
 import styled from 'styled-components';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import { listApiGroupByProjectIdAndName } from '@/services/doc/DocApiGroup';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ChangeEvent } from 'react';
 import { useEffect, useState } from 'react';
 import { ApiState, FormParamType, HttpMethod, QueryParamType } from '@/services/doc/Enums';
@@ -28,7 +30,7 @@ import { saveApiInfo, updateApiInfo } from '@/services/doc/DocApiInfo';
 import JsonSchemaEditor from '@quiet-front-end/json-schema-editor-visual';
 import type { Header } from '@/services/doc/EntityType';
 import MarkdownEditor from '@/pages/components/Markdown/MarkdownEditor';
-import { REQUEST_HEADER } from '@/constant/doc/Values';
+import { CONTENT_TYPE, REQUEST_HEADER } from '@/constant/doc/Values';
 
 interface ApiEditProps {
   projectId: string;
@@ -68,6 +70,9 @@ export default (props: ApiEditProps) => {
   const [reqBodyTypeSetting, setReqBodyTypeSetting] = useState<string>('form');
   const [affixed, setAffixed] = useState<boolean>();
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [contentTypeDisplay, setContentTypeDisplay] = useState<'none' | undefined>('none');
+  const [minLengthDisplay, setMinLengthDisplay] = useState<'none' | undefined>('none');
+  const [maxLengthDisplay, setMaxLengthDisplay] = useState<'none' | undefined>('none');
 
   function getReqParamSettingOptionsByMethod(method: HttpMethod | string): string[] {
     let datum = method;
@@ -192,6 +197,11 @@ export default (props: ApiEditProps) => {
       const values = await apiEditForm.validateFields();
       values.id = apiDetail.api.id;
       values.api_group_id = values.api_group_id?.value;
+      const cloneValues = _.clone(values);
+      values.req_json_body = null;
+      values.req_form = null;
+      values.req_file = null;
+      values.req_raw = null;
       if (respTypeSetting === 'JSON') {
         values.resp_json_body = respJsonBody;
         values.resp_raw = null;
@@ -200,24 +210,15 @@ export default (props: ApiEditProps) => {
       }
       if (reqBodyTypeSetting === 'json') {
         values.req_json_body = reqJsonBody;
-        values.req_form = [];
-        values.req_file = '';
-        values.req_raw = '';
       }
       if (reqBodyTypeSetting === 'form') {
-        values.req_json_body = {};
-        values.req_file = '';
-        values.req_raw = '';
+        values.req_form = cloneValues.req_form;
       }
       if (reqBodyTypeSetting === 'file') {
-        values.req_json_body = {};
-        values.req_form = [];
-        values.req_raw = '';
+        values.req_file = cloneValues.req_file;
       }
       if (reqBodyTypeSetting === 'raw') {
-        values.req_json_body = {};
-        values.req_form = [];
-        values.req_file = '';
+        values.req_raw = cloneValues.req_raw;
       }
       await updateApi({ ...apiDetail.api, ...values });
       delete values.id;
@@ -240,24 +241,32 @@ export default (props: ApiEditProps) => {
   function handleReqBodyTypeChange(value: string) {
     setReqBodyTypeSetting(value);
     let headers: Header[] = apiEditForm.getFieldValue('headers');
+    let handleContentType: string | undefined = undefined;
+
     if (value !== 'json') {
       setReqJsonBody(undefined);
-      if (headers) {
-        headers = headers.filter(
-          (header) => header.name !== 'Content-Type' && header.value === 'application/json',
-        );
-      }
+      handleContentType = 'application/json';
     } else {
       setReqJsonBody(apiDetail.api_info?.req_json_body);
+    }
+    if (value === 'form') {
+      handleContentType = 'multipart/form-data';
+    }
+    if (handleContentType) {
+      if (headers) {
+        headers = headers.filter(
+          (header) => header.name !== 'Content-Type' && header.value === handleContentType,
+        );
+      }
       if (!headers) {
         headers = [];
       }
-      const contentType = headers.find((header) => header.name === 'Content-Type');
+      const contentTypeHeader = headers.find((header) => header.name === 'Content-Type');
       headers = headers.filter((header) => header.name !== 'Content-Type');
-      if (contentType) {
-        headers.push({ ...contentType, value: 'application/json', required: true });
+      if (contentTypeHeader) {
+        headers.push({ ...contentTypeHeader, value: handleContentType, required: true });
       } else {
-        headers.push({ name: 'Content-Type', value: 'application/json', required: true });
+        headers.push({ name: 'Content-Type', value: handleContentType, required: true });
       }
     }
     apiEditForm.setFieldsValue({ ...apiEditForm.getFieldsValue(), headers });
@@ -415,14 +424,49 @@ export default (props: ApiEditProps) => {
                 {(fields, { add, remove }) => (
                   <>
                     <FieldFormItem>
-                      <Button
+                      <Dropdown.Button
                         type="primary"
                         size={'small'}
+                        placement={'bottomLeft'}
                         onClick={() => add({ required: true, type: FormParamType.TEXT })}
-                        icon={<PlusOutlined />}
+                        icon={<CaretDownOutlined />}
+                        overlay={
+                          <Menu>
+                            <Menu.Item key="1">
+                              <Checkbox
+                                checked={contentTypeDisplay !== 'none'}
+                                onClick={() =>
+                                  setContentTypeDisplay(contentTypeDisplay ? undefined : 'none')
+                                }
+                              >
+                                ContentType
+                              </Checkbox>
+                            </Menu.Item>
+                            <Menu.Item key="2">
+                              <Checkbox
+                                checked={minLengthDisplay !== 'none'}
+                                onClick={() =>
+                                  setMinLengthDisplay(minLengthDisplay ? undefined : 'none')
+                                }
+                              >
+                                MinLength
+                              </Checkbox>
+                            </Menu.Item>
+                            <Menu.Item key="3">
+                              <Checkbox
+                                checked={maxLengthDisplay !== 'none'}
+                                onClick={() =>
+                                  setMaxLengthDisplay(maxLengthDisplay ? undefined : 'none')
+                                }
+                              >
+                                MaxLength
+                              </Checkbox>
+                            </Menu.Item>
+                          </Menu>
+                        }
                       >
                         添加form参数
-                      </Button>
+                      </Dropdown.Button>
                     </FieldFormItem>
                     {fields.map(({ key, name, fieldKey, ...restField }) => (
                       <Row
@@ -453,20 +497,29 @@ export default (props: ApiEditProps) => {
                             <Checkbox />
                           </FieldFormItem>
                         </Col>
-                        <Col flex={'92px'}>
+                        <Col flex={'70px'}>
                           <FieldFormItem
                             {...restField}
                             name={[name, 'type']}
                             fieldKey={[fieldKey, 'type']}
                             rules={[{ required: true, message: '请选择参数类型' }]}
                           >
-                            <Select style={{ width: '92px' }}>
+                            <Select style={{ width: '70px' }}>
                               <Select.Option value={FormParamType.TEXT}>text</Select.Option>
                               <Select.Option value={FormParamType.FILE}>file</Select.Option>
                             </Select>
                           </FieldFormItem>
                         </Col>
-                        <Col flex={'100px'}>
+                        <Col flex={'200px'} style={{ display: contentTypeDisplay }}>
+                          <FieldFormItem
+                            {...restField}
+                            name={[name, 'content_type']}
+                            fieldKey={[fieldKey, 'content_type']}
+                          >
+                            <AutoComplete placeholder={'Content-Type'} options={CONTENT_TYPE} />
+                          </FieldFormItem>
+                        </Col>
+                        <Col flex={'100px'} style={{ display: minLengthDisplay }}>
                           <FieldFormItem
                             {...restField}
                             name={[name, 'mix_length']}
@@ -476,7 +529,7 @@ export default (props: ApiEditProps) => {
                             <InputNumber min={0} style={{ width: 100 }} placeholder="最小长度" />
                           </FieldFormItem>
                         </Col>
-                        <Col flex={'100px'}>
+                        <Col flex={'100px'} style={{ display: maxLengthDisplay }}>
                           <FieldFormItem
                             {...restField}
                             name={[name, 'max_length']}

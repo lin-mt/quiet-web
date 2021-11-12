@@ -108,6 +108,10 @@ export default (props: ApiPreviewProps) => {
       dataIndex: 'type',
     },
     {
+      title: 'ContentType',
+      dataIndex: 'content_type',
+    },
+    {
       title: '最小长度',
       dataIndex: 'min_length',
     },
