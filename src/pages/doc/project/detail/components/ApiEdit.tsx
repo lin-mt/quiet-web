@@ -245,8 +245,8 @@ export default (props: ApiEditProps) => {
 
     if (value !== 'json') {
       setReqJsonBody(undefined);
-      handleContentType = 'application/json';
     } else {
+      handleContentType = 'application/json';
       setReqJsonBody(apiDetail.api_info?.req_json_body);
     }
     if (value === 'form') {
