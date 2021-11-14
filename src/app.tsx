@@ -178,8 +178,12 @@ export const request: RequestConfig = {
       }
       return response;
     },
-    async (response) => {
-      if (response.status === 200) {
+    async (response, options) => {
+      if (
+        response.status === 200 &&
+        options.parseResponse &&
+        response.headers.get('content-type') === 'application/json'
+      ) {
         const data: Result<any> = await response.clone().json();
         if (data) {
           if (data.result && data.message) {
