@@ -4,7 +4,7 @@ import { Badge, Button, Empty, Input, Menu, Popconfirm, Space, Table, Tag, Tree 
 import styled from 'styled-components';
 import ApiGroupForm from '@/pages/doc/apiGroup/components/ApiGroupForm';
 import type { DocApi, DocApiGroup } from '@/services/doc/EntityType';
-import { listApiInfoById } from '@/services/doc/DocProject';
+import { getProjectInfo, listApiInfoById } from '@/services/doc/DocProject';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -21,6 +21,7 @@ import { getMethodTagColor } from '@/utils/doc/utils';
 import type { MenuInfo } from 'rc-menu/es/interface';
 import type { ColumnType } from 'antd/lib/table/interface';
 import { ApiState } from '@/services/doc/Enums';
+import type { DocProject } from '@/services/doc/EntityType';
 
 const DetailContainer = styled.div`
   margin-top: -24px;
@@ -60,8 +61,10 @@ const ProjectDetails: React.FC<any> = (props) => {
   const [selectedNode, setSelectedNode] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
   const [current, setCurrent] = useState<string>('interface');
+  const [projectInfo, setProjectInfo] = useState<DocProject>();
 
   const loadProjectApiInfo = useCallback(() => {
+    getProjectInfo(projectId).then((info) => setProjectInfo(info));
     listApiInfoById(projectId).then((resp) => {
       const treeData: DocApiGroup[] = [];
       const unGroupNode: any = {
@@ -268,11 +271,13 @@ const ProjectDetails: React.FC<any> = (props) => {
                         </div>
                       </div>
                     ) : (
-                      <ApiDetail
-                        apiId={selectedNode.id}
-                        projectId={projectId}
-                        afterUpdate={() => loadProjectApiInfo()}
-                      />
+                      projectInfo && (
+                        <ApiDetail
+                          apiId={selectedNode.id}
+                          projectInfo={projectInfo}
+                          afterUpdate={() => loadProjectApiInfo()}
+                        />
+                      )
                     )}
                   </div>
                 ) : (

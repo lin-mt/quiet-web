@@ -7,25 +7,22 @@ import { getApiDetail } from '@/services/doc/DocApi';
 import ApiRun from '@/pages/doc/project/detail/components/ApiRun';
 import { EditOutlined, EyeOutlined, SendOutlined } from '@ant-design/icons';
 import type { MenuInfo } from 'rc-menu/lib/interface';
-import { getProjectInfo } from '@/services/doc/DocProject';
 
 interface ApiDetailProps {
   apiId: string;
-  projectId: string;
+  projectInfo: DocProject;
   afterUpdate?: () => void;
 }
 
 export default (props: ApiDetailProps) => {
-  const { apiId, projectId, afterUpdate } = props;
+  const { apiId, projectInfo, afterUpdate } = props;
 
   const [apiDetail, setApiDetail] = useState<ApiDetail>();
-  const [projectInfo, setProjectInfo] = useState<DocProject>();
   const [current, setCurrent] = useState<string>('run');
 
   useEffect(() => {
     getApiDetail(apiId).then((detail) => setApiDetail(detail));
-    getProjectInfo(projectId).then((info) => setProjectInfo(info));
-  }, [apiId, projectId]);
+  }, [apiId]);
 
   function handleCurrentMenuChange(info: MenuInfo) {
     setCurrent(info.key);
@@ -50,7 +47,6 @@ export default (props: ApiDetailProps) => {
         )}
         {current === 'edit' && apiDetail && projectInfo && (
           <ApiEdit
-            projectId={projectId}
             apiDetail={apiDetail}
             projectInfo={projectInfo}
             afterUpdate={() => {

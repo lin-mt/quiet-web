@@ -16,7 +16,7 @@ import {
   Space,
   Tooltip,
 } from 'antd';
-import type { ApiDetail, DocProject } from '@/services/doc/EntityType';
+import type { ApiDetail, DocApiGroup, DocProject } from '@/services/doc/EntityType';
 import styled from 'styled-components';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import { listApiGroupByProjectIdAndName } from '@/services/doc/DocApiGroup';
@@ -33,7 +33,6 @@ import MarkdownEditor from '@/pages/components/Markdown/MarkdownEditor';
 import { CONTENT_TYPE, REQUEST_HEADER } from '@/constant/doc/Values';
 
 interface ApiEditProps {
-  projectId: string;
   apiDetail: ApiDetail;
   projectInfo: DocProject;
   afterUpdate?: () => void;
@@ -58,7 +57,7 @@ const FieldFormItem = styled(Form.Item)`
 `;
 
 export default (props: ApiEditProps) => {
-  const { apiDetail, projectInfo, projectId, afterUpdate } = props;
+  const { apiDetail, projectInfo, afterUpdate } = props;
 
   const [apiEditForm] = Form.useForm();
 
@@ -142,7 +141,10 @@ export default (props: ApiEditProps) => {
   }, []);
 
   function listApiGroupByName(name: string) {
-    return listApiGroupByProjectIdAndName(projectId, name);
+    if (projectInfo.id) {
+      return listApiGroupByProjectIdAndName(projectInfo.id, name);
+    }
+    return new Promise<DocApiGroup[]>(() => {});
   }
 
   const handlePath = (pathParam: string) => {

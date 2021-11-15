@@ -113,6 +113,7 @@ export default function ApiRun(props: ApiRunProps) {
     }
     form.setFieldsValue(fieldsValue);
     setRespHeaders(undefined);
+    setRespOriginHeaders(undefined);
     setRespBody(undefined);
   }, [apiDetail.api_info, environments, form, selectEnvIndex]);
 
@@ -155,7 +156,6 @@ export default function ApiRun(props: ApiRunProps) {
   }
 
   function handleFormOnFinish(values: any) {
-    console.log('values', values);
     let path;
     if (environments.length > 0) {
       const basePath = removePathSeparator(environments[selectEnvIndex].base_path);
@@ -190,36 +190,36 @@ export default function ApiRun(props: ApiRunProps) {
       }
     }
     // 处理Body
-    let body: any;
+    let data: any;
     if (apiDetail.api_info?.req_form) {
-      body = new FormData();
+      data = new FormData();
       for (let i = 0; i < values.req_form.length; i++) {
         const formData: FormParam = values.req_form[i];
         if (formData.type === FormParamType.TEXT.toString()) {
-          body.append(formData.name, new Blob([formData.example], { type: formData.content_type }));
+          data.append(formData.name, new Blob([formData.example], { type: formData.content_type }));
         } else {
           const formDataFile = formDataFiles[formData.name];
           if (formDataFile && formDataFile.length > 0) {
             for (let j = 0; j < formDataFile.length; j++) {
-              body.append(formData.name, formDataFile[j]);
+              data.append(formData.name, formDataFile[j]);
             }
           }
         }
       }
     }
     if (apiDetail.api_info?.req_raw) {
-      body = values.req_raw;
+      data = values.req_raw;
     }
     if (apiDetail.api_info?.req_file) {
-      body = new FormData();
+      data = new FormData();
       if (fileList && fileList.length > 0) {
         fileList.forEach((file) => {
-          body.append(values.req_file, file);
+          data.append(values.req_file, file);
         });
       }
     }
     if (apiDetail.api_info?.req_json_body) {
-      body = JSON.parse(values.req_json_body);
+      data = JSON.parse(values.req_json_body);
     }
     let reqPath = `/api/doc/request/${path}`;
     if (params) {
@@ -232,7 +232,7 @@ export default function ApiRun(props: ApiRunProps) {
       method: apiDetail.api.method,
       headers,
       params,
-      body,
+      data,
       getResponse: true,
     }).then((resp) => {
       const originHeaders = resp.response.headers?.get('origin-headers');
