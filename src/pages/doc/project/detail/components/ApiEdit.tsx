@@ -138,6 +138,7 @@ export default (props: ApiEditProps) => {
     if (apiDetail.api_info?.resp_raw) {
       setRespTypeSetting('RAW');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function listApiGroupByName(name: string) {
