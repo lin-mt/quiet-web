@@ -83,7 +83,9 @@ const PermissionConfig: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该配置信息吗？"
             onConfirm={() => {
-              deletePermission(record.id).then(() => permissionModalActionRef?.current?.reload());
+              if (record.id) {
+                deletePermission(record.id).then(() => permissionModalActionRef?.current?.reload());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -107,7 +109,7 @@ const PermissionConfig: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietPermission>
         actionRef={permissionModalActionRef}
-        rowKey={(record) => record.id}
+        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
         request={(params, sorter, filter) => pagePermission({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createPermission} icon={<PlusOutlined />}>

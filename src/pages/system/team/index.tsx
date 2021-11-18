@@ -113,7 +113,9 @@ const TeamManagement: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该团队以及队员信息吗？"
             onConfirm={() => {
-              deleteTeam(record.id).then(() => teamModalActionRef?.current?.reload());
+              if (record.id) {
+                deleteTeam(record.id).then(() => teamModalActionRef?.current?.reload());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -141,7 +143,7 @@ const TeamManagement: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietTeam>
         actionRef={teamModalActionRef}
-        rowKey={(record) => record.id}
+        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
         request={(params, sorter, filter) => pageTeam({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createTeam}>

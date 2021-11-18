@@ -85,7 +85,9 @@ const Dictionary: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该数据字典吗？"
             onConfirm={() => {
-              deleteDictionary(record.id).then(() => dictionaryModalActionRef?.current?.reload());
+              if (record.id) {
+                deleteDictionary(record.id).then(() => dictionaryModalActionRef?.current?.reload());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -109,7 +111,7 @@ const Dictionary: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietDictionary>
         actionRef={dictionaryModalActionRef}
-        rowKey={(record) => record.id}
+        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
         request={(params, sorter, filter) => pageDictionary({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="tree" onClick={() => setDictionaryTreeVisible(true)}>

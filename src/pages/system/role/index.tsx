@@ -87,7 +87,9 @@ const RoleManagement: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该角色吗？"
             onConfirm={() => {
-              deleteRole(record.id).then(() => roleModalActionRef?.current?.reload());
+              if (record.id) {
+                deleteRole(record.id).then(() => roleModalActionRef?.current?.reload());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -111,7 +113,7 @@ const RoleManagement: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietRole>
         actionRef={roleModalActionRef}
-        rowKey={(record) => record.id}
+        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
         request={(params, sorter, filter) => pageRole({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="tree" onClick={() => setRoleTreeVisible(true)}>
