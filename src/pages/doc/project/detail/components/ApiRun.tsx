@@ -16,6 +16,7 @@ import type { RcFile, UploadFile } from 'antd/lib/upload/interface';
 import { QuietEditor } from '@/pages/components/QuietEditor';
 import _ from 'lodash';
 import { request } from 'umi';
+import jsf from 'json-schema-faker';
 
 const PartTitle = styled.h2`
   font-size: 17px;
@@ -93,12 +94,13 @@ export default function ApiRun(props: ApiRunProps) {
 
   useEffect(() => {
     if (projectInfo.id) {
+      form.resetFields();
       listByProjectId(projectInfo.id).then((resp) => setEnvironments(resp));
     }
-  }, [projectInfo.id]);
+  }, [form, projectInfo.id]);
 
   useEffect(() => {
-    const fieldsValue: any = _.clone(apiDetail.api_info);
+    const fieldsValue: any = _.clone(form.getFieldsValue());
     if (environments.length > 0) {
       const envHeaders = environments[selectEnvIndex].headers;
       if (envHeaders) {
@@ -108,14 +110,19 @@ export default function ApiRun(props: ApiRunProps) {
         fieldsValue.headers.unshift(...envHeaders);
       }
     }
+    form.setFieldsValue(fieldsValue);
+  }, [environments, form, selectEnvIndex]);
+
+  useEffect(() => {
+    const fieldsValue: any = _.clone(apiDetail.api_info);
     if (apiDetail.api_info?.req_json_body) {
-      fieldsValue.req_json_body = JSON.stringify(apiDetail.api_info?.req_json_body);
+      fieldsValue.req_json_body = JSON.stringify(jsf.generate(apiDetail.api_info.req_json_body));
     }
     form.setFieldsValue(fieldsValue);
     setRespHeaders(undefined);
     setRespOriginHeaders(undefined);
     setRespBody(undefined);
-  }, [apiDetail.api_info, environments, form, selectEnvIndex]);
+  }, [apiDetail.api_info, form]);
 
   function removePathSeparator(path: string): string {
     if (!path) {
@@ -621,7 +628,13 @@ export default function ApiRun(props: ApiRunProps) {
                         <QuietEditor
                           language={apiDetail.api_info?.req_json_body ? 'json' : undefined}
                           lineNumbers={'off'}
-                          onMount={(editor) => (reqBodyEditor.current = editor)}
+                          onMount={(editor) => {
+                            reqBodyEditor.current = editor;
+                            setTimeout(() => {
+                              // todo 优化下？
+                              editor.getAction('editor.action.formatDocument').run();
+                            }, 1000);
+                          }}
                           height={369}
                         />
                       </Form.Item>

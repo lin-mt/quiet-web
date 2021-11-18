@@ -286,9 +286,9 @@ const ProjectDetails: React.FC<any> = (props) => {
               </div>
             </InterfaceContainer>
           )}
-          {current === 'setting' && (
+          {current === 'setting' && projectInfo && (
             <div style={{ marginTop: 10 }}>
-              <Setting projectId={projectId} />
+              <Setting projectInfo={projectInfo} />
             </div>
           )}
         </div>

@@ -70,6 +70,7 @@
     "classnames": "^2.2.6",
     "genson-js": "^0.0.6",
     "github-markdown-css": "^5.0.0",
+    "json-schema-faker": "^0.5.0-rcv.40",
     "lodash": "^4.17.11",
     "moment": "^2.25.3",
     "omit.js": "^2.0.2",

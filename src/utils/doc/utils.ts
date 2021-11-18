@@ -22,9 +22,9 @@ export function getMethodTagColor(method: any): string {
       color = 'blue';
       break;
     case HttpMethod.POST:
-    case HttpMethod.CONNECT:
+    // case HttpMethod.CONNECT:
     case HttpMethod.OPTIONS:
-    case HttpMethod.TRACE:
+    // case HttpMethod.TRACE:
     case HttpMethod.PATCH:
       color = 'orange';
       break;

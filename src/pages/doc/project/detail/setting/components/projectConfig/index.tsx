@@ -2,11 +2,12 @@ import { Button, Form, Input } from 'antd';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import { listUsersByName } from '@/services/system/QuietUser';
 import { useEffect, useState } from 'react';
-import { getProjectInfo, updateProject } from '@/services/doc/DocProject';
+import { updateProject } from '@/services/doc/DocProject';
 import { SaveOutlined } from '@ant-design/icons';
+import type { DocProject } from '@/services/doc/EntityType';
 
 interface ProjectConfigProp {
-  projectId: string;
+  projectInfo: DocProject;
 }
 
 export default function ProjectConfig(props: ProjectConfigProp) {
@@ -14,13 +15,11 @@ export default function ProjectConfig(props: ProjectConfigProp) {
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
-    getProjectInfo(props.projectId).then((info) => {
-      form.setFieldsValue({
-        ...info,
-        principal: { value: info.principal, label: info.principal_name },
-      });
+    form.setFieldsValue({
+      ...props.projectInfo,
+      principal: { value: props.projectInfo.principal, label: props.projectInfo.principal_name },
     });
-  }, [form, props.projectId]);
+  }, [form, props.projectInfo]);
 
   async function findUserByName(name: string) {
     return listUsersByName(name).then((resp) => {

@@ -1,3 +1,5 @@
+// noinspection HttpUrlsUsage
+
 import {
   AutoComplete,
   Button,
@@ -12,7 +14,7 @@ import {
   Typography,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
-import type { DocProjectEnvironment } from '@/services/doc/EntityType';
+import type { DocProject, DocProjectEnvironment } from '@/services/doc/EntityType';
 import {
   deleteProjectEnvironment,
   listByProjectId,
@@ -32,31 +34,37 @@ const DeleteOutlinedHoverRed = styled(DeleteOutlined)`
 `;
 
 interface EnvironmentProp {
-  projectId: string;
+  projectInfo: DocProject;
 }
 
 export default function (props: EnvironmentProp) {
+  const { projectInfo } = props;
+
   const [form] = Form.useForm();
   const [environments, setEnvironments] = useState<DocProjectEnvironment[]>([]);
   const [activeKey, setActiveKey] = useState<string | undefined>();
   const [init, setInit] = useState<boolean>(false);
 
   const newKey = 'new_key';
-  const newEnv: DocProjectEnvironment = {
-    id: newKey,
-    name: '新环境',
-    protocol: HttpProtocol.HTTP,
-    base_path: '127.0.0.1',
-    project_id: props.projectId,
-    headers: [],
-    cookies: [],
-  };
+  const newEnv: any = projectInfo.id
+    ? {
+        id: newKey,
+        name: '新环境',
+        protocol: HttpProtocol.HTTP,
+        base_path: '127.0.0.1',
+        project_id: projectInfo.id,
+        headers: [],
+        cookies: [],
+      }
+    : {};
 
   useEffect(() => {
-    listByProjectId(props.projectId)
-      .then((resp) => setEnvironments(resp))
-      .finally(() => setInit(true));
-  }, [props.projectId]);
+    if (projectInfo.id) {
+      listByProjectId(projectInfo.id)
+        .then((resp) => setEnvironments(resp))
+        .finally(() => setInit(true));
+    }
+  }, [projectInfo.id]);
 
   useEffect(() => {
     let isMounted = true;

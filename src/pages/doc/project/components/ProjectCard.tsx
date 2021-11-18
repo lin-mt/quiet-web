@@ -25,15 +25,19 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
   }
 
   async function reloadProjectInfo() {
-    setProjectInfo(await getProjectInfo(projectInfo.id));
+    if (projectInfo.id) {
+      setProjectInfo(await getProjectInfo(projectInfo.id));
+    }
   }
 
   function handleDeleteClick() {
-    deleteProject(projectInfo.id).then(() => {
-      if (afterDeleteAction) {
-        afterDeleteAction();
-      }
-    });
+    if (projectInfo.id) {
+      deleteProject(projectInfo.id).then(() => {
+        if (afterDeleteAction) {
+          afterDeleteAction();
+        }
+      });
+    }
   }
 
   return (
