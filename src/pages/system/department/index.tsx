@@ -86,7 +86,9 @@ const PermissionConfig: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该部门信息吗？"
             onConfirm={() => {
-              deleteDepartment(record.id).then(() => refreshPageInfo());
+              if (record.id) {
+                deleteDepartment(record.id).then(() => refreshPageInfo());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -122,7 +124,9 @@ const PermissionConfig: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietDepartment>
         actionRef={departmentModalActionRef}
-        rowKey={(record) => record.id}
+        rowKey={(record, index) => {
+          return record.id ? record.id : `${index}`;
+        }}
         request={(params, sorter, filter) => pageDepartment({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="tree" onClick={showAllDepartmentByTree}>

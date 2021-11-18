@@ -19,14 +19,21 @@ const ClientManagement: React.FC<any> = () => {
   const [clientFormVisible, setClientModalVisible] = useState<boolean>(false);
   const clientModalActionRef = useRef<ActionType>();
 
-  async function confirmRemoveClientAuthorizedGrantType(id: string, authorized_grant_type: string) {
-    await removeClientAuthorizedGrantType(id, authorized_grant_type);
-    clientModalActionRef?.current?.reload();
+  async function confirmRemoveClientAuthorizedGrantType(
+    id: string | undefined,
+    authorized_grant_type: string,
+  ) {
+    if (id) {
+      await removeClientAuthorizedGrantType(id, authorized_grant_type);
+      clientModalActionRef?.current?.reload();
+    }
   }
 
-  async function confirmRemoveClientScope(id: string, scope: string) {
-    await removeClientScope(id, scope);
-    clientModalActionRef?.current?.reload();
+  async function confirmRemoveClientScope(id: string | undefined, scope: string) {
+    if (id) {
+      await removeClientScope(id, scope);
+      clientModalActionRef?.current?.reload();
+    }
   }
 
   const columns: ProColumns<QuietClient>[] = [
@@ -197,7 +204,9 @@ const ClientManagement: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该客户端吗？"
             onConfirm={() => {
-              deleteClient(record.id).then(() => clientModalActionRef?.current?.reload());
+              if (record.id) {
+                deleteClient(record.id).then(() => clientModalActionRef?.current?.reload());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -217,7 +226,13 @@ const ClientManagement: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietClient>
         actionRef={clientModalActionRef}
-        rowKey={(record) => record.id}
+        rowKey={(record, index) => {
+          if (record.id) {
+            return record.id;
+          } else {
+            return `${index}`;
+          }
+        }}
         request={(params, sorter, filter) => clientPage({ params, sorter, filter })}
         toolBarRender={() => [
           <Button

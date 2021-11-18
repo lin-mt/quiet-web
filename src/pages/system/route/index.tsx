@@ -38,14 +38,18 @@ const GatewayRoute: React.FC<any> = () => {
     });
   }, [getDictionaryLabelByType]);
 
-  async function confirmRemoveRouteFilter(id: string, filter: string) {
-    await removeFilter(id, filter);
-    routeModalActionRef?.current?.reload();
+  async function confirmRemoveRouteFilter(id: string | undefined, filter: string) {
+    if (id) {
+      await removeFilter(id, filter);
+      routeModalActionRef?.current?.reload();
+    }
   }
 
-  async function confirmRemoveRoutePredicate(id: string, predicate: string) {
-    await removePredicate(id, predicate);
-    routeModalActionRef?.current?.reload();
+  async function confirmRemoveRoutePredicate(id: string | undefined, predicate: string) {
+    if (id) {
+      await removePredicate(id, predicate);
+      routeModalActionRef?.current?.reload();
+    }
   }
 
   async function handleConfirmPublishRoute() {
@@ -190,7 +194,9 @@ const GatewayRoute: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该路由配置吗？"
             onConfirm={() => {
-              deleteRoute(record.id).then(() => routeModalActionRef?.current?.reload());
+              if (record.id) {
+                deleteRoute(record.id).then(() => routeModalActionRef?.current?.reload());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -209,7 +215,7 @@ const GatewayRoute: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietRoute>
         actionRef={routeModalActionRef}
-        rowKey={(record) => record.id}
+        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
         request={(params, sorter, filter) => pageRoute({ params, sorter, filter })}
         toolBarRender={() => [
           <DictionarySelect

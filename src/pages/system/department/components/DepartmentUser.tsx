@@ -112,7 +112,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
             placement="top"
             title="确认在该部门移除该用户吗？"
             onConfirm={async () => {
-              if (department) {
+              if (department && department.id && record.id) {
                 await removeUsers(department.id, [record.id]);
                 userModalActionRef.current?.reload();
               }
@@ -127,7 +127,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
 
   async function handleAddUserOk(value: any) {
     const userIds = value?.map((u: { value: string }) => u.value);
-    if (department) {
+    if (department && department.id) {
       await addUsers(department.id, userIds);
       userModalActionRef.current?.reload();
       setAddDepartmentUserVisible(false);
@@ -135,7 +135,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
   }
 
   async function confirmRemoveUsers() {
-    if (department) {
+    if (department && department.id) {
       const userIds: string[] = [];
       selectedRowKeys.forEach((v) => userIds.push(v.toString()));
       await removeUsers(department.id, userIds);
@@ -166,7 +166,10 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
         actionRef={userModalActionRef}
         rowSelection={{ onChange: (keys) => setSelectedRowKeys(keys) }}
         tableAlertRender={false}
-        rowKey={(record) => record.id}
+        rowKey={(record, index) => {
+          if (record.id) return record.id;
+          else return `${index}`;
+        }}
         request={(params, sorter, filter) =>
           pageUser({ id: department?.id, ...params, params, sorter, filter })
         }

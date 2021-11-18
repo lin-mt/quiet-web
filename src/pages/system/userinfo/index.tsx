@@ -25,14 +25,18 @@ const UserInfo: React.FC<any> = () => {
   const [addRoleUserId, setAddRoleUserId] = useState<string | null>(null);
   const userModalActionRef = useRef<ActionType>();
 
-  async function confirmRemoveUserRole(userId: string, roleId: string) {
-    await removeRole(userId, roleId);
-    userModalActionRef.current?.reload();
+  async function confirmRemoveUserRole(userId: string | undefined, roleId: string | undefined) {
+    if (userId && roleId) {
+      await removeRole(userId, roleId);
+      userModalActionRef.current?.reload();
+    }
   }
 
-  function addUserRole(userId: string) {
-    setAddRoleUserId(userId);
-    setRoleTreeVisible(true);
+  function addUserRole(userId: string | undefined) {
+    if (userId) {
+      setAddRoleUserId(userId);
+      setRoleTreeVisible(true);
+    }
   }
 
   const columns: ProColumns<QuietUser>[] = [
@@ -185,7 +189,9 @@ const UserInfo: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该用户及该用户的相关信息吗？"
             onConfirm={() => {
-              deleteUser(record.id).then(() => userModalActionRef.current?.reload());
+              if (record.id) {
+                deleteUser(record.id).then(() => userModalActionRef.current?.reload());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -227,7 +233,7 @@ const UserInfo: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietUser>
         actionRef={userModalActionRef}
-        rowKey={(record) => record.id}
+        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
         request={(params, sorter, filter) => pageUser({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createUser}>

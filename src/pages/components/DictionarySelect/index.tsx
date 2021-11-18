@@ -29,11 +29,13 @@ export function DictionarySelect<
         .then((resp) => {
           const datumOptions: OptionType[] = [];
           resp.forEach((dictionary) => {
-            datumOptions.push({
-              key: dictionary.id,
-              value: `${dictionary.type}.${dictionary.key}`,
-              label: dictionary.label,
-            });
+            if (dictionary.id) {
+              datumOptions.push({
+                key: dictionary.id,
+                value: `${dictionary.type}.${dictionary.key}`,
+                label: dictionary.label,
+              });
+            }
           });
           return datumOptions;
         })
