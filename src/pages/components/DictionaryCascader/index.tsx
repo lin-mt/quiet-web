@@ -32,12 +32,14 @@ export function DictionaryCascader({
     const buildOptions = (sources: QuietDictionary[]): OptionType[] => {
       const datumOptions: OptionType[] = [];
       sources.forEach((dictionary) => {
-        datumOptions.push({
-          key: dictionary.id,
-          value: `${dictionary.type}.${dictionary.key}`,
-          label: dictionary.label,
-          children: dictionary.children ? buildOptions(dictionary.children) : undefined,
-        });
+        if (dictionary.id) {
+          datumOptions.push({
+            key: dictionary.id,
+            value: `${dictionary.type}.${dictionary.key}`,
+            label: dictionary.label,
+            children: dictionary.children ? buildOptions(dictionary.children) : undefined,
+          });
+        }
       });
       return datumOptions;
     };
