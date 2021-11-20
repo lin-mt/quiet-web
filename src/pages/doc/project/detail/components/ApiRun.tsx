@@ -102,11 +102,13 @@ export default function ApiRun(props: ApiRunProps) {
   useEffect(() => {
     const fieldsValue: any = _.clone(form.getFieldsValue());
     if (environments.length > 0) {
-      const envHeaders = environments[selectEnvIndex].headers;
+      const envHeaders: any = environments[selectEnvIndex].headers;
+      envHeaders.forEach((header: any) => (header.disabled = true));
       if (envHeaders) {
         if (!fieldsValue.headers) {
           fieldsValue.headers = [];
         }
+        fieldsValue.environment_id = 0;
         fieldsValue.headers.unshift(...envHeaders);
       }
     }
@@ -264,7 +266,7 @@ export default function ApiRun(props: ApiRunProps) {
             <PartTitle id={'request'} style={{ marginTop: 0 }}>
               Request
             </PartTitle>
-            <Input.Group>
+            <Input.Group compact={true}>
               <Input
                 value={apiDetail.api.method}
                 disabled={true}
@@ -272,9 +274,8 @@ export default function ApiRun(props: ApiRunProps) {
               />
               {environments.length > 0 ? (
                 <Form.Item name={'environment_id'} noStyle={true}>
-                  <Select
-                    value={selectEnvIndex}
-                    style={{ width: '20%' }}
+                  <Select<number>
+                    style={{ width: '30%' }}
                     onChange={(envIndex) => setSelectEnvIndex(envIndex)}
                   >
                     {environments.map((environment, index) => {
@@ -295,13 +296,13 @@ export default function ApiRun(props: ApiRunProps) {
                 <Input
                   value={'http://127.0.0.1:9363'}
                   disabled={true}
-                  style={{ color: 'rgba(0, 0, 0, 0.69)', width: '20%' }}
+                  style={{ color: 'rgba(0, 0, 0, 0.69)', width: '30%' }}
                 />
               )}
               <Input
                 value={`${projectInfo.base_path ? projectInfo.base_path : ''}${apiDetail.api.path}`}
                 disabled={true}
-                style={{ color: 'rgba(0, 0, 0, 0.69)', width: '60%' }}
+                style={{ color: 'rgba(0, 0, 0, 0.69)', width: '50%' }}
               />
               <Button type={'primary'} htmlType={'submit'} style={{ width: '11%', float: 'right' }}>
                 发送
