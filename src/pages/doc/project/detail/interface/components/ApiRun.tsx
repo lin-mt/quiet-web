@@ -259,7 +259,7 @@ export default function ApiRun(props: ApiRunProps) {
   }
 
   return (
-    <div style={{ paddingLeft: 30, paddingRight: 30, paddingBottom: 20 }}>
+    <div style={{ paddingBottom: 20 }}>
       <Row gutter={20} wrap={false}>
         <Col span={19}>
           <Form name={'apiRunForm'} form={form} onFinish={handleFormOnFinish}>

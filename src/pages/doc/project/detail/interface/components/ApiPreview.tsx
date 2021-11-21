@@ -12,7 +12,7 @@ import { ApiState, HttpMethod } from '@/services/doc/Enums';
 import styled from 'styled-components';
 import type { ColumnsType } from 'antd/lib/table/interface';
 import type { QueryParam } from '@/services/doc/EntityType';
-import { SchemaTable } from '@/pages/doc/project/detail/components/SchemaTable';
+import { SchemaTable } from '@/pages/doc/project/detail/interface/components/SchemaTable';
 import MarkdownViewer from '@/pages/components/Markdown/MarkdownViewer';
 
 const ContentContainer = styled.div`
