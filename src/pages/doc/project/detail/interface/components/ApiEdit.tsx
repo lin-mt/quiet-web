@@ -139,7 +139,7 @@ export default (props: ApiEditProps) => {
       setRespTypeSetting('RAW');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [apiDetail.api.id]);
 
   function listApiGroupByName(name: string) {
     if (projectInfo.id) {
