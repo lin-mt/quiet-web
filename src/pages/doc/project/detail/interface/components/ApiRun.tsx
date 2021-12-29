@@ -118,7 +118,7 @@ export default function ApiRun(props: ApiRunProps) {
   useEffect(() => {
     const fieldsValue: any = _.clone(apiDetail.api_info);
     if (apiDetail.api_info?.req_json_body) {
-      fieldsValue.req_json_body = JSON.stringify(jsf.generate(apiDetail.api_info.req_json_body));
+      fieldsValue.req_json_body = JSON.stringify(jsf.generate(apiDetail.api_info.req_json_body), null, 2);
     }
     form.setFieldsValue(fieldsValue);
     setRespHeaders(undefined);
@@ -631,10 +631,6 @@ export default function ApiRun(props: ApiRunProps) {
                           lineNumbers={'off'}
                           onMount={(editor) => {
                             reqBodyEditor.current = editor;
-                            setTimeout(() => {
-                              // todo 优化下？
-                              editor.getAction('editor.action.formatDocument').run();
-                            }, 1000);
                           }}
                           height={369}
                         />
