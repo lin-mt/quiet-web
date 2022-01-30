@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Menu, notification, Spin } from 'antd';
+import { Avatar, Menu, Spin } from 'antd';
 import { history, useModel } from 'umi';
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import { outLogin } from '@/services/system/Login';
 import type { MenuInfo } from 'rc-menu/lib/interface';
+import { outLogin } from '@/services/system/Login';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -37,8 +37,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout') {
-        setInitialState((s) => ({ ...s, current_user: undefined }));
-        loginOut().then(() => notification.info({ message: '退出成功' }));
+        setInitialState((s) => ({ ...s, currentUser: undefined }));
+        loginOut();
         return;
       }
       history.push(`/account/${key}`);
