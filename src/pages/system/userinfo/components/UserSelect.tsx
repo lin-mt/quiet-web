@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
 import { listUsersByName } from '@/services/system/QuietUser';
-import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 
 type UserSelectProps = {
@@ -36,7 +35,7 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
   async function findUserByName(name: string) {
     return listUsersByName(name).then((resp) => {
       return resp.map((user) => ({
-        label: user.fullName,
+        label: user.full_name,
         value: user.id,
       }));
     });
@@ -68,7 +67,6 @@ const UserSelect: React.FC<UserSelectProps> = (props) => {
         style={{ width: '100%' }}
         mode="multiple"
         value={selectedUsers}
-        tagRender={multipleSelectTagRender}
         placeholder="请输入用户名/姓名"
         fetchOptions={findUserByName}
         onChange={(newValue) => setSelectedUsers(newValue)}

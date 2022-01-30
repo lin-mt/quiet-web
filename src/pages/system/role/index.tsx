@@ -3,7 +3,7 @@ import { Button, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { queryRole, deleteRole } from '@/services/system/QuietRole';
+import { pageRole, deleteRole } from '@/services/system/QuietRole';
 import { PageContainer } from '@ant-design/pro-layout';
 import RoleTree from '@/pages/system/role/components/RoleTree';
 import RoleForm from '@/pages/system/role/components/RoleForm';
@@ -25,23 +25,23 @@ const RoleManagement: React.FC<any> = () => {
     },
     {
       title: '角色名',
-      dataIndex: 'roleName',
+      dataIndex: 'role_name',
       valueType: 'text',
     },
     {
       title: '角色中文名',
-      dataIndex: 'roleCnName',
+      dataIndex: 'role_cn_name',
       valueType: 'text',
     },
     {
       title: '父角色 ID',
-      dataIndex: 'parentId',
+      dataIndex: 'parent_id',
       valueType: 'text',
       copyable: true,
     },
     {
       title: '父角色名',
-      dataIndex: 'parentRoleName',
+      dataIndex: 'parent_role_name',
       valueType: 'text',
       search: false,
     },
@@ -53,15 +53,15 @@ const RoleManagement: React.FC<any> = () => {
     },
     {
       title: '创建时间',
-      dataIndex: 'gmtCreate',
-      key: 'gmtCreate',
+      dataIndex: 'gmt_create',
+      key: 'gmt_create',
       valueType: 'dateTime',
       search: false,
     },
     {
       title: '更新时间',
-      dataIndex: 'gmtUpdate',
-      key: 'gmtUpdate',
+      dataIndex: 'gmt_update',
+      key: 'gmt_update',
       valueType: 'dateTime',
       search: false,
     },
@@ -87,7 +87,9 @@ const RoleManagement: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该角色吗？"
             onConfirm={() => {
-              deleteRole(record.id).then(() => roleModalActionRef?.current?.reload());
+              if (record.id) {
+                deleteRole(record.id).then(() => roleModalActionRef?.current?.reload());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -98,8 +100,8 @@ const RoleManagement: React.FC<any> = () => {
   ];
 
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
-    gmtCreate: { show: false },
-    gmtUpdate: { show: false },
+    gmt_create: { show: false },
+    gmt_update: { show: false },
   });
 
   function createRole() {
@@ -112,7 +114,7 @@ const RoleManagement: React.FC<any> = () => {
       <ProTable<QuietRole>
         actionRef={roleModalActionRef}
         rowKey={(record) => record.id}
-        request={(params, sorter, filter) => queryRole({ params, sorter, filter })}
+        request={(params, sorter, filter) => pageRole({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="tree" onClick={() => setRoleTreeVisible(true)}>
             所有角色
@@ -122,7 +124,7 @@ const RoleManagement: React.FC<any> = () => {
           </Button>,
         ]}
         columns={columns}
-        columnsStateMap={columnsStateMap}
+        columnsState={{ value: columnsStateMap }}
         onColumnsStateChange={(map) => setColumnsStateMap(map)}
       />
       {roleFormVisible && (

@@ -1,65 +1,37 @@
-import { request } from 'umi';
 import type { RequestData } from '@ant-design/pro-table/lib/typing';
 import type { QuietDepartment, QuietUser } from '@/services/system/EntityType';
-import type { Result } from '@/types/Result';
+import { DELETE, GET, PAGE, PAGE_RESULT, POST, PUT } from '@/utils/HttpUtils';
 
-export function removeUsers(departmentId: string, userIds: string[]) {
-  return request('/api/system/department/removeUsers', {
-    method: 'POST',
-    data: { id: departmentId, userIds },
-  });
+const base_path = '/api/system/department';
+
+export function removeUsers(department_id: string, user_ids: string[]) {
+  return POST(`${base_path}/remove-users`, { id: department_id, userIds: user_ids });
 }
 
-export function addUsers(departmentId: string, userIds: string[]) {
-  return request('/api/system/department/addUsers', {
-    method: 'POST',
-    data: { id: departmentId, userIds },
-  });
+export function addUsers(department_id: string, user_ids: string[]) {
+  return POST(`${base_path}/add-users`, { id: department_id, userIds: user_ids });
 }
 
 export function pageUser(params?: any): Promise<Partial<RequestData<QuietUser>>> {
-  return request<Result<Partial<RequestData<QuietUser>>>>('/api/system/department/pageUser', {
-    method: 'POST',
-    data: params,
-  }).then((resData) => {
-    return { ...resData.data, data: resData.data.results };
-  });
+  return PAGE_RESULT<QuietUser>(`${base_path}/page-user`, params);
 }
 
 export async function treeDepartment(): Promise<QuietDepartment[]> {
-  return request<Result<QuietDepartment[]>>('/api/system/department/tree', {
-    method: 'POST',
-  }).then((resp) => resp.data);
+  return GET<QuietDepartment[]>(`${base_path}/tree`);
 }
 
-export async function queryDepartment(
-  params?: any,
-): Promise<Partial<RequestData<QuietDepartment>>> {
-  return request<Result<Partial<RequestData<QuietDepartment>>>>('/api/system/department/page', {
-    method: 'POST',
-    data: params,
-  }).then((resData) => {
-    return { ...resData.data, data: resData.data.results };
-  });
+export async function pageDepartment(params?: any): Promise<Partial<RequestData<QuietDepartment>>> {
+  return PAGE<QuietDepartment>(`${base_path}/page`, params);
 }
 
 export async function saveDepartment(save: QuietDepartment): Promise<QuietDepartment> {
-  return request<Result<QuietDepartment>>('/api/system/department/save', {
-    method: 'POST',
-    data: { save },
-  }).then((resp) => resp.data);
+  return POST<QuietDepartment>(`${base_path}`, save);
 }
 
 export async function updateDepartment(update: QuietDepartment): Promise<QuietDepartment> {
-  return request<Result<QuietDepartment>>('/api/system/department/update', {
-    method: 'POST',
-    data: { update },
-  }).then((resp) => resp.data);
+  return PUT<QuietDepartment>(`${base_path}`, update);
 }
 
-export async function deleteDepartment(params?: any) {
-  return request('/api/system/department/delete', {
-    method: 'POST',
-    data: { deleteId: params },
-  });
+export async function deleteDepartment(id: string) {
+  await DELETE(`${base_path}/${id}`);
 }

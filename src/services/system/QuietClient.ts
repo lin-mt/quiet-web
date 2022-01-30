@@ -1,48 +1,32 @@
-import { request } from 'umi';
 import type { RequestData } from '@ant-design/pro-table/lib/typing';
 import type { QuietClient } from '@/services/system/EntityType';
-import type { Result } from '@/types/Result';
+import { DELETE, PAGE, POST, PUT } from '@/utils/HttpUtils';
+
+const base_path = '/api/system/client';
 
 export function removeClientScope(id: string, scope: string) {
-  return request('/api/system/client/removeClientScope', {
-    method: 'POST',
-    data: { id, clientScope: scope },
+  return POST(`${base_path}/remove-client-scope`, { id, clientScope: scope });
+}
+
+export function removeClientAuthorizedGrantType(id: string, authorized_grant_type: string) {
+  return POST(`${base_path}/remove-client-authorized-grant-type`, {
+    id,
+    client_authorized_grant_type: authorized_grant_type,
   });
 }
 
-export function removeClientAuthorizedGrantType(id: string, authorizedGrantType: string) {
-  return request('/api/system/client/removeClientAuthorizedGrantType', {
-    method: 'POST',
-    data: { id, clientAuthorizedGrantType: authorizedGrantType },
-  });
+export async function clientPage(params?: any): Promise<Partial<RequestData<QuietClient>>> {
+  return PAGE<QuietClient>(`${base_path}/page`, params);
 }
 
-export async function queryClient(params?: any): Promise<Partial<RequestData<QuietClient>>> {
-  return request<Result<Partial<RequestData<QuietClient>>>>('/api/system/client/page', {
-    method: 'POST',
-    data: params,
-  }).then((resData) => {
-    return { ...resData.data, data: resData.data.results };
-  });
+export async function saveClient(data: QuietClient): Promise<QuietClient> {
+  return POST<QuietClient>(`${base_path}`, data);
 }
 
-export async function saveClient(save: QuietClient): Promise<QuietClient> {
-  return request<Result<QuietClient>>('/api/system/client/save', {
-    data: { save },
-    method: 'POST',
-  }).then((resp) => resp.data);
+export async function updateClient(data: QuietClient): Promise<QuietClient> {
+  return PUT<QuietClient>(`${base_path}`, data);
 }
 
-export async function updateClient(update: QuietClient): Promise<QuietClient> {
-  return request<Result<QuietClient>>('/api/system/client/update', {
-    data: { update },
-    method: 'POST',
-  }).then((resp) => resp.data);
-}
-
-export async function deleteClient(deleteId: string) {
-  return request('/api/system/client/delete', {
-    data: { deleteId },
-    method: 'POST',
-  });
+export async function deleteClient(id: string) {
+  await DELETE(`${base_path}/${id}`);
 }

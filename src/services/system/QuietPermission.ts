@@ -1,36 +1,21 @@
-import { request } from 'umi';
 import type { RequestData } from '@ant-design/pro-table/lib/typing';
 import type { QuietPermission } from '@/services/system/EntityType';
-import type { Result } from '@/types/Result';
+import { DELETE, PAGE, POST, PUT } from '@/utils/HttpUtils';
 
-export async function queryPermission(
-  params?: any,
-): Promise<Partial<RequestData<QuietPermission>>> {
-  return request<Result<Partial<RequestData<QuietPermission>>>>('/api/system/permission/page', {
-    method: 'POST',
-    data: params,
-  }).then((resData) => {
-    return { ...resData.data, data: resData.data.results };
-  });
+const base_path = '/api/system/permission';
+
+export async function pagePermission(params?: any): Promise<Partial<RequestData<QuietPermission>>> {
+  return PAGE<QuietPermission>(`${base_path}/page`, params);
 }
 
 export async function savePermission(save: QuietPermission): Promise<QuietPermission> {
-  return request<Result<QuietPermission>>('/api/system/permission/save', {
-    method: 'POST',
-    data: { save },
-  }).then((resp) => resp.data);
+  return POST<QuietPermission>(`${base_path}`, save);
 }
 
 export async function updatePermission(update: QuietPermission): Promise<QuietPermission> {
-  return request<Result<QuietPermission>>('/api/system/permission/update', {
-    method: 'POST',
-    data: { update },
-  }).then((resp) => resp.data);
+  return PUT<QuietPermission>(`${base_path}`, update);
 }
 
-export async function deletePermission(deleteId: string) {
-  return request('/api/system/permission/delete', {
-    method: 'POST',
-    data: { deleteId },
-  });
+export async function deletePermission(id: string) {
+  await DELETE(`${base_path}/${id}`);
 }

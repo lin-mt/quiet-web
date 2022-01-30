@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
+import { Button, Col, Form, Input, Modal, Row, Select, Switch } from 'antd';
 import { saveClient, updateClient } from '@/services/system/QuietClient';
 import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import type { QuietClient } from '@/services/system/EntityType';
@@ -16,16 +16,15 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [inputForSelectValues, setInputForSelectValues] = useState<string[]>();
   const [scopes, setScopes] = useState<{ key: string; value: string; label: string }[]>();
-  const [authorizedGrantTypes, setAuthorizedGrantTypes] = useState<
-    { key: string; value: string; label: string }[]
-  >();
+  const [authorizedGrantTypes, setAuthorizedGrantTypes] =
+    useState<{ key: string; value: string; label: string }[]>();
 
   const [form] = Form.useForm();
 
   useEffect(() => {
     if (updateInfo) {
       setAuthorizedGrantTypes(
-        updateInfo.authorizedGrantTypes?.map((authorizedGrantType) => {
+        updateInfo.authorized_grant_types?.map((authorizedGrantType) => {
           return {
             key: authorizedGrantType,
             value: authorizedGrantType,
@@ -52,7 +51,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
       scope: scopes?.map((scopeValue) => {
         return scopeValue.value;
       }),
-      authorizedGrantTypes: authorizedGrantTypes?.map((authorizedGrantType) => {
+      authorized_grant_types: authorizedGrantTypes?.map((authorizedGrantType) => {
         return authorizedGrantType.value;
       }),
     };
@@ -131,7 +130,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
           <Col span={12}>
             <Form.Item
               label={'客户端ID'}
-              name={'clientId'}
+              name={'client_id'}
               rules={[
                 { required: true, message: '请输入客户端ID' },
                 { max: 30, message: '客户端ID长度不能超过 20' },
@@ -143,7 +142,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
           <Col span={12}>
             <Form.Item
               label={'客户端名称'}
-              name={'clientName'}
+              name={'client_name'}
               rules={[
                 { required: true, message: '请输入客户端名称' },
                 { max: 30, message: '客户端名称长度不能超过 30' },
@@ -157,7 +156,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
           <Col span={12}>
             <Form.Item
               label="客户端密码"
-              name="clientSecret"
+              name="client_secret"
               rules={[
                 { required: true, message: '请输入客户端密码' },
                 { min: 5, max: 16, message: '密码长度要在 5 - 16 之间' },
@@ -169,12 +168,12 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
           <Col span={12}>
             <Form.Item
               label="确认密码"
-              name="confirmClientSecret"
+              name="confirm_client_secret"
               rules={[
                 { required: true, message: '请确认密码' },
                 ({ getFieldValue }) => ({
                   validator(rule, value) {
-                    if (!value || getFieldValue('clientSecret') === value) {
+                    if (!value || getFieldValue('client_secret') === value) {
                       return Promise.resolve();
                     }
                     return Promise.reject(new Error('两次输入的密码不匹配！'));
@@ -215,7 +214,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
                 labelInValue
                 value={authorizedGrantTypes}
                 tagRender={multipleSelectTagRender}
-                placeholder="请输入授权范围"
+                placeholder="请输入授权类型"
                 filterOption={false}
                 onSearch={buildOptionByInputValue}
                 onChange={handleAuthorizedGrantTypesChange}
@@ -234,25 +233,21 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
           <Col span={12}>
             <Form.Item
               label={'是否需要认证'}
-              name={'secretRequired'}
+              name={'secret_required'}
+              valuePropName={'checked'}
               rules={[{ required: true, message: '请选择是否需要认证' }]}
             >
-              <Select placeholder={'请选择'}>
-                <Select.Option value={'true'}>是</Select.Option>
-                <Select.Option value={'false'}>否</Select.Option>
-              </Select>
+              <Switch checkedChildren="是" unCheckedChildren="否" defaultChecked />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
               label={'是否自动授权'}
-              name={'autoApprove'}
+              name={'auto_approve'}
+              valuePropName={'checked'}
               rules={[{ required: true, message: '请选择是否自动授权' }]}
             >
-              <Select placeholder={'请选择'}>
-                <Select.Option value={'true'}>是</Select.Option>
-                <Select.Option value={'false'}>否</Select.Option>
-              </Select>
+              <Switch checkedChildren="是" unCheckedChildren="否" defaultChecked />
             </Form.Item>
           </Col>
         </Row>
@@ -261,18 +256,16 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
             <Form.Item
               label={'是否限制授权范围'}
               name={'scoped'}
+              valuePropName={'checked'}
               rules={[{ required: true, message: '请选择是否限制授权范围' }]}
             >
-              <Select placeholder={'请选择'}>
-                <Select.Option value={'true'}>是</Select.Option>
-                <Select.Option value={'false'}>否</Select.Option>
-              </Select>
+              <Switch checkedChildren="是" unCheckedChildren="否" defaultChecked />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
               label={'token有效期'}
-              name={'accessTokenValiditySeconds'}
+              name={'access_token_validity_seconds'}
               rules={[{ required: true, message: '请输入 token 有效期' }]}
             >
               <Input placeholder={'请输入 token 有效期'} type={'number'} />
@@ -283,7 +276,7 @@ const ClientForm: React.FC<ClientFormProps> = (props) => {
           <Col span={12}>
             <Form.Item
               label={'刷新token的有效期'}
-              name={'refreshTokenValiditySeconds'}
+              name={'refresh_token_validity_seconds'}
               rules={[{ required: true, message: '请输入刷新 token 的有效期' }]}
             >
               <Input placeholder={'请输入刷新 token 的有效期'} type={'number'} />

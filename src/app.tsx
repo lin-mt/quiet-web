@@ -1,20 +1,22 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { SettingDrawer } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { message, notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history } from 'umi';
+import { history, Link } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import type { ResponseError } from 'umi-request';
 import { queryCurrent } from './services/system/QuietUser';
 import type { Result } from '@/types/Result';
 import { ResultType } from '@/types/Result';
-import { LocalStorage, ResultCode, ResultUrl, System } from '@/constant';
+import { LocalStorage, System, Url } from '@/constant';
 import type { RequestOptionsInit } from 'umi-request';
 import { request as umiReq } from 'umi';
-import type { QuietUser, TokenInfo } from '@/services/system/EntityType';
+import { BookOutlined, LinkOutlined } from '@ant-design/icons';
+import defaultSettings from '../config/defaultSettings';
 
-const loginPath = '/login';
+const isDev = process.env.NODE_ENV === 'development';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -26,56 +28,33 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: QuietUser;
-  tokenInfo?: TokenInfo;
-  fetchUserInfo?: () => Promise<QuietUser | undefined>;
+  current_user?: SystemAPI.QuietUser;
+  loading?: boolean;
+  token_info?: SystemAPI.TokenInfo;
+  fetchUserInfo?: () => Promise<SystemAPI.QuietUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
       return await queryCurrent();
     } catch (error) {
-      history.push('/login');
+      history.push(Url.Login);
     }
     return undefined;
   };
   // 如果是登录页面，不执行
-  if (history.location.pathname !== loginPath) {
+  if (history.location.pathname !== Url.Login) {
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
-      currentUser,
+      current_user: currentUser,
       settings: {},
     };
   }
   return {
     fetchUserInfo,
-    settings: {},
+    settings: defaultSettings,
   };
 }
-
-// https://umijs.org/zh-CN/plugins/plugin-layout
-export const layout: RunTimeLayoutConfig = ({ initialState }) => {
-  return {
-    rightContentRender: () => <RightContent />,
-    disableContentMargin: false,
-    // waterMarkProps: {
-    //   content: initialState?.currentUser?.username,
-    // },
-    footerRender: () => <Footer />,
-    onPageChange: () => {
-      const { location } = history;
-      // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
-        history.push(loginPath);
-      }
-    },
-    links: [],
-    menuHeaderRender: undefined,
-    // 自定义 403 页面
-    // unAccessible: <div>unAccessible</div>,
-    ...initialState?.settings,
-  };
-};
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -108,7 +87,7 @@ const refreshToken = () => {
       grant_type: System.GrantType.RefreshToken,
       refresh_token: tokenInfo.refresh_token,
     };
-    return umiReq<TokenInfo>('/api/system/oauth/token', {
+    return umiReq<SystemAPI.TokenInfo>('/api/system/oauth/token', {
       method: 'POST',
       params: refreshTokenData,
       headers: {
@@ -121,6 +100,7 @@ const refreshToken = () => {
 
 /**
  * 异常处理程序
+ * @see https://beta-pro.ant.design/docs/request-cn
  */
 const errorHandler = (error: ResponseError) => {
   const { response } = error;
@@ -134,6 +114,10 @@ const errorHandler = (error: ResponseError) => {
   }
   throw error;
 };
+
+const successMsgSet = new Set<string>();
+const failureMsgSet = new Set<string>();
+const warningMsgSet = new Set<string>();
 
 export const request: RequestConfig = {
   errorHandler,
@@ -197,29 +181,53 @@ export const request: RequestConfig = {
       return response;
     },
     async (response) => {
-      if (response.status === 200) {
+      if (response.status === 200 && response.headers.get('content-type') === 'application/json') {
         const data: Result<any> = await response.clone().json();
         if (data) {
           if (data.result && data.message) {
             switch (data.result) {
               case ResultType.SUCCESS:
-                message.success(data.message);
+                successMsgSet.add(data.message);
+                setTimeout(() => {
+                  for (const msg of successMsgSet) {
+                    message.success(msg);
+                  }
+                  successMsgSet.clear();
+                }, successMsgSet.size * 500);
                 break;
               case ResultType.WARNING:
-                message.warning(data.message);
+                warningMsgSet.add(data.message);
+                setTimeout(() => {
+                  for (const msg of warningMsgSet) {
+                    message.warn(msg);
+                  }
+                  warningMsgSet.clear();
+                }, warningMsgSet.size * 500);
                 break;
               case ResultType.FAILURE:
-                message.error(`${data.code ? `错误码：${data.code} ` : ` `} ${data.message}`);
+                failureMsgSet.add(
+                  `${data.code ? `错误码：${data.code} ` : ` `}\r\n${data.message}`,
+                );
+                setTimeout(() => {
+                  for (const msg of failureMsgSet) {
+                    message.error(msg);
+                  }
+                  failureMsgSet.clear();
+                }, failureMsgSet.size * 500);
                 break;
               case ResultType.EXCEPTION:
-                message.error(`${data.code ? `异常码：${data.code} ` : ` `} ${data.message}`);
-                break;
+                message.error({
+                  content: (
+                    <span>
+                      {data.code ? `异常码：${data.code}` : ``}
+                      <br /> 异常信息：{data.message}
+                    </span>
+                  ),
+                });
+                throw new Error(
+                  `${data.code ? `异常码：${data.code}` : ``}\n异常信息：${data.message}`,
+                );
               default:
-            }
-          }
-          if (data.code) {
-            if (ResultCode.NoLogin === data.code && history.location.pathname !== ResultUrl.Login) {
-              history.push(ResultUrl.Login);
             }
           }
         }
@@ -227,4 +235,60 @@ export const request: RequestConfig = {
       return response;
     },
   ],
+};
+
+// ProLayout 支持的api https://procomponents.ant.design/components/layout
+export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+  return {
+    rightContentRender: () => <RightContent />,
+    disableContentMargin: false,
+    // waterMarkProps: {
+    // content: initialState?.currentUser?.full_name,
+    // },
+    footerRender: () => <Footer />,
+    onPageChange: () => {
+      const { location } = history;
+      // 如果没有登录，重定向到 login
+      if (!initialState?.current_user && location.pathname !== Url.Login) {
+        history.push(Url.Login);
+      }
+    },
+    links: isDev
+      ? [
+          <Link to="/umi/plugin/openapi" target="_blank" key={'openapi'}>
+            <LinkOutlined />
+            <span>OpenAPI 文档</span>
+          </Link>,
+          <Link to="/~docs" key={'docs'}>
+            <BookOutlined />
+            <span>业务组件文档</span>
+          </Link>,
+        ]
+      : [],
+    menuHeaderRender: undefined,
+    // 自定义 403 页面
+    // unAccessible: <div>unAccessible</div>,
+    // 增加一个 loading 的状态
+    childrenRender: (children, props) => {
+      // if (initialState?.loading) return <PageLoading />;
+      return (
+        <>
+          {children}
+          {!props.location?.pathname?.includes('/login') && (
+            <SettingDrawer
+              enableDarkTheme
+              settings={initialState?.settings}
+              onSettingChange={(settings) => {
+                setInitialState((preInitialState) => ({
+                  ...preInitialState,
+                  settings,
+                }));
+              }}
+            />
+          )}
+        </>
+      );
+    },
+    ...initialState?.settings,
+  };
 };

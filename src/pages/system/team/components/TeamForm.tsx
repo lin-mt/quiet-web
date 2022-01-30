@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Input, Modal } from 'antd';
 import { saveTeam, updateTeam } from '@/services/system/QuietTeam';
 import { listUsersByName } from '@/services/system/QuietUser';
-import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import type { QuietTeam, QuietUser } from '@/services/system/EntityType';
 
@@ -13,33 +12,28 @@ type TeamFormProps = {
   afterAction?: () => void;
 };
 
-const RoleForm: React.FC<TeamFormProps> = (props) => {
+const TeamForm: React.FC<TeamFormProps> = (props) => {
   const { visible, onCancel, updateInfo, afterAction } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [productOwners, setProductOwners] = useState<any[]>();
-  const [scrumMasters, setScrumMasters] = useState<any[]>();
-  const [members, setMembers] = useState<any[]>();
 
   const [form] = Form.useForm();
 
   useEffect(() => {
     if (updateInfo) {
-      form.setFieldsValue(updateInfo);
-      setProductOwners(
-        updateInfo.productOwners?.map((user: QuietUser) => {
-          return { value: user.id, label: user.fullName };
-        }),
-      );
-      setScrumMasters(
-        updateInfo.scrumMasters?.map((user: QuietUser) => {
-          return { value: user.id, label: user.fullName };
-        }),
-      );
-      setMembers(
-        updateInfo.members?.map((user: QuietUser) => {
-          return { value: user.id, label: user.fullName };
-        }),
-      );
+      const formProductOwners = updateInfo.product_owners?.map((user: QuietUser) => {
+        return { value: user.id, label: user.full_name };
+      });
+      const formScrumMasters = updateInfo.scrum_masters?.map((user: QuietUser) => {
+        return { value: user.id, label: user.full_name };
+      });
+      const formMembers = updateInfo.members?.map((user: QuietUser) => {
+        return { value: user.id, label: user.full_name };
+      });
+      const datumUpdateInfo: any = { ...updateInfo };
+      datumUpdateInfo.product_owners = formProductOwners;
+      datumUpdateInfo.scrum_masters = formScrumMasters;
+      datumUpdateInfo.members = formMembers;
+      form.setFieldsValue(datumUpdateInfo);
     } else {
       form.setFieldsValue(undefined);
     }
@@ -50,13 +44,13 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
     setSubmitting(true);
     const submitValues = {
       ...values,
-      productOwners: productOwners?.map((user) => {
+      product_owners: values.product_owners?.map((user: { value: string }) => {
         return { id: user.value };
       }),
-      scrumMasters: scrumMasters?.map((user) => {
+      scrum_masters: values.scrum_masters?.map((user: { value: string }) => {
         return { id: user.value };
       }),
-      members: members?.map((user) => {
+      members: values.members?.map((user: { value: string }) => {
         return { id: user.value };
       }),
     };
@@ -71,7 +65,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
     setSubmitting(false);
     onCancel();
     if (afterAction) {
-      afterAction();
+      // afterAction();
     }
   }
 
@@ -97,7 +91,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
   async function findUserByName(name: string) {
     return listUsersByName(name).then((resp) => {
       return resp.map((user) => ({
-        label: user.fullName,
+        label: user.full_name,
         value: user.id,
       }));
     });
@@ -129,7 +123,7 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
         <Col>
           <Form.Item
             label="团队名称"
-            name="teamName"
+            name="team_name"
             rules={[
               { required: true, message: '请输入团队名称' },
               { max: 16, message: '团队名称长度不能超过 16' },
@@ -139,38 +133,41 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label="ProductOwner">
+          <Form.Item
+            name={'product_owners'}
+            label="ProductOwners"
+            rules={[{ required: true, message: '请选择 PO' }]}
+          >
             <DebounceSelect
               mode="multiple"
-              value={productOwners}
-              tagRender={multipleSelectTagRender}
               placeholder="请输入 ProductOwner 用户名/姓名"
               fetchOptions={findUserByName}
-              onChange={(value) => setProductOwners(value)}
             />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label="ScrumMaster">
+          <Form.Item
+            name={'scrum_masters'}
+            label="ScrumMaster"
+            rules={[{ required: true, message: '请选择 SM' }]}
+          >
             <DebounceSelect
               mode="multiple"
-              value={scrumMasters}
-              tagRender={multipleSelectTagRender}
               placeholder="请输入 ScrumMaster 用户名/姓名"
-              onChange={(value) => setScrumMasters(value)}
               fetchOptions={findUserByName}
             />
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label="团队成员">
+          <Form.Item
+            name={'members'}
+            label="团队成员"
+            rules={[{ required: true, message: '请选择团队成员' }]}
+          >
             <DebounceSelect
               mode="multiple"
-              value={members}
-              tagRender={multipleSelectTagRender}
               placeholder="请输入团队成员 用户名/姓名"
               fetchOptions={findUserByName}
-              onChange={(value) => setMembers(value)}
             />
           </Form.Item>
         </Col>
@@ -188,4 +185,4 @@ const RoleForm: React.FC<TeamFormProps> = (props) => {
   );
 };
 
-export default RoleForm;
+export default TeamForm;

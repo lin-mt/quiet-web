@@ -1,79 +1,55 @@
 import { request } from 'umi';
-import type { Result } from '@/types/Result';
 import type { ReactText } from 'react';
 import type { NoticeIconData, QuietUser, QuietUserRole } from '@/services/system/EntityType';
 import type { RequestData } from '@ant-design/pro-table/lib/typing';
+import { DELETE, GET, PAGE, POST, PUT } from '@/utils/HttpUtils';
 
-export function listUsersByName(name: string): Promise<QuietUser[]> {
-  return request<Result<QuietUser[]>>('/api/system/user/listUsersByName', {
-    method: 'POST',
-    data: { name },
-  }).then((resp) => resp.data);
+const base_path = '/api/system/user';
+
+export function listUsersByName(keyword: string): Promise<QuietUser[]> {
+  return GET<QuietUser[]>(`${base_path}/list-users-by-name`, { keyword });
 }
 
 export async function pageUser(params?: any): Promise<Partial<RequestData<QuietUser>>> {
-  return request<Result<Partial<RequestData<QuietUser>>>>('/api/system/user/page', {
-    method: 'POST',
-    data: params,
-  }).then((resData) => {
-    return { ...resData.data, data: resData.data.results };
-  });
+  return PAGE<QuietUser>(`${base_path}/page`, params);
 }
 
 export async function registeredUser(save: QuietUser): Promise<QuietUser> {
-  return request<Result<QuietUser>>('/api/system/user/registered', {
-    method: 'POST',
-    data: { save },
-  }).then((resp) => resp.data);
+  return POST<QuietUser>(`${base_path}`, save);
 }
 
-export async function deleteUser(deleteId: string) {
-  request('/api/system/user/delete', {
-    method: 'POST',
-    data: { deleteId },
-  });
+export async function deleteUser(id: string) {
+  await DELETE(`${base_path}/${id}`);
 }
 
 export async function updateUser(update: QuietUser): Promise<QuietUser> {
-  return request<Result<QuietUser>>('/api/system/user/update', {
-    method: 'POST',
-    data: { update },
-  }).then((resp) => resp.data);
+  return PUT<QuietUser>(`${base_path}`, update);
 }
 
 export async function getNotices(options?: Record<string, any>) {
-  return request<API.NoticeIconList>('/api/notices', {
+  return request<SystemAPI.NoticeIconList>('/api/notices', {
     method: 'GET',
     ...(options || {}),
   });
 }
 
 export async function queryCurrent(): Promise<QuietUser> {
-  return request<Result<QuietUser>>('/api/system/user/currentUserInfo', {
-    method: 'POSt',
-  }).then((res) => {
-    if (res && res.data && !res.data.avatar) {
-      res.data.avatar =
-        'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
+  return GET<QuietUser>(`${base_path}/current-user-info`).then((res) => {
+    if (res && !res.avatar) {
+      res.avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
     }
-    return res.data;
+    return res;
   });
 }
 
-export async function removeRole(userId: string, roleId: string) {
-  return request('/api/system/user/removeRole', {
-    data: { params: { userId, roleId } },
-    method: 'POST',
-  });
+export async function removeRole(id: string, role_id: string) {
+  return POST(`${base_path}/remove-role`, { id, role_id });
 }
 
 export async function addRoles(
-  saveBatch: { userId: string; roleId: ReactText }[],
+  user_roles: { user_id: string; role_id: ReactText }[],
 ): Promise<QuietUserRole> {
-  return request<Result<QuietUserRole>>('/api/system/user/addRoles', {
-    method: 'POST',
-    data: { saveBatch },
-  }).then((resp) => resp.data);
+  return POST<QuietUserRole>(`${base_path}/add-roles`, { userRoles: user_roles });
 }
 
 export async function queryNotices(): Promise<any> {

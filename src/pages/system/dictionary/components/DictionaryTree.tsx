@@ -17,17 +17,8 @@ type DictionaryTreeProps = {
 };
 
 const DictionaryTree: React.FC<DictionaryTreeProps> = (props) => {
-  const {
-    type,
-    visible,
-    maskClosable,
-    closable,
-    onCancel,
-    onOk,
-    multiple,
-    onSelect,
-    afterClose,
-  } = props;
+  const { type, visible, maskClosable, closable, onCancel, onOk, multiple, onSelect, afterClose } =
+    props;
 
   const [treeData, setTreeData] = useState<DataNode[] | undefined>([]);
   const [selectedKeys, setSelectedKeys] = useState<ReactText[]>([]);
@@ -39,7 +30,7 @@ const DictionaryTree: React.FC<DictionaryTreeProps> = (props) => {
         for (let i = 0; i < data.length; i += 1) {
           buildResult[i].key = data[i].id;
           buildResult[i].title = data[i].label;
-          if (data[i].children) {
+          if (data[i].children && data[i].children.length > 0) {
             buildResult[i].children = buildDictionaryTreeNodes(data[i].children);
           } else {
             buildResult[i].isLeaf = true;

@@ -3,7 +3,7 @@ import { Button, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { deletePermission, queryPermission } from '@/services/system/QuietPermission';
+import { deletePermission, pagePermission } from '@/services/system/QuietPermission';
 import { PageContainer } from '@ant-design/pro-layout';
 import PermissionForm from '@/pages/system/permission/components/PermissionForm';
 import type { QuietPermission } from '@/services/system/EntityType';
@@ -21,25 +21,25 @@ const PermissionConfig: React.FC<any> = () => {
     },
     {
       title: '应用名称',
-      dataIndex: 'applicationName',
+      dataIndex: 'application_name',
       valueType: 'text',
       copyable: true,
     },
     {
       title: 'urlPattern',
-      dataIndex: 'urlPattern',
+      dataIndex: 'url_pattern',
       valueType: 'text',
       ellipsis: true,
       copyable: true,
     },
     {
       title: 'reqMethod',
-      dataIndex: 'requestMethod',
+      dataIndex: 'request_method',
       valueType: 'text',
     },
     {
       title: 'roleId',
-      dataIndex: 'roleId',
+      dataIndex: 'role_id',
       valueType: 'text',
       copyable: true,
     },
@@ -51,15 +51,15 @@ const PermissionConfig: React.FC<any> = () => {
     },
     {
       title: '创建时间',
-      dataIndex: 'gmtCreate',
-      key: 'gmtCreate',
+      dataIndex: 'gmt_create',
+      key: 'gmt_create',
       valueType: 'dateTime',
       search: false,
     },
     {
       title: '更新时间',
-      dataIndex: 'gmtUpdate',
-      key: 'gmtUpdate',
+      dataIndex: 'gmt_update',
+      key: 'gmt_update',
       valueType: 'dateTime',
       search: false,
     },
@@ -83,7 +83,9 @@ const PermissionConfig: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该配置信息吗？"
             onConfirm={() => {
-              deletePermission(record.id).then(() => permissionModalActionRef?.current?.reload());
+              if (record.id) {
+                deletePermission(record.id).then(() => permissionModalActionRef?.current?.reload());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -94,8 +96,8 @@ const PermissionConfig: React.FC<any> = () => {
   ];
 
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
-    gmtCreate: { show: false },
-    gmtUpdate: { show: false },
+    gmt_create: { show: false },
+    gmt_update: { show: false },
   });
 
   function createPermission() {
@@ -108,14 +110,14 @@ const PermissionConfig: React.FC<any> = () => {
       <ProTable<QuietPermission>
         actionRef={permissionModalActionRef}
         rowKey={(record) => record.id}
-        request={(params, sorter, filter) => queryPermission({ params, sorter, filter })}
+        request={(params, sorter, filter) => pagePermission({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createPermission} icon={<PlusOutlined />}>
             新增配置
           </Button>,
         ]}
         columns={columns}
-        columnsStateMap={columnsStateMap}
+        columnsState={{ value: columnsStateMap }}
         onColumnsStateChange={(map) => setColumnsStateMap(map)}
       />
       {permissionFormVisible && (

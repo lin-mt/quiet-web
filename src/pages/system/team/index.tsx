@@ -22,19 +22,19 @@ const TeamManagement: React.FC<any> = () => {
     },
     {
       title: '团队名',
-      dataIndex: 'teamName',
+      dataIndex: 'team_name',
       valueType: 'text',
     },
     {
       title: 'ProductOwner',
-      dataIndex: 'productOwners',
+      dataIndex: 'product_owners',
       search: false,
       render: (_, record) => (
         <Space>
-          {record.productOwners
-            ? record.productOwners.map(({ id, fullName }) => (
+          {record.product_owners
+            ? record.product_owners.map(({ id, full_name }) => (
                 <Tag color={'#108EE9'} key={id}>
-                  {fullName}
+                  {full_name}
                 </Tag>
               ))
             : '-'}
@@ -43,14 +43,14 @@ const TeamManagement: React.FC<any> = () => {
     },
     {
       title: 'ScrumMaster',
-      dataIndex: 'scrumMasters',
+      dataIndex: 'scrum_masters',
       search: false,
       render: (_, record) => (
         <Space>
-          {record.scrumMasters
-            ? record.scrumMasters.map(({ id, fullName }) => (
+          {record.scrum_masters
+            ? record.scrum_masters.map(({ id, full_name }) => (
                 <Tag color={'#108EE9'} key={id}>
-                  {fullName}
+                  {full_name}
                 </Tag>
               ))
             : '-'}
@@ -64,9 +64,9 @@ const TeamManagement: React.FC<any> = () => {
       render: (_, record) => (
         <Space>
           {record.members
-            ? record.members.map(({ id, fullName }) => (
+            ? record.members.map(({ id, full_name }) => (
                 <Tag color={'#108EE9'} key={id}>
-                  {fullName}
+                  {full_name}
                 </Tag>
               ))
             : '-'}
@@ -81,15 +81,15 @@ const TeamManagement: React.FC<any> = () => {
     },
     {
       title: '创建时间',
-      dataIndex: 'gmtCreate',
-      key: 'gmtCreate',
+      dataIndex: 'gmt_create',
+      key: 'gmt_create',
       valueType: 'dateTime',
       search: false,
     },
     {
       title: '更新时间',
-      dataIndex: 'gmtUpdate',
-      key: 'gmtUpdate',
+      dataIndex: 'gmt_update',
+      key: 'gmt_update',
       valueType: 'dateTime',
       search: false,
     },
@@ -113,7 +113,9 @@ const TeamManagement: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该团队以及队员信息吗？"
             onConfirm={() => {
-              deleteTeam(record.id).then(() => teamModalActionRef?.current?.reload());
+              if (record.id) {
+                deleteTeam(record.id).then(() => teamModalActionRef?.current?.reload());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -124,8 +126,8 @@ const TeamManagement: React.FC<any> = () => {
   ];
 
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
-    gmtCreate: { show: false },
-    gmtUpdate: { show: false },
+    gmt_create: { show: false },
+    gmt_update: { show: false },
   });
 
   function createTeam() {
@@ -149,7 +151,7 @@ const TeamManagement: React.FC<any> = () => {
           </Button>,
         ]}
         columns={columns}
-        columnsStateMap={columnsStateMap}
+        columnsState={{ value: columnsStateMap }}
         onColumnsStateChange={(map) => setColumnsStateMap(map)}
       />
       {roleFormVisible && (

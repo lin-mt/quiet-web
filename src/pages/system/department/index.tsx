@@ -3,7 +3,7 @@ import { Button, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ColumnsState, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { deleteDepartment, queryDepartment } from '@/services/system/QuietDepartment';
+import { deleteDepartment, pageDepartment } from '@/services/system/QuietDepartment';
 import { PageContainer } from '@ant-design/pro-layout';
 import DepartmentForm from '@/pages/system/department/components/DepartmentForm';
 import DepartmentTree from '@/pages/system/department/components/DepartmentTree';
@@ -26,13 +26,13 @@ const PermissionConfig: React.FC<any> = () => {
     },
     {
       title: '部门名称',
-      dataIndex: 'departmentName',
+      dataIndex: 'department_name',
       valueType: 'text',
       copyable: true,
     },
     {
       title: '父级部门ID',
-      dataIndex: 'parentId',
+      dataIndex: 'parent_id',
       valueType: 'text',
       copyable: true,
     },
@@ -44,15 +44,15 @@ const PermissionConfig: React.FC<any> = () => {
     },
     {
       title: '创建时间',
-      dataIndex: 'gmtCreate',
-      key: 'gmtCreate',
+      dataIndex: 'gmt_create',
+      key: 'gmt_create',
       valueType: 'dateTime',
       search: false,
     },
     {
       title: '更新时间',
-      dataIndex: 'gmtUpdate',
-      key: 'gmtUpdate',
+      dataIndex: 'gmt_update',
+      key: 'gmt_update',
       valueType: 'dateTime',
       search: false,
     },
@@ -86,7 +86,9 @@ const PermissionConfig: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该部门信息吗？"
             onConfirm={() => {
-              deleteDepartment(record.id).then(() => refreshPageInfo());
+              if (record.id) {
+                deleteDepartment(record.id).then(() => refreshPageInfo());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -105,8 +107,8 @@ const PermissionConfig: React.FC<any> = () => {
   }
 
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
-    gmtCreate: { show: false },
-    gmtUpdate: { show: false },
+    gmt_create: { show: false },
+    gmt_update: { show: false },
   });
 
   function createDepartment() {
@@ -123,7 +125,7 @@ const PermissionConfig: React.FC<any> = () => {
       <ProTable<QuietDepartment>
         actionRef={departmentModalActionRef}
         rowKey={(record) => record.id}
-        request={(params, sorter, filter) => queryDepartment({ params, sorter, filter })}
+        request={(params, sorter, filter) => pageDepartment({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="tree" onClick={showAllDepartmentByTree}>
             所有部门
@@ -133,7 +135,7 @@ const PermissionConfig: React.FC<any> = () => {
           </Button>,
         ]}
         columns={columns}
-        columnsStateMap={columnsStateMap}
+        columnsState={{ value: columnsStateMap }}
         onColumnsStateChange={(map) => setColumnsStateMap(map)}
       />
       {departmentFormVisible && (

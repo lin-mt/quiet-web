@@ -5,6 +5,7 @@ import { history, useModel } from 'umi';
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import type { MenuInfo } from 'rc-menu/lib/interface';
 import { outLogin } from '@/services/system/Login';
 
 export type GlobalHeaderRightProps = {
@@ -33,21 +34,16 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const onMenuClick = useCallback(
-    (event: {
-      key: React.Key;
-      keyPath: React.Key[];
-      item: React.ReactInstance;
-      domEvent: React.MouseEvent<HTMLElement>;
-    }) => {
+    (event: MenuInfo) => {
       const { key } = event;
-      if (key === 'logout' && initialState) {
-        setInitialState({ ...initialState, currentUser: undefined });
+      if (key === 'logout') {
+        setInitialState((s) => ({ ...s, currentUser: undefined }));
         loginOut();
         return;
       }
       history.push(`/account/${key}`);
     },
-    [initialState, setInitialState],
+    [setInitialState],
   );
 
   const loading = (
@@ -66,9 +62,9 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     return loading;
   }
 
-  const { currentUser } = initialState;
+  const { current_user } = initialState;
 
-  if (!currentUser || !currentUser.username) {
+  if (!current_user || !current_user.username) {
     return loading;
   }
 
@@ -97,8 +93,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   return (
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
-        <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
-        <span className={`${styles.name} anticon`}>{currentUser.fullName}</span>
+        <Avatar size="small" className={styles.avatar} src={current_user.avatar} alt="avatar" />
+        <span className={`${styles.name} anticon`}>{current_user.full_name}</span>
       </span>
     </HeaderDropdown>
   );

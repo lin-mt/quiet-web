@@ -3,7 +3,7 @@ import type { CascaderProps } from 'antd';
 import { Cascader, Empty, Spin } from 'antd';
 import type { DictionaryType } from '@/types/Type';
 import { useModel } from 'umi';
-import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DICTIONARY } from '@/constant/system/ModelNames';
 import type { QuietDictionary } from '@/services/system/EntityType';
 
 export interface DictionaryCascaderProps extends Omit<CascaderProps, 'options' | 'children'> {
@@ -24,37 +24,35 @@ export function DictionaryCascader({
   defaultValue,
   ...props
 }: DictionaryCascaderProps) {
-  const { getDictionariesByType } = useModel(DICTIONARY);
+  const { getDictionaryByType } = useModel(DICTIONARY);
   const [loading, setLoading] = React.useState(false);
   const [options, setOptions] = React.useState<OptionType[]>([]);
 
   useEffect(() => {
-    setLoading(true);
-    let isMounted = true;
-
     const buildOptions = (sources: QuietDictionary[]): OptionType[] => {
       const datumOptions: OptionType[] = [];
       sources.forEach((dictionary) => {
-        datumOptions.push({
-          key: dictionary.id,
-          value: `${dictionary.type}.${dictionary.key}`,
-          label: dictionary.label,
-          children: dictionary.children ? buildOptions(dictionary.children) : undefined,
-        });
+        if (dictionary.id) {
+          datumOptions.push({
+            key: dictionary.id,
+            value: `${dictionary.type}.${dictionary.key}`,
+            label: dictionary.label,
+            children: dictionary.children ? buildOptions(dictionary.children) : undefined,
+          });
+        }
       });
       return datumOptions;
     };
-
-    getDictionariesByType(type).then((dictionaries) => {
-      if (isMounted) {
-        setOptions(buildOptions(dictionaries));
+    setLoading(true);
+    getDictionaryByType(type)
+      .then((resp) => {
+        return buildOptions(resp);
+      })
+      .then((ops) => {
+        setOptions(ops);
         setLoading(false);
-      }
-    });
-    return () => {
-      isMounted = false;
-    };
-  }, [getDictionariesByType, type]);
+      });
+  }, [getDictionaryByType, type]);
 
   return (
     <Cascader

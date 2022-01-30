@@ -51,7 +51,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
     },
     {
       title: '姓名',
-      dataIndex: 'fullName',
+      dataIndex: 'full_name',
       valueType: 'text',
     },
     {
@@ -67,31 +67,31 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
     },
     {
       title: '电话号码',
-      dataIndex: 'phoneNumber',
+      dataIndex: 'phone_number',
       valueType: 'text',
       copyable: true,
     },
     {
       title: '邮箱',
-      dataIndex: 'emailAddress',
+      dataIndex: 'email_address',
       valueType: 'text',
       copyable: true,
     },
     {
       title: '账号到期',
-      dataIndex: 'accountExpired',
+      dataIndex: 'account_expired',
       valueType: 'select',
       valueEnum: accountExpiredStatus,
     },
     {
       title: '账号被锁',
-      dataIndex: 'accountLocked',
+      dataIndex: 'account_locked',
       valueType: 'select',
       valueEnum: accountLockedStatus,
     },
     {
       title: '密码过期',
-      dataIndex: 'credentialsExpired',
+      dataIndex: 'credentials_expired',
       valueType: 'select',
       valueEnum: credentialsExpiredStatus,
     },
@@ -112,7 +112,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
             placement="top"
             title="确认在该部门移除该用户吗？"
             onConfirm={async () => {
-              if (department) {
+              if (department && department.id && record.id) {
                 await removeUsers(department.id, [record.id]);
                 userModalActionRef.current?.reload();
               }
@@ -127,7 +127,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
 
   async function handleAddUserOk(value: any) {
     const userIds = value?.map((u: { value: string }) => u.value);
-    if (department) {
+    if (department && department.id) {
       await addUsers(department.id, userIds);
       userModalActionRef.current?.reload();
       setAddDepartmentUserVisible(false);
@@ -135,7 +135,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
   }
 
   async function confirmRemoveUsers() {
-    if (department) {
+    if (department && department.id) {
       const userIds: string[] = [];
       selectedRowKeys.forEach((v) => userIds.push(v.toString()));
       await removeUsers(department.id, userIds);
@@ -148,7 +148,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
     if (selectedRowKeys.length > 0) {
       setConfirmRemoveUsersVisible(true);
     } else {
-      message.info('请选择要移除的部门成员');
+      message.info('请选择要移除的部门成员').then();
     }
   }
 
@@ -157,7 +157,7 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
       destroyOnClose
       width={'80%'}
       footer={null}
-      title={`部门 ${department?.departmentName} 的成员信息`}
+      title={`部门 ${department?.department_name} 的成员信息`}
       visible={visible}
       onCancel={handleOnCancel}
       onOk={handleOnOk}
@@ -168,11 +168,12 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
         tableAlertRender={false}
         rowKey={(record) => record.id}
         request={(params, sorter, filter) =>
-          pageUser({ departmentId: department?.id, ...params, params, sorter, filter })
+          pageUser({ id: department?.id, ...params, params, sorter, filter })
         }
         toolBarRender={() => [
-          <span>已选 {selectedRowKeys.length} 项</span>,
+          <span key={'selected'}>已选 {selectedRowKeys.length} 项</span>,
           <Popconfirm
+            key={'remove'}
             placement={'top'}
             visible={confirmRemoveUsersVisible}
             title={`确认在该部门中移除所选的 ${selectedRowKeys.length} 名成员吗？`}

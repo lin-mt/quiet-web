@@ -4,7 +4,7 @@ import { CloseOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design
 import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import {
-  queryClient,
+  clientPage,
   deleteClient,
   removeClientAuthorizedGrantType,
   removeClientScope,
@@ -19,14 +19,21 @@ const ClientManagement: React.FC<any> = () => {
   const [clientFormVisible, setClientModalVisible] = useState<boolean>(false);
   const clientModalActionRef = useRef<ActionType>();
 
-  async function confirmRemoveClientAuthorizedGrantType(id: string, authorizedGrantType: string) {
-    await removeClientAuthorizedGrantType(id, authorizedGrantType);
-    clientModalActionRef?.current?.reload();
+  async function confirmRemoveClientAuthorizedGrantType(
+    id: string | undefined,
+    authorized_grant_type: string,
+  ) {
+    if (id) {
+      await removeClientAuthorizedGrantType(id, authorized_grant_type);
+      clientModalActionRef?.current?.reload();
+    }
   }
 
-  async function confirmRemoveClientScope(id: string, scope: string) {
-    await removeClientScope(id, scope);
-    clientModalActionRef?.current?.reload();
+  async function confirmRemoveClientScope(id: string | undefined, scope: string) {
+    if (id) {
+      await removeClientScope(id, scope);
+      clientModalActionRef?.current?.reload();
+    }
   }
 
   const columns: ProColumns<QuietClient>[] = [
@@ -39,23 +46,23 @@ const ClientManagement: React.FC<any> = () => {
     },
     {
       title: '客户端ID',
-      dataIndex: 'clientId',
+      dataIndex: 'client_id',
       valueType: 'text',
     },
     {
       title: '名称',
-      dataIndex: 'clientName',
+      dataIndex: 'client_name',
       valueType: 'text',
     },
     {
       title: '需要认证',
-      dataIndex: 'secretRequired',
+      dataIndex: 'secret_required',
       valueType: 'select',
       valueEnum: secretRequiredStatus,
     },
     {
       title: '自动授权',
-      dataIndex: 'autoApprove',
+      dataIndex: 'auto_approve',
       valueType: 'select',
       valueEnum: autoApproveStatus,
     },
@@ -68,6 +75,7 @@ const ClientManagement: React.FC<any> = () => {
     {
       title: '授权范围',
       dataIndex: 'scope',
+      search: false,
       render: (_, record) => (
         <Space direction={'vertical'}>
           {record.scope
@@ -79,7 +87,7 @@ const ClientManagement: React.FC<any> = () => {
                   onClose={(e) => e.preventDefault()}
                   closeIcon={
                     <Popconfirm
-                      title={`确定移除 ${record.clientName} 的 ${scope} 授权范围吗？`}
+                      title={`确定移除 ${record.client_name} 的 ${scope} 授权范围吗？`}
                       icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                       /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
                       onConfirm={confirmRemoveClientScope.bind(this, record.id, scope)}
@@ -97,33 +105,33 @@ const ClientManagement: React.FC<any> = () => {
     },
     {
       title: '授权类型',
-      dataIndex: 'authorizedGrantTypes',
+      dataIndex: 'authorized_grant_types',
       search: false,
       render: (_, record) => (
         <Space direction={'vertical'}>
-          {record.authorizedGrantTypes
-            ? record.authorizedGrantTypes.map((authorizedGrantType) => (
+          {record.authorized_grant_types
+            ? record.authorized_grant_types.map((authorized_grant_type) => (
                 <Tag
                   color={'#108EE9'}
-                  key={authorizedGrantType}
+                  key={authorized_grant_type}
                   closable={true}
                   onClose={(e) => e.preventDefault()}
                   closeIcon={
                     <Popconfirm
-                      title={`确定移除 ${record.clientName} 的 ${authorizedGrantType} 授权类型吗？`}
+                      title={`确定移除 ${record.client_name} 的 ${authorized_grant_type} 授权类型吗？`}
                       icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                       onConfirm={confirmRemoveClientAuthorizedGrantType.bind(
                         /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
                         this,
                         record.id,
-                        authorizedGrantType,
+                        authorized_grant_type,
                       )}
                     >
                       <CloseOutlined />
                     </Popconfirm>
                   }
                 >
-                  {authorizedGrantType}
+                  {authorized_grant_type}
                 </Tag>
               ))
             : '-'}
@@ -132,27 +140,27 @@ const ClientManagement: React.FC<any> = () => {
     },
     {
       title: 'token有效期',
-      dataIndex: 'accessTokenValiditySeconds',
+      dataIndex: 'access_token_validity_seconds',
       valueType: 'digit',
       search: false,
     },
     {
       title: '刷新token的有效期',
-      dataIndex: 'refreshTokenValiditySeconds',
+      dataIndex: 'refresh_token_validity_seconds',
       valueType: 'digit',
       search: false,
     },
     {
       title: '资源ID',
-      key: 'resourceIds',
-      dataIndex: 'resourceIds',
+      key: 'resource_ids',
+      dataIndex: 'resource_ids',
       valueType: 'text',
       search: false,
     },
     {
       title: '重定向Uri',
-      key: 'registeredRedirectUri',
-      dataIndex: 'registeredRedirectUri',
+      key: 'registered_redirect_uri',
+      dataIndex: 'registered_redirect_uri',
       valueType: 'text',
       search: false,
     },
@@ -163,15 +171,15 @@ const ClientManagement: React.FC<any> = () => {
     },
     {
       title: '创建时间',
-      dataIndex: 'gmtCreate',
-      key: 'gmtCreate',
+      dataIndex: 'gmt_create',
+      key: 'gmt_create',
       valueType: 'dateTime',
       search: false,
     },
     {
       title: '更新时间',
-      dataIndex: 'gmtUpdate',
-      key: 'gmtUpdate',
+      dataIndex: 'gmt_update',
+      key: 'gmt_update',
       valueType: 'dateTime',
       search: false,
     },
@@ -196,7 +204,9 @@ const ClientManagement: React.FC<any> = () => {
             placement="topLeft"
             title="确认删除该客户端吗？"
             onConfirm={() => {
-              deleteClient(record.id).then(() => clientModalActionRef?.current?.reload());
+              if (record.id) {
+                deleteClient(record.id).then(() => clientModalActionRef?.current?.reload());
+              }
             }}
           >
             <a key="delete">删除</a>
@@ -206,10 +216,10 @@ const ClientManagement: React.FC<any> = () => {
     },
   ];
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
-    gmtCreate: { show: false },
-    gmtUpdate: { show: false },
-    resourceIds: { show: false },
-    registeredRedirectUri: { show: false },
+    gmt_create: { show: false },
+    gmt_update: { show: false },
+    resource_ids: { show: false },
+    registered_redirect_uri: { show: false },
   });
 
   return (
@@ -217,7 +227,7 @@ const ClientManagement: React.FC<any> = () => {
       <ProTable<QuietClient>
         actionRef={clientModalActionRef}
         rowKey={(record) => record.id}
-        request={(params, sorter, filter) => queryClient({ params, sorter, filter })}
+        request={(params, sorter, filter) => clientPage({ params, sorter, filter })}
         toolBarRender={() => [
           <Button
             type="primary"
@@ -231,7 +241,7 @@ const ClientManagement: React.FC<any> = () => {
           </Button>,
         ]}
         columns={columns}
-        columnsStateMap={columnsStateMap}
+        columnsState={{ value: columnsStateMap }}
         onColumnsStateChange={(map) => setColumnsStateMap(map)}
       />
       {clientFormVisible && (

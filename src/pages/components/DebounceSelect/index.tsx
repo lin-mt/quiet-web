@@ -2,6 +2,7 @@ import React from 'react';
 import { Empty, Select, Spin } from 'antd';
 import type { SelectProps } from 'antd/es/select';
 import debounce from 'lodash/debounce';
+import { multipleSelectTagRender } from '@/utils/RenderUtils';
 
 export interface DebounceSelectProps<ValueType = any>
   extends Omit<SelectProps<ValueType>, 'options' | 'children'> {
@@ -10,7 +11,7 @@ export interface DebounceSelectProps<ValueType = any>
 }
 
 export function DebounceSelect<
-  ValueType extends { key?: string; label: React.ReactNode; value: string | number } = any
+  ValueType extends { key?: string; label: React.ReactNode; value: string | number } = any,
 >({ fetchOptions, debounceTimeout = 500, ...props }: DebounceSelectProps) {
   const [fetching, setFetching] = React.useState(false);
   const [options, setOptions] = React.useState<ValueType[]>([]);
@@ -43,6 +44,7 @@ export function DebounceSelect<
       labelInValue
       filterOption={false}
       onSearch={debounceFetcher}
+      tagRender={multipleSelectTagRender}
       notFoundContent={<div style={{ textAlign: 'center' }}>{fetching ? <Spin /> : <Empty />}</div>}
       options={options}
       onBlur={() => setOptions([])}

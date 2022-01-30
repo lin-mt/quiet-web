@@ -80,7 +80,7 @@ const RoleForm: React.FC<PermissionFormProps> = (props) => {
         <Col>
           <Form.Item
             label="应用名称"
-            name="applicationName"
+            name="application_name"
             rules={[{ required: true, message: '请输入应用名称' }]}
           >
             <Input placeholder="请输入应用名称" />
@@ -89,7 +89,7 @@ const RoleForm: React.FC<PermissionFormProps> = (props) => {
         <Col>
           <Form.Item
             label="urlPattern"
-            name="urlPattern"
+            name="url_pattern"
             rules={[
               { required: true, message: '请输入urlPattern' },
               { max: 100, message: 'url匹配规则长度不能超过 100' },
@@ -99,14 +99,14 @@ const RoleForm: React.FC<PermissionFormProps> = (props) => {
           </Form.Item>
         </Col>
         <Col>
-          <Form.Item label="requestMethod" name="requestMethod">
+          <Form.Item label="requestMethod" name="request_method">
             <Input placeholder="请输入请求方法" />
           </Form.Item>
         </Col>
         <Col>
           <Form.Item
             label="角色 ID"
-            name="roleId"
+            name="role_id"
             rules={[{ required: true, message: '请输入角色ID' }]}
           >
             <Input placeholder="请输入角色 ID" />

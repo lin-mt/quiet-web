@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
+import { Button, Col, Form, Input, Modal, Row, Select, Switch } from 'antd';
 import { registeredUser, updateUser } from '@/services/system/QuietUser';
 import type { QuietUser } from '@/services/system/EntityType';
 
@@ -98,7 +98,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
           <Col span={8}>
             <Form.Item
               label="姓名"
-              name="fullName"
+              name="full_name"
               rules={[
                 { required: true, message: '请输入姓名' },
                 { max: 10, message: '姓名的长度不能超过 10' },
@@ -124,7 +124,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
           <Col span={12}>
             <Form.Item
               label="密码"
-              name="secretCode"
+              name="secret_code"
               rules={[
                 { required: true, message: '请输入密码' },
                 { min: 5, max: 16, message: '密码长度要在 5 - 16 之间' },
@@ -136,12 +136,12 @@ const UserForm: React.FC<UserFormProps> = (props) => {
           <Col span={12}>
             <Form.Item
               label="确认密码"
-              name="confirmSecretCode"
+              name="confirm_secret_code"
               rules={[
                 { required: true, message: '请确认密码' },
                 ({ getFieldValue }) => ({
                   validator(rule, value) {
-                    if (!value || getFieldValue('secretCode') === value) {
+                    if (!value || getFieldValue('secret_code') === value) {
                       return Promise.resolve();
                     }
                     return Promise.reject(new Error('两次输入的密码不匹配！'));
@@ -158,7 +158,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
           <Col span={12}>
             <Form.Item
               label="手机号"
-              name="phoneNumber"
+              name="phone_number"
               rules={[
                 {
                   required: true,
@@ -176,7 +176,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
           <Col span={12}>
             <Form.Item
               label="联系邮箱"
-              name="emailAddress"
+              name="email_address"
               rules={[{ type: 'email', message: '邮箱格式不正确' }]}
             >
               <Input placeholder="请输入联系邮箱" />
@@ -187,37 +187,29 @@ const UserForm: React.FC<UserFormProps> = (props) => {
           <>
             <Row gutter={20}>
               <Col span={12}>
-                <Form.Item label="是否锁定" name={'accountLocked'}>
-                  <Select placeholder="请选择" allowClear>
-                    <Option value="true">是</Option>
-                    <Option value="false">否</Option>
-                  </Select>
+                <Form.Item label="是否锁定" name={'account_locked'} valuePropName={'checked'}>
+                  <Switch checkedChildren="是" unCheckedChildren="否" defaultChecked />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="账号是否到期" name="accountExpired">
-                  <Select placeholder="请选择" allowClear>
-                    <Option value="true">是</Option>
-                    <Option value="false">否</Option>
-                  </Select>
+                <Form.Item label="账号是否到期" name="account_expired" valuePropName={'checked'}>
+                  <Switch checkedChildren="是" unCheckedChildren="否" defaultChecked />
                 </Form.Item>
               </Col>
             </Row>
             <Row gutter={20}>
               <Col span={12}>
-                <Form.Item label="账号是否启用" name="enabled">
-                  <Select placeholder="请选择" allowClear>
-                    <Option value="true">是</Option>
-                    <Option value="false">否</Option>
-                  </Select>
+                <Form.Item label="账号是否启用" name="enabled" valuePropName={'checked'}>
+                  <Switch checkedChildren="是" unCheckedChildren="否" defaultChecked />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="密码是否过期" name="credentialsExpired">
-                  <Select placeholder="请选择" allowClear>
-                    <Option value="true">是</Option>
-                    <Option value="false">否</Option>
-                  </Select>
+                <Form.Item
+                  label="密码是否过期"
+                  name="credentials_expired"
+                  valuePropName={'checked'}
+                >
+                  <Switch checkedChildren="是" unCheckedChildren="否" defaultChecked />
                 </Form.Item>
               </Col>
             </Row>
