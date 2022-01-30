@@ -1,4 +1,5 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { SettingDrawer } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { message, notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
@@ -12,8 +13,8 @@ import { ResultType } from '@/types/Result';
 import { LocalStorage, System, Url } from '@/constant';
 import type { RequestOptionsInit } from 'umi-request';
 import { request as umiReq } from 'umi';
-import type { QuietUser, TokenInfo } from '@/services/system/EntityType';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
+import defaultSettings from '../config/defaultSettings';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -27,9 +28,10 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  current_user?: QuietUser;
-  token_info?: TokenInfo;
-  fetchUserInfo?: () => Promise<QuietUser | undefined>;
+  current_user?: SystemAPI.QuietUser;
+  loading?: boolean;
+  token_info?: SystemAPI.TokenInfo;
+  fetchUserInfo?: () => Promise<SystemAPI.QuietUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -50,7 +52,7 @@ export async function getInitialState(): Promise<{
   }
   return {
     fetchUserInfo,
-    settings: {},
+    settings: defaultSettings,
   };
 }
 
@@ -85,7 +87,7 @@ const refreshToken = () => {
       grant_type: System.GrantType.RefreshToken,
       refresh_token: tokenInfo.refresh_token,
     };
-    return umiReq<TokenInfo>('/api/system/oauth/token', {
+    return umiReq<SystemAPI.TokenInfo>('/api/system/oauth/token', {
       method: 'POST',
       params: refreshTokenData,
       headers: {
@@ -236,7 +238,7 @@ export const request: RequestConfig = {
 };
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
@@ -253,11 +255,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     links: isDev
       ? [
-          <Link to="/umi/plugin/openapi" target="_blank">
+          <Link to="/umi/plugin/openapi" target="_blank" key={'openapi'}>
             <LinkOutlined />
             <span>OpenAPI 文档</span>
           </Link>,
-          <Link to="/~docs">
+          <Link to="/~docs" key={'docs'}>
             <BookOutlined />
             <span>业务组件文档</span>
           </Link>,
@@ -266,6 +268,27 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
+    // 增加一个 loading 的状态
+    childrenRender: (children, props) => {
+      // if (initialState?.loading) return <PageLoading />;
+      return (
+        <>
+          {children}
+          {!props.location?.pathname?.includes('/login') && (
+            <SettingDrawer
+              enableDarkTheme
+              settings={initialState?.settings}
+              onSettingChange={(settings) => {
+                setInitialState((preInitialState) => ({
+                  ...preInitialState,
+                  settings,
+                }));
+              }}
+            />
+          )}
+        </>
+      );
+    },
     ...initialState?.settings,
   };
 };

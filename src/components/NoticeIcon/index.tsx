@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { Tag, message } from 'antd';
 import { groupBy } from 'lodash';
 import moment from 'moment';
-import { useModel } from 'umi';
-import { getNotices } from '@/services/system/QuietUser';
+import { useModel, useRequest } from 'umi';
 
 import NoticeIcon from './NoticeIcon';
 import styles from './index.less';
+import { getNotices } from '@/services/system/QuietUser';
 
 export type GlobalHeaderRightProps = {
   fetchingNotices?: boolean;
@@ -14,7 +14,9 @@ export type GlobalHeaderRightProps = {
   onNoticeClear?: (tabName?: string) => void;
 };
 
-const getNoticeData = (notices: API.NoticeIconItem[]): Record<string, API.NoticeIconItem[]> => {
+const getNoticeData = (
+  notices: SystemAPI.NoticeIconItem[],
+): Record<string, SystemAPI.NoticeIconItem[]> => {
   if (!notices || notices.length === 0 || !Array.isArray(notices)) {
     return {};
   }
@@ -54,7 +56,7 @@ const getNoticeData = (notices: API.NoticeIconItem[]): Record<string, API.Notice
   return groupBy(newNotices, 'type');
 };
 
-const getUnreadData = (noticeData: Record<string, API.NoticeIconItem[]>) => {
+const getUnreadData = (noticeData: Record<string, SystemAPI.NoticeIconItem[]>) => {
   const unreadMsg: Record<string, number> = {};
   Object.keys(noticeData).forEach((key) => {
     const value = noticeData[key];
@@ -70,14 +72,15 @@ const getUnreadData = (noticeData: Record<string, API.NoticeIconItem[]>) => {
   return unreadMsg;
 };
 
-const NoticeIconView = () => {
+const NoticeIconView: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { current_user } = initialState || {};
-  const [notices, setNotices] = useState<API.NoticeIconItem[]>([]);
+  const [notices, setNotices] = useState<SystemAPI.NoticeIconItem[]>([]);
+  const { data } = useRequest(getNotices);
 
   useEffect(() => {
-    getNotices().then(({ data }) => setNotices(data || []));
-  }, []);
+    setNotices(data || []);
+  }, [data]);
 
   const noticeData = getNoticeData(notices);
   const unreadMsg = getUnreadData(noticeData || {});

@@ -18,10 +18,9 @@ export async function accountLogin(params: LoginParams) {
   });
 }
 
-export async function oauthToken(params: LoginParams) {
+export async function oauthToken(params: SystemAPI.LoginParams) {
   const oauthData = {
     ...params,
-    password: params.secret_code,
     grant_type: System.GrantType.Password,
   };
   return request<TokenInfo>('/api/system/oauth/token', {
@@ -33,8 +32,22 @@ export async function oauthToken(params: LoginParams) {
   });
 }
 
-export async function getFakeCaptcha(mobile: string) {
-  return request(`/api/login/captcha?mobile=${mobile}`);
+/** 发送验证码 POST /api/login/captcha */
+export async function getFakeCaptcha(
+  params: {
+    // query
+    /** 手机号 */
+    phone?: string;
+  },
+  options?: Record<string, any>,
+) {
+  return request<SystemAPI.FakeCaptcha>('/api/login/captcha', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
 }
 
 export async function outLogin() {
