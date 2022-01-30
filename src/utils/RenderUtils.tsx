@@ -1,5 +1,5 @@
-import type { CustomTagProps } from 'rc-select/lib/interface/generator';
 import { Tag } from 'antd';
+import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 
 export const tagColor = '#108EE9';
 export const filterStyle = {
