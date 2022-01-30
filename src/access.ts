@@ -12,14 +12,12 @@ export default function access(initialState: { current_user?: QuietUser | undefi
 
 function hasRole(roles: QuietRole[], roleName: string) {
   let hasRoleName = false;
-  if (!roles) {
-    return hasRoleName;
-  }
-  // eslint-disable-next-line no-restricted-syntax
-  for (const role of roles) {
-    if (role.role_name === roleName) {
-      hasRoleName = true;
-      break;
+  if (roles && roles.length > 0) {
+    for (const role of roles) {
+      if (role.role_name === roleName) {
+        hasRoleName = true;
+        break;
+      }
     }
   }
   return hasRoleName;

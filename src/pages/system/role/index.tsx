@@ -113,7 +113,7 @@ const RoleManagement: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietRole>
         actionRef={roleModalActionRef}
-        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
+        rowKey={(record) => record.id}
         request={(params, sorter, filter) => pageRole({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="tree" onClick={() => setRoleTreeVisible(true)}>

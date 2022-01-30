@@ -109,7 +109,7 @@ const PermissionConfig: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietPermission>
         actionRef={permissionModalActionRef}
-        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
+        rowKey={(record) => record.id}
         request={(params, sorter, filter) => pagePermission({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createPermission} icon={<PlusOutlined />}>

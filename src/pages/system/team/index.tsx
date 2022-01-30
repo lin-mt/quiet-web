@@ -143,7 +143,7 @@ const TeamManagement: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietTeam>
         actionRef={teamModalActionRef}
-        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
+        rowKey={(record) => record.id}
         request={(params, sorter, filter) => pageTeam({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createTeam}>

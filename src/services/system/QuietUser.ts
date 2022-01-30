@@ -27,7 +27,7 @@ export async function updateUser(update: QuietUser): Promise<QuietUser> {
 }
 
 export async function getNotices(options?: Record<string, any>) {
-  return request<API.NoticeIconList>('/api/notices', {
+  return request<SystemAPI.NoticeIconList>('/api/notices', {
     method: 'GET',
     ...(options || {}),
   });

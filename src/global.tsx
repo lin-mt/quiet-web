@@ -5,6 +5,20 @@ import defaultSettings from '../config/defaultSettings';
 const { pwa } = defaultSettings;
 const isHttps = document.location.protocol === 'https:';
 
+const clearCache = () => {
+  // remove all caches
+  if (window.caches) {
+    caches
+      .keys()
+      .then((keys) => {
+        keys.forEach((key) => {
+          caches.delete(key);
+        });
+      })
+      .catch((e) => console.log(e));
+  }
+};
+
 // if pwa is true
 if (pwa) {
   // Notify user if offline now
@@ -34,9 +48,9 @@ if (pwa) {
         };
         worker.postMessage({ type: 'skip-waiting' }, [channel.port2]);
       });
-      // Refresh current page to use the updated HTML and other assets after SW has skiped waiting
-      // @ts-ignore
-      window.location.reload(true);
+
+      clearCache();
+      window.location.reload();
       return true;
     };
     const key = `open${Date.now()}`;
@@ -73,13 +87,5 @@ if (pwa) {
     if (sw) sw.unregister();
   });
 
-  // remove all caches
-  // @ts-ignore
-  if (window.caches && window.caches.keys()) {
-    caches.keys().then((keys) => {
-      keys.forEach((key) => {
-        caches.delete(key);
-      });
-    });
-  }
+  clearCache();
 }

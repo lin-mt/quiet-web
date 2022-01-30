@@ -7,7 +7,6 @@ import type { ActionType, ProColumns, ColumnsState } from '@ant-design/pro-table
 import ProTable from '@ant-design/pro-table';
 import { pageUser, deleteUser, removeRole, addRoles } from '@/services/system/QuietUser';
 import UserForm from './components/UserForm';
-import { Tooltip } from 'antd';
 import RoleTree from '@/pages/system/role/components/RoleTree';
 import { Gender } from '@/services/system/Enums';
 import {
@@ -79,30 +78,28 @@ const UserInfo: React.FC<any> = () => {
       dataIndex: 'authorities',
       search: false,
       render: (_, record) => (
-        <Space>
+        <Space direction={'vertical'}>
           {!(record.authorities && record.authorities.length > 0)
             ? '-'
             : record.authorities.map(({ id, role_name, role_cn_name }) => (
-                <Tooltip placement="bottom" title={role_cn_name} key={role_name}>
-                  <Tag
-                    color={'#108EE9'}
-                    key={role_name}
-                    closable={true}
-                    onClose={(e) => e.preventDefault()}
-                    closeIcon={
-                      <Popconfirm
-                        title={`确定删除用户 ${record.full_name} 的 ${role_cn_name} 角色吗？`}
-                        icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-                        /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
-                        onConfirm={confirmRemoveUserRole.bind(this, record.id, id)}
-                      >
-                        <CloseOutlined />
-                      </Popconfirm>
-                    }
-                  >
-                    {role_name}
-                  </Tag>
-                </Tooltip>
+                <Tag
+                  color={'#108EE9'}
+                  key={role_name}
+                  closable={true}
+                  onClose={(e) => e.preventDefault()}
+                  closeIcon={
+                    <Popconfirm
+                      title={`确定删除用户 ${record.full_name} 的 ${role_cn_name} 角色吗？`}
+                      icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                      /* eslint-disable-next-line @typescript-eslint/no-invalid-this */
+                      onConfirm={confirmRemoveUserRole.bind(this, record.id, id)}
+                    >
+                      <CloseOutlined />
+                    </Popconfirm>
+                  }
+                >
+                  {role_name}
+                </Tag>
               ))}
         </Space>
       ),
@@ -233,7 +230,7 @@ const UserInfo: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietUser>
         actionRef={userModalActionRef}
-        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
+        rowKey={(record) => record.id}
         request={(params, sorter, filter) => pageUser({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createUser}>
