@@ -11,6 +11,11 @@ export default {
   'menu.system.client': '应用授权',
   'menu.system.dictionary': '数据字典',
   'menu.system.gateway-route': '网关配置',
+  'menu.scrum': '敏捷管理',
+  'menu.scrum.project': '项目管理',
+  'menu.scrum.project-detail': '项目详情',
+  'menu.scrum.project-iteration': '迭代详情',
+  'menu.scrum.template': '模板管理',
 
   'menu.welcome': '欢迎',
   'menu.more-blocks': '更多区块',

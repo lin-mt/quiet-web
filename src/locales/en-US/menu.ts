@@ -11,6 +11,11 @@ export default {
   'menu.system.client': 'ApplicationAuthorization',
   'menu.system.dictionary': 'DictionaryConfig',
   'menu.system.gateway-route': 'RouteConfig',
+  'menu.scrum': 'AgileManagement',
+  'menu.scrum.project': 'ProjectManagement',
+  'menu.scrum.project-detail': 'ProjectDetails',
+  'menu.scrum.project-iteration': 'ProjectIteration',
+  'menu.scrum.template': 'TemplateManagement',
 
   'menu.welcome': 'Welcome',
   'menu.more-blocks': 'More Blocks',
