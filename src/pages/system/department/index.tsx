@@ -124,9 +124,7 @@ const PermissionConfig: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietDepartment>
         actionRef={departmentModalActionRef}
-        rowKey={(record, index) => {
-          return record.id ? record.id : `${index}`;
-        }}
+        rowKey={(record) => record.id}
         request={(params, sorter, filter) => pageDepartment({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="tree" onClick={showAllDepartmentByTree}>

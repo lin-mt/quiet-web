@@ -166,16 +166,14 @@ const DepartmentUser: React.FC<DepartmentUserProps> = (props) => {
         actionRef={userModalActionRef}
         rowSelection={{ onChange: (keys) => setSelectedRowKeys(keys) }}
         tableAlertRender={false}
-        rowKey={(record, index) => {
-          if (record.id) return record.id;
-          else return `${index}`;
-        }}
+        rowKey={(record) => record.id}
         request={(params, sorter, filter) =>
           pageUser({ id: department?.id, ...params, params, sorter, filter })
         }
         toolBarRender={() => [
-          <span>已选 {selectedRowKeys.length} 项</span>,
+          <span key={'selected'}>已选 {selectedRowKeys.length} 项</span>,
           <Popconfirm
+            key={'remove'}
             placement={'top'}
             visible={confirmRemoveUsersVisible}
             title={`确认在该部门中移除所选的 ${selectedRowKeys.length} 名成员吗？`}

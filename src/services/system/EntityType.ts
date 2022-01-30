@@ -1,5 +1,5 @@
 export interface BaseEntity {
-  id?: string;
+  id: string;
   creator?: string;
   updater?: string;
   gmt_create?: string;
