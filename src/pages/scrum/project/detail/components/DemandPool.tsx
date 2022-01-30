@@ -10,7 +10,7 @@ import DemandCard from '@/pages/scrum/demand/components/DemandCard';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { DroppableId, LoadingMoreContainer } from '@/pages/scrum/project/detail/components/Common';
 import { DictionaryType } from '@/types/Type';
-import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DICTIONARY } from '@/constant/system/ModelNames';
 import { filterStyle } from '@/utils/RenderUtils';
 import type { QuietDictionary } from '@/services/system/EntityType';
 
@@ -23,7 +23,7 @@ export interface ScrumDemandFilter {
 export default forwardRef((_, ref) => {
   const limit = 6;
   const { projectId, priorities, priorityColors } = useModel(PROJECT_DETAIL);
-  const { getDictionaryLabels, getDictionariesByType } = useModel(DICTIONARY);
+  const { getDictionaryLabelByType, getDictionaryByType } = useModel(DICTIONARY);
 
   const [offset, setOffset] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -54,7 +54,7 @@ export default forwardRef((_, ref) => {
     },
     addDemand: (newDemand: ScrumDemand, index: number) => {
       const demandForAdd = newDemand;
-      demandForAdd.iterationId = undefined;
+      demandForAdd.iteration_id = undefined;
       const newToBePlanned = Array.from(toBePlanned);
       newToBePlanned.splice(index, 0, demandForAdd);
       setToBePlanned(newToBePlanned);
@@ -69,19 +69,18 @@ export default forwardRef((_, ref) => {
         setOffset(demands.length);
         setHasMore(limit === demands.length);
       });
-      await getDictionaryLabels(DictionaryType.DemandType).then((labels) =>
-        setDemandTypeLabels(labels),
-      );
-      await getDictionariesByType(DictionaryType.DemandType).then((dictionaries) => {
-        setDemandType(dictionaries);
-      });
       setLoading(false);
     }
-  }, [demandFilter, getDictionariesByType, getDictionaryLabels, projectId]);
+  }, [demandFilter, projectId]);
 
   useEffect(() => {
     refreshToBePlanned().then();
   }, [refreshToBePlanned]);
+
+  useEffect(() => {
+    getDictionaryByType(DictionaryType.DemandType).then((resp) => setDemandType(resp));
+    getDictionaryLabelByType(DictionaryType.DemandType).then((resp) => setDemandTypeLabels(resp));
+  }, [getDictionaryByType, getDictionaryLabelByType]);
 
   function loadMoreDemandsToBePlanned() {
     if (hasMore && projectId) {
@@ -105,19 +104,6 @@ export default forwardRef((_, ref) => {
         extra={
           <Space size={'large'}>
             <Space>
-              <Select
-                size={'small'}
-                bordered={false}
-                allowClear={true}
-                style={{ ...filterStyle, width: 93 }}
-                placeholder={'规划状态'}
-                onChange={(value) =>
-                  setDemandFilter({ ...demandFilter, planned: value?.toString() })
-                }
-              >
-                <Select.Option value={'false'}>待规划</Select.Option>
-                <Select.Option value={'true'}>已规划</Select.Option>
-              </Select>
               <Select
                 size={'small'}
                 bordered={false}
@@ -163,7 +149,7 @@ export default forwardRef((_, ref) => {
                   <Draggable
                     draggableId={demand.id}
                     index={index}
-                    isDragDisabled={!!demand.iterationId}
+                    isDragDisabled={!!demand.iteration_id}
                   >
                     {(demandProvider) => (
                       <div
@@ -175,7 +161,7 @@ export default forwardRef((_, ref) => {
                           <DemandCard
                             demand={demand}
                             cardStyle={
-                              demand.iterationId
+                              demand.iteration_id
                                 ? {
                                     backgroundColor: '#ececec',
                                     cursor: 'pointer',
@@ -231,7 +217,7 @@ export default forwardRef((_, ref) => {
               icon={<CaretDownFilled />}
             />
           ) : (
-            '已无更多需求...'
+            '已无更多待规划的需求...'
           )}
         </LoadingMoreContainer>
       )}

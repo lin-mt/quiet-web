@@ -10,20 +10,15 @@ import { CaretDownFilled, ForwardFilled } from '@ant-design/icons';
 import { scrollByIterationId } from '@/services/scrum/ScrumDemand';
 import { DroppableId, LoadingMoreContainer } from '@/pages/scrum/project/detail/components/Common';
 import { filterStyle } from '@/utils/RenderUtils';
-import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DICTIONARY } from '@/constant/system/ModelNames';
 import { DictionaryType } from '@/types/Type';
 
 export default forwardRef((_, ref) => {
   const limit = 6;
 
-  const {
-    projectId,
-    versions,
-    priorityColors,
-    selectedIterationId,
-    setSelectedIterationId,
-  } = useModel(PROJECT_DETAIL);
-  const { getDictionaryLabels } = useModel(DICTIONARY);
+  const { projectId, versions, priorityColors, selectedIterationId, setSelectedIterationId } =
+    useModel(PROJECT_DETAIL);
+  const { getDictionaryLabelByType } = useModel(DICTIONARY);
 
   const [offset, setOffset] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -50,7 +45,7 @@ export default forwardRef((_, ref) => {
     },
     addDemand: (newDemand: ScrumDemand, index: number) => {
       const demandForAdd = newDemand;
-      demandForAdd.iterationId = selectedIterationId;
+      demandForAdd.iteration_id = selectedIterationId;
       const newToBePlanned = Array.from(iterationDemands);
       newToBePlanned.splice(index, 0, demandForAdd);
       setIterationDemands(newToBePlanned);
@@ -65,13 +60,16 @@ export default forwardRef((_, ref) => {
         setIterationDemands(demands);
         setOffset(demands.length);
         setHasMore(limit === demands.length);
-        await getDictionaryLabels(DictionaryType.DemandType).then((labels) =>
-          setDemandTypeLabels(labels),
-        );
         setLoading(false);
       });
     }
-  }, [getDictionaryLabels, selectedIterationId]);
+  }, [selectedIterationId]);
+
+  useEffect(() => {
+    getDictionaryLabelByType(DictionaryType.DemandType).then((labels) =>
+      setDemandTypeLabels(labels),
+    );
+  }, [getDictionaryLabelByType]);
 
   function loadMoreDemandsInIteration() {
     if (hasMore && selectedIterationId) {
@@ -97,8 +95,9 @@ export default forwardRef((_, ref) => {
             <TreeSelect
               size={'small'}
               virtual={false}
-              showSearch={true}
+              treeIcon={true}
               bordered={false}
+              showSearch={true}
               style={{ ...filterStyle, width: '200px' }}
               treeNodeFilterProp={'title'}
               defaultValue={selectedIterationId}

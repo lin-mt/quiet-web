@@ -8,7 +8,7 @@ import { multipleSelectTagRender } from '@/utils/RenderUtils';
 import { DictionaryCascader } from '@/pages/components/DictionaryCascader';
 import { buildDictionaryCascaderValue } from '@/utils/system/utils';
 import { useModel } from '@@/plugin-model/useModel';
-import { DICTIONARY } from '@/constant/system/Modelnames';
+import { DICTIONARY } from '@/constant/system/ModelNames';
 
 interface TaskFormProps {
   visible: boolean;
@@ -23,7 +23,7 @@ interface TaskFormProps {
 export default (props: TaskFormProps) => {
   const { visible, onCancel, updateInfo, demandId, executors, taskStepId, afterAction } = props;
 
-  const { getDictionariesByType } = useModel(DICTIONARY);
+  const { getDictionaryByType } = useModel(DICTIONARY);
 
   const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -31,7 +31,7 @@ export default (props: TaskFormProps) => {
 
   useEffect(() => {
     if (updateInfo) {
-      getDictionariesByType(DictionaryType.TaskType).then((dictionaries) => {
+      getDictionaryByType(DictionaryType.TaskType).then((dictionaries) => {
         const newUpdateInfo: any = { ...updateInfo };
         newUpdateInfo.type = buildDictionaryCascaderValue(dictionaries, updateInfo.type);
         form.setFieldsValue(newUpdateInfo);
@@ -39,7 +39,7 @@ export default (props: TaskFormProps) => {
     } else {
       form.setFieldsValue(undefined);
     }
-  }, [form, getDictionariesByType, updateInfo]);
+  }, [form, getDictionaryByType, updateInfo]);
 
   async function handleSubmit() {
     const values = await form.validateFields();
@@ -52,8 +52,8 @@ export default (props: TaskFormProps) => {
         ...values,
       });
     } else {
-      values.demandId = demandId;
-      values.taskStepId = taskStepId;
+      values.demand_id = demandId;
+      values.task_step_id = taskStepId;
       newTaskInfo = await saveTask(values);
     }
     setSubmitting(false);
@@ -124,14 +124,14 @@ export default (props: TaskFormProps) => {
         </Form.Item>
         <Form.Item
           label={'执行者'}
-          name={'executorId'}
+          name={'executor_id'}
           rules={[{ required: true, message: '请选择执行者' }]}
         >
           <Select
             showSearch={true}
             placeholder="请选择执行者"
             options={executors.map((executor) => ({
-              label: executor.fullName,
+              label: executor.full_name,
               value: executor.id,
             }))}
           />
@@ -143,7 +143,7 @@ export default (props: TaskFormProps) => {
             placeholder="请选择参与者"
             tagRender={multipleSelectTagRender}
             options={executors.map((executor) => ({
-              label: executor.fullName,
+              label: executor.full_name,
               value: executor.id,
             }))}
           />
@@ -157,7 +157,7 @@ export default (props: TaskFormProps) => {
           ]}
         >
           {
-            // todo 使用富文本
+            // todo 使用Markdown
           }
           <Input.TextArea placeholder="请输入备注信息" rows={3} />
         </Form.Item>

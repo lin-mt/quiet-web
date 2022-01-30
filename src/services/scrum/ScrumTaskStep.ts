@@ -1,40 +1,24 @@
-import { request } from 'umi';
-import type { Result } from '@/types/Result';
 import type { ScrumTaskStep } from '@/services/scrum/EntitiyType';
+import { DELETE, GET, POST, PUT } from '@/utils/HttpUtils';
 
-const apiPrefix = '/api/scrum/taskStep';
+const base_path = '/api/scrum/task-step';
 
-export function getAllByTemplateId(templateId: string): Promise<ScrumTaskStep[]> {
-  return request<Result<ScrumTaskStep[]>>(`${apiPrefix}/getAllByTemplateId`, {
-    method: 'POST',
-    data: { templateId },
-  }).then((resp) => resp.data);
+export function getAllByTemplateId(id: string): Promise<ScrumTaskStep[]> {
+  return GET<ScrumTaskStep[]>(`${base_path}/all-by-template-id/${id}`);
 }
 
 export function saveTaskStep(save: ScrumTaskStep): Promise<ScrumTaskStep> {
-  return request<Result<ScrumTaskStep>>(`${apiPrefix}/save`, {
-    method: 'POST',
-    data: { save },
-  }).then((resp) => resp.data);
+  return POST<ScrumTaskStep>(`${base_path}`, save);
 }
 
 export function updateTaskStep(update: ScrumTaskStep): Promise<ScrumTaskStep> {
-  return request<Result<ScrumTaskStep>>(`${apiPrefix}/update`, {
-    method: 'POST',
-    data: { update },
-  }).then((resp) => resp.data);
+  return PUT<ScrumTaskStep>(`${base_path}`, update);
 }
 
-export function deleteTaskStep(deleteId: string) {
-  return request(`${apiPrefix}/delete`, {
-    method: 'POST',
-    data: { deleteId },
-  });
+export function deleteTaskStep(id: string) {
+  return DELETE(`${base_path}/${id}`);
 }
 
-export function batchUpdateTaskStep(updateBatch: ScrumTaskStep[]): Promise<ScrumTaskStep[]> {
-  return request<Result<ScrumTaskStep[]>>(`${apiPrefix}/updateBatch`, {
-    method: 'POST',
-    data: { updateBatch },
-  }).then((resp) => resp.data);
+export function batchUpdateTaskStep(data: ScrumTaskStep[]): Promise<ScrumTaskStep[]> {
+  return PUT<ScrumTaskStep[]>(`${base_path}/batch`, { data });
 }

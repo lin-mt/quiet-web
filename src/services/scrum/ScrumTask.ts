@@ -1,38 +1,24 @@
-import { request } from 'umi';
-import type { Result } from '@/types/Result';
 import type { ScrumTask } from '@/services/scrum/EntitiyType';
+import { DELETE, GET, POST, PUT } from '@/utils/HttpUtils';
 
-const apiPrefix = '/api/scrum/task';
+const base_path = '/api/scrum/task';
 
 export function findAllTaskByDemandIds(
-  demandIds: string[],
+  demand_ids: string[],
 ): Promise<Record<string, Record<string, ScrumTask[]>>> {
-  return request<Result<Record<string, Record<string, ScrumTask[]>>>>(
-    `${apiPrefix}/findAllTaskByDemandIds`,
-    {
-      method: 'POST',
-      data: { demandIds },
-    },
-  ).then((resp) => resp.data);
+  return GET<Record<string, Record<string, ScrumTask[]>>>(`${base_path}/all-task-by-demand-ids`, {
+    demand_ids,
+  });
 }
 
 export function saveTask(save: ScrumTask): Promise<ScrumTask> {
-  return request<Result<ScrumTask>>(`${apiPrefix}/save`, {
-    method: 'POST',
-    data: { save },
-  }).then((resp) => resp.data);
+  return POST<ScrumTask>(`${base_path}`, save);
 }
 
 export function updateTask(update: ScrumTask): Promise<ScrumTask> {
-  return request<Result<ScrumTask>>(`${apiPrefix}/update`, {
-    method: 'POST',
-    data: { update },
-  }).then((resp) => resp.data);
+  return PUT<ScrumTask>(`${base_path}`, update);
 }
 
-export function deleteTask(deleteId: string) {
-  return request(`${apiPrefix}/delete`, {
-    method: 'POST',
-    data: { deleteId },
-  });
+export function deleteTask(id: string) {
+  return DELETE(`${base_path}/${id}`);
 }

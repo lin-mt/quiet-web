@@ -1,40 +1,24 @@
-import { request } from 'umi';
-import type { Result } from '@/types/Result';
 import type { ScrumPriority } from '@/services/scrum/EntitiyType';
+import { DELETE, GET, POST, PUT } from '@/utils/HttpUtils';
 
-const apiPrefix = '/api/scrum/priority';
+const base_path = '/api/scrum/priority';
 
-export function findAllByTemplateId(templateId: string): Promise<ScrumPriority[]> {
-  return request<Result<ScrumPriority[]>>(`${apiPrefix}/findAllByTemplateId`, {
-    method: 'POST',
-    data: { templateId },
-  }).then((resp) => resp.data);
+export function findAllByTemplateId(id: string): Promise<ScrumPriority[]> {
+  return GET<ScrumPriority[]>(`${base_path}/all-by-template-id/${id}`);
 }
 
 export function savePriority(save: ScrumPriority): Promise<ScrumPriority> {
-  return request<Result<ScrumPriority>>(`${apiPrefix}/save`, {
-    method: 'POST',
-    data: { save },
-  }).then((resp) => resp.data);
+  return POST<ScrumPriority>(`${base_path}`, save);
 }
 
 export function updatePriority(update: ScrumPriority): Promise<ScrumPriority> {
-  return request<Result<ScrumPriority>>(`${apiPrefix}/update`, {
-    method: 'POST',
-    data: { update },
-  }).then((resp) => resp.data);
+  return PUT<ScrumPriority>(`${base_path}`, update);
 }
 
-export function deletePriority(deleteId: string) {
-  return request(`${apiPrefix}/delete`, {
-    method: 'POST',
-    data: { deleteId },
-  });
+export function deletePriority(id: string) {
+  return DELETE(`${base_path}/${id}`);
 }
 
-export function batchUpdatePriorities(updateBatch: ScrumPriority[]): Promise<ScrumPriority[]> {
-  return request<Result<ScrumPriority[]>>(`${apiPrefix}/updateBatch`, {
-    method: 'POST',
-    data: { updateBatch },
-  }).then((resp) => resp.data);
+export function batchUpdatePriorities(data: ScrumPriority[]): Promise<ScrumPriority[]> {
+  return PUT<ScrumPriority[]>(`${base_path}/batch`, { data });
 }

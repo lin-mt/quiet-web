@@ -24,10 +24,10 @@ export default (props: VersionFormProps) => {
 
   async function handleSubmit() {
     const values = await form.validateFields();
-    values.planStartDate = formatDate(values.planStartDate);
-    values.planEndDate = formatDate(values.planEndDate);
-    values.projectId = projectId;
-    values.parentId = parentId;
+    values.plan_start_date = formatDate(values.plan_start_date);
+    values.plan_end_date = formatDate(values.plan_end_date);
+    values.project_id = projectId;
+    values.parent_id = parentId;
     setSubmitting(true);
     if (updateInfo) {
       await updateVersion({
@@ -85,7 +85,7 @@ export default (props: VersionFormProps) => {
         </Button>,
       ]}
     >
-      <Form form={form} name={'projectForm'} labelCol={{ span: 6 }}>
+      <Form form={form} name={'versionForm'} labelCol={{ span: 6 }}>
         <Form.Item
           label={'版本名称'}
           name={'name'}
@@ -98,14 +98,14 @@ export default (props: VersionFormProps) => {
         </Form.Item>
         <Form.Item
           label={'计划开始日期'}
-          name={'planStartDate'}
+          name={'plan_start_date'}
           rules={[{ required: true, message: '请选择计划开始日期' }]}
         >
           <DatePicker style={{ width: '100%' }} placeholder={'请选择计划开始日期'} />
         </Form.Item>
         <Form.Item
           label={'计划结束日期'}
-          name={'planEndDate'}
+          name={'plan_end_date'}
           rules={[{ required: true, message: '请选择计划结束日期' }]}
         >
           <DatePicker style={{ width: '100%' }} placeholder={'请选择计划结束日期'} />
@@ -119,7 +119,7 @@ export default (props: VersionFormProps) => {
           ]}
         >
           {
-            // todo 使用富文本
+            // todo 使用Markdown
           }
           <Input.TextArea placeholder="请输入备注信息" rows={3} />
         </Form.Item>

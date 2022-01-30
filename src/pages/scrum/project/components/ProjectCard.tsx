@@ -4,7 +4,7 @@ import { Button, Form, Popconfirm, Space, Typography } from 'antd';
 import { DeleteFilled, EditFilled, ForwardFilled } from '@ant-design/icons';
 import ProjectSetting from '@/pages/scrum/project/components/ProjectSetting';
 import React, { useState } from 'react';
-import { deleteProject, findProjectInfo } from '@/services/scrum/ScrumProject';
+import { deleteProject, getProject } from '@/services/scrum/ScrumProject';
 import ProjectForm from '@/pages/scrum/project/components/ProjectForm';
 import type { ScrumProject } from '@/services/scrum/EntitiyType';
 
@@ -28,7 +28,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
   }
 
   async function reloadProjectInfo() {
-    setProjectInfo(await findProjectInfo(projectInfo.id));
+    setProjectInfo(await getProject(projectInfo.id));
   }
 
   async function handleDeleteClick() {
@@ -82,7 +82,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
         }
       >
         <Space direction={'vertical'}>
-          <Typography.Text style={{ color: '#108EE9' }}>{projectInfo.managerName}</Typography.Text>
+          <Typography.Text style={{ color: '#108EE9' }}>{projectInfo.manager_name}</Typography.Text>
           <Typography.Paragraph
             type={'secondary'}
             ellipsis={{

@@ -3,14 +3,12 @@ import React, { useEffect, useState } from 'react';
 import ProCard from '@ant-design/pro-card';
 import { AppstoreAddOutlined } from '@ant-design/icons';
 import TemplateForm from '@/pages/scrum/template/components/TemplateForm';
-import { buildFullCard } from '@/utils/RenderUtils';
 import TemplateCard from '@/pages/scrum/template/components/TemplateCard';
 import type { ScrumTemplate } from '@/services/scrum/EntitiyType';
 
 interface TemplateListProps {
   title: string;
   templates: ScrumTemplate[];
-  templateNum?: number;
   newTemplate?: boolean;
   changeSelectable?: boolean;
   editable?: boolean;
@@ -18,14 +16,9 @@ interface TemplateListProps {
   afterUpdateAction?: () => void;
 }
 
-interface CardTemplateInfo extends ScrumTemplate {
-  key: string;
-}
-
-const ProjectList: React.FC<TemplateListProps> = ({
+const TemplateList: React.FC<TemplateListProps> = ({
   title,
   templates,
-  templateNum = 5,
   newTemplate = false,
   changeSelectable = false,
   editable = false,
@@ -35,30 +28,47 @@ const ProjectList: React.FC<TemplateListProps> = ({
   const addIconDefaultStyle = { fontSize: '36px' };
   const addIconOverStyle = {
     ...addIconDefaultStyle,
+    fontSize: '39px',
     color: '#1890ff',
   };
   const newTemplateKey = 'newTemplateKey';
 
   const [addIconStyle, setAddIconStyle] = useState<CSSProperties>(addIconDefaultStyle);
   const [templateFormVisible, setTemplateFormVisible] = useState<boolean>(false);
-  const [cardTemplates, setCardProjects] = useState<CardTemplateInfo[]>([]);
+  const [cardTemplates, setCardTemplates] = useState<ScrumTemplate[]>([]);
 
   useEffect(() => {
-    setCardProjects(buildFullCard(templates, templateNum, newTemplate, newTemplateKey));
-  }, [newTemplate, templateNum, templates]);
+    if (newTemplate) {
+      const newCard: any = { id: newTemplateKey };
+      templates.unshift(newCard);
+    }
+    setCardTemplates(templates);
+  }, [newTemplate, templates]);
+
+  const cardHeight = 168;
+  const colSpan = '20%';
 
   return (
     <>
-      <ProCard gutter={24} ghost style={{ marginBottom: '24px' }} title={title} collapsible>
+      <ProCard
+        wrap={true}
+        collapsible={true}
+        ghost={true}
+        gutter={[16, 16]}
+        style={{ marginBottom: 24 }}
+        title={title}
+      >
         {cardTemplates.map((template) => {
-          if (template.key === newTemplateKey) {
+          if (template.id === newTemplateKey) {
             return (
               <ProCard
-                key={template.key}
+                colSpan={colSpan}
+                key={template.id}
                 layout={'center'}
                 hoverable={true}
                 size={cardSize}
-                style={{ minHeight: '168px' }}
+                style={{ height: cardHeight }}
+                bodyStyle={{ minHeight: cardHeight }}
                 onMouseOver={() => setAddIconStyle(addIconOverStyle)}
                 onMouseLeave={() => setAddIconStyle(addIconDefaultStyle)}
                 onClick={() => setTemplateFormVisible(true)}
@@ -67,9 +77,15 @@ const ProjectList: React.FC<TemplateListProps> = ({
               </ProCard>
             );
           }
-          return template.id ? (
-            <ProCard hoverable={true} key={template.id} bodyStyle={{ padding: 0 }}>
+          return (
+            <ProCard
+              hoverable={true}
+              colSpan={colSpan}
+              key={template.id}
+              bodyStyle={{ padding: 0, height: cardHeight }}
+            >
               <TemplateCard
+                key={template.id}
                 template={template}
                 cardSize={cardSize}
                 editable={editable}
@@ -77,8 +93,6 @@ const ProjectList: React.FC<TemplateListProps> = ({
                 changeSelectable={changeSelectable}
               />
             </ProCard>
-          ) : (
-            <ProCard key={template.key} style={{ visibility: 'hidden' }} />
           );
         })}
       </ProCard>
@@ -93,4 +107,4 @@ const ProjectList: React.FC<TemplateListProps> = ({
   );
 };
 
-export default ProjectList;
+export default TemplateList;

@@ -24,9 +24,9 @@ const TaskStepForm: React.FC<TaskStepFormProps> = (props) => {
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
-    values.templateId = template.id;
+    values.template_id = template.id;
     if (!updateInfo) {
-      values.serialNumber = template.taskSteps?.length;
+      values.serial_number = template.task_steps?.length;
       await saveTaskStep(values);
     } else {
       await updateTaskStep({

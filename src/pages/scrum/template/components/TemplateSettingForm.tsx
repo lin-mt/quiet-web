@@ -38,7 +38,7 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
   afterAction,
   onCancel,
 }) => {
-  const [taskSteps, setTaskSteps] = useState<ScrumTaskStep[] | undefined>(template.taskSteps);
+  const [taskSteps, setTaskSteps] = useState<ScrumTaskStep[] | undefined>(template.task_steps);
   const [priorities, setPriorities] = useState<ScrumPriority[] | undefined>(template.priorities);
   const [updateTaskStepInfo, setUpdateTaskStepInfo] = useState<ScrumTaskStep>();
   const [updatePriorityInfo, setUpdatePriorityInfo] = useState<ScrumPriority>();
@@ -236,10 +236,10 @@ const TemplateSettingForm: React.FC<TemplateSettingFormProps> = ({
                         {!readOnly && (
                           <Space>
                             <ColorPicker
-                              initialValue={priority.colorHex}
+                              initialValue={priority.color_hex}
                               onChange={async (color: any) => {
                                 const update = priority;
-                                update.colorHex = color;
+                                update.color_hex = color;
                                 await updatePriority(update);
                                 await reloadTemplatePriorities();
                               }}

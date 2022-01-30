@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { findProjectDetail } from '@/services/scrum/ScrumProject';
+import { getProjectDetail } from '@/services/scrum/ScrumProject';
 import { Col, Descriptions, Empty, message, Row, Spin, Tag } from 'antd';
 import { tagColor } from '@/utils/RenderUtils';
 import DemandPool from '@/pages/scrum/project/detail/components/DemandPool';
@@ -16,14 +16,8 @@ import { updateDemand } from '@/services/scrum/ScrumDemand';
 import { DroppableId } from '@/pages/scrum/project/detail/components/Common';
 
 const ProjectDetail: React.FC<any> = (props) => {
-  const {
-    projectId,
-    setProjectId,
-    members,
-    setMembers,
-    setPriorities,
-    selectedIterationId,
-  } = useModel(PROJECT_DETAIL);
+  const { projectId, setProjectId, members, setMembers, setPriorities, selectedIterationId } =
+    useModel(PROJECT_DETAIL);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [projectDetail, setProjectDetail] = useState<ScrumProjectDetail>();
@@ -34,7 +28,7 @@ const ProjectDetail: React.FC<any> = (props) => {
     setProjectId(props.location.query.projectId);
     if (projectId) {
       setLoading(true);
-      findProjectDetail(projectId).then(async (project) => {
+      getProjectDetail(projectId).then(async (project) => {
         setProjectDetail(project);
         const membersDatum: Record<string, QuietUser> = {};
         project.teams.forEach((team) => {
@@ -45,7 +39,7 @@ const ProjectDetail: React.FC<any> = (props) => {
           }
         });
         setMembers(membersDatum);
-        await findAllByTemplateId(project.project.templateId).then((priorities) => {
+        await findAllByTemplateId(project.project.template_id).then((priorities) => {
           setPriorities(priorities);
           setLoading(false);
         });
@@ -75,9 +69,9 @@ const ProjectDetail: React.FC<any> = (props) => {
       }
       // @ts-ignore
       const operationDemand: ScrumDemand = demandPoolRef?.current?.getDemandById(demandId);
-      operationDemand.iterationId = selectedIterationId;
+      operationDemand.iteration_id = selectedIterationId;
       updateDemand(operationDemand).then((planningResult) => {
-        handlePlanningResult(planningResult.iterationId === selectedIterationId);
+        handlePlanningResult(planningResult.iteration_id === selectedIterationId);
       });
       // @ts-ignore
       demandPoolRef?.current?.removeDemand(source.index);
@@ -87,9 +81,9 @@ const ProjectDetail: React.FC<any> = (props) => {
     if (destination.droppableId === DroppableId.DemandPool) {
       // @ts-ignore
       const operationDemand: ScrumDemand = demandPlanningRef?.current?.getDemandById(demandId);
-      operationDemand.iterationId = undefined;
+      operationDemand.iteration_id = undefined;
       updateDemand(operationDemand).then((planningResult) => {
-        handlePlanningResult(!planningResult.iterationId);
+        handlePlanningResult(!planningResult.iteration_id);
       });
       // @ts-ignore
       demandPlanningRef?.current?.removeDemand(source.index);
@@ -109,16 +103,16 @@ const ProjectDetail: React.FC<any> = (props) => {
           <Descriptions title={projectDetail.project.name}>
             <Descriptions.Item span={3}>{projectDetail.project.description}</Descriptions.Item>
             <Descriptions.Item label={'项目经理'}>
-              {projectDetail.project.managerName}
+              {projectDetail.project.manager_name}
             </Descriptions.Item>
             <Descriptions.Item label={'创建时间'} span={2}>
-              {projectDetail.project.gmtCreate}
+              {projectDetail.project.gmt_create}
             </Descriptions.Item>
             <Descriptions.Item label={'参与团队'}>
               {projectDetail.teams.map((team) => {
                 return (
                   <Tag color={tagColor} key={team.id}>
-                    {team.teamName}
+                    {team.team_name}
                   </Tag>
                 );
               })}
@@ -127,7 +121,7 @@ const ProjectDetail: React.FC<any> = (props) => {
               {Object.keys(members).map((id) => {
                 return (
                   <Tag color={tagColor} key={id}>
-                    {members[id].fullName}
+                    {members[id].full_name}
                   </Tag>
                 );
               })}

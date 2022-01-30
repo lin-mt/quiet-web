@@ -19,6 +19,8 @@ const CardContainer = styled(Col)`
 
 interface IterationRowProps {
   demand: ScrumDemand;
+  taskDragDisabled: boolean;
+  taskCanBeCreated: () => boolean;
   demandTypeLabels: Record<string, string>;
   taskTypeLabels: Record<string, string>;
   priorityColors: Record<string, string>;
@@ -29,6 +31,8 @@ interface IterationRowProps {
 
 export default ({
   demand,
+  taskDragDisabled,
+  taskCanBeCreated,
   demandTypeLabels,
   taskTypeLabels,
   priorityColors,
@@ -43,17 +47,21 @@ export default ({
   });
 
   function calculateDroppableMinHeight(): number {
-    let maxCount = 0;
-    Object.keys(taskStepToTasks).forEach((key) => {
-      maxCount = maxCount < taskStepToTasks[key].length ? taskStepToTasks[key].length : maxCount;
-    });
+    let maxCount = 1;
+    if (taskStepToTasks) {
+      Object.keys(taskStepToTasks).forEach((key) => {
+        maxCount = maxCount < taskStepToTasks[key].length ? taskStepToTasks[key].length : maxCount;
+      });
+    }
     return maxCount * 80;
   }
 
   function handleCreateTaskClick(e: React.MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
-    setTaskUpdateInfo(undefined);
-    setTaskFormVisible(true);
+    if (taskCanBeCreated()) {
+      setTaskUpdateInfo(undefined);
+      setTaskFormVisible(true);
+    }
   }
 
   function handleTaskCardEdit(task: ScrumTask) {
@@ -73,6 +81,10 @@ export default ({
   }
 
   function handleOnDragEnd({ destination, source, draggableId }: DropResult) {
+    if (taskDragDisabled) {
+      message.warn('迭代未开始或已结束，无法修改任务状态').then();
+      return;
+    }
     if (!destination) {
       return;
     }
@@ -88,9 +100,9 @@ export default ({
       return true;
     });
     if (operatingTask) {
-      operatingTask.taskStepId = destination.droppableId;
+      operatingTask.task_step_id = destination.droppableId;
       updateTask(operatingTask).then((result) => {
-        if (result.taskStepId !== destination.droppableId) {
+        if (result.task_step_id !== destination.droppableId) {
           message.error('操作失败，请联系管理员！').then(() => window.location.reload());
         }
       });
@@ -153,8 +165,8 @@ export default ({
                             <TaskCard
                               cardStyle={{ marginTop: taskIndex === 0 ? 0 : 6 }}
                               task={task}
-                              executorName={members[task.executorId].fullName}
-                              taskTypeLabels={taskTypeLabels}
+                              taskType={taskTypeLabels[task.type]}
+                              executorName={members[task.executor_id].full_name}
                               onEditClick={() => handleTaskCardEdit(task)}
                               onDeleteClick={() => handleTaskCardDelete(task)}
                             />
@@ -190,10 +202,8 @@ export default ({
           taskStepId={taskSteps[0].id}
           visible={taskFormVisible}
           updateInfo={taskUpdateInfo}
-          onCancel={() => {
-            setTaskFormVisible(false);
-            reloadDemandTasks();
-          }}
+          onCancel={() => setTaskFormVisible(false)}
+          afterAction={() => reloadDemandTasks()}
           executors={Object.keys(members).map((key) => members[key])}
           demandId={demand.id}
         />

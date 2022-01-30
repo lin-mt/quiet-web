@@ -26,7 +26,7 @@ const PriorityForm: React.FC<PriorityFormProps> = (props) => {
     setSubmitting(true);
     values.templateId = template.id;
     if (!updateInfo) {
-      values.serialNumber = template.priorities?.length;
+      values.serial_number = template.priorities?.length;
       await savePriority(values);
     } else {
       await updatePriority({
@@ -68,7 +68,7 @@ const PriorityForm: React.FC<PriorityFormProps> = (props) => {
         </Button>,
       ]}
     >
-      <Form form={form} name={'taskStepForm'} labelCol={{ span: 5 }}>
+      <Form form={form} name={'priorityForm'} labelCol={{ span: 5 }}>
         <Form.Item
           label={'优先级名称'}
           name={'name'}

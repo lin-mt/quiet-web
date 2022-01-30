@@ -109,7 +109,7 @@ export default (props: DemandFormProps) => {
         </Form.Item>
         <Form.Item
           label={'优先级'}
-          name={'priorityId'}
+          name={'priority_id'}
           rules={[{ required: true, message: '请选择优先级' }]}
         >
           <Select showSearch={true} placeholder="请选择优先级" options={prioritiesOptions} />
@@ -123,7 +123,7 @@ export default (props: DemandFormProps) => {
           ]}
         >
           {
-            // todo 使用富文本
+            // todo 使用Markdown
           }
           <Input.TextArea placeholder="请输入备注信息" rows={3} />
         </Form.Item>

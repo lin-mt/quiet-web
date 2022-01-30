@@ -78,7 +78,7 @@ const TemplateForm: React.FC<TemplateFormProps> = (props) => {
         </Button>,
       ]}
     >
-      <Form form={form} name={'projectForm'} labelCol={{ span: 5 }}>
+      <Form form={form} name={'templateForm'} labelCol={{ span: 5 }}>
         <Form.Item
           label={'模板名称'}
           name={'name'}

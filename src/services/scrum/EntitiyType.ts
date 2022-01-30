@@ -7,20 +7,20 @@ import type {
 } from '@/services/system/EntityType';
 
 export interface AllTemplate {
-  templateCreated: ScrumTemplate[];
-  templateSelectable: ScrumTemplate[];
+  template_created: ScrumTemplate[];
+  template_selectable: ScrumTemplate[];
 }
 
 export interface ScrumProject extends BaseEntity {
   name: string;
   manager: string;
-  templateId: string;
+  template_id: string;
   description?: string;
-  demandPrefix?: string;
-  taskPrefix?: string;
-  templateName?: string;
-  buildTool?: string;
-  managerName?: string;
+  demand_prefix?: string;
+  task_prefix?: string;
+  template_name?: string;
+  build_tool?: string;
+  manager_name?: string;
   teams?: QuietTeam[];
 }
 
@@ -30,73 +30,73 @@ export interface ScrumProjectDetail {
 }
 
 export interface MyScrumProject {
-  projectManaged: ScrumProject[];
-  projectInvolved: ScrumProject[];
+  project_managed: ScrumProject[];
+  project_involved: ScrumProject[];
 }
 
 export interface ScrumTemplate extends BaseEntity {
   name: string;
   enabled: boolean;
   remark?: string;
-  taskSteps?: ScrumTaskStep[];
+  task_steps?: ScrumTaskStep[];
   priorities?: ScrumPriority[];
 }
 
 export interface ScrumTaskStep extends SerialEntity {
   name: string;
-  templateId: string;
+  template_id: string;
   remark?: string;
 }
 
 export interface ScrumPriority extends SerialEntity {
   name: string;
-  colorHex: string;
-  templateId: string;
+  color_hex: string;
+  template_id: string;
   remark?: string;
 }
 
 export interface ScrumDemand extends SerialEntity, ParentEntity<ScrumDemand> {
   title: string;
   type: string;
-  projectId: string;
-  iterationId?: string;
-  priorityId: string;
-  optimizeDemandId?: string;
-  startTime?: string;
-  endTime?: string;
+  project_id: string;
+  iteration_id?: string;
+  priority_id: string;
+  optimize_demand_id?: string;
+  start_time?: string;
+  end_time?: string;
   remark?: string;
 }
 
 export interface ScrumTask extends SerialEntity {
   title: string;
   type: string;
-  demandId: string;
-  taskStepId: string;
-  executorId: string;
+  demand_id: string;
+  task_step_id: string;
+  executor_id: string;
   participant?: string[];
-  preTaskIds?: string[];
-  startTime?: string;
-  endTime?: string;
+  pre_task_ids?: string[];
+  start_time?: string;
+  end_time?: string;
   remark: string;
 }
 
 export interface ScrumIteration extends SerialEntity {
   name: string;
-  versionId: string;
-  planStartDate: string;
-  planEndDate: string;
-  startTime?: string;
-  endTime?: string;
+  version_id: string;
+  plan_start_date: string;
+  plan_end_date: string;
+  start_time?: string;
+  end_time?: string;
   remark?: string;
 }
 
 export interface ScrumVersion extends ParentEntity<ScrumVersion>, SerialEntity, KeyEntity {
   name: string;
-  projectId: string;
-  planStartDate: string;
-  planEndDate: string;
-  startTime?: string;
-  endTime?: string;
+  project_id: string;
+  plan_start_date: string;
+  plan_end_date: string;
+  start_time?: string;
+  end_time?: string;
   remark?: string;
   iterations?: ScrumIteration[];
 }

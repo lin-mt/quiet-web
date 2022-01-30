@@ -21,7 +21,7 @@ const ProjectSetting: React.FC<ProjectSettingProps> = (props) => {
     await updateProject({
       ...projectInfo,
       ...values,
-      teamIds: projectInfo.teams?.map((team) => team.id),
+      team_ids: projectInfo.teams?.map((team) => team.id),
     });
     if (afterSettingUpdate) {
       afterSettingUpdate();
@@ -36,8 +36,8 @@ const ProjectSetting: React.FC<ProjectSettingProps> = (props) => {
       onVisibleChange={(visible) => setProjectSettingFormVisible(visible)}
       trigger={'click'}
       content={
-        <Form form={form} name={'projectForm'} labelCol={{ span: 7 }}>
-          <Form.Item label={'构建工具'} name={'buildTool'}>
+        <Form form={form} name={'projectSettingForm'} labelCol={{ span: 7 }}>
+          <Form.Item label={'构建工具'} name={'build_tool'}>
             <Select placeholder={'请选择'} allowClear>
               <Option value="MAVEN">Maven</Option>
               <Option value="GRADLE">Gradle</Option>
@@ -45,14 +45,14 @@ const ProjectSetting: React.FC<ProjectSettingProps> = (props) => {
           </Form.Item>
           <Form.Item
             label={'需求前缀'}
-            name={'demandPrefix'}
+            name={'demand_prefix'}
             rules={[{ max: 6, message: '需求前缀长度不能超过 6' }]}
           >
             <Input placeholder="请输入" />
           </Form.Item>
           <Form.Item
             label={'任务前缀'}
-            name={'taskPrefix'}
+            name={'task_prefix'}
             rules={[{ max: 6, message: '任务前缀长度不能超过 6' }]}
           >
             <Input placeholder="请输入" />

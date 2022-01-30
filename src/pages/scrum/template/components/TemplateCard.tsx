@@ -45,8 +45,8 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
   }
 
   const enableStateChangeable =
-    templateInfo.taskSteps &&
-    templateInfo.taskSteps.length > 0 &&
+    templateInfo.task_steps &&
+    templateInfo.task_steps.length > 0 &&
     templateInfo.priorities &&
     templateInfo.priorities.length > 0;
 
@@ -54,8 +54,8 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
     <>
       <ProCard
         size={cardSize}
-        title={templateInfo.name}
         style={{ height: '100%' }}
+        title={templateInfo.name}
         onClick={() => {
           if (!(changeSelectable || editable)) {
             setTemplateSettingFormVisible(true);

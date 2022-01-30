@@ -7,7 +7,7 @@ import type { CSSProperties } from 'react';
 
 interface TaskCardProps {
   task: ScrumTask;
-  taskTypeLabels: Record<string, string>;
+  taskType: string;
   executorName: string;
   cardStyle?: CSSProperties;
   onEditClick?: () => void;
@@ -39,7 +39,7 @@ const OperationContainer = styled.div`
 
 export default ({
   task,
-  taskTypeLabels,
+  taskType,
   executorName,
   cardStyle,
   onEditClick,
@@ -52,7 +52,7 @@ export default ({
       <Row>
         <Col span={22}>
           <div>标题：{task.title}</div>
-          <div>类型：{taskTypeLabels[task.type]}</div>
+          <div>类型：{taskType}</div>
           <div>执行者：{executorName}</div>
         </Col>
         {showOperation && (
