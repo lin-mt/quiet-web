@@ -16,6 +16,9 @@ export default {
   'menu.scrum.project-detail': '项目详情',
   'menu.scrum.project-iteration': '迭代详情',
   'menu.scrum.template': '模板管理',
+  'menu.doc': '文档管理',
+  'menu.doc.project': '项目文档',
+  'menu.doc.project-detail': '项目详情',
 
   'menu.welcome': '欢迎',
   'menu.more-blocks': '更多区块',

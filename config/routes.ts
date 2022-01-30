@@ -42,6 +42,24 @@
     ],
   },
   {
+    path: '/doc',
+    name: 'doc',
+    icon: 'file-text',
+    routes: [
+      {
+        path: '/doc/project',
+        name: 'project',
+        component: './doc/project',
+      },
+      {
+        path: '/doc/project/detail',
+        name: 'project-detail',
+        component: './doc/project/detail',
+        hideInMenu: true,
+      },
+    ],
+  },
+  {
     path: '/system',
     name: 'system',
     icon: 'setting',

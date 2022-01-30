@@ -16,6 +16,9 @@ export default {
   'menu.scrum.project-detail': 'ProjectDetails',
   'menu.scrum.project-iteration': 'ProjectIteration',
   'menu.scrum.template': 'TemplateManagement',
+  'menu.doc': 'DocumentManagement',
+  'menu.doc.project': 'ProjectDocumentation',
+  'menu.doc.project-detail': 'ProjectDetail',
 
   'menu.welcome': 'Welcome',
   'menu.more-blocks': 'More Blocks',
