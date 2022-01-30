@@ -230,7 +230,7 @@ const UserInfo: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietUser>
         actionRef={userModalActionRef}
-        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
+        rowKey={(record) => record.id}
         request={(params, sorter, filter) => pageUser({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="create" onClick={createUser}>

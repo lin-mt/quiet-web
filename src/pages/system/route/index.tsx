@@ -215,10 +215,11 @@ const GatewayRoute: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietRoute>
         actionRef={routeModalActionRef}
-        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
+        rowKey={(record) => record.id}
         request={(params, sorter, filter) => pageRoute({ params, sorter, filter })}
         toolBarRender={() => [
           <DictionarySelect
+            key={'environment'}
             allowClear={true}
             type={DictionaryType.Environment}
             style={{ width: 120 }}
@@ -226,6 +227,7 @@ const GatewayRoute: React.FC<any> = () => {
             onChange={(value) => setPublishEnvironment(value)}
           />,
           <Popconfirm
+            key={'publish'}
             title={
               publishEnvironment
                 ? `确认发布 ${environmentLabels[publishEnvironment]} 下的路由配置吗？`

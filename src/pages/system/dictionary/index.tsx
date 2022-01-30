@@ -111,7 +111,7 @@ const Dictionary: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietDictionary>
         actionRef={dictionaryModalActionRef}
-        rowKey={(record, index) => (record.id ? record.id : `${index}`)}
+        rowKey={(record) => record.id}
         request={(params, sorter, filter) => pageDictionary({ params, sorter, filter })}
         toolBarRender={() => [
           <Button type="primary" key="tree" onClick={() => setDictionaryTreeVisible(true)}>

@@ -226,13 +226,7 @@ const ClientManagement: React.FC<any> = () => {
     <PageContainer>
       <ProTable<QuietClient>
         actionRef={clientModalActionRef}
-        rowKey={(record, index) => {
-          if (record.id) {
-            return record.id;
-          } else {
-            return `${index}`;
-          }
-        }}
+        rowKey={(record) => record.id}
         request={(params, sorter, filter) => clientPage({ params, sorter, filter })}
         toolBarRender={() => [
           <Button
