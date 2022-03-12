@@ -58,12 +58,12 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
             : [
                 <EditFilled key={'edit'} onClick={handleEditClick} />,
                 <Popconfirm
+                  key={'delete'}
                   placement={'bottom'}
                   title={`确定删除项目 ${projectInfo.name} 吗?`}
                   onConfirm={handleDeleteClick}
                 >
                   <DeleteFilled
-                    key={'delete'}
                     onMouseOver={(event) => {
                       // eslint-disable-next-line no-param-reassign
                       event.currentTarget.style.color = 'red';
