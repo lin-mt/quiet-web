@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Link, useModel } from 'umi';
-import { Button, Card, Empty, List, Space, Spin, Tooltip, TreeSelect } from 'antd';
+import { Button, Card, Col, Empty, List, Row, Spin, Tooltip, TreeSelect } from 'antd';
 import { disableVersionNode } from '@/utils/scrum/utils';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
 import type { ScrumDemand } from '@/services/scrum/EntitiyType';
@@ -91,34 +91,38 @@ export default forwardRef((_, ref) => {
         bordered={false}
         bodyStyle={{ paddingTop: 6, paddingBottom: 6 }}
         extra={
-          <Space>
-            <TreeSelect
-              size={'small'}
-              virtual={false}
-              treeIcon={true}
-              bordered={false}
-              showSearch={true}
-              style={{ ...filterStyle, width: '200px' }}
-              treeNodeFilterProp={'title'}
-              defaultValue={selectedIterationId}
-              onSelect={(value) => setSelectedIterationId(value.toString())}
-              placeholder={'请选择需求规划的迭代'}
-              treeData={disableVersionNode(versions)}
-            />
-            <Link
-              to={`/scrum/project/iteration?projectId=${projectId}&iterationId=${selectedIterationId}`}
-            >
-              <Tooltip title={selectedIterationId ? '' : '请选择需求要规划的迭代'}>
-                <Button
-                  icon={<ForwardFilled />}
-                  type={'primary'}
-                  shape={'round'}
-                  size={'small'}
-                  disabled={!selectedIterationId}
-                />
-              </Tooltip>
-            </Link>
-          </Space>
+          <Row gutter={10}>
+            <Col flex={'auto'}>
+              <TreeSelect
+                size={'small'}
+                virtual={false}
+                treeIcon={true}
+                bordered={false}
+                showSearch={true}
+                style={{ ...filterStyle, width: '300px' }}
+                treeNodeFilterProp={'title'}
+                defaultValue={selectedIterationId}
+                onSelect={(value: any) => setSelectedIterationId(value.toString())}
+                placeholder={'请选择需求规划的迭代'}
+                treeData={disableVersionNode(versions)}
+              />
+            </Col>
+            <Col>
+              <Link
+                to={`/scrum/project/iteration?projectId=${projectId}&iterationId=${selectedIterationId}`}
+              >
+                <Tooltip title={selectedIterationId ? '' : '请选择需求要规划的迭代'}>
+                  <Button
+                    icon={<ForwardFilled />}
+                    type={'primary'}
+                    shape={'round'}
+                    size={'small'}
+                    disabled={!selectedIterationId}
+                  />
+                </Tooltip>
+              </Link>
+            </Col>
+          </Row>
         }
       >
         <Droppable droppableId={DroppableId.DemandPlanning} type="TASK">

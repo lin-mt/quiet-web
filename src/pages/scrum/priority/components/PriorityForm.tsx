@@ -24,7 +24,8 @@ const PriorityForm: React.FC<PriorityFormProps> = (props) => {
   async function handleSubmit() {
     const values = await form.validateFields();
     setSubmitting(true);
-    values.templateId = template.id;
+    values.template_id = template.id;
+    console.log(values);
     if (!updateInfo) {
       values.serial_number = template.priorities?.length;
       await savePriority(values);

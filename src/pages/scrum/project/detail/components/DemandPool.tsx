@@ -1,6 +1,6 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { deleteDemand, findToBePlanned } from '@/services/scrum/ScrumDemand';
-import { Button, Card, Empty, List, Select, Space, Spin } from 'antd';
+import { Button, Card, Col, Empty, List, Row, Select, Spin } from 'antd';
 import { CaretDownFilled, PlusOutlined } from '@ant-design/icons';
 import { useModel } from '@@/plugin-model/useModel';
 import { PROJECT_DETAIL } from '@/constant/scrum/ModelNames';
@@ -102,8 +102,8 @@ export default forwardRef((_, ref) => {
         bordered={false}
         bodyStyle={{ paddingTop: 6, paddingBottom: 6 }}
         extra={
-          <Space size={'large'}>
-            <Space>
+          <Row gutter={10}>
+            <Col>
               <Select
                 size={'small'}
                 bordered={false}
@@ -115,6 +115,8 @@ export default forwardRef((_, ref) => {
                   setDemandFilter({ ...demandFilter, demandType: value?.toString() })
                 }
               />
+            </Col>
+            <Col>
               <Select
                 size={'small'}
                 bordered={false}
@@ -126,17 +128,19 @@ export default forwardRef((_, ref) => {
                   setDemandFilter({ ...demandFilter, priorityId: value?.toString() })
                 }
               />
-            </Space>
-            <Button
-              type={'primary'}
-              size={'small'}
-              shape={'round'}
-              icon={<PlusOutlined />}
-              onClick={() => setDemandFormVisible(true)}
-            >
-              需求
-            </Button>
-          </Space>
+            </Col>
+            <Col>
+              <Button
+                type={'primary'}
+                size={'small'}
+                shape={'round'}
+                icon={<PlusOutlined />}
+                onClick={() => setDemandFormVisible(true)}
+              >
+                需求
+              </Button>
+            </Col>
+          </Row>
         }
       >
         <Droppable droppableId={DroppableId.DemandPool} type="TASK" isDropDisabled={false}>

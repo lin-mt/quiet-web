@@ -30,7 +30,7 @@ export default (props: DemandFormProps) => {
 
   async function handleSubmit() {
     const values = await form.validateFields();
-    values.projectId = projectId;
+    values.project_id = projectId;
     setSubmitting(true);
     let newDemandInfo: ScrumDemand;
     if (updateInfo) {
