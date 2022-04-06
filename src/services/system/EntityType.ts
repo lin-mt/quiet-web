@@ -111,6 +111,11 @@ export interface QuietDepartment extends BaseEntity {
   remark?: string;
 }
 
+export interface QuietHoliday extends BaseEntity {
+  date_info: string;
+  is_holiday: boolean;
+}
+
 export interface NoticeIconData extends BaseEntity {
   key: string;
   avatar: string;

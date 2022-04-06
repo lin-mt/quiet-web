@@ -34,6 +34,11 @@
         component: './system/department',
       },
       {
+        path: '/system/calendar',
+        name: 'calendar',
+        component: './system/calendar',
+      },
+      {
         path: '/system/dictionary',
         name: 'dictionary',
         component: './system/dictionary',
