@@ -9,6 +9,7 @@ export default {
   'menu.system.department': '部门管理',
   'menu.system.team': '团队管理',
   'menu.system.client': '应用授权',
+  'menu.system.calendar': '日历设置',
   'menu.system.dictionary': '数据字典',
   'menu.system.gateway-route': '网关配置',
   'menu.scrum': '敏捷管理',
