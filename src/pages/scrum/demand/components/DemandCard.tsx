@@ -64,7 +64,7 @@ export default ({
         {showOperation && (
           <Col span={2}>
             <Dropdown
-              placement={'bottomCenter'}
+              placement={'bottom'}
               trigger={['click']}
               overlay={() => {
                 return (
