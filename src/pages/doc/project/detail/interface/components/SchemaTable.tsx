@@ -82,14 +82,14 @@ const columns: ColumnsType<any> = [
       return Object.keys(result).map((item, index) => {
         const name = messageMap[item];
         const value = result[item];
-        const isShow = !_.isUndefined(result[item]) && !_.isUndefined(name);
+        const isShow = !_.isUndefined(result[item]) && result[item] && !_.isUndefined(name) && name;
         const key = `${name}${index}`;
 
         return (
           isShow && (
             <p key={key}>
               <span style={{ fontWeight: 700 }}>{name}: </span>
-              <span>{value.toString()}</span>
+              <span>{value?.toString()}</span>
             </p>
           )
         );

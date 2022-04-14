@@ -64,7 +64,7 @@
     "@bytemd/plugin-mermaid": "^1.10.13",
     "@bytemd/react": "^1.10.13",
     "@monaco-editor/react": "^4.3.1",
-    "@quiet-front-end/json-schema-editor-visual": "^0.1.2",
+    "@quiet-front-end/json-schema-editor-antd": "^0.1.0",
     "@umijs/route-utils": "^2.0.0",
     "antd": "^4.19.4",
     "classnames": "^2.3.0",
