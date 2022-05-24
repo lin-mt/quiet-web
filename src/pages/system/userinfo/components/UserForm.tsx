@@ -20,7 +20,11 @@ const UserForm: React.FC<UserFormProps> = (props) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    form.setFieldsValue(updateInfo);
+    if (updateInfo) {
+      form.setFieldsValue(updateInfo);
+    } else {
+      form.setFieldsValue(undefined);
+    }
   }, [form, updateInfo]);
 
   async function handleSubmit() {
