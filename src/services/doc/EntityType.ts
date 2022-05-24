@@ -17,7 +17,9 @@ export interface DocApi extends SerialEntity, DataNode {
   remark: string;
   visitors: QuietUser[];
   api_group: DocApiGroup;
+  author_full_name?: string;
   creator_full_name?: string;
+  updater_full_name?: string;
 }
 
 export interface FormParam {
