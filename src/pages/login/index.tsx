@@ -12,7 +12,6 @@ import { ProFormCaptcha, ProFormCheckbox, ProFormText, LoginForm } from '@ant-de
 import { useIntl, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import { oauthToken, getFakeCaptcha } from '@/services/system/Login';
-import UserForm from '@/pages/system/userinfo/components/UserForm';
 import styles from './index.less';
 import { LocalStorage } from '@/constant';
 
@@ -30,7 +29,6 @@ const LoginMessage: React.FC<{
 );
 
 const Login: React.FC = () => {
-  const [userFormVisible, setUserFormVisible] = useState(false);
   const [userLoginState, setUserLoginState] = useState<SystemAPI.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -284,11 +282,6 @@ const Login: React.FC = () => {
         </LoginForm>
       </div>
       <Footer />
-      <UserForm
-        isUserRegister={true}
-        visible={userFormVisible}
-        onCancel={() => setUserFormVisible(false)}
-      />
     </div>
   );
 };
