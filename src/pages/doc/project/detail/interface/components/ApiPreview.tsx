@@ -137,7 +137,7 @@ export default (props: ApiPreviewProps) => {
           <Descriptions.Item label={'状态'}>
             <Badge
               status={apiDetail.api.api_state === ApiState.FINISHED ? 'success' : 'processing'}
-              text={apiDetail.api.api_state === ApiState.FINISHED ? '完成' : '未完成'}
+              text={apiDetail.api.api_state === ApiState.FINISHED ? '已完成' : '未完成'}
             />
           </Descriptions.Item>
           <Descriptions.Item label={'更新时间'}>{apiDetail.api.gmt_update}</Descriptions.Item>

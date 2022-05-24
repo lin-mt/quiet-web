@@ -131,7 +131,7 @@ export default function (props: EnvironmentProp) {
 
   function handleFormFinish(environment: DocProjectEnvironment) {
     if (environment.id === newKey) {
-      delete environment.id;
+      environment.id = '';
       saveProjectEnvironment(environment).then((resp) => {
         const newEnvironments: DocProjectEnvironment[] = [];
         environments.forEach((datum) => {
@@ -263,15 +263,10 @@ export default function (props: EnvironmentProp) {
                     <Form.List name={'headers'}>
                       {(fields, { add, remove }) => (
                         <>
-                          {fields.map(({ key, name, fieldKey, ...restField }) => (
-                            <Form.Item style={{ marginBottom: 16 }} key={name}>
+                          {fields.map((field) => (
+                            <Form.Item style={{ marginBottom: 16 }} key={field.key}>
                               <Space align={'center'} size={101}>
-                                <Form.Item
-                                  {...restField}
-                                  name={[name, 'name']}
-                                  fieldKey={[fieldKey, 'name']}
-                                  noStyle={true}
-                                >
+                                <Form.Item {...field} noStyle={true}>
                                   <AutoComplete
                                     placeholder={'请输入header名称'}
                                     style={{ width: 178 }}
@@ -279,15 +274,10 @@ export default function (props: EnvironmentProp) {
                                   />
                                 </Form.Item>
                                 <Space>
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, 'value']}
-                                    fieldKey={[fieldKey, 'value']}
-                                    noStyle={true}
-                                  >
+                                  <Form.Item {...field} noStyle={true}>
                                     <Input placeholder={'请输入header值'} style={{ width: 399 }} />
                                   </Form.Item>
-                                  <DeleteOutlinedHoverRed onClick={() => remove(name)} />
+                                  <DeleteOutlinedHoverRed onClick={() => remove(field.name)} />
                                 </Space>
                               </Space>
                             </Form.Item>
@@ -308,27 +298,17 @@ export default function (props: EnvironmentProp) {
                     <Form.List name={'cookies'}>
                       {(fields, { add, remove }, { errors }) => (
                         <>
-                          {fields.map(({ key, name, fieldKey, ...restField }) => (
-                            <Form.Item style={{ marginBottom: 16 }} key={name}>
+                          {fields.map((field) => (
+                            <Form.Item style={{ marginBottom: 16 }} key={field.key}>
                               <Space align={'center'} size={101}>
-                                <Form.Item
-                                  {...restField}
-                                  name={[name, 'name']}
-                                  fieldKey={[fieldKey, 'name']}
-                                  noStyle={true}
-                                >
+                                <Form.Item {...field} noStyle={true}>
                                   <Input placeholder={'请输入cookie名称'} />
                                 </Form.Item>
                                 <Space>
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, 'value']}
-                                    fieldKey={[fieldKey, 'value']}
-                                    noStyle={true}
-                                  >
+                                  <Form.Item {...field} noStyle={true}>
                                     <Input placeholder={'请输入cookie值'} style={{ width: 399 }} />
                                   </Form.Item>
-                                  <DeleteOutlinedHoverRed onClick={() => remove(name)} />
+                                  <DeleteOutlinedHoverRed onClick={() => remove(field.name)} />
                                 </Space>
                               </Space>
                             </Form.Item>
