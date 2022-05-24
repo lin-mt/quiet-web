@@ -180,7 +180,7 @@ export default (props: ApiEditProps) => {
       let i: number;
       for (i = 1; i < paths.length; i += 1) {
         if (paths[i][0] === ':') {
-          name = paths[i].substr(1);
+          name = paths[i].substring(1);
           insertParams(name);
         }
       }
