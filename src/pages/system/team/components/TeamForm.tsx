@@ -65,7 +65,7 @@ const TeamForm: React.FC<TeamFormProps> = (props) => {
     setSubmitting(false);
     onCancel();
     if (afterAction) {
-      // afterAction();
+      afterAction();
     }
   }
 

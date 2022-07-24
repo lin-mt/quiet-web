@@ -9,6 +9,7 @@ export default {
   'menu.system.department': 'DepartmentManagement',
   'menu.system.team': 'TeamManagement',
   'menu.system.client': 'ApplicationAuthorization',
+  'menu.system.calendar': 'CalendarSetting',
   'menu.system.dictionary': 'DictionaryConfig',
   'menu.system.gateway-route': 'RouteConfig',
   'menu.scrum': 'AgileManagement',
