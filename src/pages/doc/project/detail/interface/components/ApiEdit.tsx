@@ -27,10 +27,11 @@ import { ApiState, FormParamType, HttpMethod, QueryParamType } from '@/services/
 import _ from 'lodash';
 import { updateApi } from '@/services/doc/DocApi';
 import { saveApiInfo, updateApiInfo } from '@/services/doc/DocApiInfo';
-import JsonSchemaEditor from '@quiet-front-end/json-schema-editor-visual';
 import type { Header } from '@/services/doc/EntityType';
 import MarkdownEditor from '@/pages/components/Markdown/MarkdownEditor';
 import { CONTENT_TYPE, REQUEST_HEADER } from '@/constant/doc/Values';
+import JsonSchemaEditor from '@quiet-front-end/json-schema-editor-antd';
+import '@quiet-front-end/json-schema-editor-antd/dist/css/index.css';
 
 interface ApiEditProps {
   apiDetail: ApiDetail;
@@ -179,7 +180,7 @@ export default (props: ApiEditProps) => {
       let i: number;
       for (i = 1; i < paths.length; i += 1) {
         if (paths[i][0] === ':') {
-          name = paths[i].substr(1);
+          name = paths[i].substring(1);
           insertParams(name);
         }
       }
@@ -354,13 +355,13 @@ export default (props: ApiEditProps) => {
           <Form.List name="path_param">
             {(fields) => (
               <>
-                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                {fields.map(({ key, name, ...restField }) => (
                   <Row key={key} gutter={10} style={{ display: 'flex', alignItems: 'baseline' }}>
                     <Col span={4}>
                       <FieldFormItem
                         {...restField}
                         name={[name, 'name']}
-                        fieldKey={[fieldKey, 'name']}
+                        fieldKey={[key, 'name']}
                         rules={[{ required: true, message: '请输入参数名称' }]}
                       >
                         <Input disabled={true} />
@@ -370,7 +371,7 @@ export default (props: ApiEditProps) => {
                       <FieldFormItem
                         {...restField}
                         name={[name, 'example']}
-                        fieldKey={[fieldKey, 'example']}
+                        fieldKey={[key, 'example']}
                         rules={[{ max: 300, type: 'string', message: '参数示例长度不能超过 300' }]}
                       >
                         <Input placeholder="参数示例" />
@@ -380,7 +381,7 @@ export default (props: ApiEditProps) => {
                       <FieldFormItem
                         {...restField}
                         name={[name, 'remark']}
-                        fieldKey={[fieldKey, 'remark']}
+                        fieldKey={[key, 'remark']}
                         rules={[{ max: 300, type: 'string', message: '备注长度不能超过 300' }]}
                       >
                         <Input style={{ width: '100%' }} placeholder="备注" />
@@ -471,7 +472,7 @@ export default (props: ApiEditProps) => {
                         添加form参数
                       </Dropdown.Button>
                     </FieldFormItem>
-                    {fields.map(({ key, name, fieldKey, ...restField }) => (
+                    {fields.map(({ key, name, ...restField }) => (
                       <Row
                         key={key}
                         gutter={10}
@@ -481,7 +482,7 @@ export default (props: ApiEditProps) => {
                           <FieldFormItem
                             {...restField}
                             name={[name, 'name']}
-                            fieldKey={[fieldKey, 'name']}
+                            fieldKey={[key, 'name']}
                             rules={[
                               { required: true, message: '请输入参数名称' },
                               { max: 30, message: '参数长度不能超过 30', type: 'string' },
@@ -494,7 +495,7 @@ export default (props: ApiEditProps) => {
                           <FieldFormItem
                             {...restField}
                             name={[name, 'required']}
-                            fieldKey={[fieldKey, 'required']}
+                            fieldKey={[key, 'required']}
                             valuePropName={'checked'}
                           >
                             <Checkbox />
@@ -504,7 +505,7 @@ export default (props: ApiEditProps) => {
                           <FieldFormItem
                             {...restField}
                             name={[name, 'type']}
-                            fieldKey={[fieldKey, 'type']}
+                            fieldKey={[key, 'type']}
                             rules={[{ required: true, message: '请选择参数类型' }]}
                           >
                             <Select style={{ width: '70px' }}>
@@ -517,7 +518,7 @@ export default (props: ApiEditProps) => {
                           <FieldFormItem
                             {...restField}
                             name={[name, 'content_type']}
-                            fieldKey={[fieldKey, 'content_type']}
+                            fieldKey={[key, 'content_type']}
                           >
                             <AutoComplete placeholder={'Content-Type'} options={CONTENT_TYPE} />
                           </FieldFormItem>
@@ -526,7 +527,7 @@ export default (props: ApiEditProps) => {
                           <FieldFormItem
                             {...restField}
                             name={[name, 'mix_length']}
-                            fieldKey={[fieldKey, 'mix_length']}
+                            fieldKey={[key, 'mix_length']}
                             rules={[{ min: 0, type: 'number', message: '最小长度不能小于 0' }]}
                           >
                             <InputNumber min={0} style={{ width: 100 }} placeholder="最小长度" />
@@ -536,7 +537,7 @@ export default (props: ApiEditProps) => {
                           <FieldFormItem
                             {...restField}
                             name={[name, 'max_length']}
-                            fieldKey={[fieldKey, 'max_length']}
+                            fieldKey={[key, 'max_length']}
                             rules={[{ min: 0, type: 'number', message: '最大长度不能小于 0' }]}
                           >
                             <InputNumber min={0} style={{ width: 100 }} placeholder="最大长度" />
@@ -546,7 +547,7 @@ export default (props: ApiEditProps) => {
                           <FieldFormItem
                             {...restField}
                             name={[name, 'example']}
-                            fieldKey={[fieldKey, 'example']}
+                            fieldKey={[key, 'example']}
                             rules={[
                               { max: 300, type: 'string', message: '参数示例长度不能超过 300' },
                             ]}
@@ -558,7 +559,7 @@ export default (props: ApiEditProps) => {
                           <FieldFormItem
                             {...restField}
                             name={[name, 'remark']}
-                            fieldKey={[fieldKey, 'remark']}
+                            fieldKey={[key, 'remark']}
                             rules={[{ max: 300, type: 'string', message: '备注长度不能超过 300' }]}
                           >
                             <Input style={{ width: '100%' }} placeholder="备注" />
@@ -575,7 +576,7 @@ export default (props: ApiEditProps) => {
             )}
             {reqBodyTypeSetting === 'json' && (
               <JsonSchemaEditor
-                isMock={true}
+                mock={true}
                 data={
                   apiDetail.api_info?.req_json_body
                     ? JSON.parse(JSON.stringify(apiDetail.api_info?.req_json_body))
@@ -615,13 +616,13 @@ export default (props: ApiEditProps) => {
                       添加Query参数
                     </Button>
                   </FieldFormItem>
-                  {fields.map(({ key, name, fieldKey, ...restField }) => (
+                  {fields.map(({ key, name, ...restField }) => (
                     <Row key={key} gutter={10} style={{ display: 'flex', alignItems: 'baseline' }}>
                       <Col flex={1}>
                         <FieldFormItem
                           {...restField}
                           name={[name, 'name']}
-                          fieldKey={[fieldKey, 'name']}
+                          fieldKey={[key, 'name']}
                           rules={[{ required: true, message: '请输入参数名称' }]}
                         >
                           <Input placeholder="参数名称" />
@@ -631,7 +632,7 @@ export default (props: ApiEditProps) => {
                         <FieldFormItem
                           {...restField}
                           name={[name, 'required']}
-                          fieldKey={[fieldKey, 'required']}
+                          fieldKey={[key, 'required']}
                           valuePropName={'checked'}
                         >
                           <Checkbox />
@@ -641,7 +642,7 @@ export default (props: ApiEditProps) => {
                         <FieldFormItem
                           {...restField}
                           name={[name, 'type']}
-                          fieldKey={[fieldKey, 'type']}
+                          fieldKey={[key, 'type']}
                           rules={[{ required: true, message: '请选择参数类型' }]}
                         >
                           <Select style={{ width: '92px' }}>
@@ -652,11 +653,7 @@ export default (props: ApiEditProps) => {
                         </FieldFormItem>
                       </Col>
                       <Col flex={'100px'}>
-                        <FieldFormItem
-                          {...restField}
-                          name={[name, 'mix']}
-                          fieldKey={[fieldKey, 'mix']}
-                        >
+                        <FieldFormItem {...restField} name={[name, 'mix']} fieldKey={[key, 'mix']}>
                           <InputNumber
                             min={0}
                             style={{ width: 130 }}
@@ -665,11 +662,7 @@ export default (props: ApiEditProps) => {
                         </FieldFormItem>
                       </Col>
                       <Col flex={'100px'}>
-                        <FieldFormItem
-                          {...restField}
-                          name={[name, 'max']}
-                          fieldKey={[fieldKey, 'max']}
-                        >
+                        <FieldFormItem {...restField} name={[name, 'max']} fieldKey={[key, 'max']}>
                           <InputNumber
                             min={0}
                             style={{ width: 130 }}
@@ -681,7 +674,7 @@ export default (props: ApiEditProps) => {
                         <FieldFormItem
                           {...restField}
                           name={[name, 'example']}
-                          fieldKey={[fieldKey, 'example']}
+                          fieldKey={[key, 'example']}
                           rules={[
                             { max: 300, type: 'string', message: '参数示例长度不能超过 300' },
                           ]}
@@ -693,7 +686,7 @@ export default (props: ApiEditProps) => {
                         <FieldFormItem
                           {...restField}
                           name={[name, 'remark']}
-                          fieldKey={[fieldKey, 'remark']}
+                          fieldKey={[key, 'remark']}
                           rules={[{ max: 300, type: 'string', message: '备注长度不能超过 300' }]}
                         >
                           <Input style={{ width: '100%' }} placeholder="备注" />
@@ -722,13 +715,13 @@ export default (props: ApiEditProps) => {
                       添加Header
                     </Button>
                   </FieldFormItem>
-                  {fields.map(({ key, name, fieldKey, ...restField }) => (
+                  {fields.map(({ key, name, ...restField }) => (
                     <Row key={key} gutter={10} style={{ display: 'flex', alignItems: 'baseline' }}>
                       <Col flex={'220px'}>
                         <FieldFormItem
                           {...restField}
                           name={[name, 'name']}
-                          fieldKey={[fieldKey, 'name']}
+                          fieldKey={[key, 'name']}
                           rules={[{ required: true, message: '请输入参数名称' }]}
                         >
                           <AutoComplete placeholder={'参数名称'} options={REQUEST_HEADER} />
@@ -738,7 +731,7 @@ export default (props: ApiEditProps) => {
                         <FieldFormItem
                           {...restField}
                           name={[name, 'value']}
-                          fieldKey={[fieldKey, 'value']}
+                          fieldKey={[key, 'value']}
                           rules={[{ max: 30, message: '参数值长度不能超过 30' }]}
                         >
                           <Input placeholder="参数值" />
@@ -748,7 +741,7 @@ export default (props: ApiEditProps) => {
                         <FieldFormItem
                           {...restField}
                           name={[name, 'required']}
-                          fieldKey={[fieldKey, 'required']}
+                          fieldKey={[key, 'required']}
                           valuePropName={'checked'}
                         >
                           <Checkbox />
@@ -758,7 +751,7 @@ export default (props: ApiEditProps) => {
                         <FieldFormItem
                           {...restField}
                           name={[name, 'remark']}
-                          fieldKey={[fieldKey, 'remark']}
+                          fieldKey={[key, 'remark']}
                           rules={[{ max: 300, type: 'string', message: '备注长度不能超过 300' }]}
                         >
                           <Input style={{ width: '100%' }} placeholder="备注" />
@@ -787,7 +780,7 @@ export default (props: ApiEditProps) => {
           {respTypeSetting === 'JSON' && (
             <>
               <JsonSchemaEditor
-                isMock={true}
+                mock={true}
                 data={
                   apiDetail.api_info?.resp_json_body
                     ? JSON.parse(JSON.stringify(apiDetail.api_info?.resp_json_body))

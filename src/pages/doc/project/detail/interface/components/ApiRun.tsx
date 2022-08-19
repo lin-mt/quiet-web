@@ -135,8 +135,8 @@ export default function ApiRun(props: ApiRunProps) {
       return path;
     }
     let removed: string;
-    removed = path.startsWith('/') ? path.substr(1, path.length) : path;
-    removed = removed.endsWith('/') ? removed.substr(0, removed.length - 1) : removed;
+    removed = path.startsWith('/') ? path.substring(1) : path;
+    removed = removed.endsWith('/') ? removed.substring(0, removed.length - 1) : removed;
     return removed;
   }
 
@@ -322,11 +322,11 @@ export default function ApiRun(props: ApiRunProps) {
                   <Form.List name={'headers'}>
                     {(fields) => (
                       <>
-                        {fields.map(({ key, name, fieldKey, ...restField }, index) => {
-                          const filedValue = form.getFieldValue('headers')[key];
+                        {fields.map((field, index) => {
+                          const filedValue = form.getFieldValue('headers')[field.key];
                           return (
                             <Row
-                              key={key}
+                              key={field.key}
                               gutter={5}
                               style={{
                                 display: 'flex',
@@ -335,24 +335,19 @@ export default function ApiRun(props: ApiRunProps) {
                               }}
                             >
                               <Col flex={'30%'}>
-                                <Form.Item {...restField} name={[name, 'name']}>
+                                <Form.Item {...field}>
                                   <DisabledInput disabled={true} />
                                 </Form.Item>
                               </Col>
                               <Col>=</Col>
                               <Col>
-                                <Form.Item
-                                  {...restField}
-                                  name={[name, 'required']}
-                                  valuePropName={'checked'}
-                                >
+                                <Form.Item {...field} valuePropName={'checked'}>
                                   <Checkbox disabled={true} />
                                 </Form.Item>
                               </Col>
                               <Col flex={'auto'}>
                                 <Form.Item
-                                  {...restField}
-                                  name={[name, 'value']}
+                                  {...field}
                                   rules={[
                                     {
                                       required: filedValue.required,
@@ -377,9 +372,9 @@ export default function ApiRun(props: ApiRunProps) {
                   <Form.List name={'path_param'}>
                     {(fields) => (
                       <>
-                        {fields.map(({ key, name, fieldKey, ...restField }, index) => (
+                        {fields.map((field, index) => (
                           <Row
-                            key={key}
+                            key={field.key}
                             gutter={5}
                             style={{
                               display: 'flex',
@@ -388,20 +383,19 @@ export default function ApiRun(props: ApiRunProps) {
                             }}
                           >
                             <Col flex={'30%'}>
-                              <Form.Item {...restField} name={[name, 'name']}>
+                              <Form.Item {...field}>
                                 <DisabledInput disabled={true} />
                               </Form.Item>
                             </Col>
                             <Col>=</Col>
                             <Col flex={'auto'}>
                               <Form.Item
-                                {...restField}
-                                name={[name, 'example']}
+                                {...field}
                                 rules={[
                                   {
                                     required: true,
                                     message: `请输入${
-                                      form.getFieldValue('path_param')[key].name
+                                      form.getFieldValue('path_param')[field.key].name
                                     }的值`,
                                   },
                                 ]}
@@ -422,11 +416,11 @@ export default function ApiRun(props: ApiRunProps) {
                   <Form.List name={'req_query'}>
                     {(fields) => (
                       <>
-                        {fields.map(({ key, name, fieldKey, ...restField }, index) => {
-                          const filedValue = form.getFieldValue('req_query')[key];
+                        {fields.map((field, index) => {
+                          const filedValue = form.getFieldValue('req_query')[field.key];
                           return (
                             <Row
-                              key={key}
+                              key={field.key}
                               gutter={5}
                               style={{
                                 display: 'flex',
@@ -435,24 +429,19 @@ export default function ApiRun(props: ApiRunProps) {
                               }}
                             >
                               <Col flex={'30%'}>
-                                <Form.Item {...restField} name={[name, 'name']}>
+                                <Form.Item {...field}>
                                   <DisabledInput disabled={true} />
                                 </Form.Item>
                               </Col>
                               <Col>=</Col>
                               <Col>
-                                <Form.Item
-                                  {...restField}
-                                  name={[name, 'required']}
-                                  valuePropName={'checked'}
-                                >
+                                <Form.Item {...field} valuePropName={'checked'}>
                                   <Checkbox disabled={true} />
                                 </Form.Item>
                               </Col>
                               <Col flex={'auto'}>
                                 <Form.Item
-                                  {...restField}
-                                  name={[name, 'example']}
+                                  {...field}
                                   rules={[
                                     {
                                       required: filedValue.required,
@@ -481,11 +470,11 @@ export default function ApiRun(props: ApiRunProps) {
                     <Form.List name={'req_form'}>
                       {(fields) => (
                         <>
-                          {fields.map(({ key, name, fieldKey, ...restField }, index) => {
-                            const filedValue = form.getFieldValue('req_form')[key];
+                          {fields.map((field, index) => {
+                            const filedValue = form.getFieldValue('req_form')[field.key];
                             return (
                               <Row
-                                key={key}
+                                key={field.key}
                                 gutter={5}
                                 wrap={false}
                                 style={{
@@ -495,25 +484,20 @@ export default function ApiRun(props: ApiRunProps) {
                                 }}
                               >
                                 <Col flex={'30%'}>
-                                  <Form.Item {...restField} name={[name, 'name']}>
+                                  <Form.Item {...field}>
                                     <DisabledInput disabled={true} />
                                   </Form.Item>
                                 </Col>
                                 <Col>=</Col>
                                 <Col>
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, 'required']}
-                                    valuePropName={'checked'}
-                                  >
+                                  <Form.Item {...field} valuePropName={'checked'}>
                                     <Checkbox disabled={true} />
                                   </Form.Item>
                                 </Col>
                                 <Col flex={'auto'}>
                                   {filedValue.type === FormParamType.TEXT && (
                                     <Form.Item
-                                      {...restField}
-                                      name={[name, 'example']}
+                                      {...field}
                                       rules={[
                                         {
                                           required: filedValue.required,

@@ -131,11 +131,13 @@ export default (props: ApiPreviewProps) => {
       <ContentContainer>
         <Descriptions bordered={true} size={'middle'} column={2}>
           <Descriptions.Item label={'接口名称'}>{apiDetail.api.name}</Descriptions.Item>
+          <Descriptions.Item label={'作者'}>{apiDetail.api.author_full_name}</Descriptions.Item>
           <Descriptions.Item label={'创建人'}>{apiDetail.api.creator_full_name}</Descriptions.Item>
+          <Descriptions.Item label={'更新人'}>{apiDetail.api.updater_full_name}</Descriptions.Item>
           <Descriptions.Item label={'状态'}>
             <Badge
               status={apiDetail.api.api_state === ApiState.FINISHED ? 'success' : 'processing'}
-              text={apiDetail.api.api_state === ApiState.FINISHED ? '完成' : '未完成'}
+              text={apiDetail.api.api_state === ApiState.FINISHED ? '已完成' : '未完成'}
             />
           </Descriptions.Item>
           <Descriptions.Item label={'更新时间'}>{apiDetail.api.gmt_update}</Descriptions.Item>
