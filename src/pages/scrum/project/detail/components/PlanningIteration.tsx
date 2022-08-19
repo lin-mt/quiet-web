@@ -123,7 +123,7 @@ export default () => {
                       <Descriptions.Item label="计划开始日期">
                         {formatDate(nodeValues.plan_start_date)}
                       </Descriptions.Item>
-                      <Descriptions.Item label="计划开始日期">
+                      <Descriptions.Item label="计划结束日期">
                         {formatDate(nodeValues.plan_end_date)}
                       </Descriptions.Item>
                       <Descriptions.Item>
