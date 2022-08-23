@@ -1,42 +1,16 @@
-import { useIntl } from 'umi';
-import { GithubOutlined } from '@ant-design/icons';
-import { DefaultFooter } from '@ant-design/pro-layout';
 import React from 'react';
+import { Layout } from '@arco-design/web-react';
+import { FooterProps } from '@arco-design/web-react/es/Layout/interface';
+import cs from 'classnames';
+import styles from './style/index.module.less';
 
-const Footer: React.FC = () => {
-  const intl = useIntl();
-  const defaultMessage = intl.formatMessage({
-    id: 'app.copyright.produced',
-    defaultMessage: '蚂蚁集团体验技术部出品',
-  });
-
-  const currentYear = new Date().getFullYear();
-
+function Footer(props: FooterProps = {}) {
+  const { className, ...restProps } = props;
   return (
-    <DefaultFooter
-      copyright={`${currentYear} ${defaultMessage}`}
-      links={[
-        {
-          key: 'Ant Design Pro',
-          title: 'Ant Design Pro',
-          href: 'https://pro.ant.design',
-          blankTarget: true,
-        },
-        {
-          key: 'github',
-          title: <GithubOutlined />,
-          href: 'https://github.com/ant-design/ant-design-pro',
-          blankTarget: true,
-        },
-        {
-          key: 'Ant Design',
-          title: 'Ant Design',
-          href: 'https://ant.design',
-          blankTarget: true,
-        },
-      ]}
-    />
+    <Layout.Footer className={cs(styles.footer, className)} {...restProps}>
+      Quiet
+    </Layout.Footer>
   );
-};
+}
 
 export default Footer;

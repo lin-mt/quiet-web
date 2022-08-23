@@ -1,57 +1,19 @@
-# Ant Design Pro
+# Quiet Web
 
-This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
+## 快速开始
 
-## Environment Prepare
-
-Install `node_modules`:
-
-```bash
+```
+// 初始化项目
 npm install
-```
 
-or
+// 开发模式
+npm run dev
 
-```bash
-yarn
-```
-
-## Provided Scripts
-
-Ant Design Pro provides some useful script to help you quick start and build with web project, code style check and test.
-
-Scripts provided in `package.json`. It's safe to modify or add additional script:
-
-### Start project
-
-```bash
-npm start
-```
-
-### Build project
-
-```bash
+// 构建
 npm run build
 ```
 
-### Check code style
+## TODO
 
-```bash
-npm run lint
-```
-
-You can also use script to auto fix some lint error:
-
-```bash
-npm run lint:fix
-```
-
-### Test code
-
-```bash
-npm test
-```
-
-## More
-
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
+1. 权限限制
+2. 国际化
