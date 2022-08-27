@@ -30,6 +30,10 @@ export const routes: IRoute[] = [
         name: 'menu.system.userManager',
         key: 'system/user-manager',
       },
+      {
+        name: 'menu.system.teamManager',
+        key: 'system/team-manager',
+      },
     ],
   },
 ];

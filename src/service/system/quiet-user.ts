@@ -3,8 +3,11 @@ import { DELETE, GET, PAGE, PageResult, POST, PUT } from '@/utils/request';
 
 const base_path = '/system/user';
 
-export function listUsersByName(keyword: string): Promise<QuietUser[]> {
-  return GET<QuietUser[]>(`${base_path}/list-users-by-name`, { keyword });
+export function listUsers(
+  keyword?: string,
+  user_ids?: string[]
+): Promise<QuietUser[]> {
+  return GET<QuietUser[]>(`${base_path}/list-users`, { keyword, user_ids });
 }
 
 export async function pageUser(

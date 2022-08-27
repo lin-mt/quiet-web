@@ -2,6 +2,7 @@ const i18n = {
   'en-US': {
     'menu.system': 'System Manager',
     'menu.system.userManager': 'User Manager',
+    'menu.system.teamManager': 'Team Manager',
     'menu.dashboard': 'Dashboard',
     'menu.dashboard.workplace': 'Workplace',
     'menu.user.info': 'User Info',
@@ -42,6 +43,7 @@ const i18n = {
   'zh-CN': {
     'menu.system': '系统管理',
     'menu.system.userManager': '用户管理',
+    'menu.system.teamManager': '团队管理',
     'menu.dashboard': '仪表盘',
     'menu.dashboard.workplace': '工作台',
     'menu.user.info': '用户信息',
