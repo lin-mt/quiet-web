@@ -31,6 +31,10 @@ export const routes: IRoute[] = [
         key: 'system/user-manager',
       },
       {
+        name: 'menu.system.deptManager',
+        key: 'system/dept-manager',
+      },
+      {
         name: 'menu.system.teamManager',
         key: 'system/team-manager',
       },

@@ -2,6 +2,7 @@ const i18n = {
   'en-US': {
     'menu.system': 'System Manager',
     'menu.system.userManager': 'User Manager',
+    'menu.system.deptManager': 'Dept Manager',
     'menu.system.teamManager': 'Team Manager',
     'menu.system.roleManager': 'Role Manager',
     'menu.system.calendarSetting': 'Calendar Setting',
@@ -45,6 +46,7 @@ const i18n = {
   'zh-CN': {
     'menu.system': '系统管理',
     'menu.system.userManager': '用户管理',
+    'menu.system.deptManager': '部门管理',
     'menu.system.teamManager': '团队管理',
     'menu.system.roleManager': '角色管理',
     'menu.system.calendarSetting': '日历设置',

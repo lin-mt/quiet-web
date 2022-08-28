@@ -106,8 +106,8 @@ export interface QuietPermission extends BaseEntity {
   post_authorize_value?: string;
 }
 
-export interface QuietDepartment extends BaseEntity {
-  department_name: string;
+export interface QuietDept extends ParentEntity<QuietDept> {
+  dept_name: string;
   parent_id?: string;
   remark?: string;
 }

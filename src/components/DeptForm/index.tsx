@@ -1,36 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Modal, Typography } from '@arco-design/web-react';
-import { QuietRole } from '@/service/system/type';
-import RoleTreeSelect from '@/components/RoleTreeSelect';
+import { QuietDept } from '@/service/system/type';
+import DeptTreeSelect from '@/components/DeptTreeSelect';
 
 const { useForm } = Form;
 
-export type RoleFormProps = {
-  roleInfo?: QuietRole;
+export type DeptFormProps = {
+  deptInfo?: QuietDept;
   title?: string;
   visible?: boolean;
-  onOk?: (values: QuietRole) => Promise<QuietRole | void>;
+  onOk?: (values: QuietDept) => Promise<QuietDept | void>;
   okText?: string;
   onCancel?: () => void;
   cancelText?: string;
 };
 
-function RoleForm(props: RoleFormProps) {
+function DeptForm(props: DeptFormProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.roleInfo) {
-      form.setFieldsValue(props.roleInfo);
-      form.setFieldValue('role_name', props.roleInfo.role_name.substring(5));
+    if (props.deptInfo) {
+      form.setFieldsValue(props.deptInfo);
     }
-  }, [form, props.roleInfo]);
+  }, [form, props.deptInfo]);
 
   function handleOk() {
     if (props.onOk) {
       form.validate().then(async (values) => {
         setSubmitting(true);
-        values.role_name = 'ROLE_' + values.role_name;
         props.onOk(values).finally(() => {
           setSubmitting(false);
         });
@@ -68,45 +66,35 @@ function RoleForm(props: RoleFormProps) {
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
-        {props.roleInfo && (
+        {props.deptInfo && (
           <>
             <Form.Item hidden={true} field="id">
               <Input />
             </Form.Item>
-            <Form.Item label={'角色ID'} field="id">
+            <Form.Item label={'部门ID'} field="id">
               <Typography.Text copyable={true}>
-                {props.roleInfo.id}
+                {props.deptInfo.id}
               </Typography.Text>
             </Form.Item>
           </>
         )}
         <Form.Item
-          label="角色名"
-          field="role_name"
+          label="部门名称"
+          field="dept_name"
           rules={[
-            { required: true, message: '请输入角色名' },
-            { max: 30, message: '角色名称长度不能超过 30' },
+            { required: true, message: '请输入部门名称' },
+            { max: 10, message: '部门名称长度不能超过 10' },
           ]}
         >
-          <Input addBefore="ROLE_" placeholder="请输入角色名" />
+          <Input placeholder="请输入部门名称" />
         </Form.Item>
-        <Form.Item
-          label="角色中文名"
-          field="role_cn_name"
-          rules={[
-            { required: true, message: '请输入角色中文名' },
-            { max: 30, message: '角色中文名称长度不能超过 30' },
-          ]}
-        >
-          <Input placeholder="请输入角色中文名" />
-        </Form.Item>
-        <Form.Item label="父角色" field="parent_id">
-          <RoleTreeSelect multiple={false} placeholder="请选择父角色" />
+        <Form.Item label="父级部门" field="parent_id">
+          <DeptTreeSelect multiple={false} placeholder="请选择父级部门" />
         </Form.Item>
         <Form.Item
           label="备注"
           field="remark"
-          rules={[{ max: 100, message: '角色的备注信息长度不能超过 100' }]}
+          rules={[{ max: 100, message: '备注信息长度不能超过 100' }]}
         >
           <Input.TextArea
             autoSize={{ minRows: 2, maxRows: 5 }}
@@ -118,4 +106,4 @@ function RoleForm(props: RoleFormProps) {
   );
 }
 
-export default RoleForm;
+export default DeptForm;
