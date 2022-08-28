@@ -7,7 +7,7 @@ const { Row, Col } = Grid;
 const { useForm } = Form;
 
 function SearchForm(props: {
-  /* eslint-disable @typescript-eslint/no-explicit-any */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSearch: (values: Record<string, any>) => void;
 }) {
   const [form] = useForm();
@@ -29,23 +29,23 @@ function SearchForm(props: {
       <Form
         form={form}
         className={styles['search-form']}
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
+        labelCol={{ span: 7 }}
+        wrapperCol={{ span: 17 }}
       >
         <Row gutter={24}>
           <Col span={colSpan}>
-            <Form.Item label={'团队ID'} field="id">
-              <Input allowClear placeholder={'请输入团队ID'} />
+            <Form.Item label={'角色ID'} field="id">
+              <Input allowClear placeholder={'请输入角色ID'} />
             </Form.Item>
           </Col>
           <Col span={colSpan}>
-            <Form.Item label={'用户ID'} field="user_id">
-              <Input allowClear placeholder={'请输入用户ID'} />
+            <Form.Item label={'角色名'} field="role_name">
+              <Input allowClear placeholder={'请输入角色名'} />
             </Form.Item>
           </Col>
           <Col span={colSpan}>
-            <Form.Item label={'团队名称'} field="team_name">
-              <Input allowClear placeholder={'请输入团队名称'} />
+            <Form.Item label={'角色中文名'} field="role_cn_name">
+              <Input allowClear placeholder={'请输入角色中文名'} />
             </Form.Item>
           </Col>
         </Row>

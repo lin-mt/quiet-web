@@ -34,6 +34,10 @@ export const routes: IRoute[] = [
         name: 'menu.system.teamManager',
         key: 'system/team-manager',
       },
+      {
+        name: 'menu.system.roleManager',
+        key: 'system/role-manager',
+      },
     ],
   },
 ];
@@ -96,6 +100,7 @@ const useRoute = (userPermission): [IRoute[], string] => {
   useEffect(() => {
     const newRoutes = filterRoute(routes);
     setPermissionRoute(newRoutes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(userPermission)]);
 
   const defaultRoute = useMemo(() => {
