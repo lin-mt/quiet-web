@@ -91,6 +91,11 @@ export interface QuietTeam extends BaseEntity {
   members?: QuietUser[];
 }
 
+export interface QuietHoliday extends BaseEntity {
+  date_info: string;
+  is_holiday: boolean;
+}
+
 export interface QuietPermission extends BaseEntity {
   application_name: string;
   url_pattern: string;

@@ -38,6 +38,10 @@ export const routes: IRoute[] = [
         name: 'menu.system.roleManager',
         key: 'system/role-manager',
       },
+      {
+        name: 'menu.system.calendarSetting',
+        key: 'system/calendar-setting',
+      },
     ],
   },
 ];
