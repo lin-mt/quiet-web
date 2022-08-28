@@ -92,13 +92,18 @@ export default () => {
         {months.map((value) => {
           return (
             <Col
-              span={6}
+              xs={24}
+              sm={12}
+              md={8}
+              lg={6}
+              xl={6}
+              xxl={6}
               key={value.format('YYYY-MM')}
               style={{ marginBottom: 15 }}
             >
               <Calendar
                 panel={true}
-                panelWidth={360}
+                panelWidth={'100%'}
                 defaultValue={value.format('YYYY-MM') + '-01'}
                 headerRender={() => (
                   <div
