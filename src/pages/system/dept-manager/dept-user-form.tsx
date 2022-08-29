@@ -157,7 +157,11 @@ function DeptUserForm(props: DeptUserFormProps) {
             size="small"
             onClick={() =>
               Modal.confirm({
-                onOk: () => removeUsers(props.dept.id, [record.id]),
+                title: `确定将成员 ${record.full_name} 移出部门 ${props.dept.dept_name} 吗？`,
+                onOk: () =>
+                  removeUsers(props.dept.id, [record.id]).then(() =>
+                    fetchData()
+                  ),
               })
             }
           >
