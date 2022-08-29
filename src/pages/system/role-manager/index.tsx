@@ -45,7 +45,7 @@ function RoleManager() {
     setLoading(true);
     pageRole({
       current: pagination.current,
-      pageSize: pagination.pageSize,
+      page_size: pagination.pageSize,
       ...formParams,
     })
       .then((res) => {
@@ -80,6 +80,7 @@ function RoleManager() {
       title: '角色名',
       dataIndex: 'role_name',
       width: 180,
+      render: (value) => value.substring(5),
     },
     {
       title: '角色中文名',
@@ -95,6 +96,7 @@ function RoleManager() {
       title: '父角色名',
       dataIndex: 'parent_role_name',
       width: 180,
+      render: (value) => value?.substring(5),
     },
     {
       title: '备注',

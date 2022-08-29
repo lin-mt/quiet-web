@@ -1,19 +1,24 @@
 import { DELETE, GET, PAGE, PageResult, POST, PUT } from '@/utils/request';
-import { QuietDept } from '@/service/system/type';
+import { QuietDept, QuietUser } from '@/service/system/type';
 
 const base_path = '/system/dept';
 
-export function removeUsers(department_id: string, user_ids: string[]) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function pageDeptUser(params?: any): Promise<PageResult<QuietUser>> {
+  return GET<PageResult<QuietUser>>(`${base_path}/page-user`, params);
+}
+
+export function removeUsers(dept_id: string, user_ids: string[]) {
   return POST(`${base_path}/remove-users`, {
-    id: department_id,
-    userIds: user_ids,
+    id: dept_id,
+    user_ids: user_ids,
   });
 }
 
-export function addUsers(department_id: string, user_ids: string[]) {
+export function addUsers(dept_id: string, user_ids: string[]) {
   return POST(`${base_path}/add-users`, {
-    id: department_id,
-    userIds: user_ids,
+    id: dept_id,
+    user_ids: user_ids,
   });
 }
 

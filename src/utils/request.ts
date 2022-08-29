@@ -97,6 +97,9 @@ req.interceptors.response.use(
       localStorage.removeItem(LocalStorage.UserStatus);
       window.location.href = '/login';
     }
+    if (error.response.status === 500) {
+      Message.error('服务器发生错误，请联系管理员');
+    }
     return Promise.reject(error);
   }
 );

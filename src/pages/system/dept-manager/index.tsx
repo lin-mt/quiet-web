@@ -20,6 +20,9 @@ import {
 } from '@/service/system/quiet-dept';
 import DeptForm, { DeptFormProps } from '@/components/DeptForm';
 import { QuietDept } from '@/service/system/type';
+import DeptUserForm, {
+  DeptUserFormProps,
+} from '@/pages/system/dept-manager/dept-user-form';
 
 function DeptManager() {
   const [data, setData] = useState([]);
@@ -35,6 +38,8 @@ function DeptManager() {
   const [deptFormProps, setDeptFormProps] = useState<DeptFormProps>({
     visible: false,
   });
+  const [deptUserFormProps, setDeptUserFormProps] =
+    useState<DeptUserFormProps>();
 
   useEffect(() => {
     fetchData();
@@ -95,9 +100,24 @@ function DeptManager() {
       title: '操作',
       dataIndex: 'operations',
       fixed: 'right',
-      width: 150,
+      width: 240,
       render: (_, record) => (
         <div className={styles.operations}>
+          <Button
+            type={'text'}
+            size={'small'}
+            onClick={() =>
+              setDeptUserFormProps({
+                dept: record,
+                visible: true,
+                title: `部门 ${record?.dept_name} 成员信息`,
+                onOk: () => setDeptUserFormProps({ visible: false }),
+                onCancel: () => setDeptUserFormProps({ visible: false }),
+              })
+            }
+          >
+            成员管理
+          </Button>
           <Button
             type="text"
             size="small"
@@ -175,6 +195,8 @@ function DeptManager() {
       </Spin>
 
       <DeptForm {...deptFormProps} />
+
+      {deptUserFormProps && <DeptUserForm {...deptUserFormProps} />}
     </Card>
   );
 }

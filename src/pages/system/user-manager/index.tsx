@@ -52,7 +52,7 @@ function UserManager() {
     setLoading(true);
     pageUser({
       current: pagination.current,
-      pageSize: pagination.pageSize,
+      page_size: pagination.pageSize,
       ...formParams,
     })
       .then((res) => {
@@ -126,7 +126,7 @@ function UserManager() {
                   }}
                 >
                   <Tooltip content={role_cn_name} key={role_name}>
-                    {role_name}
+                    {role_name.substring(5)}
                   </Tooltip>
                 </Tag>
               ))}
