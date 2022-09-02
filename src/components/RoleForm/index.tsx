@@ -36,7 +36,7 @@ function RoleForm(props: RoleFormProps) {
         });
       });
     } else {
-      form.clearFields();
+      form.resetFields();
     }
   }
 
@@ -44,7 +44,7 @@ function RoleForm(props: RoleFormProps) {
     if (props.onCancel) {
       props.onCancel();
     } else {
-      form.clearFields();
+      form.resetFields();
     }
   }
 
@@ -58,7 +58,7 @@ function RoleForm(props: RoleFormProps) {
       onCancel={handleCancel}
       cancelText={props.cancelText}
       afterClose={() => {
-        form.clearFields();
+        form.resetFields();
       }}
       confirmLoading={submitting}
     >

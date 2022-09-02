@@ -13,7 +13,7 @@ export function locked(locked: boolean) {
 }
 
 export function enabled(enabled: boolean): string {
-  return enabled ? '启用' : '封禁';
+  return enabled ? '启用' : '禁用';
 }
 
 export function enumToSelectOptions(enumVal): {

@@ -43,6 +43,10 @@ export const routes: IRoute[] = [
         key: 'system/role-manager',
       },
       {
+        name: 'menu.system.dictManager',
+        key: 'system/dict-manager',
+      },
+      {
         name: 'menu.system.calendarSetting',
         key: 'system/calendar-setting',
       },

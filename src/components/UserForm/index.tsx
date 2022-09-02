@@ -52,7 +52,7 @@ function UserForm(props: UserFormProps) {
         });
       });
     } else {
-      form.clearFields();
+      form.resetFields();
     }
   }
 
@@ -60,7 +60,7 @@ function UserForm(props: UserFormProps) {
     if (props.onCancel) {
       props.onCancel();
     } else {
-      form.clearFields();
+      form.resetFields();
     }
   }
 
@@ -74,7 +74,7 @@ function UserForm(props: UserFormProps) {
       onCancel={handleCancel}
       cancelText={props.cancelText}
       afterClose={() => {
-        form.clearFields();
+        form.resetFields();
         setUserRoleIds([]);
       }}
       confirmLoading={submitting}
@@ -200,10 +200,10 @@ function UserForm(props: UserFormProps) {
                 <Form.Item
                   label="账号状态"
                   field={'account_locked'}
+                  initialValue={true}
                   triggerPropName={'checked'}
                 >
                   <Switch
-                    defaultChecked
                     checkedText={locked(true)}
                     uncheckedText={locked(false)}
                   />
@@ -213,10 +213,10 @@ function UserForm(props: UserFormProps) {
                 <Form.Item
                   label="账号期限"
                   field="account_expired"
+                  initialValue={true}
                   triggerPropName={'checked'}
                 >
                   <Switch
-                    defaultChecked
                     checkedText={expired(true)}
                     uncheckedText={expired(false)}
                   />
@@ -226,10 +226,10 @@ function UserForm(props: UserFormProps) {
                 <Form.Item
                   label="账号状态"
                   field="enabled"
+                  initialValue={true}
                   triggerPropName={'checked'}
                 >
                   <Switch
-                    defaultChecked
                     checkedText={enabled(true)}
                     uncheckedText={enabled(false)}
                   />
@@ -239,10 +239,10 @@ function UserForm(props: UserFormProps) {
                 <Form.Item
                   label="密码期限"
                   field="credentials_expired"
+                  initialValue={true}
                   triggerPropName={'checked'}
                 >
                   <Switch
-                    defaultChecked
                     checkedText={expired(true)}
                     uncheckedText={expired(false)}
                   />

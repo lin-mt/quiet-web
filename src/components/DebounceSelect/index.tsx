@@ -27,7 +27,7 @@ const DebounceSelect = <
   const fetchRef = React.useRef(0);
 
   useEffect(() => {
-    if (props.value && props.initOptions) {
+    if (props.initOptions) {
       props.initOptions().then((ops) => {
         if (ops) {
           setOptions(ops);
@@ -59,6 +59,7 @@ const DebounceSelect = <
 
   return (
     <Select
+      showSearch={true}
       filterOption={false}
       onSearch={debounceFetcher}
       notFoundContent={

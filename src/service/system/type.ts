@@ -6,8 +6,8 @@ export interface BaseEntity {
   gmt_update?: string;
 }
 
-export interface SerialEntity extends BaseEntity {
-  serial_number: number;
+export interface SortableEntity extends BaseEntity {
+  sort_num: number;
 }
 
 export interface ParentEntity<T extends BaseEntity> extends BaseEntity {
@@ -74,6 +74,22 @@ export interface QuietRole extends ParentEntity<QuietRole> {
 export interface QuietUserRole extends BaseEntity {
   user_id: string;
   role_id: string;
+}
+
+export interface QuietDictType extends BaseEntity {
+  service_id: string;
+  name: string;
+  enabled: boolean;
+  remark?: string;
+}
+
+export interface QuietDict extends SortableEntity {
+  type_id: string;
+  key: string;
+  label: string;
+  enabled: boolean;
+  remark?: string;
+  children?: QuietDict[];
 }
 
 export interface QuietDictionary extends ParentEntity<QuietDictionary> {
