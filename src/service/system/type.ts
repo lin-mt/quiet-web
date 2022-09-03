@@ -89,6 +89,7 @@ export interface QuietDict extends SortableEntity {
   name: string;
   enabled: boolean;
   remark?: string;
+  type_name?: string;
   children?: QuietDict[];
 }
 

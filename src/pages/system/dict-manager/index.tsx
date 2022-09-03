@@ -92,7 +92,7 @@ function DictManager() {
     },
     {
       title: '字典类型',
-      dataIndex: 'type_id',
+      dataIndex: 'type_name',
       width: 185,
     },
     {
