@@ -22,7 +22,8 @@ const RoleTreeSelect = (
       const buildResult = _.clone(data);
       if (data) {
         for (let i = 0; i < data.length; i += 1) {
-          buildResult[i].key = data[i].id;
+          buildResult[i].value = data[i].key;
+          buildResult[i].title = data[i].name;
           if (data[i].children) {
             buildResult[i].children = buildDictTreeData(data[i].children);
           }

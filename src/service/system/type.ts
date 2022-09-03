@@ -86,7 +86,7 @@ export interface QuietDictType extends BaseEntity {
 export interface QuietDict extends SortableEntity {
   type_id: string;
   key: string;
-  label: string;
+  name: string;
   enabled: boolean;
   remark?: string;
   children?: QuietDict[];

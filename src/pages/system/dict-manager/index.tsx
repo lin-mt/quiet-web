@@ -87,7 +87,7 @@ function DictManager() {
     },
     {
       title: '名称',
-      dataIndex: 'label',
+      dataIndex: 'name',
       width: 180,
     },
     {
@@ -139,7 +139,7 @@ function DictManager() {
             size="small"
             onClick={() =>
               Modal.confirm({
-                title: `确认删除字典 ${record.label} 吗？`,
+                title: `确认删除字典 ${record.name} 吗？`,
                 onOk: () => deleteDict(record.id).then(() => fetchData()),
               })
             }

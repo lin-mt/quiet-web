@@ -11,6 +11,7 @@ import { QuietDict } from '@/service/system/type';
 import { enabled } from '@/utils/render';
 import DictTypeSelect from '@/components/DictTypeSelect';
 import { IconExclamationCircle } from '@arco-design/web-react/icon';
+import DictSelect from '@/components/DictSelect';
 
 const { useForm } = Form;
 
@@ -26,6 +27,8 @@ export type DictFormProps = {
 
 function DictForm(props: DictFormProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [parentKey, setParentKey] = useState();
+  const [selectedTypeId, setSelectedTypeId] = useState();
   const [form] = useForm();
 
   useEffect(() => {
@@ -38,6 +41,9 @@ function DictForm(props: DictFormProps) {
     if (props.onOk) {
       form.validate().then(async (values) => {
         setSubmitting(true);
+        if (parentKey) {
+          values.key = parentKey + values.key;
+        }
         props.onOk(values).finally(() => {
           setSubmitting(false);
         });
@@ -66,12 +72,17 @@ function DictForm(props: DictFormProps) {
       cancelText={props.cancelText}
       afterClose={() => {
         form.resetFields();
+        setSelectedTypeId(undefined);
+        setParentKey(undefined);
       }}
       confirmLoading={submitting}
     >
       <Form
         form={form}
         id={'dict-form'}
+        onValuesChange={(v, vs) => {
+          setSelectedTypeId(vs.type_id);
+        }}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
@@ -92,32 +103,29 @@ function DictForm(props: DictFormProps) {
         >
           <DictTypeSelect placeholder="请选择字典类型" />
         </Form.Item>
+        <Form.Item label={'父级字典'}>
+          <DictSelect
+            allowClear
+            typeId={selectedTypeId}
+            value={parentKey}
+            onChange={(value) => setParentKey(value)}
+            placeholder={'请选择'}
+          />
+        </Form.Item>
         <Form.Item
           label="字典key"
           field="key"
           rules={[
             { required: true, message: '请输入字典key' },
-            { minLength: 2, maxLength: 18, message: '字典key长度在 2 - 18' },
-            {
-              validator: async (value, callback) => {
-                return new Promise((resolve) => {
-                  if (value.length % 2 != 0) {
-                    setTimeout(() => {
-                      callback('字典 key 必须是 2 的倍数');
-                      resolve();
-                    }, 1000);
-                  } else {
-                    resolve();
-                  }
-                });
-              },
-            },
+            { length: 2, message: '字典key长度为 2' },
+            { match: /^[0-9]+[0-9]*]*$/, message: '字典 key 必须全是数字' },
           ]}
         >
           <Input
+            prefix={parentKey}
             placeholder="请输入字典key"
             suffix={
-              <Tooltip content="格式为每层级占两位数字，第一层级范围：00-99，第二层级的前两位为第一层级的key， 所以第二层级范围为：0000-9999，后续层级以此类推">
+              <Tooltip content="每层级占用两位数字">
                 <IconExclamationCircle />
               </Tooltip>
             }
@@ -125,7 +133,7 @@ function DictForm(props: DictFormProps) {
         </Form.Item>
         <Form.Item
           label="名称"
-          field="label"
+          field="name"
           rules={[
             { required: true, message: '请输入名称' },
             { maxLength: 10, message: '名称不能超过 10' },
