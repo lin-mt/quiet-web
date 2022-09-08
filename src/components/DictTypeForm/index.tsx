@@ -29,7 +29,6 @@ function DictTypeForm(props: DictTypeFormProps) {
     if (props.onOk) {
       form.validate().then(async (values) => {
         setSubmitting(true);
-        console.log(values);
         props.onOk(values).finally(() => {
           setSubmitting(false);
         });
