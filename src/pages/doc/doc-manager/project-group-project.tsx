@@ -22,11 +22,11 @@ import DocProjectForm, {
 
 const { Row, Col } = Grid;
 
-export type ProjectListProps = {
+export type ProjectGroupProjectProps = {
   groupId?: string;
 };
 
-function ProjectList(props: ProjectListProps) {
+function ProjectGroupProject(props: ProjectGroupProjectProps) {
   const [projects, setProjects] = useState<DocProject[]>([]);
   const [docProjectFormProps, setDocProjectFormProps] =
     useState<DocProjectFormProps>({});
@@ -175,4 +175,4 @@ function ProjectList(props: ProjectListProps) {
   );
 }
 
-export default ProjectList;
+export default ProjectGroupProject;

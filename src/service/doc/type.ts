@@ -32,9 +32,24 @@ export enum HttpProtocol {
   HTTPS = 'HTTPS',
 }
 
+export enum Permission {
+  GROUP_LEADER = '组长',
+  DEVELOPER = '开发者',
+  TESTER = '测试人员',
+  VISITOR = '访客',
+}
+
 export interface DocProjectGroup extends SortableEntity {
   name: string;
   remark?: string;
+}
+
+export interface DocProjectGroupMember extends BaseEntity {
+  group_id: string;
+  user_id: string;
+  username?: string;
+  avatar?: string;
+  permission: Permission;
 }
 
 export interface DocApi extends SortableEntity {

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Tabs } from '@arco-design/web-react';
 import { IconApps, IconUser } from '@arco-design/web-react/icon';
-import ProjectList from '@/pages/doc/doc-manager/project-list';
+import ProjectGroupProject from '@/pages/doc/doc-manager/project-group-project';
+import ProjectGroupMember from '@/pages/doc/doc-manager/project-group-member';
 
 const TabPane = Tabs.TabPane;
 
@@ -10,11 +11,19 @@ export type ProjectGroupContentProps = {
 };
 
 function ProjectGroupContent(props: ProjectGroupContentProps) {
+  const [activeTab, setActiveTab] = useState<string>('pgp');
+
+  useEffect(() => {
+    if (!props.projectGroupId) {
+      setActiveTab('pgp');
+    }
+  }, [props.projectGroupId]);
+
   return (
     <Card bodyStyle={{ padding: '8px 16px 16px 16px' }}>
-      <Tabs defaultActiveTab="pl">
+      <Tabs activeTab={activeTab} onClickTab={(key) => setActiveTab(key)}>
         <TabPane
-          key="pl"
+          key="pgp"
           title={
             <span>
               <IconApps style={{ marginRight: 6 }} />
@@ -22,11 +31,11 @@ function ProjectGroupContent(props: ProjectGroupContentProps) {
             </span>
           }
         >
-          <ProjectList groupId={props.projectGroupId} />
+          <ProjectGroupProject groupId={props.projectGroupId} />
         </TabPane>
         {props.projectGroupId && (
           <TabPane
-            key="pm"
+            key="pgm"
             title={
               <span>
                 <IconUser style={{ marginRight: 6 }} />
@@ -34,7 +43,7 @@ function ProjectGroupContent(props: ProjectGroupContentProps) {
               </span>
             }
           >
-            成员列表
+            <ProjectGroupMember groupId={props.projectGroupId} />
           </TabPane>
         )}
         {
