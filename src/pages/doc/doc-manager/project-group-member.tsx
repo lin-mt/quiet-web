@@ -140,7 +140,7 @@ function ProjectGroupMember(props: ProjectGroupMemberProps) {
       >
         添加成员
       </Button>
-      <Grid.Row style={{ width: '100%', paddingTop: 10 }}>
+      <Grid.Row style={{ width: '100%' }}>
         <Table
           rowKey={'username'}
           border={false}
