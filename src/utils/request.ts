@@ -135,19 +135,20 @@ req.interceptors.response.use((response) => {
               failureMsg.forEach((msg) => Message.error(msg));
               failureMsg.clear();
             }, failureMsg.size * 500);
-            break;
+            return Promise.reject(
+              `${data.code ? `错误码：${data.code} ` : ` `}\r\n${data.message}`
+            );
           case ResultType.EXCEPTION:
             Message.error(
               `${data.code ? `异常码：${data.code}` : ``}\n异常信息：${
                 data.message
               }`
             );
-            Promise.reject(
+            return Promise.reject(
               `${data.code ? `异常码：${data.code}` : ``}\n异常信息：${
                 data.message
               }`
             );
-            break;
           default:
             return response;
         }
@@ -163,7 +164,6 @@ function GET<T>(
 ): Promise<T> {
   return req
     .get<Result<T>>(url, {
-      method: 'GET',
       params: new URLSearchParams(
         qs.stringify(params, { allowDots: true, arrayFormat: 'comma' })
       ),
@@ -184,13 +184,17 @@ function POST<T>(url: string, data?): Promise<T> {
   return req.post<Result<T>>(url, data).then((resp) => resp.data.data);
 }
 
-function DELETE<T>(url: string): Promise<T> {
-  return req.delete<Result<T>>(url).then((resp) => {
-    if (resp.data) {
-      return resp.data.data;
-    }
-    return null;
-  });
+function DELETE<T>(
+  url: string,
+  params?: Record<string, unknown> | URLSearchParams
+): Promise<T> {
+  return req
+    .delete<Result<T>>(url, {
+      params: new URLSearchParams(
+        qs.stringify(params, { allowDots: true, arrayFormat: 'comma' })
+      ),
+    })
+    .then((resp) => resp.data.data);
 }
 
 function PUT<T>(url: string, data?): Promise<T> {
