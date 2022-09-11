@@ -4,6 +4,10 @@ import { isSSR } from './is';
 
 export type ParamsType = Record<string, any>;
 
+export function getQueryParams(): ParamsType {
+  return qs.parseUrl(!isSSR ? window.location.href : '').query;
+}
+
 export default function getUrlParams(): ParamsType {
   const params = qs.parseUrl(!isSSR ? window.location.href : '').query;
   const returnParams: ParamsType = {};
