@@ -46,9 +46,26 @@ function ProjectGroupContent(props: ProjectGroupContentProps) {
             <ProjectGroupMember groupId={props.projectGroupId} />
           </TabPane>
         )}
-        {
-          // TODO 分组动态、分组设置
-        }
+        <TabPane
+          disabled
+          key="pgd"
+          title={
+            <span>
+              <IconUser style={{ marginRight: 6 }} />
+              分组动态
+            </span>
+          }
+        />
+        <TabPane
+          disabled
+          key="pgs"
+          title={
+            <span>
+              <IconUser style={{ marginRight: 6 }} />
+              分组设置
+            </span>
+          }
+        />
       </Tabs>
     </Card>
   );

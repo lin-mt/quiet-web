@@ -30,6 +30,11 @@ export const routes: IRoute[] = [
         name: 'menu.doc.docManager',
         key: 'doc/doc-manager',
       },
+      {
+        name: 'menu.doc.apiManager',
+        key: 'doc/api-manager',
+        ignore: true,
+      },
     ],
   },
   {

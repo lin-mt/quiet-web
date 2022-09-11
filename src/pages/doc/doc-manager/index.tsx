@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import { Grid } from '@arco-design/web-react';
 import ProjectGroupManager from '@/pages/doc/doc-manager/project-group-manager';
 import ProjectGroupContent from '@/pages/doc/doc-manager/project-group-content';
-import qs from 'query-string';
-import { isSSR } from '@/utils/is';
+import { getQueryParams } from '@/utils/getUrlParams';
 
 const { Row, Col } = Grid;
 
 export default function DocManager() {
-  const query: { projectGroupId?: string } = qs.parseUrl(
-    !isSSR ? window.location.href : ''
-  ).query;
+  const query: { projectGroupId?: string } = getQueryParams();
 
   const [projectGroupId, setProjectGroupId] = useState<string>(
     query.projectGroupId

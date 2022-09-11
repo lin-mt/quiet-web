@@ -5,9 +5,16 @@ import {
   Grid,
   Modal,
   Space,
+  Tooltip,
   Typography,
 } from '@arco-design/web-react';
-import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
+import {
+  IconDelete,
+  IconEdit,
+  IconList,
+  IconPlus,
+  IconStar,
+} from '@arco-design/web-react/icon';
 import styles from './style/index.module.less';
 import { DocProject } from '@/service/doc/type';
 import {
@@ -42,6 +49,43 @@ function ProjectGroupProject(props: ProjectGroupProjectProps) {
     });
   }
 
+  function handleEditorProject(value: DocProject) {
+    setDocProjectFormProps({
+      visible: true,
+      project: value,
+      title: '更新项目',
+      onOk: (update) => {
+        return updateProject(update).then(() => {
+          listProject();
+          setDocProjectFormProps({ visible: false });
+        });
+      },
+      onCancel: () => setDocProjectFormProps({ visible: false }),
+    });
+  }
+
+  function handleNewProjectClick() {
+    setDocProjectFormProps({
+      visible: true,
+      title: '新建项目',
+      onOk: (value) => {
+        value.group_id = props.groupId;
+        return saveProject(value).then(() => {
+          listProject();
+          setDocProjectFormProps({ visible: false });
+        });
+      },
+      onCancel: () => setDocProjectFormProps({ visible: false }),
+    });
+  }
+
+  function handleDeleteProject(value: DocProject) {
+    Modal.confirm({
+      title: `确定删除项目 ${value.name} 吗？`,
+      onConfirm: () => deleteProject(value.id).then(() => listProject()),
+    });
+  }
+
   return (
     <Row gutter={20} className={styles['project-list']}>
       <Col
@@ -58,21 +102,8 @@ function ProjectGroupProject(props: ProjectGroupProjectProps) {
           hoverable
           bordered
           className={styles['card-with-icon-hover']}
-          style={{ textAlign: 'center' }}
-          onClick={() => {
-            setDocProjectFormProps({
-              visible: true,
-              title: '新建项目',
-              onOk: (value) => {
-                value.group_id = props.groupId;
-                return saveProject(value).then(() => {
-                  listProject();
-                  setDocProjectFormProps({ visible: false });
-                });
-              },
-              onCancel: () => setDocProjectFormProps({ visible: false }),
-            });
-          }}
+          style={{ textAlign: 'center', cursor: 'pointer' }}
+          onClick={() => handleNewProjectClick()}
         >
           <Space
             style={{
@@ -92,7 +123,7 @@ function ProjectGroupProject(props: ProjectGroupProjectProps) {
         </Card>
       </Col>
 
-      {projects.map((value) => {
+      {projects.map((project) => {
         return (
           <Col
             xs={24}
@@ -101,7 +132,7 @@ function ProjectGroupProject(props: ProjectGroupProjectProps) {
             lg={6}
             xl={6}
             xxl={6}
-            key={value.id}
+            key={project.id}
             style={{ marginBottom: 15 }}
           >
             <Card hoverable bordered className={styles['card-with-icon-hover']}>
@@ -120,50 +151,49 @@ function ProjectGroupProject(props: ProjectGroupProjectProps) {
                     }}
                     size={28}
                   >
-                    {value.name.substring(0, 1)}
+                    {project.name.substring(0, 1)}
                   </Avatar>
                   <Typography.Text
                     style={{ marginBottom: 0 }}
                     ellipsis={{ cssEllipsis: true, rows: 2, showTooltip: true }}
                   >
-                    {value.name}
+                    {project.name}
                   </Typography.Text>
                 </Space>
                 <Space>
-                  <span className={styles['icon-hover']}>
-                    <IconEdit
-                      onClick={() => {
-                        setDocProjectFormProps({
-                          visible: true,
-                          project: value,
-                          title: '更新项目',
-                          onOk: (update) => {
-                            return updateProject(update).then(() => {
-                              listProject();
-                              setDocProjectFormProps({ visible: false });
-                            });
-                          },
-                          onCancel: () =>
-                            setDocProjectFormProps({ visible: false }),
-                        });
-                      }}
-                    />
-                  </span>
-                  <span className={styles['icon-delete']}>
-                    <IconDelete
-                      onClick={() => {
-                        Modal.confirm({
-                          title: `确定删除项目 ${value.name} 吗？`,
-                          onConfirm: () =>
-                            deleteProject(value.id).then(() => listProject()),
-                        });
-                      }}
-                    />
-                  </span>
+                  <Space direction={'vertical'}>
+                    <span className={styles['icon-hover']}>
+                      <Tooltip content={'接口列表'}>
+                        <IconList
+                          onClick={() =>
+                            (location.href = `/doc/api-manager?projectId=${project.id}`)
+                          }
+                        />
+                      </Tooltip>
+                    </span>
+                    <span className={styles['icon-disable']}>
+                      <Tooltip content={''} position={'bottom'}>
+                        <IconStar />
+                      </Tooltip>
+                    </span>
+                  </Space>
+                  <Space direction={'vertical'}>
+                    <span className={styles['icon-hover']}>
+                      <Tooltip content={'编辑项目'}>
+                        <IconEdit
+                          onClick={() => handleEditorProject(project)}
+                        />
+                      </Tooltip>
+                    </span>
+                    <span className={styles['icon-delete']}>
+                      <Tooltip content={'删除项目'} position={'bottom'}>
+                        <IconDelete
+                          onClick={() => handleDeleteProject(project)}
+                        />
+                      </Tooltip>
+                    </span>
+                  </Space>
                 </Space>
-                {
-                  // TODO 收藏功能
-                }
               </Space>
             </Card>
           </Col>

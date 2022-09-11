@@ -1,32 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Modal, Typography } from '@arco-design/web-react';
-import { DocProjectGroup } from '@/service/doc/type';
+import { DocApiGroup } from '@/service/doc/type';
+import { QuietFormProps } from '@/components/type';
 
 const { useForm } = Form;
 
-export type ProjectGroupFormProps = {
-  groupInfo?: DocProjectGroup;
-  title?: string;
-  visible?: boolean;
-  onOk?: (values: DocProjectGroup) => Promise<DocProjectGroup | void>;
-  okText?: string;
-  onCancel?: () => void;
-  cancelText?: string;
+export type ApiGroupFormProps = QuietFormProps<DocApiGroup> & {
+  projectId: string;
 };
 
-function ProjectGroupForm(props: ProjectGroupFormProps) {
+function ApiGroupForm(props: ApiGroupFormProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.groupInfo) {
-      form.setFieldsValue(props.groupInfo);
+    if (props.updateEntity) {
+      form.setFieldsValue(props.updateEntity);
     }
-  }, [form, props.groupInfo]);
+  }, [form, props.updateEntity]);
 
   function handleOk() {
     if (props.onOk) {
       form.validate().then(async (values) => {
+        values.project_id = props.projectId;
         setSubmitting(true);
         props.onOk(values).finally(() => {
           setSubmitting(false);
@@ -61,18 +57,18 @@ function ProjectGroupForm(props: ProjectGroupFormProps) {
     >
       <Form
         form={form}
-        id={'project-group-form'}
+        id={'api-group-form'}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
-        {props.groupInfo && (
+        {props.updateEntity && (
           <>
             <Form.Item hidden={true} field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'分组ID'} field="id">
               <Typography.Text copyable={true}>
-                {props.groupInfo.id}
+                {props.updateEntity.id}
               </Typography.Text>
             </Form.Item>
           </>
@@ -102,4 +98,4 @@ function ProjectGroupForm(props: ProjectGroupFormProps) {
   );
 }
 
-export default ProjectGroupForm;
+export default ApiGroupForm;
