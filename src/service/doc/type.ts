@@ -67,6 +67,7 @@ export interface DocApi extends SortableEntity {
   author_full_name?: string;
   creator_full_name?: string;
   updater_full_name?: string;
+  api_info?: DocApiInfo;
 }
 
 export interface FormParam {
@@ -143,12 +144,6 @@ export interface DocProjectConfig extends BaseEntity {
 export interface MyDocProject {
   responsible_projects: DocProject[];
   accessible_projects: DocProject[];
-}
-
-export interface ApiDetail {
-  api: DocApi;
-  api_info?: DocApiInfo;
-  visitors?: QuietUser[];
 }
 
 export interface Cookie {

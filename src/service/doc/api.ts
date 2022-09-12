@@ -1,4 +1,4 @@
-import { ApiDetail, DocApi } from '@/service/doc/type';
+import { DocApi } from '@/service/doc/type';
 import { DELETE, GET, PAGE, PageResult, POST, PUT } from '@/utils/request';
 
 const base_path = '/doc/api';
@@ -21,8 +21,8 @@ export async function deleteApi(id: string) {
   await DELETE(`${base_path}/${id}`);
 }
 
-export async function getApiDetail(id: string): Promise<ApiDetail> {
-  return GET<ApiDetail>(`${base_path}/detail/${id}`);
+export async function getApiDetail(id: string): Promise<DocApi> {
+  return GET<DocApi>(`${base_path}/detail/${id}`);
 }
 
 export function listApi(project_id: string, name?: string): Promise<DocApi[]> {

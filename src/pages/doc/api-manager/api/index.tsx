@@ -7,6 +7,8 @@ import ApiGroupManager, {
 import ApiGroupListApi from '@/pages/doc/api-manager/api/api-group-list-api';
 import ApiDetail from '@/pages/doc/api-manager/api/api-detail';
 import { getQueryParams } from '@/utils/getUrlParams';
+import { DocProject } from '@/service/doc/type';
+import { getProjectInfo } from '@/service/doc/project';
 
 const { Row, Col } = Grid;
 
@@ -16,6 +18,7 @@ export type ApiProps = {
 
 function Api(props: ApiProps) {
   const [selectedApi, setSelectedApi] = useState<string>();
+  const [projectInfo, setProjectInfo] = useState<DocProject>();
   const [content, setContent] = useState<ReactNode>();
   const query = getQueryParams();
 
@@ -23,6 +26,10 @@ function Api(props: ApiProps) {
     buildContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    getProjectInfo(props.projectId).then((project) => setProjectInfo(project));
+  }, [props.projectId]);
 
   function buildContent(node?: ClickNode) {
     let result: ReactNode;
@@ -40,7 +47,7 @@ function Api(props: ApiProps) {
       apiGroupId = query.apiGroupId;
     }
     if (apiId) {
-      result = <ApiDetail apiId={apiId} />;
+      result = <ApiDetail apiId={apiId} projectInfo={projectInfo} />;
     }
     if (apiGroupId || (node && NodeType.API_GROUP === node.type)) {
       result = (
