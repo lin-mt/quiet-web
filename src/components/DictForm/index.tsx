@@ -101,7 +101,7 @@ function DictForm(props: DictFormProps) {
           field="type_id"
           rules={[{ required: true, message: '请选择字典类型' }]}
         >
-          <DictTypeSelect placeholder="请选择字典类型" />
+          <DictTypeSelect placeholder="请输入类型名称" />
         </Form.Item>
         <Form.Item label={'父级字典'}>
           <DictSelect
@@ -109,7 +109,7 @@ function DictForm(props: DictFormProps) {
             typeId={selectedTypeId}
             value={parentKey}
             onChange={(value) => setParentKey(value)}
-            placeholder={'请选择'}
+            placeholder={selectedTypeId ? '请选择父级字典' : '请先选择字典类型'}
           />
         </Form.Item>
         <Form.Item
