@@ -18,7 +18,7 @@ const RoleTreeSelect = (
 
   useEffect(() => {
     const buildRoleTreeData = (data: QuietRole[]) => {
-      const buildResult = _.clone(data);
+      const buildResult: TreeSelectDataType[] = _.clone(data);
       if (data) {
         for (let i = 0; i < data.length; i += 1) {
           buildResult[i].key = data[i].id;

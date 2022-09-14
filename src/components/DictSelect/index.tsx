@@ -19,7 +19,7 @@ const RoleTreeSelect = (
 
   useEffect(() => {
     const buildDictTreeData = (data: QuietDict[]) => {
-      const buildResult = _.clone(data);
+      const buildResult: TreeSelectDataType[] = _.clone(data);
       if (data) {
         for (let i = 0; i < data.length; i += 1) {
           buildResult[i].value = data[i].key;
