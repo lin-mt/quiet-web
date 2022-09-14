@@ -12,7 +12,7 @@ import {
 import { pageApi, saveApi } from '@/service/doc/api';
 import { ColumnProps } from '@arco-design/web-react/es/Table';
 import { ApiState, DocApi } from '@/service/doc/type';
-import { getMethodTagColor } from '@/utils/render';
+import { getMethodTagColor } from '@/utils/doc/render';
 import { BlockTitle } from '@/components/doc/styled';
 import { getApiGroup } from '@/service/doc/api-group';
 import ApiForm from '@/components/doc/ApiForm';

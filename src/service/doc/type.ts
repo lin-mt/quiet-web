@@ -2,13 +2,13 @@
 import { BaseEntity, QuietUser, SortableEntity } from '@/service/system/type';
 
 export enum FormParamType {
-  TEXT = 'TEXT',
-  FILE = 'FILE',
+  TEXT = 'text',
+  FILE = 'file',
 }
 
 export enum ApiState {
-  UNFINISHED = 'UNFINISHED',
-  FINISHED = 'FINISHED',
+  UNFINISHED = '未完成',
+  FINISHED = '已完成',
 }
 
 export enum HttpMethod {
@@ -22,14 +22,14 @@ export enum HttpMethod {
 }
 
 export enum QueryParamType {
-  STRING = 'STRING',
-  INTEGER = 'INTEGER',
-  NUMBER = 'NUMBER',
+  STRING = 'string',
+  INTEGER = 'integer',
+  NUMBER = 'number',
 }
 
 export enum HttpProtocol {
-  HTTP = 'HTTP',
-  HTTPS = 'HTTPS',
+  HTTP = 'http',
+  HTTPS = 'https',
 }
 
 export enum Permission {

@@ -301,13 +301,5 @@ export function SchemaTable(props: SchemaTableProp) {
   }
   let data = schemaTransformToTable(product);
   data = _.isArray(data) ? data : [];
-  return (
-    <Table
-      border
-      size="small"
-      pagination={false}
-      data={data}
-      columns={columns}
-    />
-  );
+  return <Table border pagination={false} data={data} columns={columns} />;
 }

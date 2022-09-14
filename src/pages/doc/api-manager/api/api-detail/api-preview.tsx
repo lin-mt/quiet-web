@@ -21,7 +21,7 @@ import {
 } from '@arco-design/web-react';
 import { BlockTitle } from '@/components/doc/styled';
 import styled from 'styled-components';
-import { getMethodTagColor } from '@/utils/render';
+import { getMethodTagColor } from '@/utils/doc/render';
 import { SchemaTable } from '@/pages/doc/api-manager/api/api-detail/schema-table';
 import MarkdownViewer from '@/components/Markdown/MarkdownViewer';
 import { DataType } from '@arco-design/web-react/es/Descriptions/interface';
@@ -226,7 +226,6 @@ export default (props: PreviewProps) => {
             <Table
               border
               pagination={false}
-              size={'small'}
               rowKey={(header) => header.name}
               data={api.api_info?.path_param}
               columns={pathColumns}
@@ -237,7 +236,6 @@ export default (props: PreviewProps) => {
         <Table
           border
           pagination={false}
-          size={'small'}
           rowKey={(header) => header.name}
           data={api.api_info?.headers}
           columns={headerColumns}
@@ -246,7 +244,6 @@ export default (props: PreviewProps) => {
         <Table
           border
           pagination={false}
-          size={'small'}
           rowKey={(query) => query.name}
           data={api.api_info?.req_query}
           columns={queryColumns}
@@ -261,7 +258,6 @@ export default (props: PreviewProps) => {
           <Table
             border
             pagination={false}
-            size={'small'}
             rowKey={(form) => form.name}
             data={api.api_info.req_form}
             columns={reqFormColumns}

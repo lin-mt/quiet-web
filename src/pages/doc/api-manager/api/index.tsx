@@ -47,7 +47,9 @@ function Api(props: ApiProps) {
       apiGroupId = query.apiGroupId;
     }
     if (apiId) {
-      result = <ApiDetail apiId={apiId} projectInfo={projectInfo} />;
+      result = projectInfo && (
+        <ApiDetail apiId={apiId} projectInfo={projectInfo} />
+      );
     }
     if (apiGroupId || (node && NodeType.API_GROUP === node.type)) {
       result = (
@@ -86,14 +88,14 @@ function Api(props: ApiProps) {
 
   return (
     <Row gutter={16}>
-      <Col span={6}>
+      <Col span={5}>
         <ApiGroupManager
           projectId={props.projectId}
           activeId={selectedApi}
           onTreeNodeClick={(node) => buildContent(node)}
         />
       </Col>
-      <Col span={18}>{content}</Col>
+      <Col span={19}>{content}</Col>
     </Row>
   );
 }
