@@ -1,6 +1,13 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Card, Empty, Grid } from '@arco-design/web-react';
 import ApiGroupManager, {
+  ApiGroupManagerRefProps,
   ClickNode,
   NodeType,
 } from '@/pages/doc/api-manager/api/api-group-manager';
@@ -16,11 +23,19 @@ export type ApiProps = {
   projectId: string;
 };
 
+export type ApiContextProps = {
+  reloadApiGroupInfo?: () => void;
+};
+
+export const ApiContext = createContext<ApiContextProps>({});
+
 function Api(props: ApiProps) {
   const [selectedApi, setSelectedApi] = useState<string>();
   const [projectInfo, setProjectInfo] = useState<DocProject>();
   const [content, setContent] = useState<ReactNode>();
   const query = getQueryParams();
+
+  const apiGroupManagerRef = useRef<ApiGroupManagerRefProps>(null);
 
   useEffect(() => {
     buildContent();
@@ -86,16 +101,23 @@ function Api(props: ApiProps) {
     history.replaceState(null, null, `${url}`);
   }
 
+  function reloadApiGroupInfo() {
+    apiGroupManagerRef.current.reload();
+  }
+
   return (
     <Row gutter={16}>
       <Col span={5}>
         <ApiGroupManager
+          ref={apiGroupManagerRef}
           projectId={props.projectId}
           activeId={selectedApi}
           onTreeNodeClick={(node) => buildContent(node)}
         />
       </Col>
-      <Col span={19}>{content}</Col>
+      <ApiContext.Provider value={{ reloadApiGroupInfo }}>
+        <Col span={19}>{content}</Col>
+      </ApiContext.Provider>
     </Row>
   );
 }

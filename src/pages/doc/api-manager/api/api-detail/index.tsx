@@ -21,16 +21,22 @@ const ApiDetailTabPane = styled(TabPane)`
 
 function ApiDetail(props: ApiDetailProps) {
   const [apiDetail, setApiDetail] = useState<DocApi>();
+  const [activeTab, setActiveTab] = useState('preview');
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    loadApiDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.apiId]);
+
+  function loadApiDetail() {
     setLoading(true);
     getApiDetail(props.apiId)
       .then((api) => {
         setApiDetail(api);
       })
       .finally(() => setLoading(false));
-  }, [props.apiId]);
+  }
 
   return (
     <Card
@@ -38,7 +44,7 @@ function ApiDetail(props: ApiDetailProps) {
       className={styles['api-detail']}
       loading={loading}
     >
-      <Tabs>
+      <Tabs activeTab={activeTab} onChange={(key) => setActiveTab(key)}>
         <ApiDetailTabPane
           key={'preview'}
           title={
@@ -60,7 +66,11 @@ function ApiDetail(props: ApiDetailProps) {
           }
         >
           {apiDetail && (
-            <ApiEditor api={apiDetail} projectInfo={props.projectInfo} />
+            <ApiEditor
+              api={apiDetail}
+              projectInfo={props.projectInfo}
+              handleUpdate={() => loadApiDetail()}
+            />
           )}
         </ApiDetailTabPane>
         <ApiDetailTabPane

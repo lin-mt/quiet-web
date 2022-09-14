@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   ApiState,
   DocApi,
@@ -38,6 +38,7 @@ import MarkdownEditor from '@/components/Markdown/MarkdownEditor';
 import { updateApi } from '@/service/doc/api';
 import { saveApiInfo, updateApiInfo } from '@/service/doc/api-info';
 import QuietJsonSchemaEditor from '@/components/QuietJsonSchemaEditor';
+import { ApiContext, ApiContextProps } from '@/pages/doc/api-manager/api';
 
 const { Row, Col } = Grid;
 const { Item } = Form;
@@ -45,7 +46,7 @@ const { Item } = Form;
 export type ApiEditorProps = {
   api: DocApi;
   projectInfo: DocProject;
-  // TODO 更新结束要重新加载接口分组信息
+  handleUpdate?: (api: DocApi) => void;
 };
 
 const EditContainer = styled.div.attrs((props: { hide: boolean }) => props)`
@@ -66,6 +67,8 @@ const SaveContainer = styled.div.attrs((props: { hide: boolean }) => props)`
 `;
 
 function ApiEditor(props: ApiEditorProps) {
+  const apiContext = useContext<ApiContextProps>(ApiContext);
+
   const [form] = Form.useForm();
   const [reqParamSettingOptions, setReqParamSettingOptions] =
     useState<string[]>();
@@ -115,13 +118,19 @@ function ApiEditor(props: ApiEditorProps) {
     try {
       const values = await form.validate();
       values.id = props.api.id;
-      updateApi({ ...props.api, ...values }).then(() => {
+      updateApi({ ...props.api, ...values }).then(async (resp) => {
         values.api_info.api_id = props.api.id;
+        let apiInfo;
         if (props.api.api_info) {
           values.api_info.id = props.api.api_info.id;
-          updateApiInfo(values.api_info);
+          apiInfo = await updateApiInfo(values.api_info);
         } else {
-          saveApiInfo(values.api_info);
+          apiInfo = await saveApiInfo(values.api_info);
+        }
+        resp.api_info = apiInfo;
+        props.handleUpdate && props.handleUpdate(resp);
+        if (resp.api_group_id !== props.api.api_group_id) {
+          apiContext.reloadApiGroupInfo();
         }
       });
     } catch (e) {

@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  forwardRef,
+  Ref,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import {
   Button,
   Card,
@@ -40,7 +46,20 @@ export type ApiGroupManagerProps = {
   onTreeNodeClick?: (node: ClickNode) => void;
 };
 
-export function ApiGroupManager(props: ApiGroupManagerProps) {
+export type ApiGroupManagerRefProps = {
+  reload: () => void;
+};
+
+export function ApiGroupManager(
+  props: ApiGroupManagerProps,
+  ref: Ref<ApiGroupManagerRefProps>
+) {
+  useImperativeHandle(ref, () => ({
+    reload: () => {
+      fetchData();
+    },
+  }));
+
   const defaultId = 'default';
   const [apiGroupFormProps, setApiGroupFormProps] =
     useState<QuietFormProps<DocApiGroup>>();
@@ -241,4 +260,4 @@ export function ApiGroupManager(props: ApiGroupManagerProps) {
   );
 }
 
-export default ApiGroupManager;
+export default forwardRef(ApiGroupManager);
