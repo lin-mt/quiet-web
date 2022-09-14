@@ -34,7 +34,7 @@ const DebounceSelect = <
         }
       });
     }
-  }, [JSON.stringify(props.value)]);
+  }, []);
 
   const debounceFetcher = React.useMemo(() => {
     const loadOptions = (value: string) => {
