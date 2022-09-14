@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Tabs } from '@arco-design/web-react';
+import { Card, Spin, Tabs } from '@arco-design/web-react';
 import styles from './style/index.module.less';
 import { IconEdit, IconEye, IconPlayArrow } from '@arco-design/web-react/icon';
 import styled from 'styled-components';
@@ -7,6 +7,7 @@ import { DocApi, DocProject } from '@/service/doc/type';
 import { getApiDetail } from '@/service/doc/api';
 import Preview from '@/pages/doc/api-manager/api/api-detail/api-preview';
 import ApiEditor from '@/pages/doc/api-manager/api/api-detail/api-editor';
+import ApiRun from '@/pages/doc/api-manager/api/api-detail/api-run';
 
 const { TabPane } = Tabs;
 
@@ -22,7 +23,7 @@ const ApiDetailTabPane = styled(TabPane)`
 function ApiDetail(props: ApiDetailProps) {
   const [apiDetail, setApiDetail] = useState<DocApi>();
   const [activeTab, setActiveTab] = useState('preview');
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     loadApiDetail();
@@ -39,51 +40,47 @@ function ApiDetail(props: ApiDetailProps) {
   }
 
   return (
-    <Card
-      bodyStyle={{ padding: 0 }}
-      className={styles['api-detail']}
-      loading={loading}
-    >
-      <Tabs activeTab={activeTab} onChange={(key) => setActiveTab(key)}>
-        <ApiDetailTabPane
-          key={'preview'}
-          title={
-            <span>
-              <IconEye /> 预览
-            </span>
-          }
-        >
-          {apiDetail && (
+    <Card bodyStyle={{ padding: 0 }} className={styles['api-detail']}>
+      {loading ? (
+        <Spin loading={loading} />
+      ) : (
+        <Tabs activeTab={activeTab} onChange={(key) => setActiveTab(key)}>
+          <ApiDetailTabPane
+            key={'preview'}
+            title={
+              <span>
+                <IconEye /> 预览
+              </span>
+            }
+          >
             <Preview api={apiDetail} projectInfo={props.projectInfo} />
-          )}
-        </ApiDetailTabPane>
-        <ApiDetailTabPane
-          key={'edit'}
-          title={
-            <span>
-              <IconEdit /> 编辑
-            </span>
-          }
-        >
-          {apiDetail && (
+          </ApiDetailTabPane>
+          <ApiDetailTabPane
+            key={'edit'}
+            title={
+              <span>
+                <IconEdit /> 编辑
+              </span>
+            }
+          >
             <ApiEditor
               api={apiDetail}
               projectInfo={props.projectInfo}
               handleUpdate={() => loadApiDetail()}
             />
-          )}
-        </ApiDetailTabPane>
-        <ApiDetailTabPane
-          key={'run'}
-          title={
-            <span>
-              <IconPlayArrow /> 运行
-            </span>
-          }
-        >
-          运行
-        </ApiDetailTabPane>
-      </Tabs>
+          </ApiDetailTabPane>
+          <ApiDetailTabPane
+            key={'run'}
+            title={
+              <span>
+                <IconPlayArrow /> 运行
+              </span>
+            }
+          >
+            <ApiRun apiDetail={apiDetail} projectInfo={props.projectInfo} />
+          </ApiDetailTabPane>
+        </Tabs>
+      )}
     </Card>
   );
 }

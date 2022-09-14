@@ -9,7 +9,6 @@ import {
   QueryParamType,
 } from '@/service/doc/type';
 import {
-  Affix,
   AutoComplete,
   Button,
   Checkbox,
@@ -29,7 +28,12 @@ import styled from 'styled-components';
 import ApiGroupSelect from '@/components/doc/ApiGroupSelect';
 import { enumToSelectOptions } from '@/utils/render';
 import _ from 'lodash';
-import { IconDelete, IconDown, IconPlus } from '@arco-design/web-react/icon';
+import {
+  IconDelete,
+  IconDown,
+  IconPlus,
+  IconSave,
+} from '@arco-design/web-react/icon';
 import {
   CONTENT_TYPE,
   REQUEST_HEADER,
@@ -58,12 +62,11 @@ const EditContainer = styled.div.attrs((props: { hide: boolean }) => props)`
   }
 `;
 
-const SaveContainer = styled.div.attrs((props: { hide: boolean }) => props)`
+const SaveContainer = styled.div`
   height: 56px;
   text-align: center;
   padding-top: 12px;
-  background-color: ${(props) =>
-    props.affixed ? 'rgb(var(--gray-3))' : undefined};
+  background-color: rgb(var(--gray-3));
 `;
 
 function ApiEditor(props: ApiEditorProps) {
@@ -75,7 +78,6 @@ function ApiEditor(props: ApiEditorProps) {
   const [reqParamSetting, setReqParamSetting] = useState<string>();
   const [respTypeSetting, setRespTypeSetting] = useState<string>();
   const [reqBodyTypeSetting, setReqBodyTypeSetting] = useState<string>();
-  const [affixed, setAffixed] = useState<boolean>();
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [contentTypeDisplay, setContentTypeDisplay] = useState<
     'none' | undefined
@@ -831,23 +833,21 @@ function ApiEditor(props: ApiEditorProps) {
         >
           <MarkdownEditor maxLength={300} value={props.api.remark} />
         </Item>
-        <Affix
-          offsetBottom={0}
-          onChange={(af) => setAffixed(af)}
-          style={{ marginTop: 30 }}
-        >
-          <SaveContainer affixed={affixed} style={{}}>
-            <Button
-              type="primary"
-              loading={submitting}
-              key={'submit'}
-              htmlType={'submit'}
-              onClick={handleSubmit}
-            >
-              保存
-            </Button>
-          </SaveContainer>
-        </Affix>
+        {
+          // TODO 使用固钉 Affix
+        }
+        <SaveContainer>
+          <Button
+            type="primary"
+            loading={submitting}
+            key={'submit'}
+            htmlType={'submit'}
+            icon={<IconSave />}
+            onClick={handleSubmit}
+          >
+            保 存
+          </Button>
+        </SaveContainer>
       </Space>
     </Form>
   );
