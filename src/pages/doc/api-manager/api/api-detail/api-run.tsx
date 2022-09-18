@@ -583,7 +583,7 @@ function ApiRun(props: ApiRunProps) {
         const contentType = resp.headers['content-type'];
         if (contentType === 'application/json') {
           setRespBodyLanguage('json');
-          setRespBodyValue(JSON.stringify(resp.data, null, 4));
+          setRespBodyValue(JSON.stringify(resp.data, null, 2));
         } else {
           setRespBodyLanguage('text');
           setRespBodyValue(resp.data);
