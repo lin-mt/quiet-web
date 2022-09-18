@@ -37,6 +37,7 @@
     "copy-to-clipboard": "^3.3.1",
     "dayjs": "^1.11.5",
     "github-markdown-css": "^5.1.0",
+    "json-schema-faker": "^0.5.0-rcv.44",
     "lodash": "^4.17.21",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
