@@ -6,6 +6,7 @@ import {
   FormParamType,
   Header,
   HttpMethod,
+  PathParam,
   QueryParamType,
 } from '@/service/doc/type';
 import {
@@ -177,9 +178,11 @@ function ApiEditor(props: ApiEditorProps) {
 
   function handleApiPathChange(value) {
     let val = value;
-    const queue: { name: string; example: ''; remark: string }[] = [];
+    const queue: PathParam[] = [];
     const insertParams = (name: string) => {
-      const findExist = _.find(form.getFieldValue('api_path_param'), { name });
+      const findExist = _.find(form.getFieldValue('api_info.path_param'), {
+        name,
+      });
       if (findExist) {
         queue.push(findExist);
       } else {
@@ -206,7 +209,10 @@ function ApiEditor(props: ApiEditorProps) {
       // @ts-ignore
       val.replace(/{(.+?)}/g, insertParam);
     }
-    form.setFieldsValue({ ...form.getFieldsValue(), path_param: queue });
+    form.setFieldsValue({
+      ...form.getFieldsValue(),
+      api_info: { ...form.getFieldValue('api_info'), path_param: queue },
+    });
   }
 
   function handleReqBodyTypeChange(value: string) {
@@ -311,14 +317,18 @@ function ApiEditor(props: ApiEditorProps) {
               </Item>
             </Input.Group>
           </Item>
-          <Item label={' '}>
+          <Item noStyle wrapperCol={{ span: 24 }}>
             <Form.List field={'api_info.path_param'}>
               {(fields) => {
                 return (
                   <>
-                    {fields.map((item) => {
+                    {fields.map((item, index) => {
                       return (
-                        <Row key={item.key} gutter={5}>
+                        <Row
+                          key={item.key}
+                          gutter={5}
+                          style={{ marginTop: index == 0 ? 0 : 10 }}
+                        >
                           <Col span={4}>
                             <Item
                               noStyle
@@ -455,6 +465,7 @@ function ApiEditor(props: ApiEditorProps) {
                       </Dropdown.Button>
                     </Item>
                     {fields.map((item, index) => (
+                      // TODO 重名不给添加
                       <Row
                         align="center"
                         key={item.key}

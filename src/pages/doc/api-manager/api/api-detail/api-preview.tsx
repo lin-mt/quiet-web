@@ -54,56 +54,50 @@ export default (props: PreviewProps) => {
     setDescription([
       {
         label: '接口名称',
-        value: props.api.name,
+        value: api.name,
       },
       {
         label: '作者',
-        value: props.api.author_full_name,
+        value: api.author_full_name,
       },
       {
         label: '创建人',
-        value: props.api.creator_full_name,
+        value: api.creator_full_name,
       },
       {
         label: '更新人',
-        value: props.api.updater_full_name,
+        value: api.updater_full_name,
       },
       {
         label: '状态',
         value: (
           <Badge
             status={
-              props.api.api_state === ApiState.FINISHED
-                ? 'success'
-                : 'processing'
+              api.api_state === ApiState.FINISHED ? 'success' : 'processing'
             }
-            text={
-              props.api.api_state === ApiState.FINISHED ? '已完成' : '未完成'
-            }
+            text={api.api_state === ApiState.FINISHED ? '已完成' : '未完成'}
           />
         ),
       },
       {
         label: '更新时间',
-        value: props.api.gmt_update,
+        value: api.gmt_update,
       },
       {
         label: '接口路径',
         value: (
           <Space direction={'horizontal'}>
-            <Tag color={getMethodTagColor(props.api.method)}>
-              {props.api.method}
-            </Tag>
+            <Tag color={getMethodTagColor(api.method)}>{api.method}</Tag>
             <Typography.Text copyable={true}>
               {props.projectInfo.base_path}
-              {props.api.path}
+              {api.path}
             </Typography.Text>
           </Space>
         ),
       },
     ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(props.api)]);
+  }, [JSON.stringify(api)]);
 
   const pathColumns: ColumnProps<PathParam>[] = [
     { title: '参数名称', dataIndex: 'name' },

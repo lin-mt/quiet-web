@@ -141,11 +141,6 @@ export interface DocProjectConfig extends BaseEntity {
   remark: string;
 }
 
-export interface MyDocProject {
-  responsible_projects: DocProject[];
-  accessible_projects: DocProject[];
-}
-
 export interface Cookie {
   name: string;
   value: string;
@@ -155,7 +150,7 @@ export interface DocProjectEnv extends BaseEntity {
   name: string;
   project_id: string;
   protocol: HttpProtocol;
-  base_path: string;
+  domain?: string;
   headers?: Header[];
   cookies?: Cookie[];
 }
