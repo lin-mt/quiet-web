@@ -687,9 +687,6 @@ function ApiRun(props: ApiRunProps) {
               <Row>
                 <SecondTitle id={'res-header'}>Headers</SecondTitle>
               </Row>
-              {
-                // TODO Headers Description
-              }
               {respOriginHeaders ? (
                 <Descriptions
                   border
