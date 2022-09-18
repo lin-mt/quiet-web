@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const {
   override,
   addWebpackModuleRule,
@@ -44,6 +45,7 @@ module.exports = {
         },
       })
     ),
+    addWebpackPlugin(new MonacoWebpackPlugin()),
     addWebpackAlias({
       '@': path.resolve(__dirname, 'src'),
     })

@@ -1,9 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import type { OnChange, OnMount } from '@monaco-editor/react';
-import Editor from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
 import type { CSSProperties } from 'react';
 import { Xcode_default } from '@/components/QuietEditor/themes';
 import { GlobalContext } from '@/context';
+import * as monaco from 'monaco-editor';
+
+loader.config({ monaco });
 
 interface QuietEditorProp {
   width?: string | number;

@@ -1,4 +1,6 @@
-export const Xcode_default = {
+import * as monaco from 'monaco-editor';
+
+export const Xcode_default: monaco.editor.IStandaloneThemeData = {
   base: 'vs',
   inherit: true,
   rules: [
