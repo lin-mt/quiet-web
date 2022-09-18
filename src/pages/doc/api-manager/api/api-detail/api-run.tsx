@@ -43,7 +43,6 @@ export type ApiRunProps = {
 function ApiRun(props: ApiRunProps) {
   const { apiDetail, projectInfo } = props;
   const apiInfo = apiDetail.api_info;
-  console.log(apiDetail);
   const [form] = useForm();
   const [envs, setEnvs] = useState<DocProjectEnv[]>([]);
   const [reqFormFiles, setReqFormFiles] = useState<
