@@ -293,6 +293,25 @@
     scroll-into-view-if-needed "2.2.20"
     shallowequal "^1.1.0"
 
+"@arco-design/web-react@^2.40.0":
+  version "2.40.0"
+  resolved "https://registry.yarnpkg.com/@arco-design/web-react/-/web-react-2.40.0.tgz#9ac876a3bcf3432fee9ae4fffbd28916a436dac9"
+  integrity sha512-T4gPYcXqbTL+iZj7NOIraNunmn/dTuJ90Ubi4v4eSukn0ONGx8vxXWYNx9ujO/ntM0cHwYxSyoLWdfmqlgYFrg==
+  dependencies:
+    "@arco-design/color" "^0.4.0"
+    "@babel/runtime" "^7.5.5"
+    b-tween "^0.3.3"
+    b-validate "^1.4.2"
+    compute-scroll-into-view "^1.0.17"
+    dayjs "^1.10.5"
+    lodash "^4.17.21"
+    number-precision "^1.3.1"
+    react-focus-lock "^2.9.1"
+    react-transition-group "^4.3.0"
+    resize-observer-polyfill "^1.5.1"
+    scroll-into-view-if-needed "2.2.20"
+    shallowequal "^1.1.0"
+
 "@arco-plugins/utils@^1.0.2":
   version "1.0.2"
   resolved "https://registry.npmjs.org/@arco-plugins/utils/-/utils-1.0.2.tgz#de1dd0aa2751e230604d22e4c96474a175582f29"
@@ -2540,7 +2559,7 @@
   dependencies:
     state-local "^1.0.6"
 
-"@monaco-editor/react@^4.4.2":
+"@monaco-editor/react@^4.4.5":
   version "4.4.5"
   resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-4.4.5.tgz#beabe491efeb2457441a00d1c7651c653697f65b"
   integrity sha512-IImtzU7sRc66OOaQVCG+5PFHkSWnnhrUWGBuH6zNmH2h0YgmAhcjHZQc/6MY9JWEbUtVF1WPBMJ9u1XuFbRrVA==
@@ -2589,17 +2608,18 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
   integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
 
-"@quiet-front-end/json-schema-editor-arco@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@quiet-front-end/json-schema-editor-arco/-/json-schema-editor-arco-0.1.6.tgz#5be68c25ad34194544154e941ba60b767449e93c"
-  integrity sha512-RP4qR/WTpkRUNGt/ZUx9IZWIyVeTRjojdJbFjiPXDAjpbVx7VAc2oNg45oq2OQX1UNG0EMpkTO6dOwWDxpPAtQ==
+"@quiet-front-end/json-schema-editor-arco@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@quiet-front-end/json-schema-editor-arco/-/json-schema-editor-arco-0.1.11.tgz#e3e056c62cd936364e2a0ef857761300a0d70f19"
+  integrity sha512-UkobJ7IGh9LVRIPdX+6TbME1XSyIyH5W1QAG+Pxb79jGoZfwAaK8VnbA4HuKNCwjqi0L3UJEHeSwahKribnYVw==
   dependencies:
+    "@arco-design/web-react" "^2.40.0"
     "@babel/runtime" "^7.5.5"
-    "@monaco-editor/react" "^4.4.2"
+    "@monaco-editor/react" "^4.4.5"
     genson-js "^0.0.8"
     lodash "^4.17.21"
-    mobx "^6.5.0"
-    mobx-react "^7.3.0"
+    mobx "^6.6.2"
+    mobx-react "^7.5.3"
 
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.0"
@@ -4999,6 +5019,11 @@ b-validate@^1.4.0:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/b-validate/-/b-validate-1.4.1.tgz#908bb3997d45780e8e0ca501d70361ff9f75e374"
   integrity sha512-X6ImDku5YY8NfWTh/hX8CAaronWnNXpb159cqs6lDWLtI4OWiehZ4B0NshfatTuKt1HIeNq9PObE/Xl5YoJYUg==
+
+b-validate@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/b-validate/-/b-validate-1.4.2.tgz#89f8529e789d72be7c1cd0047f35af6a24072f54"
+  integrity sha512-UJ9Wvol6ogFQ+YBwtPwSg7uKWQ8ORUTD5RVE8SASu3oXOmuEynCLkeZJYJsSMnvK3RYrQx3/s352FX6o1ha24A==
 
 babel-jest@^27.4.2, babel-jest@^27.4.5:
   version "27.4.5"
@@ -7904,6 +7929,13 @@ fmin@^0.0.2:
     tape "^4.5.1"
     uglify-js "^2.6.2"
 
+focus-lock@^0.11.2:
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/focus-lock/-/focus-lock-0.11.3.tgz#c094e8f109d780f56038abdeec79328fd56b627f"
+  integrity sha512-4n0pYcPTa/uI7Q66BZna61nRT7lDhnuJ9PJr6wiDjx4uStg491ks41y7uOG+s0umaaa+hulNKSldU9aTg9/yVg==
+  dependencies:
+    tslib "^2.0.3"
+
 focus-lock@^0.9.2:
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/focus-lock/-/focus-lock-0.9.2.tgz#9d30918aaa99b1b97677731053d017f82a540d5b"
@@ -10590,14 +10622,14 @@ mobx-react-lite@^3.4.0:
   resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-3.4.0.tgz#d59156a96889cdadad751e5e4dab95f28926dfff"
   integrity sha512-bRuZp3C0itgLKHu/VNxi66DN/XVkQG7xtoBVWxpvC5FhAqbOCP21+nPhULjnzEqd7xBMybp6KwytdUpZKEgpIQ==
 
-mobx-react@^7.3.0:
+mobx-react@^7.5.3:
   version "7.5.3"
   resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-7.5.3.tgz#74b1c148d2f2a1affab3153ea570ab52c7eff70c"
   integrity sha512-+ltotliKt4Bjn3d8taZH/VFAcRUbaASvsM8/QSvmHXcZ++RZwaFtjl9JkIosy1byaJGEDS3EFFx2InRm2VaSUw==
   dependencies:
     mobx-react-lite "^3.4.0"
 
-mobx@^6.5.0:
+mobx@^6.6.2:
   version "6.6.2"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-6.6.2.tgz#9d9102a0e337e3fc09cb2d8ca0c6f00b61270d5a"
   integrity sha512-IOpS0bf3+hXIhDIy+CmlNMBfFpAbHS0aVHcNC+xH/TFYEKIIVDKNYRh9eKlXuVfJ1iRKAp0cRVmO145CyJAMVQ==
@@ -12022,6 +12054,13 @@ react-clientside-effect@^1.2.5:
   dependencies:
     "@babel/runtime" "^7.12.13"
 
+react-clientside-effect@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/react-clientside-effect/-/react-clientside-effect-1.2.6.tgz#29f9b14e944a376b03fb650eed2a754dd128ea3a"
+  integrity sha512-XGGGRQAKY+q25Lz9a/4EPqom7WRjz3z9R2k4jhVKA/puQFH/5Nt27vFZYql4m4NVNdUvX8PS3O7r/Zzm7cjUlg==
+  dependencies:
+    "@babel/runtime" "^7.12.13"
+
 react-color@^2.18.1:
   version "2.19.3"
   resolved "https://registry.yarnpkg.com/react-color/-/react-color-2.19.3.tgz#ec6c6b4568312a3c6a18420ab0472e146aa5683d"
@@ -12097,6 +12136,18 @@ react-focus-lock@^2.2.1:
     react-clientside-effect "^1.2.5"
     use-callback-ref "^1.2.5"
     use-sidecar "^1.0.5"
+
+react-focus-lock@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/react-focus-lock/-/react-focus-lock-2.9.1.tgz#094cfc19b4f334122c73bb0bff65d77a0c92dd16"
+  integrity sha512-pSWOQrUmiKLkffPO6BpMXN7SNKXMsuOakl652IBuALAu1esk+IcpJyM+ALcYzPTTFz1rD0R54aB9A4HuP5t1Wg==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    focus-lock "^0.11.2"
+    prop-types "^15.6.2"
+    react-clientside-effect "^1.2.6"
+    use-callback-ref "^1.3.0"
+    use-sidecar "^1.1.2"
 
 react-is@^16.12.0, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
@@ -14005,6 +14056,13 @@ use-callback-ref@^1.2.5:
   resolved "https://registry.yarnpkg.com/use-callback-ref/-/use-callback-ref-1.2.5.tgz#6115ed242cfbaed5915499c0a9842ca2912f38a5"
   integrity sha512-gN3vgMISAgacF7sqsLPByqoePooY3n2emTH59Ur5d/M8eg4WTWu1xp8i8DHjohftIyEx0S08RiYxbffr4j8Peg==
 
+use-callback-ref@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/use-callback-ref/-/use-callback-ref-1.3.0.tgz#772199899b9c9a50526fedc4993fc7fa1f7e32d5"
+  integrity sha512-3FT9PRuRdbB9HfXhEq35u4oZkvpJ5kuYbpqhCfmiZyReuRgpnhDlbr2ZEnnuS0RrJAPn6l23xjFg9kpDM+Ms7w==
+  dependencies:
+    tslib "^2.0.0"
+
 use-sidecar@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/use-sidecar/-/use-sidecar-1.0.5.tgz#ffff2a17c1df42e348624b699ba6e5c220527f2b"
@@ -14012,6 +14070,14 @@ use-sidecar@^1.0.5:
   dependencies:
     detect-node-es "^1.1.0"
     tslib "^1.9.3"
+
+use-sidecar@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/use-sidecar/-/use-sidecar-1.1.2.tgz#2f43126ba2d7d7e117aa5855e5d8f0276dfe73c2"
+  integrity sha512-epTbsLuzZ7lPClpz2TyryBfztm7m+28DlEv2ZCQ3MDr5ssiwyOwGH/e5F9CkfWjJ1t4clvI58yF822/GUkjjhw==
+  dependencies:
+    detect-node-es "^1.1.0"
+    tslib "^2.0.0"
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
