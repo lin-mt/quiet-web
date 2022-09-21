@@ -9,7 +9,7 @@ const { Row, Col } = Grid;
 const { useForm } = Form;
 
 function SearchForm(props: {
-  onSearch: (values: Record<string, any>) => void;
+  onSearch: (values: Record<string, unknown>) => void;
 }) {
   const [form] = useForm<QuietUser>();
 

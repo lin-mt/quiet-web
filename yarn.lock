@@ -2608,15 +2608,14 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
   integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
 
-"@quiet-front-end/json-schema-editor-arco@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@quiet-front-end/json-schema-editor-arco/-/json-schema-editor-arco-0.1.11.tgz#e3e056c62cd936364e2a0ef857761300a0d70f19"
-  integrity sha512-UkobJ7IGh9LVRIPdX+6TbME1XSyIyH5W1QAG+Pxb79jGoZfwAaK8VnbA4HuKNCwjqi0L3UJEHeSwahKribnYVw==
+"@quiet-front-end/json-schema-editor-arco@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@quiet-front-end/json-schema-editor-arco/-/json-schema-editor-arco-0.1.12.tgz#f8cdc26dfed8ae044bea99ca736bdb1a11d5ee51"
+  integrity sha512-2v2DJAy4kUyMzD4dRDiU2t6H56nUfRiQvCCTBZ38aSi0M72qRwX0veMHPgECZMzSUXS9JVDE6QUDrFfK5alj1w==
   dependencies:
     "@arco-design/web-react" "^2.40.0"
     "@babel/runtime" "^7.5.5"
     "@monaco-editor/react" "^4.4.5"
-    genson-js "^0.0.8"
     lodash "^4.17.21"
     mobx "^6.6.2"
     mobx-react "^7.5.3"
@@ -8056,11 +8055,6 @@ gemoji@^7.0.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/gemoji/-/gemoji-7.1.0.tgz#165403777681a9690d649aabd104da037bdd7739"
   integrity sha512-wI0YWDIfQraQMDs0yXAVQiVBZeMm/rIYssf8LZlMDdssKF19YqJKOHkv4zvwtVQTBJ0LNmErv1S+DqlVUudz8g==
-
-genson-js@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/genson-js/-/genson-js-0.0.8.tgz#b5a2c9dad7b821b0c08f103ccbe2de88e88b1f34"
-  integrity sha512-4NUusDTwF+lzYh72uKV+Uvpky9iPO+YDIMpGImA5pbHfLV9HwgRCA4hYjGu78V4J4Cx2IZRTFfRERn9aUs74mw==
 
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"

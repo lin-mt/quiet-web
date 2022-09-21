@@ -100,7 +100,7 @@ function DropContent() {
           }
         >
           {tabList.map((item) => {
-            const { key, title, avatar } = item;
+            const { key, title } = item;
             const data = groupData[key] || [];
             const unReadData = data.filter((item) => !item.status);
             return (
