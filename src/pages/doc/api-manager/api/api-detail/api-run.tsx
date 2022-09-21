@@ -649,7 +649,7 @@ function ApiRun(props: ApiRunProps) {
                   disabled
                   value={`${
                     projectInfo.base_path ? projectInfo.base_path : ''
-                  }${apiDetail.path}`}
+                  }/${removePathSeparator(apiDetail.path)}`}
                   style={{ width: '50%' }}
                 />
                 <Button

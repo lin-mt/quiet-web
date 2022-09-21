@@ -80,6 +80,7 @@ function ApiEditor(props: ApiEditorProps) {
   const [respTypeSetting, setRespTypeSetting] = useState<string>();
   const [reqBodyTypeSetting, setReqBodyTypeSetting] = useState<string>();
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [pathParamNoStyle, setPathParamNoStyle] = useState<boolean>(true);
   const [contentTypeDisplay, setContentTypeDisplay] = useState<
     'none' | undefined
   >('none');
@@ -111,6 +112,11 @@ function ApiEditor(props: ApiEditorProps) {
     }
     if (props.api.api_info?.resp_raw) {
       setRespTypeSetting('RAW');
+    }
+    if (props.api.api_info?.path_param?.length > 0) {
+      setPathParamNoStyle(false);
+    } else {
+      setPathParamNoStyle(true);
     }
     form.setFieldsValue(props.api);
     // eslint-disable-next-line
@@ -190,6 +196,7 @@ function ApiEditor(props: ApiEditorProps) {
       }
     };
     val = handlePath(val);
+    form.setFieldValue('path', val + (value?.endsWith('/') ? '/' : ''));
     if (val && val.indexOf(':') !== -1) {
       const paths = val.split('/');
       let name: string;
@@ -208,6 +215,11 @@ function ApiEditor(props: ApiEditorProps) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       val.replace(/{(.+?)}/g, insertParam);
+    }
+    if (queue.length > 0) {
+      setPathParamNoStyle(false);
+    } else {
+      setPathParamNoStyle(true);
     }
     form.setFieldsValue({
       ...form.getFieldsValue(),
@@ -281,7 +293,13 @@ function ApiEditor(props: ApiEditorProps) {
               placeholder="请输入分组名称"
             />
           </Item>
-          <Item label={'接口路径'}>
+          <Item
+            label={'接口路径'}
+            style={{
+              marginBottom:
+                form.getFieldValue('api_info.path_param')?.length > 0 ? 10 : 20,
+            }}
+          >
             <Input.Group compact>
               <Item field="method" noStyle>
                 <Select
@@ -317,7 +335,7 @@ function ApiEditor(props: ApiEditorProps) {
               </Item>
             </Input.Group>
           </Item>
-          <Item noStyle wrapperCol={{ span: 24 }}>
+          <Item label={' '} noStyle={pathParamNoStyle}>
             <Form.List field={'api_info.path_param'}>
               {(fields) => {
                 return (
@@ -327,7 +345,7 @@ function ApiEditor(props: ApiEditorProps) {
                         <Row
                           key={item.key}
                           gutter={5}
-                          style={{ marginTop: index == 0 ? 0 : 10 }}
+                          style={{ marginTop: index === 0 ? 0 : 10 }}
                         >
                           <Col span={4}>
                             <Item
