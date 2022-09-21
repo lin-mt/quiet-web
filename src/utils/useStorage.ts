@@ -40,6 +40,7 @@ function useStorage(
     if (storageValue) {
       setStoredValue(storageValue);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return [storedValue, setStorageValue, removeStorage];

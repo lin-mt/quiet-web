@@ -28,7 +28,7 @@
     "@bytemd/plugin-mermaid": "^1.17.2",
     "@bytemd/react": "^1.17.2",
     "@loadable/component": "^5.13.2",
-    "@quiet-front-end/json-schema-editor-arco": "^0.1.11",
+    "@quiet-front-end/json-schema-editor-arco": "^0.1.12",
     "@turf/turf": "^6.5.0",
     "arco-design-pro": "^2.7.0",
     "axios": "^0.24.0",

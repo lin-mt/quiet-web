@@ -2,6 +2,7 @@
 import qs from 'query-string';
 import { isSSR } from './is';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ParamsType = Record<string, any>;
 
 export function getQueryParams(): ParamsType {

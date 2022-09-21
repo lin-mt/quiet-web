@@ -34,6 +34,7 @@ const DebounceSelect = <
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const debounceFetcher = React.useMemo(() => {

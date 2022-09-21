@@ -185,6 +185,7 @@ function PageLayout() {
     const routeConfig = routeMap.current.get(pathname);
     setBreadCrumb(routeConfig || []);
     updateMenuStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
   return (
     <Layout className={styles.layout}>

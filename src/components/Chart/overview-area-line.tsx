@@ -9,7 +9,7 @@ function OverviewAreaLine({
   name = '总内容量',
   color = '#4080FF',
 }: {
-  data: any[];
+  data: unknown[];
   loading: boolean;
   name?: string;
   color?: string;

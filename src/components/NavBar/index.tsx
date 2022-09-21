@@ -42,6 +42,7 @@ function Navbar({ show }: { show: boolean }) {
   const userInfo = useSelector((state: GlobalState) => state.userInfo);
   const dispatch = useDispatch();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setUserStatus] = useStorage('userStatus');
   const [role, setRole] = useStorage('userRole', 'admin');
 
@@ -83,6 +84,7 @@ function Navbar({ show }: { show: boolean }) {
         },
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
 
   if (!show) {
