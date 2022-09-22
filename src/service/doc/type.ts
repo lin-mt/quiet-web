@@ -28,8 +28,8 @@ export enum QueryParamType {
 }
 
 export enum HttpProtocol {
-  HTTP = 'http',
-  HTTPS = 'https',
+  HTTP = 'http://',
+  HTTPS = 'https://',
 }
 
 export enum Permission {

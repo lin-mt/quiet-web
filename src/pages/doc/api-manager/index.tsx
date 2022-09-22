@@ -10,10 +10,22 @@ const TabPane = Tabs.TabPane;
 function ApiManager() {
   const query = getQueryParams();
 
+  const renderTabHeader = (props, DefaultTabBar) => {
+    return (
+      <div className={styles['api-manager-tab-header']}>
+        <DefaultTabBar {...props}>
+          {(node) => {
+            return <span>{node}</span>;
+          }}
+        </DefaultTabBar>
+      </div>
+    );
+  };
+
   return (
     <Tabs
-      className={styles['content']}
-      defaultActiveTab={'api'}
+      defaultActiveTab={'setting'}
+      renderTabHeader={renderTabHeader}
       extra={
         <div style={{ paddingRight: 16 }}>
           <Button disabled type={'primary'}>
