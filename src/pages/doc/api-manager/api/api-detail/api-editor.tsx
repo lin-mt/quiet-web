@@ -10,6 +10,7 @@ import {
   QueryParamType,
 } from '@/service/doc/type';
 import {
+  Affix,
   AutoComplete,
   Button,
   Checkbox,
@@ -63,11 +64,12 @@ const EditContainer = styled.div.attrs((props: { hide: boolean }) => props)`
   }
 `;
 
-const SaveContainer = styled.div`
-  height: 56px;
+const SaveContainer = styled.div.attrs((props) => props)`
   text-align: center;
-  padding-top: 12px;
-  background-color: rgb(var(--gray-3));
+  padding-top: 16px;
+  padding-bottom: 16px;
+  background-color: ${(props) =>
+    props.affixed ? 'rgb(var(--gray-3))' : undefined};
 `;
 
 function ApiEditor(props: ApiEditorProps) {
@@ -81,6 +83,7 @@ function ApiEditor(props: ApiEditorProps) {
   const [reqBodyTypeSetting, setReqBodyTypeSetting] = useState<string>();
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [pathParamNoStyle, setPathParamNoStyle] = useState<boolean>(true);
+  const [affixed, setAffixed] = useState<boolean>();
   const [contentTypeDisplay, setContentTypeDisplay] = useState<
     'none' | undefined
   >('none');
@@ -862,21 +865,24 @@ function ApiEditor(props: ApiEditorProps) {
         >
           <MarkdownEditor maxLength={300} value={props.api.remark} />
         </Item>
-        {
-          // TODO 使用固钉 Affix
-        }
-        <SaveContainer>
-          <Button
-            type="primary"
-            loading={submitting}
-            key={'submit'}
-            htmlType={'submit'}
-            icon={<IconSave />}
-            onClick={handleSubmit}
-          >
-            保 存
-          </Button>
-        </SaveContainer>
+        <Affix
+          offsetBottom={0}
+          onChange={(af) => setAffixed(af)}
+          style={{ marginTop: 30 }}
+        >
+          <SaveContainer affixed={affixed}>
+            <Button
+              type="primary"
+              loading={submitting}
+              key={'submit'}
+              htmlType={'submit'}
+              icon={<IconSave />}
+              onClick={handleSubmit}
+            >
+              保 存
+            </Button>
+          </SaveContainer>
+        </Affix>
       </Space>
     </Form>
   );

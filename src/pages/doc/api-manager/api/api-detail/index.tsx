@@ -19,7 +19,7 @@ export type ApiDetailProps = {
 const ApiDetailTabPane = styled(TabPane)`
   padding: 5px 21px 21px 21px;
 `;
-// TODO Form.Item noStyle={{ showErrorTip: true }}
+
 function ApiDetail(props: ApiDetailProps) {
   const [apiDetail, setApiDetail] = useState<DocApi>();
   const [activeTab, setActiveTab] = useState('preview');
@@ -41,7 +41,11 @@ function ApiDetail(props: ApiDetailProps) {
       className={styles['api-detail']}
       loading={!apiDetail}
     >
-      <Tabs activeTab={activeTab} onChange={(key) => setActiveTab(key)}>
+      <Tabs
+        destroyOnHide
+        activeTab={activeTab}
+        onChange={(key) => setActiveTab(key)}
+      >
         <ApiDetailTabPane
           key={'preview'}
           title={

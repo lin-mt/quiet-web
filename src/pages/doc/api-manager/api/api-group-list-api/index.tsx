@@ -107,12 +107,11 @@ function ApiGroupListApi(props: ApiGroupListApiProps) {
       width: 100,
       fixed: 'right',
       render: (_, record) => {
+        const isFinished = ApiState[record.api_state] === ApiState.FINISHED;
         return (
           <Badge
-            status={
-              record.api_state === ApiState.FINISHED ? 'success' : 'processing'
-            }
-            text={record.api_state === ApiState.FINISHED ? '完成' : '未完成'}
+            status={isFinished ? 'success' : 'processing'}
+            text={isFinished ? '完成' : '未完成'}
           />
         );
       },

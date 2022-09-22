@@ -183,7 +183,7 @@ function EnvForm(props: EnvFormProps) {
       </Form.Item>
       <Form.Item style={{ textAlign: 'center' }}>
         <Button type="primary" htmlType="submit" icon={<IconSave />}>
-          保存
+          保 存
         </Button>
       </Form.Item>
     </Form>
