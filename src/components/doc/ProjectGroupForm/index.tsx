@@ -67,13 +67,11 @@ function ProjectGroupForm(props: ProjectGroupFormProps) {
       >
         {props.groupInfo && (
           <>
-            <Form.Item hidden={true} field="id">
+            <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'分组ID'} field="id">
-              <Typography.Text copyable={true}>
-                {props.groupInfo.id}
-              </Typography.Text>
+              <Typography.Text copyable>{props.groupInfo.id}</Typography.Text>
             </Form.Item>
           </>
         )}

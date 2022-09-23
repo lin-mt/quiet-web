@@ -72,13 +72,11 @@ function DocProjectForm(props: DocProjectFormProps) {
       >
         {props.project && (
           <>
-            <Form.Item hidden={true} field="id">
+            <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'项目ID'} field="id">
-              <Typography.Text copyable={true}>
-                {props.project.id}
-              </Typography.Text>
+              <Typography.Text copyable>{props.project.id}</Typography.Text>
             </Form.Item>
           </>
         )}

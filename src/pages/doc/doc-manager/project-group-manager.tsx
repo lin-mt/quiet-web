@@ -82,7 +82,7 @@ export function ProjectGroupManager(props: ProjectGroupManagerProps) {
           allowClear
           loading={loading}
           placeholder="请输入分组名称"
-          searchButton={true}
+          searchButton
           onSearch={(value) => listAll(value)}
         />
       </div>

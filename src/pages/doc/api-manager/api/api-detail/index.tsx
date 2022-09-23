@@ -3,7 +3,7 @@ import { Card, Tabs } from '@arco-design/web-react';
 import styles from './style/index.module.less';
 import { IconEdit, IconEye, IconPlayArrow } from '@arco-design/web-react/icon';
 import styled from 'styled-components';
-import { DocApi, DocProject } from '@/service/doc/type';
+import { DocApi } from '@/service/doc/type';
 import { getApiDetail } from '@/service/doc/api';
 import Preview from '@/pages/doc/api-manager/api/api-detail/api-preview';
 import ApiEditor from '@/pages/doc/api-manager/api/api-detail/api-editor';
@@ -13,7 +13,6 @@ const { TabPane } = Tabs;
 
 export type ApiDetailProps = {
   apiId: string;
-  projectInfo: DocProject;
 };
 
 const ApiDetailTabPane = styled(TabPane)`
@@ -54,7 +53,7 @@ function ApiDetail(props: ApiDetailProps) {
             </span>
           }
         >
-          <Preview api={apiDetail} projectInfo={props.projectInfo} />
+          <Preview api={apiDetail} />
         </ApiDetailTabPane>
         <ApiDetailTabPane
           key={'edit'}
@@ -64,11 +63,7 @@ function ApiDetail(props: ApiDetailProps) {
             </span>
           }
         >
-          <ApiEditor
-            api={apiDetail}
-            projectInfo={props.projectInfo}
-            handleUpdate={() => loadApiDetail()}
-          />
+          <ApiEditor api={apiDetail} handleUpdate={() => loadApiDetail()} />
         </ApiDetailTabPane>
         <ApiDetailTabPane
           key={'run'}
@@ -78,7 +73,7 @@ function ApiDetail(props: ApiDetailProps) {
             </span>
           }
         >
-          <ApiRun apiDetail={apiDetail} projectInfo={props.projectInfo} />
+          <ApiRun apiDetail={apiDetail} />
         </ApiDetailTabPane>
       </Tabs>
     </Card>

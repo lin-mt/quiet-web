@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Badge,
   Button,
@@ -17,15 +17,20 @@ import { BlockTitle } from '@/components/doc/styled';
 import { getApiGroup } from '@/service/doc/api-group';
 import ApiForm from '@/components/doc/ApiForm';
 import { QuietFormProps } from '@/components/type';
+import {
+  ApiManagerContext,
+  ApiManagerContextProps,
+} from '@/pages/doc/api-manager';
 
 export type ApiGroupListApiProps = {
-  projectId: string;
   groupId?: string;
   onClickApi?: (api: DocApi) => void;
   name?: string;
 };
 
 function ApiGroupListApi(props: ApiGroupListApiProps) {
+  const apiManagerContext =
+    useContext<ApiManagerContextProps>(ApiManagerContext);
   const [data, setData] = useState([]);
   const [name, setName] = useState<string>();
   const [loading, setLoading] = useState(false);
@@ -111,7 +116,7 @@ function ApiGroupListApi(props: ApiGroupListApiProps) {
         return (
           <Badge
             status={isFinished ? 'success' : 'processing'}
-            text={isFinished ? '完成' : '未完成'}
+            text={isFinished ? '已完成' : '未完成'}
           />
         );
       },
@@ -123,7 +128,7 @@ function ApiGroupListApi(props: ApiGroupListApiProps) {
     pageApi({
       current: pagination.current,
       page_size: pagination.pageSize,
-      project_id: props.projectId,
+      project_id: apiManagerContext.projectId,
       api_group_id: props.groupId ? props.groupId : 0,
     })
       .then((res) => {
@@ -175,7 +180,7 @@ function ApiGroupListApi(props: ApiGroupListApiProps) {
         />
       </Space>
       <ApiForm
-        projectId={props.projectId}
+        projectId={apiManagerContext.projectId}
         groupId={props.groupId}
         {...apiFormProps}
       />

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   ApiState,
   DocApi,
-  DocProject,
   FormParam,
   Header,
   HttpMethod,
@@ -25,6 +24,10 @@ import { getMethodTagColor } from '@/utils/doc/render';
 import { SchemaTable } from '@/pages/doc/api-manager/api/api-detail/schema-table';
 import MarkdownViewer from '@/components/Markdown/MarkdownViewer';
 import { DataType } from '@arco-design/web-react/es/Descriptions/interface';
+import {
+  ApiManagerContext,
+  ApiManagerContextProps,
+} from '@/pages/doc/api-manager';
 
 const ReqTitle = styled.div`
   padding: 10px 0;
@@ -42,15 +45,17 @@ const ContentContainer = styled.div`
 
 interface PreviewProps {
   api: DocApi;
-  projectInfo: DocProject;
 }
 
 export default (props: PreviewProps) => {
+  const apiManagerContext =
+    useContext<ApiManagerContextProps>(ApiManagerContext);
   const { api } = props;
 
   const [description, setDescription] = useState<DataType>([]);
 
   useEffect(() => {
+    const isFinished = ApiState[api.api_state] === ApiState.FINISHED;
     setDescription([
       {
         label: '接口名称',
@@ -72,10 +77,8 @@ export default (props: PreviewProps) => {
         label: '状态',
         value: (
           <Badge
-            status={
-              api.api_state === ApiState.FINISHED ? 'success' : 'processing'
-            }
-            text={api.api_state === ApiState.FINISHED ? '已完成' : '未完成'}
+            status={isFinished ? 'success' : 'processing'}
+            text={isFinished ? '已完成' : '未完成'}
           />
         ),
       },
@@ -88,8 +91,8 @@ export default (props: PreviewProps) => {
         value: (
           <Space direction={'horizontal'}>
             <Tag color={getMethodTagColor(api.method)}>{api.method}</Tag>
-            <Typography.Text copyable={true}>
-              {props.projectInfo.base_path}
+            <Typography.Text copyable>
+              {apiManagerContext.projectInfo.base_path}
               {api.path}
             </Typography.Text>
           </Space>

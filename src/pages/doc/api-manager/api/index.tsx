@@ -1,6 +1,7 @@
 import React, {
   createContext,
   ReactNode,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -14,14 +15,12 @@ import ApiGroupManager, {
 import ApiGroupListApi from '@/pages/doc/api-manager/api/api-group-list-api';
 import ApiDetail from '@/pages/doc/api-manager/api/api-detail';
 import { getQueryParams } from '@/utils/getUrlParams';
-import { DocProject } from '@/service/doc/type';
-import { getProjectInfo } from '@/service/doc/project';
+import {
+  ApiManagerContext,
+  ApiManagerContextProps,
+} from '@/pages/doc/api-manager';
 
 const { Row, Col } = Grid;
-
-export type ApiProps = {
-  projectId: string;
-};
 
 export type ApiContextProps = {
   reloadApiGroupInfo?: () => void;
@@ -29,9 +28,10 @@ export type ApiContextProps = {
 
 export const ApiContext = createContext<ApiContextProps>({});
 
-function Api(props: ApiProps) {
+function Api() {
+  const apiManagerContext =
+    useContext<ApiManagerContextProps>(ApiManagerContext);
   const [selectedApi, setSelectedApi] = useState<string>();
-  const [projectInfo, setProjectInfo] = useState<DocProject>();
   const [content, setContent] = useState<ReactNode>();
   const query = getQueryParams();
 
@@ -41,10 +41,6 @@ function Api(props: ApiProps) {
     buildContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    getProjectInfo(props.projectId).then((project) => setProjectInfo(project));
-  }, [props.projectId]);
 
   function buildContent(node?: ClickNode) {
     let result: ReactNode;
@@ -62,14 +58,11 @@ function Api(props: ApiProps) {
       apiGroupId = query.apiGroupId;
     }
     if (apiId) {
-      result = projectInfo && (
-        <ApiDetail apiId={apiId} projectInfo={projectInfo} />
-      );
+      result = <ApiDetail apiId={apiId} />;
     }
     if (apiGroupId || (node && NodeType.API_GROUP === node.type)) {
       result = (
         <ApiGroupListApi
-          projectId={props.projectId}
           groupId={apiGroupId}
           onClickApi={(api) => {
             buildContent({
@@ -90,7 +83,7 @@ function Api(props: ApiProps) {
       );
     }
     setContent(result);
-    let url = `/doc/api-manager?projectId=${props.projectId}`;
+    let url = `/doc/api-manager?projectId=${apiManagerContext.projectId}`;
     if (node && NodeType.API === node.type) {
       url = `${url}&apiId=${node.id}`;
     } else {
@@ -110,7 +103,6 @@ function Api(props: ApiProps) {
       <Col span={5}>
         <ApiGroupManager
           ref={apiGroupManagerRef}
-          projectId={props.projectId}
           activeId={selectedApi}
           onTreeNodeClick={(node) => buildContent(node)}
         />

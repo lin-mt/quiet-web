@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
   ApiState,
   DocApi,
-  DocProject,
   FormParamType,
   Header,
   HttpMethod,
@@ -45,13 +44,16 @@ import { updateApi } from '@/service/doc/api';
 import { saveApiInfo, updateApiInfo } from '@/service/doc/api-info';
 import QuietJsonSchemaEditor from '@/components/QuietJsonSchemaEditor';
 import { ApiContext, ApiContextProps } from '@/pages/doc/api-manager/api';
+import {
+  ApiManagerContext,
+  ApiManagerContextProps,
+} from '@/pages/doc/api-manager';
 
 const { Row, Col } = Grid;
 const { Item } = Form;
 
 export type ApiEditorProps = {
   api: DocApi;
-  projectInfo: DocProject;
   handleUpdate?: (api: DocApi) => void;
 };
 
@@ -73,6 +75,8 @@ const SaveContainer = styled.div.attrs((props) => props)`
 `;
 
 function ApiEditor(props: ApiEditorProps) {
+  const apiManagerContext =
+    useContext<ApiManagerContextProps>(ApiManagerContext);
   const apiContext = useContext<ApiContextProps>(ApiContext);
 
   const [form] = Form.useForm();
@@ -291,8 +295,8 @@ function ApiEditor(props: ApiEditorProps) {
           </Item>
           <Item label={'分组'} field={'api_group_id'}>
             <ApiGroupSelect
-              projectId={props.projectInfo.id}
-              allowClear={true}
+              projectId={apiManagerContext.projectId}
+              allowClear
               placeholder="请输入分组名称"
             />
           </Item>
@@ -321,7 +325,7 @@ function ApiEditor(props: ApiEditorProps) {
                   <Input
                     disabled
                     style={{ width: '30%' }}
-                    value={props.projectInfo.base_path}
+                    value={apiManagerContext.projectInfo.base_path}
                   />
                 </span>
               </Tooltip>
@@ -361,7 +365,7 @@ function ApiEditor(props: ApiEditorProps) {
                                 { required: true, message: '请输入参数名称' },
                               ]}
                             >
-                              <Input disabled={true} />
+                              <Input disabled />
                             </Item>
                           </Col>
                           <Col span={10}>

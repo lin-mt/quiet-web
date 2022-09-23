@@ -63,11 +63,11 @@ function ApiGroupForm(props: ApiGroupFormProps) {
       >
         {props.updateEntity && (
           <>
-            <Form.Item hidden={true} field="id">
+            <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'分组ID'} field="id">
-              <Typography.Text copyable={true}>
+              <Typography.Text copyable>
                 {props.updateEntity.id}
               </Typography.Text>
             </Form.Item>

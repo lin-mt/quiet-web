@@ -73,7 +73,7 @@ function ProjectGroupMemberForm(props: ProjectGroupMemberFormProps) {
       >
         {props.groupMember && (
           <>
-            <Form.Item hidden={true} field="id">
+            <Form.Item hidden field="id">
               <Input />
             </Form.Item>
           </>

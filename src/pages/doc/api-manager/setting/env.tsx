@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Message, Modal, Tabs } from '@arco-design/web-react';
 import styles from './style/index.module.less';
 import { IconDelete, IconPlus } from '@arco-design/web-react/icon';
@@ -10,20 +10,22 @@ import {
 } from '@/service/doc/project-env';
 import { DocProjectEnv } from '@/service/doc/type';
 import EnvForm from '@/components/doc/EnvForm';
+import {
+  ApiManagerContext,
+  ApiManagerContextProps,
+} from '@/pages/doc/api-manager';
 
 const TabPane = Tabs.TabPane;
 
-export type EnvProps = {
-  projectId: string;
-};
-
-function Env(props: EnvProps) {
+function Env() {
   const newEnvId = 'default';
+  const apiManagerContext =
+    useContext<ApiManagerContextProps>(ApiManagerContext);
   const [tabs, setTabs] = useState([]);
   const [activeTab, setActiveTab] = useState<string>();
 
   function fetchEnvs(newActiveTabKey?: string) {
-    listEnv(props.projectId).then((resp) => {
+    listEnv(apiManagerContext.projectId).then((resp) => {
       const envsTemp = [];
       resp.forEach((env) => {
         envsTemp.push({
@@ -44,7 +46,7 @@ function Env(props: EnvProps) {
   useEffect(() => {
     fetchEnvs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.projectId]);
+  }, [apiManagerContext.projectId]);
 
   const handleAddTab = () => {
     const newEnv = {
@@ -52,7 +54,7 @@ function Env(props: EnvProps) {
       key: newEnvId,
       env: {
         name: '新环境',
-        project_id: props.projectId,
+        project_id: apiManagerContext.projectId,
       },
     };
     for (const tab of tabs) {

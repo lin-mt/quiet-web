@@ -1,13 +1,7 @@
-import { DocApi, DocApiGroup, DocProject } from '@/service/doc/type';
+import { DocProject } from '@/service/doc/type';
 import { DELETE, GET, POST, PUT } from '@/utils/request';
 
 const base_path = '/doc/project';
-
-interface ProjectApiInfo {
-  ungroup: DocApi[];
-  grouped: Record<string, DocApi[]>;
-  api_groups: DocApiGroup[];
-}
 
 export function listAllProjectByGroupId(
   groupId?: string
@@ -30,8 +24,4 @@ export async function deleteProject(id: string) {
 
 export function getProjectInfo(id: string): Promise<DocProject> {
   return GET<DocProject>(`${base_path}/${id}`);
-}
-
-export function listApiInfoById(id: string) {
-  return GET<ProjectApiInfo>(`${base_path}/apis/${id}`);
 }

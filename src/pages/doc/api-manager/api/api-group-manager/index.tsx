@@ -1,6 +1,7 @@
 import React, {
   forwardRef,
   Ref,
+  useContext,
   useEffect,
   useImperativeHandle,
   useState,
@@ -28,6 +29,10 @@ import { listApi } from '@/service/doc/api';
 import { getQueryParams } from '@/utils/getUrlParams';
 import { QuietFormProps } from '@/components/type';
 import { DocApiGroup } from '@/service/doc/type';
+import {
+  ApiManagerContext,
+  ApiManagerContextProps,
+} from '@/pages/doc/api-manager';
 
 export enum NodeType {
   API_GROUP,
@@ -41,7 +46,6 @@ export type ClickNode = {
 };
 
 export type ApiGroupManagerProps = {
-  projectId: string;
   activeId?: string;
   onTreeNodeClick?: (node: ClickNode) => void;
 };
@@ -59,7 +63,8 @@ export function ApiGroupManager(
       fetchData();
     },
   }));
-
+  const apiManagerContext =
+    useContext<ApiManagerContextProps>(ApiManagerContext);
   const defaultId = 'default';
   const [apiGroupFormProps, setApiGroupFormProps] =
     useState<QuietFormProps<DocApiGroup>>();
@@ -71,7 +76,7 @@ export function ApiGroupManager(
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.projectId]);
+  }, [apiManagerContext.projectId]);
 
   useEffect(() => {
     const selected = props.activeId
@@ -86,7 +91,7 @@ export function ApiGroupManager(
 
   function fetchData(name?: string) {
     setLoading(true);
-    listApi(props.projectId, name)
+    listApi(apiManagerContext.projectId, name)
       .then((apis) => {
         const apiGroupId2Apis: Record<string, TreeDataType[]> = {};
         apis.forEach((api) => {
@@ -99,7 +104,7 @@ export function ApiGroupManager(
             ...api,
           });
         });
-        listApiGroup(props.projectId).then((groups) => {
+        listApiGroup(apiManagerContext.projectId).then((groups) => {
           const treeData: TreeDataType[] = [
             {
               key: defaultId,
@@ -181,7 +186,7 @@ export function ApiGroupManager(
           allowClear
           loading={loading}
           placeholder="请输入接口名称"
-          searchButton={true}
+          searchButton
           onSearch={(value) => fetchData(value)}
         />
         <Tree
@@ -255,7 +260,10 @@ export function ApiGroupManager(
           treeData={apiGroupTreeData}
         />
       </Space>
-      <ApiGroupForm projectId={props.projectId} {...apiGroupFormProps} />
+      <ApiGroupForm
+        projectId={apiManagerContext.projectId}
+        {...apiGroupFormProps}
+      />
     </Card>
   );
 }

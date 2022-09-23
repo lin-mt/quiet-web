@@ -38,6 +38,7 @@ function EnvForm(props: EnvFormProps) {
   return (
     <Form
       form={form}
+      id={'env-form'}
       layout={'vertical'}
       style={{ width: 900 }}
       onSubmit={handleOnSubmit}

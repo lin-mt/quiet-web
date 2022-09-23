@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   DocApi,
-  DocProject,
   DocProjectEnv,
   FormParam,
   FormParamType,
@@ -19,6 +18,7 @@ import {
   Input,
   Select,
   Space,
+  Tooltip,
   Upload,
 } from '@arco-design/web-react';
 import { BlockTitle, SecondTitle } from '@/components/doc/styled';
@@ -30,6 +30,10 @@ import { QuietEditor } from '@/components/QuietEditor';
 import { listEnv } from '@/service/doc/project-env';
 import req from '@/utils/request';
 import { getMethodTagColor } from '@/utils/doc/render';
+import {
+  ApiManagerContext,
+  ApiManagerContextProps,
+} from '@/pages/doc/api-manager';
 
 const AnchorLink = Anchor.Link;
 const { Row, Col } = Grid;
@@ -37,11 +41,11 @@ const { useForm } = Form;
 
 export type ApiRunProps = {
   apiDetail: DocApi;
-  projectInfo: DocProject;
 };
 
 function ApiRun(props: ApiRunProps) {
-  const { apiDetail, projectInfo } = props;
+  const { projectInfo } = useContext<ApiManagerContextProps>(ApiManagerContext);
+  const { apiDetail } = props;
   const apiInfo = apiDetail.api_info;
   const [form] = useForm();
   const [envs, setEnvs] = useState<DocProjectEnv[]>([]);
@@ -100,7 +104,7 @@ function ApiRun(props: ApiRunProps) {
                   <Row align="center" key={item.key} style={{ paddingTop: 10 }}>
                     <Col flex={'30%'}>
                       <Form.Item noStyle field={item.field + 'name'}>
-                        <Input disabled={true} />
+                        <Input disabled />
                       </Form.Item>
                     </Col>
                     <Col flex={'20px'} style={{ textAlign: 'center' }}>
@@ -220,7 +224,7 @@ function ApiRun(props: ApiRunProps) {
                         >
                           <Col flex={'30%'}>
                             <Form.Item noStyle field={item.field + '.name'}>
-                              <Input disabled={true} />
+                              <Input disabled />
                             </Form.Item>
                           </Col>
                           <Col flex={'20px'} style={{ textAlign: 'center' }}>
@@ -596,18 +600,14 @@ function ApiRun(props: ApiRunProps) {
     <Row className={[styles['api-run']]}>
       <Col span={21} style={{ paddingRight: 20 }}>
         <Form id={'api-run-form'} form={form} onSubmit={handleSendRequest}>
-          <Space
-            size={'large'}
-            direction={'vertical'}
-            style={{ width: '100%' }}
-          >
+          <Space direction={'vertical'} style={{ width: '100%' }}>
             <Space
               direction={'vertical'}
               size={'medium'}
               style={{ width: '100%' }}
             >
               <BlockTitle id={'req'}>请求数据</BlockTitle>
-              <Input.Group compact={true}>
+              <Input.Group compact>
                 <Input
                   disabled
                   value={apiDetail.method}
@@ -639,11 +639,15 @@ function ApiRun(props: ApiRunProps) {
                     />
                   </Form.Item>
                 ) : (
-                  <Input
-                    disabled
-                    value={'http://127.0.0.1:9363'}
-                    style={{ width: '30%' }}
-                  />
+                  <Tooltip content={'可在 设置-环境配置 里添加配置'}>
+                    <span style={{ borderWidth: 0 }}>
+                      <Input
+                        disabled
+                        value={'http://127.0.0.1:9363'}
+                        style={{ width: '30%' }}
+                      />
+                    </span>
+                  </Tooltip>
                 )}
                 <Input
                   disabled
