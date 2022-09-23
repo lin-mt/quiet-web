@@ -52,7 +52,7 @@ function DictTypeSearchForm(props: {
           <Col span={colSpan}>
             <Form.Item label={'启用状态'} field="enabled">
               <Select
-                allowClear={true}
+                allowClear
                 options={booleanOptions(enabled(true), enabled(false))}
                 placeholder={'请选择启用状态'}
               />

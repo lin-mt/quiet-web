@@ -155,7 +155,7 @@ function DictTypeManager(props: DictTypeManagerProps) {
   return (
     <Modal
       footer={null}
-      escToExit={true}
+      escToExit
       style={{ width: '90%' }}
       title={props.title}
       visible={props.visible}

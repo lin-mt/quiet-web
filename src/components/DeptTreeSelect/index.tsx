@@ -36,9 +36,9 @@ const DeptTreeSelect = (
 
   return (
     <TreeSelect
-      multiple={true}
-      showSearch={true}
-      allowClear={true}
+      multiple
+      showSearch
+      allowClear
       placeholder={'请选择部门'}
       treeData={deptTreeData}
       {...props}

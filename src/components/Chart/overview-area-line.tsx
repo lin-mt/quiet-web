@@ -53,8 +53,8 @@ function OverviewAreaLine({
           color="l (90) 0:rgba(17, 126, 255, 0.5)  1:rgba(17, 128, 255, 0)"
         />
         <Tooltip
-          showCrosshairs={true}
-          showMarkers={true}
+          showCrosshairs
+          showMarkers
           marker={{
             lineWidth: 3,
             stroke: color,

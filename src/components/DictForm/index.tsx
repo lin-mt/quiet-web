@@ -88,11 +88,11 @@ function DictForm(props: DictFormProps) {
       >
         {props.dict && (
           <>
-            <Form.Item hidden={true} field="id">
+            <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'字典ID'} field="id">
-              <Typography.Text copyable={true}>{props.dict.id}</Typography.Text>
+              <Typography.Text copyable>{props.dict.id}</Typography.Text>
             </Form.Item>
           </>
         )}

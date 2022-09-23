@@ -68,13 +68,11 @@ function DictTypeForm(props: DictTypeFormProps) {
       >
         {props.dictType && (
           <>
-            <Form.Item hidden={true} field="id">
+            <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'字典类型ID'} field="id">
-              <Typography.Text copyable={true}>
-                {props.dictType.id}
-              </Typography.Text>
+              <Typography.Text copyable>{props.dictType.id}</Typography.Text>
             </Form.Item>
           </>
         )}

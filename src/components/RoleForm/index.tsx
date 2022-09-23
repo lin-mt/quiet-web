@@ -70,13 +70,11 @@ function RoleForm(props: RoleFormProps) {
       >
         {props.roleInfo && (
           <>
-            <Form.Item hidden={true} field="id">
+            <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'角色ID'} field="id">
-              <Typography.Text copyable={true}>
-                {props.roleInfo.id}
-              </Typography.Text>
+              <Typography.Text copyable>{props.roleInfo.id}</Typography.Text>
             </Form.Item>
           </>
         )}

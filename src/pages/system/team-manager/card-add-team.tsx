@@ -14,7 +14,7 @@ function CardAddTeam(props: AddTeamCardProps) {
       className={cs(styles['card-block'], styles['add-card'])}
       title={null}
       style={{ height: 170 }}
-      bordered={true}
+      bordered
       onClick={props.onClick}
       size="small"
     >

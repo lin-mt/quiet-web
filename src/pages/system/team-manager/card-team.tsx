@@ -29,7 +29,7 @@ function CardTeam(props: CardTeamProps) {
 
   return (
     <Card
-      bordered={true}
+      bordered
       className={className}
       style={{ height: 170 }}
       size="small"
