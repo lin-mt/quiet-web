@@ -316,11 +316,14 @@ function ApiEditor(props: ApiEditorProps) {
                   }}
                 />
               </Item>
-              <Tooltip content="接口基本路径，可在 设置 里修改">
-                <Input
-                  style={{ width: '30%' }}
-                  value={props.projectInfo.base_path}
-                />
+              <Tooltip content="接口基本路径，可在 设置-项目配置 里修改">
+                <span style={{ borderWidth: 0 }}>
+                  <Input
+                    disabled
+                    style={{ width: '30%' }}
+                    value={props.projectInfo.base_path}
+                  />
+                </span>
               </Tooltip>
               <Item
                 noStyle
