@@ -42,7 +42,7 @@ const RoleTreeSelect = (
 
   return (
     <TreeSelect
-      showSearch={true}
+      showSearch
       placeholder={'请选择'}
       treeData={dictTreeData}
       {...props}

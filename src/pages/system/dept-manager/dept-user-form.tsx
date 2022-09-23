@@ -175,7 +175,7 @@ function DeptUserForm(props: DeptUserFormProps) {
   return (
     <Modal
       footer={null}
-      escToExit={true}
+      escToExit
       style={{ width: '90%' }}
       title={props.title}
       visible={props.visible}
@@ -190,7 +190,7 @@ function DeptUserForm(props: DeptUserFormProps) {
           <Grid.Row style={{ width: '100%' }}>
             <Grid.Col span={10}>
               <UserSelect
-                showSearch={true}
+                showSearch
                 mode={'multiple'}
                 value={selectedUserIds}
                 onChange={(value) => setSelectedUserIds(value)}

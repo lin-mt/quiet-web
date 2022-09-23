@@ -102,7 +102,7 @@ export default () => {
               style={{ marginBottom: 15 }}
             >
               <Calendar
-                panel={true}
+                panel
                 panelWidth={'100%'}
                 defaultValue={value.format('YYYY-MM') + '-01'}
                 headerRender={() => (

@@ -89,13 +89,11 @@ function TeamForm(props: TeamFormProps) {
       >
         {props.teamInfo && (
           <>
-            <Form.Item field="id" hidden={true}>
-              <Input disabled={true} />
+            <Form.Item field="id" hidden>
+              <Input disabled />
             </Form.Item>
             <Form.Item label="团队ID" field="id">
-              <Typography.Text copyable={true}>
-                {props.teamInfo.id}
-              </Typography.Text>
+              <Typography.Text copyable>{props.teamInfo.id}</Typography.Text>
             </Form.Item>
           </>
         )}
