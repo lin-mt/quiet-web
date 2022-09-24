@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Tabs } from '@arco-design/web-react';
-import { IconApps, IconUser } from '@arco-design/web-react/icon';
+import {
+  IconApps,
+  IconBook,
+  IconSettings,
+  IconUserGroup,
+} from '@arco-design/web-react/icon';
 import ProjectGroupProject from '@/pages/doc/doc-manager/project-group-project';
 import ProjectGroupMember from '@/pages/doc/doc-manager/project-group-member';
 
@@ -38,7 +43,7 @@ function ProjectGroupContent(props: ProjectGroupContentProps) {
             key="pgm"
             title={
               <span>
-                <IconUser style={{ marginRight: 6 }} />
+                <IconUserGroup style={{ marginRight: 6 }} />
                 成员列表
               </span>
             }
@@ -51,7 +56,7 @@ function ProjectGroupContent(props: ProjectGroupContentProps) {
           key="pgd"
           title={
             <span>
-              <IconUser style={{ marginRight: 6 }} />
+              <IconBook style={{ marginRight: 6 }} />
               分组动态
             </span>
           }
@@ -61,7 +66,7 @@ function ProjectGroupContent(props: ProjectGroupContentProps) {
           key="pgs"
           title={
             <span>
-              <IconUser style={{ marginRight: 6 }} />
+              <IconSettings style={{ marginRight: 6 }} />
               分组设置
             </span>
           }

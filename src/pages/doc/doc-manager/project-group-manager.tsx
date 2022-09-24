@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Input, Menu } from '@arco-design/web-react';
-import { IconBook, IconPlus, IconUser } from '@arco-design/web-react/icon';
+import { IconList, IconPlus, IconUser } from '@arco-design/web-react/icon';
 import ProjectGroupForm, {
   ProjectGroupFormProps,
 } from '@/components/doc/ProjectGroupForm';
@@ -99,7 +99,7 @@ export function ProjectGroupManager(props: ProjectGroupManagerProps) {
             key={projectGroup.id}
             onClick={() => handleProjectGroupSelect(projectGroup.id)}
           >
-            <IconBook />
+            <IconList />
             {projectGroup.name}
           </Menu.Item>
         ))}
