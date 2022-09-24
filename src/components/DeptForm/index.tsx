@@ -63,6 +63,7 @@ function DeptForm(props: DeptFormProps) {
       <Form
         form={form}
         id={'role-form'}
+        initialValues={props.deptInfo}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >

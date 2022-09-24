@@ -80,6 +80,7 @@ function DictForm(props: DictFormProps) {
       <Form
         form={form}
         id={'dict-form'}
+        initialValues={props.dict}
         onValuesChange={(v, vs) => {
           setSelectedTypeId(vs.type_id);
         }}

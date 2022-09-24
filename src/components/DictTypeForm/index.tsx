@@ -63,6 +63,7 @@ function DictTypeForm(props: DictTypeFormProps) {
       <Form
         form={form}
         id={'dict-type-form'}
+        initialValues={props.dictType}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
