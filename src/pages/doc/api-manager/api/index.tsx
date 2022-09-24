@@ -33,14 +33,18 @@ function Api() {
     useContext<ApiManagerContextProps>(ApiManagerContext);
   const [selectedApi, setSelectedApi] = useState<string>();
   const [content, setContent] = useState<ReactNode>();
-  const query = getQueryParams();
 
   const apiGroupManagerRef = useRef<ApiGroupManagerRefProps>(null);
 
   useEffect(() => {
+    history.pushState(
+      null,
+      null,
+      `/doc/api-manager?projectId=${apiManagerContext.projectId}`
+    );
     buildContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [apiManagerContext.projectId]);
 
   function buildContent(node?: ClickNode) {
     let result: ReactNode;
@@ -54,6 +58,7 @@ function Api() {
         apiGroupId = node.id;
       }
     } else {
+      const query = getQueryParams();
       apiId = query.apiId;
       apiGroupId = query.apiGroupId;
     }
@@ -82,16 +87,14 @@ function Api() {
         </Card>
       );
     }
-    setContent(result);
     let url = `/doc/api-manager?projectId=${apiManagerContext.projectId}`;
-    if (node && NodeType.API === node.type) {
-      url = `${url}&apiId=${node.id}`;
-    } else {
-      if (node && node.id) {
-        url = `${url}&apiGroupId=${node.id}`;
-      }
+    if (apiId) {
+      url = `${url}&apiId=${apiId}`;
+    } else if (apiGroupId) {
+      url = `${url}&apiGroupId=${apiGroupId}`;
     }
-    history.replaceState(null, null, `${url}`);
+    history.pushState(null, null, `${url}`);
+    setContent(result);
   }
 
   function reloadApiGroupInfo() {

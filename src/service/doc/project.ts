@@ -10,6 +10,13 @@ export function listAllProjectByGroupId(
   return GET<DocProject[]>(`${base_path}/project-group/${id}`);
 }
 
+export function listProject(
+  name: string,
+  ids?: string[]
+): Promise<DocProject[]> {
+  return GET<DocProject[]>(`${base_path}/list`, { name, ids });
+}
+
 export function saveProject(save: DocProject): Promise<DocProject> {
   return POST<DocProject>(`${base_path}`, save);
 }

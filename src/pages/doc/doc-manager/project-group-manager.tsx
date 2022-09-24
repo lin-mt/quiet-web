@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Input, Menu, Tooltip } from '@arco-design/web-react';
+import { Button, Card, Input, Menu } from '@arco-design/web-react';
 import { IconBook, IconPlus, IconUser } from '@arco-design/web-react/icon';
 import ProjectGroupForm, {
   ProjectGroupFormProps,
@@ -49,7 +49,7 @@ export function ProjectGroupManager(props: ProjectGroupManagerProps) {
       props.onGroupClick(id);
       replaceUrl = `${replaceUrl}?projectGroupId=${id}`;
     }
-    window.history.replaceState(null, null, replaceUrl);
+    window.history.pushState(null, null, replaceUrl);
   }
 
   return (
@@ -57,24 +57,24 @@ export function ProjectGroupManager(props: ProjectGroupManagerProps) {
       title={'项目分组'}
       bodyStyle={{ padding: 0 }}
       extra={
-        <Tooltip content={'新建分组'}>
-          <Button
-            onClick={() =>
-              setProjectGroupFormProps({
-                title: '新建分组',
-                visible: true,
-                onCancel: () => setProjectGroupFormProps({ visible: false }),
-                onOk: (values) =>
-                  saveProjectGroup(values).then(() => {
-                    setProjectGroupFormProps({ visible: false });
-                    listAll();
-                  }),
-              })
-            }
-            type={'text'}
-            icon={<IconPlus />}
-          />
-        </Tooltip>
+        <Button
+          onClick={() =>
+            setProjectGroupFormProps({
+              title: '新建分组',
+              visible: true,
+              onCancel: () => setProjectGroupFormProps({ visible: false }),
+              onOk: (values) =>
+                saveProjectGroup(values).then(() => {
+                  setProjectGroupFormProps({ visible: false });
+                  listAll();
+                }),
+            })
+          }
+          type={'text'}
+          icon={<IconPlus />}
+        >
+          新建分组
+        </Button>
       }
     >
       <div style={{ padding: '0 8px 4px 8px' }}>

@@ -195,6 +195,7 @@ export function ApiGroupManager(
             key: 'id',
             title: 'name',
           }}
+          treeData={apiGroupTreeData}
           selectedKeys={selectedKeys}
           renderExtra={(node) => {
             const dataRef = node.dataRef;
@@ -257,7 +258,6 @@ export function ApiGroupManager(
               });
             }
           }}
-          treeData={apiGroupTreeData}
         />
       </Space>
       <ApiGroupForm

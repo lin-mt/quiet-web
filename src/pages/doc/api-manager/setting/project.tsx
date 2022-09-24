@@ -12,23 +12,23 @@ import { updateProject } from '@/service/doc/project';
 const { useForm } = Form;
 
 function Project() {
-  const apiManagerContext =
+  const { setLoading, projectId, projectInfo, setProjectInfo } =
     useContext<ApiManagerContextProps>(ApiManagerContext);
   const [form] = useForm();
 
   useEffect(() => {
-    form.setFieldsValue(apiManagerContext.projectInfo);
+    form.setFieldsValue(projectInfo);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(apiManagerContext.projectInfo)]);
+  }, [JSON.stringify(projectInfo)]);
 
   function handleOnSubmit() {
-    apiManagerContext.setLoading(true);
+    setLoading(true);
     form.validate().then((value) => {
       updateProject(value)
         .then((res) => {
-          apiManagerContext.setProjectInfo(res);
+          setProjectInfo(res);
         })
-        .finally(() => apiManagerContext.setLoading(false));
+        .finally(() => setLoading(false));
     });
   }
 
@@ -39,15 +39,14 @@ function Project() {
       style={{ width: 800 }}
       labelCol={{ span: 3 }}
       wrapperCol={{ span: 21 }}
+      initialValues={projectInfo}
       onSubmit={handleOnSubmit}
     >
       <Form.Item hidden field="id">
         <Input />
       </Form.Item>
       <Form.Item label={'项目ID'}>
-        <Typography.Text copyable>
-          {apiManagerContext.projectId}
-        </Typography.Text>
+        <Typography.Text copyable>{projectId}</Typography.Text>
       </Form.Item>
       <Form.Item
         label="项目名称"
