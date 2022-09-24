@@ -199,74 +199,64 @@ function ApiRun(props: ApiRunProps) {
 
   function buildReqHeader() {
     // TODO 处理 cookies
-    return (
-      <Form.Item
-        noStyle
-        shouldUpdate={(prev, next) => prev.env_id !== next.env_id}
-      >
-        {(values) => {
-          return values.env_id || apiInfo?.headers ? (
+    return form.getFieldValue('headers')?.length > 0 ? (
+      <>
+        <Row>
+          <SecondTitle id={'req-header'}>Headers</SecondTitle>
+        </Row>
+        <Form.List field={'headers'}>
+          {(fields) => (
             <>
-              <Row>
-                <SecondTitle id={'req-header'}>Headers</SecondTitle>
-              </Row>
-              <Form.List field={'headers'}>
-                {(fields) => (
-                  <>
-                    {fields.map((item) => {
-                      const filedValue =
-                        form.getFieldValue('headers')[item.key];
-                      return (
-                        <Row
-                          key={item.key}
-                          align={'center'}
-                          style={{ paddingTop: 10 }}
-                        >
-                          <Col flex={'30%'}>
-                            <Form.Item noStyle field={item.field + '.name'}>
-                              <Input disabled />
-                            </Form.Item>
-                          </Col>
-                          <Col flex={'20px'} style={{ textAlign: 'center' }}>
-                            =
-                          </Col>
-                          <Col flex={'24px'} style={{ textAlign: 'center' }}>
-                            <Form.Item
-                              noStyle
-                              field={item.field + '.required'}
-                              triggerPropName={'checked'}
-                            >
-                              <Checkbox disabled style={{ paddingLeft: 0 }} />
-                            </Form.Item>
-                          </Col>
-                          <Col flex={'auto'}>
-                            <Form.Item
-                              noStyle
-                              field={item.field + '.value'}
-                              rules={[
-                                {
-                                  required: filedValue.required,
-                                  message: `请输入${filedValue.name}的值`,
-                                },
-                              ]}
-                            >
-                              <Input
-                                placeholder={'请输入'}
-                                disabled={filedValue.disabled}
-                              />
-                            </Form.Item>
-                          </Col>
-                        </Row>
-                      );
-                    })}
-                  </>
-                )}
-              </Form.List>
+              {fields.map((item) => {
+                const filedValue = form.getFieldValue('headers')[item.key];
+                return (
+                  <Row
+                    key={item.key}
+                    align={'center'}
+                    style={{ paddingTop: 10 }}
+                  >
+                    <Col flex={'30%'}>
+                      <Form.Item noStyle field={item.field + '.name'}>
+                        <Input disabled />
+                      </Form.Item>
+                    </Col>
+                    <Col flex={'20px'} style={{ textAlign: 'center' }}>
+                      =
+                    </Col>
+                    <Col flex={'24px'} style={{ textAlign: 'center' }}>
+                      <Form.Item
+                        noStyle
+                        field={item.field + '.required'}
+                        triggerPropName={'checked'}
+                      >
+                        <Checkbox disabled style={{ paddingLeft: 0 }} />
+                      </Form.Item>
+                    </Col>
+                    <Col flex={'auto'}>
+                      <Form.Item
+                        noStyle
+                        field={item.field + '.value'}
+                        rules={[
+                          {
+                            required: filedValue.required,
+                            message: `请输入${filedValue.name}的值`,
+                          },
+                        ]}
+                      >
+                        <Input
+                          placeholder={'请输入'}
+                          disabled={filedValue.disabled}
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                );
+              })}
             </>
-          ) : null;
-        }}
-      </Form.Item>
-    );
+          )}
+        </Form.List>
+      </>
+    ) : null;
   }
 
   function buildReqBody() {
@@ -600,7 +590,11 @@ function ApiRun(props: ApiRunProps) {
     <Row className={[styles['api-run']]}>
       <Col span={21} style={{ paddingRight: 20 }}>
         <Form id={'api-run-form'} form={form} onSubmit={handleSendRequest}>
-          <Space direction={'vertical'} style={{ width: '100%' }}>
+          <Space
+            direction={'vertical'}
+            size={'large'}
+            style={{ width: '100%' }}
+          >
             <Space
               direction={'vertical'}
               size={'medium'}
