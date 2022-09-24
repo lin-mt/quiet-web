@@ -13,13 +13,6 @@ export function UserSelect(
     }
 ) {
   async function initOptions() {
-    const userIds = getUserIdArr();
-    if (userIds && userIds.length > 0) {
-      return await findUserByName('', userIds);
-    }
-  }
-
-  function getUserIdArr(): string[] {
     let userIds;
     if (!props.value) {
       return;
@@ -41,7 +34,9 @@ export function UserSelect(
       const userIds = [];
       userIds.push(props.value.value);
     }
-    return userIds;
+    if (userIds && userIds.length > 0) {
+      return await findUserByName('', userIds);
+    }
   }
 
   async function findUserByName(name: string, userIds?: string[]) {
@@ -54,14 +49,9 @@ export function UserSelect(
     });
   }
 
-  function valueChangeOptions() {
-    return findUserByName('', getUserIdArr());
-  }
-
   return (
     <DebounceSelect
       initOptions={() => initOptions()}
-      valueChangeOptions={() => valueChangeOptions()}
       fetchOptions={findUserByName}
       {...props}
     />

@@ -65,6 +65,7 @@ function RoleForm(props: RoleFormProps) {
       <Form
         form={form}
         id={'role-form'}
+        initialValues={props.roleInfo}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >

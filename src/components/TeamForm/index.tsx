@@ -84,6 +84,7 @@ function TeamForm(props: TeamFormProps) {
       <Form
         form={form}
         id={'team-form'}
+        initialValues={props.teamInfo}
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 18 }}
       >

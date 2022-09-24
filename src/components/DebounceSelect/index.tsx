@@ -16,7 +16,6 @@ const DebounceSelect = <
   props: SelectProps &
     React.RefAttributes<SelectHandle> & {
       initOptions?: () => Promise<ValueType[]>;
-      valueChangeOptions?: () => Promise<ValueType[]>;
       fetchOptions: (search: string) => Promise<ValueType[]>;
       debounceTimeout?: number;
     }
@@ -37,17 +36,6 @@ const DebounceSelect = <
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (props.valueChangeOptions) {
-      props.valueChangeOptions().then((ops) => {
-        if (ops) {
-          setOptions(ops);
-        }
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.value]);
 
   const debounceFetcher = React.useMemo(() => {
     const loadOptions = (value: string) => {
