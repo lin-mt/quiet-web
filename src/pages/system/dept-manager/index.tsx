@@ -125,7 +125,7 @@ function DeptManager() {
               setDeptFormProps({
                 title: '更新部门',
                 visible: true,
-                deptInfo: record,
+                formValues: record,
                 onOk: async (values) => {
                   return await updateDept(values).then(() => {
                     fetchData();

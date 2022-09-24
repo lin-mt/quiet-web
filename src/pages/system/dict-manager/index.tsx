@@ -120,7 +120,7 @@ function DictManager() {
               setDictFormProps({
                 title: '更新字典',
                 visible: true,
-                dict: record,
+                formValues: record,
                 onOk: async (values) => {
                   return await updateDict(values).then(() => {
                     fetchData();

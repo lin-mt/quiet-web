@@ -2,28 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Modal, Switch, Typography } from '@arco-design/web-react';
 import { QuietDictType } from '@/service/system/type';
 import { enabled } from '@/utils/render';
+import { QuietFormProps } from '@/components/type';
 
 const { useForm } = Form;
 
-export type DictTypeFormProps = {
-  dictType?: QuietDictType;
-  title?: string;
-  visible?: boolean;
-  onOk?: (values: QuietDictType) => Promise<QuietDictType | void>;
-  okText?: string;
-  onCancel?: () => void;
-  cancelText?: string;
-};
+export type DictTypeFormProps = QuietFormProps<QuietDictType>;
 
 function DictTypeForm(props: DictTypeFormProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.dictType) {
-      form.setFieldsValue(props.dictType);
+    if (props.formValues) {
+      form.setFieldsValue(props.formValues);
     }
-  }, [form, props.dictType]);
+  }, [form, props.formValues]);
 
   function handleOk() {
     if (props.onOk) {
@@ -63,17 +56,17 @@ function DictTypeForm(props: DictTypeFormProps) {
       <Form
         form={form}
         id={'dict-type-form'}
-        initialValues={props.dictType}
+        initialValues={props.formValues}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
-        {props.dictType && (
+        {props.formValues && (
           <>
             <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'字典类型ID'} field="id">
-              <Typography.Text copyable>{props.dictType.id}</Typography.Text>
+              <Typography.Text copyable>{props.formValues.id}</Typography.Text>
             </Form.Item>
           </>
         )}

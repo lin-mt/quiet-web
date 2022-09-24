@@ -2,29 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Modal, Typography } from '@arco-design/web-react';
 import { QuietRole } from '@/service/system/type';
 import RoleTreeSelect from '@/components/RoleTreeSelect';
+import { QuietFormProps } from '@/components/type';
 
 const { useForm } = Form;
 
-export type RoleFormProps = {
-  roleInfo?: QuietRole;
-  title?: string;
-  visible?: boolean;
-  onOk?: (values: QuietRole) => Promise<QuietRole | void>;
-  okText?: string;
-  onCancel?: () => void;
-  cancelText?: string;
-};
+export type RoleFormProps = QuietFormProps<QuietRole>;
 
 function RoleForm(props: RoleFormProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.roleInfo) {
-      form.setFieldsValue(props.roleInfo);
-      form.setFieldValue('role_name', props.roleInfo.role_name.substring(5));
+    if (props.formValues) {
+      form.setFieldsValue(props.formValues);
+      form.setFieldValue('role_name', props.formValues.role_name.substring(5));
     }
-  }, [form, props.roleInfo]);
+  }, [form, props.formValues]);
 
   function handleOk() {
     if (props.onOk) {
@@ -65,17 +58,17 @@ function RoleForm(props: RoleFormProps) {
       <Form
         form={form}
         id={'role-form'}
-        initialValues={props.roleInfo}
+        initialValues={props.formValues}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
-        {props.roleInfo && (
+        {props.formValues && (
           <>
             <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'角色ID'} field="id">
-              <Typography.Text copyable>{props.roleInfo.id}</Typography.Text>
+              <Typography.Text copyable>{props.formValues.id}</Typography.Text>
             </Form.Item>
           </>
         )}

@@ -10,20 +10,14 @@ import {
 import { QuietUser } from '@/service/system/type';
 import { enabled, expired, locked } from '@/utils/render';
 import RoleTreeSelect from '@/components/RoleTreeSelect';
+import { QuietFormProps } from '@/components/type';
 
 const Row = Grid.Row;
 const Col = Grid.Col;
 const { useForm } = Form;
 
-export type UserFormProps = {
+export type UserFormProps = QuietFormProps<QuietUser> & {
   accountConfigVisible?: boolean;
-  userInfo?: QuietUser;
-  title?: string;
-  visible?: boolean;
-  onOk?: (values: QuietUser, roleIds: string[]) => Promise<QuietUser | void>;
-  okText?: string;
-  onCancel?: () => void;
-  cancelText?: string;
 };
 
 function UserForm(props: UserFormProps) {
@@ -33,15 +27,15 @@ function UserForm(props: UserFormProps) {
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.userInfo) {
-      form.setFieldsValue(props.userInfo);
-      if (props.userInfo.authorities) {
+    if (props.formValues) {
+      form.setFieldsValue(props.formValues);
+      if (props.formValues.authorities) {
         setUserRoleIds(
-          props.userInfo.authorities.map((authority) => authority.id)
+          props.formValues.authorities.map((authority) => authority.id)
         );
       }
     }
-  }, [form, props.userInfo]);
+  }, [form, props.formValues]);
 
   function handleOk() {
     if (props.onOk) {
@@ -82,7 +76,7 @@ function UserForm(props: UserFormProps) {
       <Form
         form={form}
         id={'user-form'}
-        initialValues={props.userInfo}
+        initialValues={props.formValues}
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 18 }}
       >

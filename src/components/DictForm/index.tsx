@@ -12,18 +12,11 @@ import { enabled } from '@/utils/render';
 import DictTypeSelect from '@/components/DictTypeSelect';
 import { IconExclamationCircle } from '@arco-design/web-react/icon';
 import DictSelect from '@/components/DictSelect';
+import { QuietFormProps } from '@/components/type';
 
 const { useForm } = Form;
 
-export type DictFormProps = {
-  dict?: QuietDict;
-  title?: string;
-  visible?: boolean;
-  onOk?: (values: QuietDict) => Promise<QuietDict | void>;
-  okText?: string;
-  onCancel?: () => void;
-  cancelText?: string;
-};
+export type DictFormProps = QuietFormProps<QuietDict>;
 
 function DictForm(props: DictFormProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -32,10 +25,10 @@ function DictForm(props: DictFormProps) {
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.dict) {
-      form.setFieldsValue(props.dict);
+    if (props.formValues) {
+      form.setFieldsValue(props.formValues);
     }
-  }, [form, props.dict]);
+  }, [form, props.formValues]);
 
   function handleOk() {
     if (props.onOk) {
@@ -80,20 +73,20 @@ function DictForm(props: DictFormProps) {
       <Form
         form={form}
         id={'dict-form'}
-        initialValues={props.dict}
+        initialValues={props.formValues}
         onValuesChange={(v, vs) => {
           setSelectedTypeId(vs.type_id);
         }}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
-        {props.dict && (
+        {props.formValues && (
           <>
             <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'字典ID'} field="id">
-              <Typography.Text copyable>{props.dict.id}</Typography.Text>
+              <Typography.Text copyable>{props.formValues.id}</Typography.Text>
             </Form.Item>
           </>
         )}

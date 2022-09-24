@@ -65,7 +65,7 @@ function TeamManager() {
                   onEdit={(value) => {
                     getTeam(value.id).then((resp) => {
                       setTeamFormProps({
-                        teamInfo: resp,
+                        formValues: resp,
                         visible: true,
                         onOk: (newTeam) => {
                           return updateTeam(newTeam).then(() => {
