@@ -181,7 +181,7 @@ function UserManager() {
               setUserFormProps({
                 title: '更新用户',
                 visible: true,
-                userInfo: record,
+                formValues: record,
                 accountConfigVisible: true,
                 onOk: async (values, roleIds) => {
                   await updateRoles(record.id, roleIds);

@@ -121,7 +121,7 @@ function DictTypeManager(props: DictTypeManagerProps) {
               setDictTypeFormProps({
                 title: '更新字典类型',
                 visible: true,
-                dictType: record,
+                formValues: record,
                 onOk: async (values) => {
                   return await updateDictType(values).then(() => {
                     fetchData();

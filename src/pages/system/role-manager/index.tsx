@@ -117,7 +117,7 @@ function RoleManager() {
               setRoleFormProps({
                 title: '更新角色',
                 visible: true,
-                roleInfo: record,
+                formValues: record,
                 onOk: async (values) => {
                   return await updateRole(values).then(() => {
                     fetchData();

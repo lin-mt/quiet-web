@@ -2,28 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Modal, Typography } from '@arco-design/web-react';
 import { QuietDept } from '@/service/system/type';
 import DeptTreeSelect from '@/components/DeptTreeSelect';
+import { QuietFormProps } from '@/components/type';
 
 const { useForm } = Form;
 
-export type DeptFormProps = {
-  deptInfo?: QuietDept;
-  title?: string;
-  visible?: boolean;
-  onOk?: (values: QuietDept) => Promise<QuietDept | void>;
-  okText?: string;
-  onCancel?: () => void;
-  cancelText?: string;
-};
+export type DeptFormProps = QuietFormProps<QuietDept>;
 
 function DeptForm(props: DeptFormProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.deptInfo) {
-      form.setFieldsValue(props.deptInfo);
+    if (props.formValues) {
+      form.setFieldsValue(props.formValues);
     }
-  }, [form, props.deptInfo]);
+  }, [form, props.formValues]);
 
   function handleOk() {
     if (props.onOk) {
@@ -63,17 +56,17 @@ function DeptForm(props: DeptFormProps) {
       <Form
         form={form}
         id={'role-form'}
-        initialValues={props.deptInfo}
+        initialValues={props.formValues}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
-        {props.deptInfo && (
+        {props.formValues && (
           <>
             <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'部门ID'} field="id">
-              <Typography.Text copyable>{props.deptInfo.id}</Typography.Text>
+              <Typography.Text copyable>{props.formValues.id}</Typography.Text>
             </Form.Item>
           </>
         )}

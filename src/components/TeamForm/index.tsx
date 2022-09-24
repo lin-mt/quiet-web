@@ -2,40 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Modal, Typography } from '@arco-design/web-react';
 import { QuietTeam } from '@/service/system/type';
 import UserSelect from '@/components/UserSelect';
+import { QuietFormProps } from '@/components/type';
 
 const { useForm } = Form;
 
-export type TeamFormProps = {
-  teamInfo?: QuietTeam;
-  title?: string;
-  visible?: boolean;
-  onOk?: (values: QuietTeam) => Promise<QuietTeam | void>;
-  okText?: string;
-  onCancel?: () => void;
-  cancelText?: string;
-};
+export type TeamFormProps = QuietFormProps<QuietTeam>;
 
 function TeamForm(props: TeamFormProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.teamInfo) {
-      form.setFieldsValue(props.teamInfo);
+    if (props.formValues) {
+      form.setFieldsValue(props.formValues);
       form.setFieldValue(
         'product_owners',
-        props.teamInfo.product_owners?.map((po) => po.id)
+        props.formValues.product_owners?.map((po) => po.id)
       );
       form.setFieldValue(
         'scrum_masters',
-        props.teamInfo.scrum_masters?.map((po) => po.id)
+        props.formValues.scrum_masters?.map((po) => po.id)
       );
       form.setFieldValue(
         'members',
-        props.teamInfo.members?.map((po) => po.id)
+        props.formValues.members?.map((po) => po.id)
       );
     }
-  }, [form, props.teamInfo]);
+  }, [form, props.formValues]);
 
   function handleOk() {
     if (props.onOk) {
@@ -84,17 +77,17 @@ function TeamForm(props: TeamFormProps) {
       <Form
         form={form}
         id={'team-form'}
-        initialValues={props.teamInfo}
+        initialValues={props.formValues}
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 18 }}
       >
-        {props.teamInfo && (
+        {props.formValues && (
           <>
             <Form.Item field="id" hidden>
               <Input disabled />
             </Form.Item>
             <Form.Item label="团队ID" field="id">
-              <Typography.Text copyable>{props.teamInfo.id}</Typography.Text>
+              <Typography.Text copyable>{props.formValues.id}</Typography.Text>
             </Form.Item>
           </>
         )}
