@@ -89,8 +89,7 @@ function ApiRun(props: ApiRunProps) {
 
   function buildReqPath() {
     return (
-      apiInfo?.path_param &&
-      apiInfo?.path_param.length > 0 && (
+      apiInfo?.path_param?.length > 0 && (
         <>
           <Row>
             <SecondTitle style={{ width: '100%' }} id={'req-path'}>
@@ -138,8 +137,7 @@ function ApiRun(props: ApiRunProps) {
 
   function buildReqQuery() {
     return (
-      apiInfo?.req_query &&
-      apiInfo?.req_query.length > 0 && (
+      apiInfo?.req_query?.length > 0 && (
         <>
           <Row>
             <SecondTitle id={'req-query'}>Query Parameters</SecondTitle>
