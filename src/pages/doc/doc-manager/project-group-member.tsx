@@ -101,7 +101,7 @@ function ProjectGroupMember(props: ProjectGroupMemberProps) {
               >
                 <Button
                   icon={<IconDelete />}
-                  type={'dashed'}
+                  type={'secondary'}
                   status={'danger'}
                 />
               </Popconfirm>
