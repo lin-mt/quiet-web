@@ -66,6 +66,7 @@ function DocProjectForm(props: DocProjectFormProps) {
     >
       <Form
         form={form}
+        initialValues={props.project}
         id={'doc-project-form'}
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 18 }}

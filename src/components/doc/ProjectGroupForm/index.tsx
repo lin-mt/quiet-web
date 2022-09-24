@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Modal, Typography } from '@arco-design/web-react';
 import { DocProjectGroup } from '@/service/doc/type';
+import { QuietFormProps } from '@/components/type';
 
 const { useForm } = Form;
 
-export type ProjectGroupFormProps = {
-  groupInfo?: DocProjectGroup;
+export type ProjectGroupFormProps = QuietFormProps<DocProjectGroup> & {
   title?: string;
   visible?: boolean;
   onOk?: (values: DocProjectGroup) => Promise<DocProjectGroup | void>;
@@ -19,10 +19,10 @@ function ProjectGroupForm(props: ProjectGroupFormProps) {
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.groupInfo) {
-      form.setFieldsValue(props.groupInfo);
+    if (props.formValues) {
+      form.setFieldsValue(props.formValues);
     }
-  }, [form, props.groupInfo]);
+  }, [form, props.formValues]);
 
   function handleOk() {
     if (props.onOk) {
@@ -61,17 +61,18 @@ function ProjectGroupForm(props: ProjectGroupFormProps) {
     >
       <Form
         form={form}
+        initialValues={props.formValues}
         id={'project-group-form'}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
-        {props.groupInfo && (
+        {props.formValues && (
           <>
             <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'分组ID'} field="id">
-              <Typography.Text copyable>{props.groupInfo.id}</Typography.Text>
+              <Typography.Text copyable>{props.formValues.id}</Typography.Text>
             </Form.Item>
           </>
         )}

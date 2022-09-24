@@ -17,10 +17,10 @@ function ApiForm(props: ApiFormProps) {
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.updateEntity) {
-      form.setFieldsValue(props.updateEntity);
+    if (props.formValues) {
+      form.setFieldsValue(props.formValues);
     }
-  }, [form, props.updateEntity]);
+  }, [form, props.formValues]);
 
   function handleOk() {
     if (props.onOk) {
@@ -61,18 +61,17 @@ function ApiForm(props: ApiFormProps) {
       <Form
         form={form}
         id={'api-form'}
+        initialValues={props.formValues}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
-        {props.updateEntity && (
+        {props.formValues && (
           <>
             <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'ID'} field="id">
-              <Typography.Text copyable>
-                {props.updateEntity.id}
-              </Typography.Text>
+              <Typography.Text copyable>{props.formValues.id}</Typography.Text>
             </Form.Item>
           </>
         )}

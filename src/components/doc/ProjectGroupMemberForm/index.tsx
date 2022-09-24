@@ -3,31 +3,24 @@ import { Form, Input, Modal, Select } from '@arco-design/web-react';
 import { DocProjectGroupMember, Permission } from '@/service/doc/type';
 import UserSelect from '@/components/UserSelect';
 import { enumToSelectOptions } from '@/utils/render';
+import { QuietFormProps } from '@/components/type';
 
 const { useForm } = Form;
 
-export type ProjectGroupMemberFormProps = {
-  groupMember?: DocProjectGroupMember;
-  groupId: string;
-  title?: string;
-  visible?: boolean;
-  onOk?: (
-    values: DocProjectGroupMember
-  ) => Promise<DocProjectGroupMember | void>;
-  okText?: string;
-  onCancel?: () => void;
-  cancelText?: string;
-};
+export type ProjectGroupMemberFormProps =
+  QuietFormProps<DocProjectGroupMember> & {
+    groupId: string;
+  };
 
 function ProjectGroupMemberForm(props: ProjectGroupMemberFormProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.groupMember) {
-      form.setFieldsValue(props.groupMember);
+    if (props.formValues) {
+      form.setFieldsValue(props.formValues);
     }
-  }, [form, props.groupMember]);
+  }, [form, props.formValues]);
 
   function handleOk() {
     if (props.onOk) {
@@ -71,7 +64,7 @@ function ProjectGroupMemberForm(props: ProjectGroupMemberFormProps) {
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
-        {props.groupMember && (
+        {props.formValues && (
           <>
             <Form.Item hidden field="id">
               <Input />

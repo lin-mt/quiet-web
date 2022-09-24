@@ -147,7 +147,7 @@ export function ApiGroupManager(
     getApiGroup(apiGroupId).then((apiGroup) => {
       setApiGroupFormProps({
         visible: true,
-        updateEntity: apiGroup,
+        formValues: apiGroup,
         title: '更新分组信息',
         onCancel: () => setApiGroupFormProps({ visible: false }),
         onOk: (values) =>
