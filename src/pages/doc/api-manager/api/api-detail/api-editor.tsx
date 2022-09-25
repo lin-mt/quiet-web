@@ -616,11 +616,13 @@ function ApiEditor(props: ApiEditorProps) {
                             <Input placeholder="备注" />
                           </Item>
                         </Col>
-                        <Col
-                          flex={'22px'}
-                          style={{ color: 'red', cursor: 'pointer' }}
-                        >
-                          <IconDelete onClick={() => remove(index)} />
+                        <Col flex={'32px'}>
+                          <Button
+                            type={'text'}
+                            status={'danger'}
+                            icon={<IconDelete />}
+                            onClick={() => remove(index)}
+                          />
                         </Col>
                       </Row>
                     ))}
@@ -744,11 +746,13 @@ function ApiEditor(props: ApiEditorProps) {
                           <Input style={{ width: '100%' }} placeholder="备注" />
                         </Item>
                       </Col>
-                      <Col
-                        flex={'22px'}
-                        style={{ color: 'red', cursor: 'pointer' }}
-                      >
-                        <IconDelete onClick={() => remove(index)} />
+                      <Col flex={'32px'}>
+                        <Button
+                          type={'text'}
+                          status={'danger'}
+                          icon={<IconDelete />}
+                          onClick={() => remove(index)}
+                        />
                       </Col>
                     </Row>
                   ))}
@@ -827,9 +831,11 @@ function ApiEditor(props: ApiEditorProps) {
                           <Input style={{ width: '100%' }} placeholder="备注" />
                         </Item>
                       </Col>
-                      <Col flex={'22px'}>
-                        <IconDelete
-                          style={{ color: 'red', cursor: 'pointer' }}
+                      <Col flex={'32px'}>
+                        <Button
+                          type={'text'}
+                          status={'danger'}
+                          icon={<IconDelete />}
                           onClick={() => remove(index)}
                         />
                       </Col>
