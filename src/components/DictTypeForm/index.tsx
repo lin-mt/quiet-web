@@ -81,6 +81,16 @@ function DictTypeForm(props: DictTypeFormProps) {
           <Input placeholder="请输入名称" />
         </Form.Item>
         <Form.Item
+          label="Key"
+          field="key"
+          rules={[
+            { required: true, message: '请输入 key' },
+            { max: 30, message: 'key 长度不能超过 30' },
+          ]}
+        >
+          <Input placeholder="请输入 key" />
+        </Form.Item>
+        <Form.Item
           label="名称"
           field="name"
           rules={[

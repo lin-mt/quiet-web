@@ -26,7 +26,7 @@ function DictTypeSearchForm(props: {
   const colSpan = 6;
 
   return (
-    <div className={styles['dict-type-search-form-wrapper']}>
+    <div className={styles['search-form-wrapper']}>
       <Form
         form={form}
         className={styles['search-form']}
@@ -42,6 +42,11 @@ function DictTypeSearchForm(props: {
           <Col span={colSpan}>
             <Form.Item label={'服务ID'} field="service_id">
               <Input allowClear placeholder={'请输入服务ID'} />
+            </Form.Item>
+          </Col>
+          <Col span={colSpan}>
+            <Form.Item label={'Key'} field="key">
+              <Input allowClear placeholder={'请输入 key'} />
             </Form.Item>
           </Col>
           <Col span={colSpan}>
@@ -64,11 +69,7 @@ function DictTypeSearchForm(props: {
         <Button type="primary" icon={<IconSearch />} onClick={handleSubmit}>
           查询
         </Button>
-        <Button
-          className={styles['reset-button']}
-          icon={<IconRefresh />}
-          onClick={handleReset}
-        >
+        <Button icon={<IconRefresh />} onClick={handleReset}>
           重置
         </Button>
       </div>

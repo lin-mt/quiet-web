@@ -12,6 +12,7 @@ import { findEnabledDict } from '@/service/system/quiet-dict';
 const RoleTreeSelect = (
   props: TreeSelectProps & {
     typeId?: string;
+    typeKey?: string;
     children?: React.ReactNode;
   } & React.RefAttributes<RefTreeSelectType>
 ) => {
@@ -31,14 +32,14 @@ const RoleTreeSelect = (
       }
       return buildResult;
     };
-    if (props.typeId) {
-      findEnabledDict(props.typeId).then((resp) => {
+    if (props.typeId || props.typeKey) {
+      findEnabledDict(props.typeId, props.typeKey).then((resp) => {
         setDictTreeData(buildDictTreeData(resp));
       });
     } else {
       setDictTreeData([]);
     }
-  }, [props.typeId]);
+  }, [props.typeId, props.typeKey]);
 
   return (
     <TreeSelect
