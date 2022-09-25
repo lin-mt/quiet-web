@@ -618,7 +618,7 @@ function ApiEditor(props: ApiEditorProps) {
                         </Col>
                         <Col flex={'32px'}>
                           <Button
-                            type={'text'}
+                            type={'secondary'}
                             status={'danger'}
                             icon={<IconDelete />}
                             onClick={() => remove(index)}
@@ -748,7 +748,7 @@ function ApiEditor(props: ApiEditorProps) {
                       </Col>
                       <Col flex={'32px'}>
                         <Button
-                          type={'text'}
+                          type={'secondary'}
                           status={'danger'}
                           icon={<IconDelete />}
                           onClick={() => remove(index)}
@@ -833,7 +833,7 @@ function ApiEditor(props: ApiEditorProps) {
                       </Col>
                       <Col flex={'32px'}>
                         <Button
-                          type={'text'}
+                          type={'secondary'}
                           status={'danger'}
                           icon={<IconDelete />}
                           onClick={() => remove(index)}
