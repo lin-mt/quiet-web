@@ -78,6 +78,7 @@ export interface QuietUserRole extends BaseEntity {
 
 export interface QuietDictType extends BaseEntity {
   service_id: string;
+  key: string;
   name: string;
   enabled: boolean;
   remark?: string;

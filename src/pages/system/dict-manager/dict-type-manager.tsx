@@ -92,12 +92,17 @@ function DictTypeManager(props: DictTypeManagerProps) {
       width: 180,
     },
     {
+      title: 'Key',
+      dataIndex: 'key',
+      width: 100,
+    },
+    {
       title: '名称',
       dataIndex: 'name',
       width: 130,
     },
     {
-      title: '启用状态',
+      title: '状态',
       dataIndex: 'enabled',
       width: 60,
       render: (val) => enabled(val),
