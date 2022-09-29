@@ -13,11 +13,7 @@ export function ProjectGroupSelect(
       debounceTimeout?: number;
     }
 ) {
-  async function initOptions() {
-    return await findByName('', [props.value]);
-  }
-
-  async function findByName(name: string, groupIds?: string[]) {
+  function fetchOptions(name: string, groupIds?: string[]) {
     return listAllProjectGroup(name, groupIds).then((groups) => {
       return groups.map((group) => ({
         key: group.id,
@@ -27,10 +23,18 @@ export function ProjectGroupSelect(
     });
   }
 
+  function getOptionsByValues(values: string[]) {
+    return fetchOptions('', values);
+  }
+
+  function getOptionsByInputValue(inputValue: string) {
+    return fetchOptions(inputValue);
+  }
+
   return (
     <DebounceSelect
-      initOptions={() => initOptions()}
-      fetchOptions={findByName}
+      getOptionsByValues={getOptionsByValues}
+      getOptionsByInputValue={getOptionsByInputValue}
       {...props}
     />
   );

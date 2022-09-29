@@ -14,11 +14,7 @@ export function ProjectGroupSelect(
       debounceTimeout?: number;
     }
 ) {
-  async function initOptions() {
-    return await findByName('', [props.value]);
-  }
-
-  async function findByName(name: string, ids?: string[]) {
+  function fetchOptions(name: string, ids?: string[]) {
     return listApiGroup(props.projectId, name, ids, 9).then((groups) => {
       return groups.map((group) => ({
         key: group.id,
@@ -28,10 +24,18 @@ export function ProjectGroupSelect(
     });
   }
 
+  function getOptionsByValues(values: string[]) {
+    return fetchOptions('', values);
+  }
+
+  function getOptionsByInputValue(inputValue: string) {
+    return fetchOptions(inputValue);
+  }
+
   return (
     <DebounceSelect
-      initOptions={() => initOptions()}
-      fetchOptions={findByName}
+      getOptionsByValues={getOptionsByValues}
+      getOptionsByInputValue={getOptionsByInputValue}
       {...props}
     />
   );

@@ -9,11 +9,7 @@ import { listProject } from '@/service/doc/project';
 function ProjectSelect(
   props: SelectProps & React.RefAttributes<SelectHandle> & { value?: string }
 ) {
-  async function initOptions() {
-    return await findByName('', [props.value]);
-  }
-
-  async function findByName(name: string, ids?: string[]) {
+  function fetchOptions(name: string, ids?: string[]) {
     return listProject(name, ids).then((projects) => {
       return projects.map((project) => ({
         key: project.id,
@@ -23,10 +19,18 @@ function ProjectSelect(
     });
   }
 
+  function getOptionsByValues(values: string[]) {
+    return fetchOptions('', values);
+  }
+
+  function getOptionsByInputValue(inputValue: string) {
+    return fetchOptions(inputValue);
+  }
+
   return (
     <DebounceSelect
-      initOptions={() => initOptions()}
-      fetchOptions={findByName}
+      getOptionsByValues={getOptionsByValues}
+      getOptionsByInputValue={getOptionsByInputValue}
       {...props}
     />
   );
