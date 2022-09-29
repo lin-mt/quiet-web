@@ -23,6 +23,20 @@ export const routes: IRoute[] = [
     ],
   },
   {
+    name: 'menu.scrum',
+    key: 'scrum',
+    children: [
+      {
+        name: 'menu.scrum.projectManager',
+        key: 'scrum/project-manager',
+      },
+      {
+        name: 'menu.scrum.templateManager',
+        key: 'scrum/template-manager',
+      },
+    ],
+  },
+  {
     name: 'menu.system',
     key: 'system',
     children: [
