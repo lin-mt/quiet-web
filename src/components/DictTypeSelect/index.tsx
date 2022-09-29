@@ -13,11 +13,7 @@ export function DictTypeSelect(
       debounceTimeout?: number;
     }
 ) {
-  async function initOptions() {
-    return await fetchOptions('', [props.value]);
-  }
-
-  async function fetchOptions(name: string, ids?: string[]) {
+  function fetchOptions(name: string, ids?: string[]) {
     return findEnabledDictType(name, ids).then((resp) => {
       return resp.map((dictType) => ({
         key: dictType.id,
@@ -27,10 +23,18 @@ export function DictTypeSelect(
     });
   }
 
+  function getOptionsByValues(values: string[]) {
+    return fetchOptions('', values);
+  }
+
+  function getOptionsByInputValue(inputValue: string) {
+    return fetchOptions(inputValue);
+  }
+
   return (
     <DebounceSelect
-      initOptions={() => initOptions()}
-      fetchOptions={fetchOptions}
+      getOptionsByValues={getOptionsByValues}
+      getOptionsByInputValue={getOptionsByInputValue}
       {...props}
     />
   );

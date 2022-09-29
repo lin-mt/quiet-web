@@ -2,9 +2,9 @@ import {
   SelectHandle,
   SelectProps,
 } from '@arco-design/web-react/es/Select/interface';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import debounce from 'lodash/debounce';
-import { Empty, Select, Spin } from '@arco-design/web-react';
+import { Select, Spin } from '@arco-design/web-react';
 
 const DebounceSelect = <
   ValueType extends {
@@ -15,61 +15,82 @@ const DebounceSelect = <
 >(
   props: SelectProps &
     React.RefAttributes<SelectHandle> & {
-      initOptions?: () => Promise<ValueType[]>;
-      fetchOptions: (search: string) => Promise<ValueType[]>;
+      getOptionsByValues: (values: string[]) => Promise<ValueType[]>;
+      getOptionsByInputValue: (search: string) => Promise<ValueType[]>;
       debounceTimeout?: number;
     }
 ) => {
-  const { fetchOptions, debounceTimeout = 500 } = props;
-
-  const [fetching, setFetching] = React.useState(false);
-  const [options, setOptions] = React.useState<ValueType[]>([]);
-  const fetchRef = React.useRef(0);
+  const [options, setOptions] = useState([]);
+  const [fetching, setFetching] = useState(false);
+  const refFetchId = useRef(null);
 
   useEffect(() => {
-    if (props.initOptions) {
-      props.initOptions().then((ops) => {
-        if (ops) {
-          setOptions(ops);
-        }
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const debounceFetcher = React.useMemo(() => {
-    const loadOptions = (value: string) => {
-      fetchRef.current += 1;
-      const fetchId = fetchRef.current;
+    if (!props.value) {
       setOptions([]);
+      return;
+    }
+    let values;
+    if (props.mode === 'multiple') {
+      values = props.value;
+    } else {
+      values = [props.value];
+    }
+    let allIn = true;
+    for (let i = 0; i < values.length; i++) {
+      if (options.findIndex((o) => o.value === values[i]) === -1) {
+        allIn = false;
+        break;
+      }
+    }
+    setOptions((prevState) => {
+      return prevState.filter(
+        (o) => values.findIndex((id) => o.value === id) !== -1
+      );
+    });
+    if (allIn) {
+      return;
+    }
+    props.getOptionsByValues(values).then((res) => {
+      setOptions(res);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(props.value)]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedFetch = useCallback(
+    debounce((inputValue) => {
+      refFetchId.current = Date.now();
+      const fetchId = refFetchId.current;
       setFetching(true);
-
-      fetchOptions(value).then((newOptions) => {
-        if (fetchId !== fetchRef.current) {
-          // for fetch callback order
-          return;
+      props.getOptionsByInputValue(inputValue).then((resp) => {
+        if (refFetchId.current === fetchId) {
+          setOptions(resp);
+          setFetching(false);
         }
-
-        setOptions(newOptions);
-        setFetching(false);
       });
-    };
-
-    return debounce(loadOptions, debounceTimeout);
-  }, [fetchOptions, debounceTimeout]);
+    }, 500),
+    []
+  );
 
   return (
     <Select
       showSearch
-      filterOption={false}
-      onSearch={debounceFetcher}
-      notFoundContent={
-        <div style={{ textAlign: 'center' }}>
-          {fetching ? <Spin /> : <Empty />}
-        </div>
-      }
       options={options}
-      onBlur={() => setOptions([])}
+      filterOption={false}
+      onSearch={debouncedFetch}
+      notFoundContent={
+        fetching ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Spin style={{ margin: 12 }} />
+          </div>
+        ) : null
+      }
       {...props}
     />
   );
