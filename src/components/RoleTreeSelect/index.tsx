@@ -36,11 +36,8 @@ const RoleTreeSelect = (
 
   return (
     <TreeSelect
-      multiple
-      showSearch
-      allowClear
-      placeholder={'请选择角色'}
       treeData={roleTreeData}
+      fieldNames={{ key: 'id', title: 'role_cn_name' }}
       {...props}
     />
   );

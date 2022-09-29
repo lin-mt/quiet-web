@@ -13,50 +13,33 @@ function TeamForm(props: TeamFormProps) {
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.formValues) {
-      form.setFieldsValue(props.formValues);
-      form.setFieldValue(
-        'product_owners',
-        props.formValues.product_owners?.map((po) => po.id)
-      );
-      form.setFieldValue(
-        'scrum_masters',
-        props.formValues.scrum_masters?.map((po) => po.id)
-      );
-      form.setFieldValue(
-        'members',
-        props.formValues.members?.map((po) => po.id)
-      );
-    }
-  }, [form, props.formValues]);
+    form.setFieldsValue(props.formValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.formValues]);
 
   function handleOk() {
     if (props.onOk) {
       form.validate().then(async (values) => {
-        values.product_owners = values.product_owners.map((id) => ({
-          id: id,
+        values.product_owners = values.product_owners.map((u) => ({
+          id: typeof u === 'string' ? u : u.id,
         }));
-        values.scrum_masters = values.scrum_masters.map((id) => ({
-          id: id,
+        values.scrum_masters = values.scrum_masters.map((u) => ({
+          id: typeof u === 'string' ? u : u.id,
         }));
-        values.members = values.members.map((id) => ({
-          id: id,
+        values.members = values.members.map((u) => ({
+          id: typeof u === 'string' ? u : u.id,
         }));
         setSubmitting(true);
         props.onOk(values).finally(() => {
           setSubmitting(false);
         });
       });
-    } else {
-      form.resetFields();
     }
   }
 
   function handleCancel() {
     if (props.onCancel) {
       props.onCancel();
-    } else {
-      form.resetFields();
     }
   }
 
@@ -77,7 +60,6 @@ function TeamForm(props: TeamFormProps) {
       <Form
         form={form}
         id={'team-form'}
-        initialValues={props.formValues}
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 18 }}
       >
@@ -105,6 +87,9 @@ function TeamForm(props: TeamFormProps) {
           label="ProductOwners"
           field={'product_owners'}
           rules={[{ required: true, message: '请选择 Product Owner' }]}
+          formatter={(value) => {
+            return value?.map((u) => (typeof u === 'string' ? u : u.id));
+          }}
         >
           <UserSelect mode={'multiple'} placeholder="请选择 Product Owner" />
         </Form.Item>
@@ -112,10 +97,19 @@ function TeamForm(props: TeamFormProps) {
           label="ScrumMasters"
           field={'scrum_masters'}
           rules={[{ required: true, message: '请选择 Scrum Master' }]}
+          formatter={(value) => {
+            return value?.map((u) => (typeof u === 'string' ? u : u.id));
+          }}
         >
           <UserSelect mode={'multiple'} placeholder="请选择 Scrum Master" />
         </Form.Item>
-        <Form.Item label="团队成员" field={'members'}>
+        <Form.Item
+          label="团队成员"
+          field={'members'}
+          formatter={(value) => {
+            return value?.map((u) => (typeof u === 'string' ? u : u.id));
+          }}
+        >
           <UserSelect mode={'multiple'} placeholder="请选择团队成员" />
         </Form.Item>
         <Form.Item

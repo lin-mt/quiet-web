@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { listUsers } from '@/service/system/quiet-user';
-import DebounceSelect from '@/components/DebounceSelect';
 import {
   SelectHandle,
   SelectProps,
 } from '@arco-design/web-react/es/Select/interface';
+import { Select, Spin } from '@arco-design/web-react';
+import debounce from 'lodash/debounce';
 
 export function UserSelect(
   props: SelectProps &
@@ -12,32 +13,9 @@ export function UserSelect(
       debounceTimeout?: number;
     }
 ) {
-  async function initOptions() {
-    let userIds;
-    if (!props.value) {
-      return;
-    }
-    if (props.value instanceof Array) {
-      userIds = props.value.map((val) => {
-        if (typeof val === 'string' || typeof val === 'number') {
-          return val;
-        }
-        return val.value;
-      });
-    } else if (
-      typeof props.value === 'string' ||
-      typeof props.value === 'number'
-    ) {
-      userIds = [];
-      userIds.push(props.value);
-    } else {
-      const userIds = [];
-      userIds.push(props.value.value);
-    }
-    if (userIds && userIds.length > 0) {
-      return await findUserByName('', userIds);
-    }
-  }
+  const [options, setOptions] = useState([]);
+  const [fetching, setFetching] = useState(false);
+  const refFetchId = useRef(null);
 
   async function findUserByName(name: string, userIds?: string[]) {
     return listUsers(name, userIds).then((resp) => {
@@ -49,10 +27,77 @@ export function UserSelect(
     });
   }
 
+  useEffect(() => {
+    if (!props.value) {
+      setOptions([]);
+      return;
+    }
+    let userIds;
+    if (props.mode === 'multiple') {
+      userIds = props.value;
+    } else {
+      userIds = [props.value];
+    }
+    let allIn = true;
+    for (let i = 0; i < userIds.length; i++) {
+      if (options.findIndex((o) => o.value === userIds[i]) === -1) {
+        allIn = false;
+        break;
+      }
+    }
+    setOptions((prevState) => {
+      return prevState.filter(
+        (o) => userIds.findIndex((id) => o.value === id) !== -1
+      );
+    });
+    if (allIn) {
+      return;
+    }
+    findUserByName('', userIds).then((res) => {
+      setOptions(res);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(props.value)]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedFetchUser = useCallback(
+    debounce((inputValue) => {
+      refFetchId.current = Date.now();
+      const fetchId = refFetchId.current;
+      setFetching(true);
+      listUsers(inputValue).then((resp) => {
+        if (refFetchId.current === fetchId) {
+          const respOptions = resp.map((user) => ({
+            label: user.full_name,
+            value: user.id,
+          }));
+          setFetching(false);
+          setOptions(respOptions);
+        }
+      });
+    }, 500),
+    []
+  );
+
   return (
-    <DebounceSelect
-      initOptions={() => initOptions()}
-      fetchOptions={findUserByName}
+    <Select
+      showSearch
+      options={options}
+      filterOption={false}
+      notFoundContent={
+        fetching ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Spin style={{ margin: 12 }} />
+          </div>
+        ) : null
+      }
+      onSearch={debouncedFetchUser}
       {...props}
     />
   );
