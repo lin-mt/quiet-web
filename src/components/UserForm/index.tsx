@@ -23,25 +23,18 @@ export type UserFormProps = QuietFormProps<QuietUser> & {
 function UserForm(props: UserFormProps) {
   const { accountConfigVisible = false } = props;
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [userRoleIds, setUserRoleIds] = useState<string[]>([]);
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.formValues) {
-      form.setFieldsValue(props.formValues);
-      if (props.formValues.authorities) {
-        setUserRoleIds(
-          props.formValues.authorities.map((authority) => authority.id)
-        );
-      }
-    }
-  }, [form, props.formValues]);
+    form.setFieldsValue(props.formValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(props.formValues)]);
 
   function handleOk() {
     if (props.onOk) {
       form.validate().then(async (values) => {
         setSubmitting(true);
-        props.onOk(values, userRoleIds).finally(() => {
+        props.onOk(values, form.getFieldValue('authorities')).finally(() => {
           setSubmitting(false);
         });
       });
@@ -69,7 +62,6 @@ function UserForm(props: UserFormProps) {
       cancelText={props.cancelText}
       afterClose={() => {
         form.resetFields();
-        setUserRoleIds([]);
       }}
       confirmLoading={submitting}
     >
@@ -182,12 +174,18 @@ function UserForm(props: UserFormProps) {
               <Col span={24}>
                 <Form.Item
                   label={'用户角色'}
+                  field={'authorities'}
                   labelCol={{ span: 3 }}
                   wrapperCol={{ span: 21 }}
+                  formatter={(value) => {
+                    return value.map((u) => (typeof u === 'string' ? u : u.id));
+                  }}
                 >
                   <RoleTreeSelect
-                    value={userRoleIds}
-                    onChange={(value) => setUserRoleIds(value)}
+                    multiple
+                    showSearch
+                    allowClear
+                    placeholder={'请选择用户角色'}
                   />
                 </Form.Item>
               </Col>
