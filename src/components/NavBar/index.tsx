@@ -182,6 +182,7 @@ function Navbar({ show }: { show: boolean }) {
             trigger="hover"
             onChange={(value) => {
               setLang(value);
+              localStorage.setItem(LocalStorage.Lang, value);
               const nextLang = defaultLocale[value];
               Message.info(`${nextLang['message.lang.tips']}${value}`);
             }}
