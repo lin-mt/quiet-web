@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import cs from 'classnames';
-import {
-  Button,
-  Card,
-  Typography,
-  Skeleton,
-  Modal,
-} from '@arco-design/web-react';
+import { Button, Card, Typography, Modal } from '@arco-design/web-react';
 import { IconUserGroup } from '@arco-design/web-react/icon';
 import styles from './style/index.module.less';
 import { QuietTeam } from '@/service/system/type';
@@ -34,28 +28,19 @@ function CardTeam(props: CardTeamProps) {
       style={{ height: 170 }}
       size="small"
       title={
-        loading ? (
-          <Skeleton
-            animation
-            text={{ rows: 1, width: ['100%'] }}
-            style={{ width: '120px', height: '24px' }}
-            className={styles['card-block-skeleton']}
-          />
-        ) : (
-          <>
-            <div
-              className={cs(styles.title, {
-                [styles['title-more']]: true,
-              })}
-            >
-              <div className={styles.icon}>
-                <IconUserGroup />
-              </div>
-              <div className={cs(styles.title)}>{props.team.team_name}</div>
+        <>
+          <div
+            className={cs(styles.title, {
+              [styles['title-more']]: true,
+            })}
+          >
+            <div className={styles.icon}>
+              <IconUserGroup />
             </div>
-            <div className={styles.time}>{props.team.gmt_create}</div>
-          </>
-        )
+            <div className={cs(styles.title)}>{props.team.team_name}</div>
+          </div>
+          <div className={styles.time}>{props.team.gmt_create}</div>
+        </>
       }
     >
       <div className={styles.content}>
