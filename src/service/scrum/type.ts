@@ -18,6 +18,11 @@ export interface ScrumProject extends BaseEntity {
   teams?: QuietTeam[];
 }
 
+export interface ScrumProjectGroup extends SortableEntity {
+  name: string;
+  remark?: string;
+}
+
 export interface ScrumTemplate extends BaseEntity {
   name: string;
   enabled: boolean;
