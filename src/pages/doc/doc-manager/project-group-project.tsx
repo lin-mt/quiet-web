@@ -15,6 +15,7 @@ import {
   IconPlus,
   IconStar,
 } from '@arco-design/web-react/icon';
+import NProgress from 'nprogress';
 import styles from './style/index.module.less';
 import { DocProject } from '@/service/doc/type';
 import {
@@ -26,6 +27,7 @@ import {
 import DocProjectForm, {
   DocProjectFormProps,
 } from '@/components/doc/ProjectForm';
+import { useHistory } from 'react-router';
 
 const { Row, Col } = Grid;
 
@@ -34,6 +36,7 @@ export type ProjectGroupProjectProps = {
 };
 
 function ProjectGroupProject(props: ProjectGroupProjectProps) {
+  const history = useHistory();
   const [projects, setProjects] = useState<DocProject[]>([]);
   const [docProjectFormProps, setDocProjectFormProps] =
     useState<DocProjectFormProps>({});
@@ -165,9 +168,13 @@ function ProjectGroupProject(props: ProjectGroupProjectProps) {
                     <span className={styles['icon-hover']}>
                       <Tooltip content={'接口列表'}>
                         <IconList
-                          onClick={() =>
-                            (location.href = `/doc/api-manager?projectId=${project.id}`)
-                          }
+                          onClick={() => {
+                            NProgress.start();
+                            history.push(
+                              `/doc/api-manager?projectId=${project.id}`
+                            );
+                            NProgress.done();
+                          }}
                         />
                       </Tooltip>
                     </span>
