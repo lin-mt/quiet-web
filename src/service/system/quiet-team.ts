@@ -7,6 +7,7 @@ export function listTeams(parmas: {
   id?: string;
   team_user_id?: string;
   team_name?: string;
+  ids?: string[];
 }) {
   return GET<QuietTeam[]>(`${base_path}/list-teams`, parmas);
 }
