@@ -22,13 +22,13 @@ export function deleteTemplate(id: string): Promise<void> {
   return DELETE(`${base_path}/${id}`);
 }
 
-export function listTemplate(parmas: {
+export function listTemplate(params: {
   id?: string;
   name?: string;
   enabled?: boolean;
   limit?: number | string;
 }): Promise<ScrumTemplate[]> {
-  return GET<ScrumTemplate[]>(`${base_path}/list`, parmas);
+  return GET<ScrumTemplate[]>(`${base_path}/list`, params);
 }
 
 export function getTemplateDetail(id: string): Promise<ScrumTemplate> {

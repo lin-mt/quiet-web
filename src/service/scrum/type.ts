@@ -1,21 +1,15 @@
-import {
-  BaseEntity,
-  ParentEntity,
-  QuietTeam,
-  SortableEntity,
-} from '../system/type';
+import { BaseEntity, ParentEntity, SortableEntity } from '../system/type';
 
 export interface ScrumProject extends BaseEntity {
   name: string;
   manager: string;
   template_id: string;
-  description?: string;
+  remark?: string;
   demand_prefix?: string;
   task_prefix?: string;
-  template_name?: string;
   build_tool?: string;
-  manager_name?: string;
-  teams?: QuietTeam[];
+  team_id: string;
+  group_id?: string;
 }
 
 export interface ScrumProjectGroup extends SortableEntity {
