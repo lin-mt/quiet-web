@@ -55,12 +55,14 @@ const retry = (response: AxiosResponse): AxiosPromise => {
 
 req.interceptors.request.use((config) => {
   const tokenInfoItem = localStorage.getItem(LocalStorage.TokenInfo);
+  const lang = localStorage.getItem(LocalStorage.Lang);
   if (tokenInfoItem) {
     const tokenInfo = JSON.parse(tokenInfoItem);
     return {
       ...config,
       headers: {
         ...config.headers,
+        'Accept-Language': lang ? lang : 'en-US',
         Authorization: `${tokenInfo.token_type} ${tokenInfo.access_token}`,
       },
     };
@@ -128,27 +130,15 @@ req.interceptors.response.use((response) => {
             }, warningMsg.size * 500);
             break;
           case ResultType.FAILURE:
-            failureMsg.add(
-              `${data.code ? `错误码：${data.code} ` : ` `}\r\n${data.message}`
-            );
+            failureMsg.add(data.message);
             setTimeout(() => {
               failureMsg.forEach((msg) => Message.error(msg));
               failureMsg.clear();
             }, failureMsg.size * 500);
-            return Promise.reject(
-              `${data.code ? `错误码：${data.code} ` : ` `}\r\n${data.message}`
-            );
+            return Promise.reject(data.message);
           case ResultType.EXCEPTION:
-            Message.error(
-              `${data.code ? `异常码：${data.code}` : ``}\n异常信息：${
-                data.message
-              }`
-            );
-            return Promise.reject(
-              `${data.code ? `异常码：${data.code}` : ``}\n异常信息：${
-                data.message
-              }`
-            );
+            Message.error(data.message);
+            return Promise.reject(data.message);
           default:
             return response;
         }
@@ -180,8 +170,18 @@ function PAGE<T>(
   });
 }
 
-function POST<T>(url: string, data?): Promise<T> {
-  return req.post<Result<T>>(url, data).then((resp) => resp.data.data);
+function POST<T>(
+  url: string,
+  data?,
+  params?: Record<string, unknown> | URLSearchParams
+): Promise<T> {
+  return req
+    .post<Result<T>>(url, data, {
+      params: new URLSearchParams(
+        qs.stringify(params, { allowDots: true, arrayFormat: 'comma' })
+      ),
+    })
+    .then((resp) => resp.data.data);
 }
 
 function DELETE<T>(
