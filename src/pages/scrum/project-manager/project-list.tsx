@@ -15,6 +15,7 @@ import {
   IconSelectAll,
   IconStar,
 } from '@arco-design/web-react/icon';
+import NProgress from 'nprogress';
 import styles from './style/index.module.less';
 import { ScrumProject } from '@/service/scrum/type';
 import ScrumProjectForm, {
@@ -26,6 +27,7 @@ import {
   saveProject,
   updateProject,
 } from '@/service/scrum/project';
+import { useHistory } from 'react-router';
 
 const { Row, Col } = Grid;
 
@@ -34,6 +36,7 @@ export type ProjectGroupProjectProps = {
 };
 
 function ProjectList(props: ProjectGroupProjectProps) {
+  const history = useHistory();
   const [projects, setProjects] = useState<ScrumProject[]>([]);
   const [scrumProjectFormProps, setScrumProjectFormProps] =
     useState<ScrumProjectFormProps>({});
@@ -174,9 +177,13 @@ function ProjectList(props: ProjectGroupProjectProps) {
                       <span className={styles['icon-hover']}>
                         <Tooltip content={'版本规划'}>
                           <IconSelectAll
-                            onClick={() =>
-                              (location.href = `/scrum/version-planning?projectId=${project.id}`)
-                            }
+                            onClick={() => {
+                              NProgress.start();
+                              history.push(
+                                `/scrum/version-planning?projectId=${project.id}`
+                              );
+                              NProgress.done();
+                            }}
                           />
                         </Tooltip>
                       </span>
