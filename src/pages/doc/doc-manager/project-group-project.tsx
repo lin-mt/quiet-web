@@ -55,7 +55,7 @@ function ProjectGroupProject(props: ProjectGroupProjectProps) {
   function handleEditorProject(value: DocProject) {
     setDocProjectFormProps({
       visible: true,
-      project: value,
+      formValues: value,
       title: '更新项目',
       onOk: (update) => {
         return updateProject(update).then(() => {

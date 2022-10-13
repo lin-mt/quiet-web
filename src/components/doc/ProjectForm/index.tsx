@@ -5,18 +5,11 @@ import { useSelector } from 'react-redux';
 import { GlobalState } from '@/store';
 import UserSelect from '@/components/UserSelect';
 import ProjectGroupSelect from '@/components/doc/ProjectGroupSelect';
+import { QuietFormProps } from '@/components/type';
 
 const { useForm } = Form;
 
-export type DocProjectFormProps = {
-  project?: DocProject;
-  title?: string;
-  visible?: boolean;
-  onOk?: (values: DocProject) => Promise<DocProject | void>;
-  okText?: string;
-  onCancel?: () => void;
-  cancelText?: string;
-};
+export type DocProjectFormProps = QuietFormProps<DocProject>;
 
 function DocProjectForm(props: DocProjectFormProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -24,10 +17,9 @@ function DocProjectForm(props: DocProjectFormProps) {
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.project) {
-      form.setFieldsValue(props.project);
-    }
-  }, [form, props.project, userInfo.id]);
+    form.setFieldsValue(props.formValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(props.formValues)]);
 
   function handleOk() {
     if (props.onOk) {
@@ -66,18 +58,17 @@ function DocProjectForm(props: DocProjectFormProps) {
     >
       <Form
         form={form}
-        initialValues={props.project}
         id={'doc-project-form'}
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 18 }}
       >
-        {props.project && (
+        {props.formValues && (
           <>
             <Form.Item hidden field="id">
               <Input />
             </Form.Item>
             <Form.Item label={'项目ID'} field="id">
-              <Typography.Text copyable>{props.project.id}</Typography.Text>
+              <Typography.Text copyable>{props.formValues.id}</Typography.Text>
             </Form.Item>
           </>
         )}
@@ -94,12 +85,14 @@ function DocProjectForm(props: DocProjectFormProps) {
         <Form.Item
           label="负责人"
           field="principal"
-          initialValue={props.project ? props.project.principal : userInfo.id}
+          initialValue={
+            props.formValues ? props.formValues.principal : userInfo.id
+          }
           rules={[{ required: true, message: '请选择项目负责人' }]}
         >
           <UserSelect placeholder="请选择项目负责人" />
         </Form.Item>
-        <Form.Item hidden={!props.project} label="所属分组" field="group_id">
+        <Form.Item hidden={!props.formValues} label="所属分组" field="group_id">
           <ProjectGroupSelect placeholder={'请选择项目分组'} />
         </Form.Item>
         <Form.Item
