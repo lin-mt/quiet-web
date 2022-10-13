@@ -32,6 +32,10 @@ export async function queryCurrent(): Promise<QuietUser> {
   return GET<QuietUser>(`${base_path}/current-user-info`);
 }
 
+export async function getUser(id: string): Promise<QuietUser> {
+  return GET<QuietUser>(`${base_path}/${id}`);
+}
+
 export async function removeRole(id: string, role_id: string) {
   return POST(`${base_path}/remove-role`, { id, role_id });
 }

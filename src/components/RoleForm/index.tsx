@@ -16,8 +16,11 @@ function RoleForm(props: RoleFormProps) {
     if (props.formValues) {
       form.setFieldsValue(props.formValues);
       form.setFieldValue('role_name', props.formValues.role_name.substring(5));
+    } else {
+      form.setFieldsValue(undefined);
     }
-  }, [form, props.formValues]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(props.formValues)]);
 
   function handleOk() {
     if (props.onOk) {
@@ -58,7 +61,6 @@ function RoleForm(props: RoleFormProps) {
       <Form
         form={form}
         id={'role-form'}
-        initialValues={props.formValues}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >

@@ -13,10 +13,9 @@ function DeptForm(props: DeptFormProps) {
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.formValues) {
-      form.setFieldsValue(props.formValues);
-    }
-  }, [form, props.formValues]);
+    form.setFieldsValue(props.formValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(props.formValues)]);
 
   function handleOk() {
     if (props.onOk) {
@@ -56,7 +55,6 @@ function DeptForm(props: DeptFormProps) {
       <Form
         form={form}
         id={'role-form'}
-        initialValues={props.formValues}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
