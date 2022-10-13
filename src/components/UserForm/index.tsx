@@ -68,7 +68,6 @@ function UserForm(props: UserFormProps) {
       <Form
         form={form}
         id={'user-form'}
-        initialValues={props.formValues}
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 18 }}
       >
