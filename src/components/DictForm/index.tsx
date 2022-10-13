@@ -25,10 +25,9 @@ function DictForm(props: DictFormProps) {
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.formValues) {
-      form.setFieldsValue(props.formValues);
-    }
-  }, [form, props.formValues]);
+    form.setFieldsValue(props.formValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(props.formValues)]);
 
   function handleOk() {
     if (props.onOk) {
@@ -73,7 +72,6 @@ function DictForm(props: DictFormProps) {
       <Form
         form={form}
         id={'dict-form'}
-        initialValues={props.formValues}
         onValuesChange={(v, vs) => {
           setSelectedTypeId(vs.type_id);
         }}

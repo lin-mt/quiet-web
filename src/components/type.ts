@@ -6,4 +6,6 @@ export type QuietFormProps<T> = {
   okText?: string;
   onCancel?: () => void;
   cancelText?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
 };
