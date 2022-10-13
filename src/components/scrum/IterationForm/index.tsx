@@ -1,25 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Modal, Typography } from '@arco-design/web-react';
 import { QuietFormProps } from '@/components/type';
-import { ScrumProjectGroup } from '@/service/scrum/type';
+import { ScrumIteration } from '@/service/scrum/type';
+import { DatePicker } from '@arco-design/web-react';
 
 const { useForm } = Form;
 
-export type ProjectGroupFormProps = QuietFormProps<ScrumProjectGroup>;
+export type IterationFormProps = QuietFormProps<ScrumIteration> & {
+  versionId: string;
+};
 
-function ProjectGroupForm(props: ProjectGroupFormProps) {
+function VersionForm(props: IterationFormProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [form] = useForm();
 
   useEffect(() => {
     if (props.formValues) {
       form.setFieldsValue(props.formValues);
+      form.setFieldValue('plan_date', [
+        props.formValues.plan_start_date,
+        props.formValues.plan_end_date,
+      ]);
+    } else {
+      form.setFieldsValue(undefined);
     }
   }, [form, props.formValues]);
 
   function handleOk() {
     if (props.onOk) {
       form.validate().then(async (values) => {
+        values.plan_start_date = values.plan_date[0];
+        values.plan_end_date = values.plan_date[1];
+        if (props.versionId) {
+          values.version_id = props.versionId;
+        }
         setSubmitting(true);
         props.onOk(values).finally(() => {
           setSubmitting(false);
@@ -40,7 +54,7 @@ function ProjectGroupForm(props: ProjectGroupFormProps) {
 
   return (
     <Modal
-      style={{ width: 500 }}
+      style={{ width: 700 }}
       title={props.title}
       visible={props.visible}
       onOk={handleOk}
@@ -54,7 +68,7 @@ function ProjectGroupForm(props: ProjectGroupFormProps) {
     >
       <Form
         form={form}
-        id={'scrum-project-group-form'}
+        id={'scrum-iteration-form'}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
       >
@@ -63,28 +77,40 @@ function ProjectGroupForm(props: ProjectGroupFormProps) {
             <Form.Item hidden field="id">
               <Input />
             </Form.Item>
-            <Form.Item label={'分组ID'} field="id">
+            <Form.Item label={'迭代ID'} field="id">
               <Typography.Text copyable>{props.formValues.id}</Typography.Text>
             </Form.Item>
           </>
         )}
+        <Form.Item hidden field="version_id">
+          <Input />
+        </Form.Item>
         <Form.Item
           label="名称"
           field="name"
           rules={[
-            { required: true, message: '请输入分组名称' },
-            { maxLength: 30, message: '分组名称长度不能超过 30' },
+            { required: true, message: '请输入迭代名称' },
+            { maxLength: 30, message: '迭代名称长度不能超过 30' },
           ]}
         >
-          <Input placeholder="请输入分组名称" />
+          <Input placeholder="请输入版本名称" />
+        </Form.Item>
+        <Form.Item
+          label="计划日期"
+          field="plan_date"
+          rules={[{ required: true, message: '请选择计划日期' }]}
+        >
+          <DatePicker.RangePicker
+            placeholder={['请选择计划开始日期', '请选择计划结束日期']}
+          />
         </Form.Item>
         <Form.Item
           label="备注"
           field="remark"
-          rules={[{ maxLength: 300, message: '备注信息长度不能超过 300' }]}
+          rules={[{ maxLength: 1000, message: '备注信息长度不能超过 1000' }]}
         >
           <Input.TextArea
-            autoSize={{ minRows: 2, maxRows: 7 }}
+            autoSize={{ minRows: 2 }}
             placeholder="请输入备注信息"
           />
         </Form.Item>
@@ -93,4 +119,4 @@ function ProjectGroupForm(props: ProjectGroupFormProps) {
   );
 }
 
-export default ProjectGroupForm;
+export default VersionForm;

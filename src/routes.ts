@@ -33,7 +33,6 @@ export const routes: IRoute[] = [
       {
         name: 'menu.scrum.versionPlanning',
         key: 'scrum/version-planning',
-        ignore: true,
       },
       {
         name: 'menu.scrum.templateManager',

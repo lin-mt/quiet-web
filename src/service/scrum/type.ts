@@ -1,5 +1,10 @@
 import { BaseEntity, ParentEntity, SortableEntity } from '../system/type';
 
+export enum PlanningType {
+  VERSION,
+  ITERATION,
+}
+
 export interface ScrumProject extends BaseEntity {
   name: string;
   manager: string;
@@ -71,6 +76,7 @@ export interface ScrumIteration extends SortableEntity {
   start_time?: string;
   end_time?: string;
   remark?: string;
+  type?: PlanningType;
 }
 
 export interface ScrumVersion
@@ -83,5 +89,5 @@ export interface ScrumVersion
   start_time?: string;
   end_time?: string;
   remark?: string;
-  iterations?: ScrumIteration[];
+  type?: PlanningType;
 }

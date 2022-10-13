@@ -37,6 +37,8 @@ function TemplateForm(props: TemplateFormProps) {
       listTaskStep(props.formValues.id).then((resp) => {
         form.setFieldValue('task_steps', resp);
       });
+    } else {
+      form.setFieldsValue(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.formValues]);

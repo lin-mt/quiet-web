@@ -15,10 +15,9 @@ function ScrumProjectForm(props: ScrumProjectFormProps) {
   const [form] = useForm();
 
   useEffect(() => {
-    if (props.formValues) {
-      form.setFieldsValue(props.formValues);
-    }
-  }, [form, props.formValues]);
+    form.setFieldsValue(props.formValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(props.formValues)]);
 
   function handleOk() {
     if (props.onOk) {
@@ -57,7 +56,6 @@ function ScrumProjectForm(props: ScrumProjectFormProps) {
     >
       <Form
         form={form}
-        initialValues={props.formValues}
         id={'scrum-project-form'}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}

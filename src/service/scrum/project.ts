@@ -3,8 +3,12 @@ import { DELETE, GET, POST, PUT } from '@/utils/request';
 
 const base_path = '/scrum/project';
 
-export function listProject(group_id?: string): Promise<ScrumProject[]> {
-  return GET<ScrumProject[]>(`${base_path}/list`, { group_id });
+export function listProject(
+  group_id?: string,
+  name?: string,
+  id?: string
+): Promise<ScrumProject[]> {
+  return GET<ScrumProject[]>(`${base_path}/list`, { group_id, name, id });
 }
 
 export function saveProject(save: ScrumProject): Promise<ScrumProject> {
