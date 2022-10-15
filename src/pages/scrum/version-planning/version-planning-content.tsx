@@ -251,6 +251,13 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
     });
   }
 
+  function isVersion(selectedNode) {
+    if (!selectedNode) {
+      return false;
+    }
+    return PlanningType.VERSION === selectedNode.type;
+  }
+
   const iterationColumns: TableColumnProps[] = [
     {
       title: 'Id',
@@ -305,8 +312,6 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
     <Row gutter={20} style={{ width: '100%' }}>
       <Col span={12}>
         <Card
-          bordered
-          hoverable
           title={'项目规划'}
           bodyStyle={{ paddingTop: 0 }}
           extra={
@@ -337,7 +342,7 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
             renderTitle={(pro) => {
               return (
                 <Space>
-                  {pro.dataRef.type === PlanningType.VERSION ? (
+                  {isVersion(pro.dataRef) ? (
                     <Tag color={'arcoblue'} size={'small'}>
                       版本
                     </Tag>
@@ -356,14 +361,8 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
       <Col span={12}>
         {selectedNode ? (
           <Card
-            bordered
-            hoverable
             bodyStyle={{ paddingTop: 0 }}
-            title={
-              PlanningType.VERSION === selectedNode.type
-                ? '版本信息'
-                : '迭代信息'
-            }
+            title={isVersion(selectedNode) ? '版本信息' : '迭代信息'}
             extra={
               <Space>
                 <Button
@@ -373,7 +372,7 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
                 >
                   编辑
                 </Button>
-                {PlanningType.VERSION === selectedNode.type && (
+                {isVersion(selectedNode) && (
                   <Button
                     type={'text'}
                     icon={<IconPlus />}
@@ -382,7 +381,7 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
                     新建子版本
                   </Button>
                 )}
-                {PlanningType.VERSION === selectedNode.type && (
+                {isVersion(selectedNode) && (
                   <Button
                     type={'text'}
                     icon={<IconPlus />}
@@ -404,19 +403,16 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
           >
             <Descriptions border column={2} data={planningDescription} />
             <div style={{ marginTop: 15 }}>
-              {PlanningType.ITERATION === selectedNode.type && (
-                <Empty description={'无规划的需求信息'} />
-              )}
-              {PlanningType.VERSION === selectedNode.type && (
+              {isVersion(selectedNode) ? (
                 <Table
                   border
                   rowKey={'id'}
                   pagination={false}
                   columns={iterationColumns}
-                  data={selectedNode.children.filter(
-                    (c) => PlanningType.ITERATION === c.type
-                  )}
+                  data={selectedNode.children.filter((c) => !isVersion(c))}
                 />
+              ) : (
+                <Empty description={'无规划的需求信息'} />
               )}
             </div>
           </Card>
