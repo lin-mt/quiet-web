@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SelectHandle } from '@arco-design/web-react/es/Select/interface';
-import { Spin, TreeSelect } from '@arco-design/web-react';
+import { Space, Tag, TreeSelect } from '@arco-design/web-react';
 import { treeVersion } from '@/service/scrum/version';
 import { listIteration } from '@/service/scrum/iteration';
 import {
@@ -16,10 +16,11 @@ export function VersionSelect(
     React.RefAttributes<SelectHandle> & {
       projectId: string;
       value?: string;
-      debounceTimeout?: number;
+      iterationAsChildren?: boolean;
+      initIterations?: (iterations: ScrumIteration[]) => void;
     }
 ) {
-  const [fetching, setFetching] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [treeData, setTreeData] = useState([]);
 
   const getIds = (vs: ScrumVersion[]) => {
@@ -41,18 +42,50 @@ export function VersionSelect(
   ) => {
     const vsClone: ScrumVersion[] = _.cloneDeep(vs);
     const isClone: ScrumIteration[] = [];
-    vsClone.forEach((vs) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    vsClone.forEach((vs: any) => {
       vs.type = PlanningType.VERSION;
+      vs.key = vs.id;
+      vs.title = (
+        <Space>
+          {props.iterationAsChildren && (
+            <Tag color={'arcoblue'} size={'small'}>
+              版本
+            </Tag>
+          )}
+          {vs.name}
+        </Space>
+      );
       const iChildren = [];
       if (vId2It && vId2It[vs.id]) {
-        vId2It[vs.id].forEach((i) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        vId2It[vs.id].forEach((i: any) => {
           const iClone = _.clone(i);
           iClone.type = PlanningType.ITERATION;
+          iClone.key = i.id;
+          iClone.title = (
+            <Space>
+              {props.iterationAsChildren && (
+                <Tag color={'green'} size={'small'}>
+                  迭代
+                </Tag>
+              )}
+              {i.name}
+            </Space>
+          );
           iChildren.push(iClone);
         });
       }
+      if (vs.id === props.value) {
+        if (props.initIterations) {
+          props.initIterations(iChildren);
+        }
+      }
+      vs.iterations = iChildren;
       vs.children = buildTreeData(vs.children, vId2It);
-      vs.children.push(...iChildren);
+      if (props.iterationAsChildren) {
+        vs.children.push(...iChildren);
+      }
     });
     return [].concat(...vsClone, ...isClone);
   };
@@ -61,7 +94,7 @@ export function VersionSelect(
     if (!props.projectId) {
       return;
     }
-    setFetching(true);
+    setLoading(true);
     treeVersion(props.projectId)
       .then((vs) => {
         const versionIds = getIds(vs);
@@ -78,27 +111,20 @@ export function VersionSelect(
           setTreeData(buildTreeData(vs, vId2It));
         });
       })
-      .finally(() => setFetching(false));
+      .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.projectId]);
+
+  function filterTreeNode(inputText, node) {
+    return node.props.name.toLowerCase().indexOf(inputText.toLowerCase()) > -1;
+  }
 
   return (
     <TreeSelect
       showSearch
+      loading={loading}
       treeData={treeData}
-      notFoundContent={
-        fetching ? (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Spin style={{ margin: 12 }} />
-          </div>
-        ) : null
-      }
+      filterTreeNode={filterTreeNode}
       {...props}
     />
   );

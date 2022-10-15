@@ -1,79 +1,64 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SelectHandle,
   SelectProps,
 } from '@arco-design/web-react/es/Select/interface';
-import { Select, Spin } from '@arco-design/web-react';
-import debounce from 'lodash/debounce';
+import { Button, Empty, Select, Space } from '@arco-design/web-react';
 import { listProject } from '@/service/scrum/project';
+import { IconPlus } from '@arco-design/web-react/icon';
+import NProgress from 'nprogress';
+import { useHistory } from 'react-router';
 
 export function ProjectSelect(
   props: SelectProps &
     React.RefAttributes<SelectHandle> & {
-      value?: string;
       groupId?: string;
-      debounceTimeout?: number;
     }
 ) {
+  const history = useHistory();
   const [options, setOptions] = useState([]);
-  const [fetching, setFetching] = useState(false);
-  const refFetchId = useRef(null);
-
-  async function findByName(name: string, id?: string) {
-    return listProject(props.groupId, name, id).then((resp) => {
-      return resp.map((project) => ({
-        label: project.name,
-        value: project.id,
-      }));
-    });
-  }
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    findByName('', props.value).then((res) => {
-      setOptions(res);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.value]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedFetchProject = useCallback(
-    debounce((inputValue) => {
-      refFetchId.current = Date.now();
-      const fetchId = refFetchId.current;
-      setFetching(true);
-      listProject(props.groupId, inputValue).then((resp) => {
-        if (refFetchId.current === fetchId) {
-          const respOptions = resp.map((project) => ({
+    setLoading(true);
+    listProject(props.groupId, '')
+      .then((resp) => {
+        return setOptions(
+          resp.map((project) => ({
             label: project.name,
             value: project.id,
-          }));
-          setFetching(false);
-          setOptions(respOptions);
-        }
-      });
-    }, 500),
-    []
-  );
+          }))
+        );
+      })
+      .finally(() => setLoading(false));
+  }, [props.groupId]);
 
   return (
     <Select
+      loading={loading}
       showSearch
       options={options}
       filterOption={false}
       notFoundContent={
-        fetching ? (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Spin style={{ margin: 12 }} />
-          </div>
-        ) : null
+        <Empty
+          description={
+            <Space direction={'vertical'}>
+              该项目组下无项目信息
+              <Button
+                type={'text'}
+                icon={<IconPlus />}
+                onClick={() => {
+                  NProgress.start();
+                  history.push('/scrum/project-manager');
+                  NProgress.done();
+                }}
+              >
+                创建项目
+              </Button>
+            </Space>
+          }
+        />
       }
-      onSearch={debouncedFetchProject}
       {...props}
     />
   );
