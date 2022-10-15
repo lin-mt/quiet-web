@@ -6,6 +6,7 @@ import {
   Spin,
   Table,
   Modal,
+  Typography,
 } from '@arco-design/web-react';
 import DictTypeSearchForm from '@/pages/system/dict-manager/dict-type-search-form';
 import { enabled } from '@/utils/render';
@@ -85,6 +86,7 @@ function DictTypeManager(props: DictTypeManagerProps) {
       dataIndex: 'id',
       fixed: 'left',
       width: 180,
+      render: (value) => <Typography.Text copyable>{value}</Typography.Text>,
     },
     {
       title: '服务ID',
