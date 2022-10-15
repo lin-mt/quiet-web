@@ -115,14 +115,12 @@ function ProjectList(props: ProjectGroupProjectProps) {
                 justifyContent: 'space-between',
               }}
             >
-              <Space>
-                <IconPlus />
-                <Typography.Text
-                  style={{ color: 'var(--color-text-3)', fontWeight: 400 }}
-                >
-                  新建项目
-                </Typography.Text>
-              </Space>
+              <IconPlus />
+              <Typography.Text
+                style={{ color: 'var(--color-text-3)', fontWeight: 400 }}
+              >
+                新建项目
+              </Typography.Text>
             </Space>
           </Card>
         </Col>
