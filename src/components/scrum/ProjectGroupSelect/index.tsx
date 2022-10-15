@@ -16,7 +16,7 @@ export function ProjectGroupSelect(
 ) {
   const personalSpace = { label: '个人空间', value: PERSONAL_SPACE_VALUE };
   const history = useHistory();
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState([personalSpace]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

@@ -44,8 +44,9 @@ function ScrumPlanningSelect(props: ScrumPlanningSelectProps) {
   return (
     <div className={styles['select-form-wrapper']}>
       <Form
-        labelCol={{ span: 5 }}
-        wrapperCol={{ span: 19 }}
+        colon
+        labelCol={{ span: 6 }}
+        wrapperCol={{ span: 18 }}
         className={styles['select-form']}
       >
         <Row gutter={24} style={{ width: '100%' }}>
@@ -55,31 +56,30 @@ function ScrumPlanningSelect(props: ScrumPlanningSelectProps) {
                 placeholder={'请输入项目组名称'}
                 value={groupId ? groupId : PERSONAL_SPACE_VALUE}
                 onChange={(val) => {
-                  setGroupId(val);
+                  const newVal = PERSONAL_SPACE_VALUE === val ? undefined : val;
+                  setGroupId(newVal);
                   handleProjectIdChange(undefined);
                   if (props.onGroupChange) {
-                    props.onGroupChange(
-                      PERSONAL_SPACE_VALUE === val ? undefined : val
-                    );
+                    props.onGroupChange(newVal);
                   }
                 }}
               />
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item label={'项目'}>
+            <Form.Item label={'规划项目'}>
               <ProjectSelect
                 allowClear
                 value={projectId}
                 placeholder={'请输入项目名称'}
-                groupId={PERSONAL_SPACE_VALUE === groupId ? undefined : groupId}
+                groupId={groupId}
                 onChange={handleProjectIdChange}
               />
             </Form.Item>
           </Col>
           {!props.hideVersionSelect && (
             <Col span={6}>
-              <Form.Item label={'版本'}>
+              <Form.Item label={'规划版本'}>
                 <VersionSelect
                   allowClear
                   value={versionId}
