@@ -37,7 +37,12 @@ function DemandPlanning() {
           </Col>
           <Col span={12}>
             {!versionId ? (
-              <Empty description={'请选择规划版本'} />
+              <Card>
+                <Empty
+                  style={{ paddingTop: 60 }}
+                  description={'请选择规划版本'}
+                />
+              </Card>
             ) : (
               <Card
                 bordered

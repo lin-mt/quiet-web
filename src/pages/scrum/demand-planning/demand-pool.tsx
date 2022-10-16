@@ -38,7 +38,11 @@ function DemandPool(props: DemandPoolProps) {
   const [demandFormProps, setDemandFormProps] =
     useState<QuietFormProps<ScrumDemand>>();
   const [pageParams, setPageParams] = useState<
-    DemandFilterParams & { page_size: number; current: number }
+    DemandFilterParams & {
+      page_size: number;
+      current: number;
+      version?: number;
+    }
   >(defaultPagination);
   const [scrollLoading, setScrollLoading] = useState<ReactNode>();
   const [typeKey2Name, setTypeKey2Name] = useState<Record<string, string>>({});
@@ -75,28 +79,32 @@ function DemandPool(props: DemandPoolProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
-  function loadDemands() {
-    setLoading(true);
+  useEffect(() => {
+    if (!projectId) {
+      setDemands([]);
+      return;
+    }
     pageDemand({ ...pageParams, project_id: projectId })
       .then((resp) => {
         setHasMoreDemand(!resp.last);
         if (pageParams.current === 1) {
+          setDemands([]);
           setDemands(resp.content);
         } else {
           setDemands((prevState) => prevState.concat(...resp.content));
         }
       })
       .finally(() => setLoading(false));
-  }
-
-  useEffect(() => {
-    if (!projectId) {
-      setDemands([]);
-      return;
-    }
-    loadDemands();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(pageParams)]);
+
+  function reloadDemands() {
+    let nextVersion = 0;
+    while (nextVersion === pageParams.version) {
+      nextVersion = Math.floor(Math.random() * 10000);
+    }
+    setPageParams({ ...defaultPagination, version: nextVersion });
+  }
 
   useEffect(() => {
     if (typeof hasMoreDemand === 'undefined') {
@@ -125,7 +133,7 @@ function DemandPool(props: DemandPoolProps) {
       onOk: (values) => {
         return saveDemand(values).then(() => {
           setDemandFormProps({ visible: false });
-          loadDemands();
+          reloadDemands();
         });
       },
       onCancel: () => setDemandFormProps({ visible: false }),
@@ -178,8 +186,9 @@ function DemandPool(props: DemandPoolProps) {
               <div style={{ marginBottom: 9, marginRight: 17 }} key={index}>
                 <DemandCard
                   demand={item}
-                  type={typeKey2Name[item.type]}
-                  priorityColor={priorityId2Color[item.priority_id]}
+                  typeKey2Name={typeKey2Name}
+                  priorityId2Color={priorityId2Color}
+                  afterDelete={() => reloadDemands()}
                 />
               </div>
             );

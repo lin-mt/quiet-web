@@ -7,8 +7,8 @@ export function findAllByIterationId(id: string): Promise<ScrumDemand[]> {
   return GET<ScrumDemand[]>(`${base_path}/all/${id}`);
 }
 
-export function deleteDemand(id: string) {
-  DELETE(`${base_path}/${id}`);
+export function deleteDemand(id: string): Promise<void> {
+  return DELETE<void>(`${base_path}/${id}`);
 }
 
 export function saveDemand(save: ScrumDemand): Promise<ScrumDemand> {
