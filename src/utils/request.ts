@@ -19,6 +19,9 @@ export type Result<T> = {
 
 export type PageResult<T> = {
   content: T[];
+  empty: boolean;
+  first: boolean;
+  last: boolean;
   total_pages: number;
   total_elements: number;
 };

@@ -28,7 +28,6 @@ const DictSelect = (
     typeId?: string;
     serviceId?: string | ServiceId;
     typeKey?: string | TypeKey;
-    children?: React.ReactNode;
   } & React.RefAttributes<RefTreeSelectType> &
     SelectProps &
     React.RefAttributes<SelectHandle>
