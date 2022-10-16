@@ -4,7 +4,7 @@ import { GET, POST } from '@/utils/request';
 const base_path = '/scrum/priority';
 
 export function listPriority(template_id: string): Promise<ScrumPriority[]> {
-  return GET<ScrumPriority[]>(`${base_path}/list/`, { template_id });
+  return GET<ScrumPriority[]>(`${base_path}/list`, { template_id });
 }
 
 export function batchSavePriorities(

@@ -17,7 +17,7 @@ export function VersionSelect(
       projectId: string;
       value?: string;
       iterationAsChildren?: boolean;
-      initIterations?: (iterations: ScrumIteration[]) => void;
+      handleIterationsChange?: (iterations: ScrumIteration[]) => void;
     }
 ) {
   const [loading, setLoading] = useState(false);
@@ -77,8 +77,8 @@ export function VersionSelect(
         });
       }
       if (vs.id === props.value) {
-        if (props.initIterations) {
-          props.initIterations(iChildren);
+        if (props.handleIterationsChange) {
+          props.handleIterationsChange(iChildren);
         }
       }
       vs.iterations = iChildren;

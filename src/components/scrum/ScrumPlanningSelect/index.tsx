@@ -16,7 +16,7 @@ export type ScrumPlanningSelectProps = {
   onGroupChange?: (groupId?: string) => void;
   onProjectChange?: (projectId?: string) => void;
   onVersionIdChange?: (versionId?: string, iterations?: []) => void;
-  initIterations?: (iterations: ScrumIteration[]) => void;
+  handleIterationsChange?: (iterations: ScrumIteration[]) => void;
 };
 
 function ScrumPlanningSelect(props: ScrumPlanningSelectProps) {
@@ -84,7 +84,7 @@ function ScrumPlanningSelect(props: ScrumPlanningSelectProps) {
                   allowClear
                   value={versionId}
                   projectId={projectId}
-                  initIterations={props.initIterations}
+                  handleIterationsChange={props.handleIterationsChange}
                   placeholder={'请输入版本名称'}
                   onChange={handleVersionIdChange}
                 />
