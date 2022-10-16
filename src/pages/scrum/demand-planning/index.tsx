@@ -30,7 +30,7 @@ const { Row, Col } = Grid;
 
 function DemandPlanning() {
   const query = getQueryParams();
-  const defaultPagination = { page_size: 8, current: 1 };
+  const defaultPagination = { page_size: 8, current: 1, desc: 'gmt_create' };
   const [projectId, setProjectId] = useState(query.projectId);
   const [versionId, setVersionId] = useState(query.versionId);
   const [iterationId, setIterationId] = useState(query.iterationId);
@@ -180,7 +180,7 @@ function DemandPlanning() {
           <Col span={12}>
             <Card
               bordered
-              bodyStyle={{ paddingTop: 10, paddingRight: 7 }}
+              bodyStyle={{ paddingTop: 10, paddingRight: 3 }}
               title={CreateDemand}
               extra={
                 <DemandFilter
@@ -200,7 +200,7 @@ function DemandPlanning() {
                 render={(item, index) => {
                   return (
                     <div
-                      style={{ marginBottom: 9, marginRight: 13 }}
+                      style={{ marginBottom: 9, marginRight: 17 }}
                       key={index}
                     >
                       <DemandCard
