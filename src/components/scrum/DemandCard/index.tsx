@@ -26,7 +26,6 @@ const DemandStyleCard = styled(Card)<{ color: string }>`
 function DemandCard(props: DemandCardProps) {
   return (
     <DemandStyleCard
-      hoverable
       size={'small'}
       bodyStyle={{ padding: 7 }}
       color={props.priorityColor}
