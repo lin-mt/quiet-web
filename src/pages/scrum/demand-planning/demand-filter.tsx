@@ -4,7 +4,7 @@ import { ScrumPriority } from '@/service/scrum/type';
 
 export type DemandFilterParams = {
   priority_id?: string;
-  planned?: boolean;
+  planned?: string;
   title?: string;
 };
 
@@ -16,7 +16,7 @@ export type DemandFilterProps = {
 
 function DemandFilter(props: DemandFilterProps) {
   const [priorityId, setPriorityId] = useState<string>();
-  const [planned, setPlanned] = useState<boolean>();
+  const [planned, setPlanned] = useState();
   const [title, setTitle] = useState<string>();
 
   function handleOnSearch() {
@@ -30,6 +30,7 @@ function DemandFilter(props: DemandFilterProps) {
       <Input.Group>
         <Select
           allowClear
+          value={priorityId}
           style={{ width: '20%', marginRight: 8 }}
           placeholder={'优先级'}
           options={props.priorities.map((p) => ({
@@ -40,8 +41,9 @@ function DemandFilter(props: DemandFilterProps) {
         />
         <Select
           allowClear
-          style={{ width: '20%', marginRight: 8 }}
+          value={planned}
           placeholder={'需求状态'}
+          style={{ width: '20%', marginRight: 8 }}
           onChange={(value) => setPlanned(value)}
           options={[
             { label: '待规划', value: 'false' },
@@ -51,6 +53,7 @@ function DemandFilter(props: DemandFilterProps) {
         <Input.Search
           allowClear
           searchButton
+          value={title}
           loading={props.loading}
           style={{ width: '60%' }}
           placeholder="请输入需求名称"
