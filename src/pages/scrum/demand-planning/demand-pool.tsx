@@ -17,21 +17,16 @@ import { ScrumDemand, ScrumPriority } from '@/service/scrum/type';
 import { pageDemand, saveDemand } from '@/service/scrum/demand';
 import DemandForm from '@/components/scrum/DemandForm';
 import { QuietFormProps } from '@/components/type';
-import { findEnabledDict } from '@/service/system/quiet-dict';
-import { getProject } from '@/service/scrum/project';
-import { listPriority } from '@/service/scrum/priority';
 
 export type DemandPoolProps = {
   projectId: string;
+  typeKey2Name: Record<string, string>;
+  priorities: ScrumPriority[];
+  priorityId2Color: Record<string, string>;
 };
 
 function DemandPool(props: DemandPoolProps) {
   const defaultPagination = { page_size: 8, current: 1, desc: 'gmt_create' };
-  const [projectId, setProjectId] = useState(props.projectId);
-  const [priorities, setPriorities] = useState<ScrumPriority[]>([]);
-  const [priorityId2Color, setPriorityId2Color] = useState<
-    Record<string, string>
-  >({});
   const [demands, setDemands] = useState<ScrumDemand[]>([]);
   const [hasMoreDemand, setHasMoreDemand] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>();
@@ -45,46 +40,23 @@ function DemandPool(props: DemandPoolProps) {
     }
   >(defaultPagination);
   const [scrollLoading, setScrollLoading] = useState<ReactNode>();
-  const [typeKey2Name, setTypeKey2Name] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    findEnabledDict(null, 'quiet-scrum', 'demand-type').then((resp) => {
-      const key2Name: Record<string, string> = {};
-      resp.forEach((p) => (key2Name[p.key] = p.name));
-      setTypeKey2Name(key2Name);
-    });
-  }, []);
-
-  useEffect(() => {
-    setProjectId(props.projectId);
-  }, [props.projectId]);
 
   useEffect(() => {
     setPageParams(defaultPagination);
-    setProjectId(projectId);
-    if (!projectId) {
-      setPriorities([]);
+    if (!props.projectId) {
       setDemands([]);
       setHasMoreDemand(undefined);
       return;
     }
-    getProject(projectId).then((resp) => {
-      listPriority(resp.template_id).then((sps) => {
-        const id2Color: Record<string, string> = {};
-        sps.forEach((p) => (id2Color[p.id] = p.color_hex));
-        setPriorityId2Color(id2Color);
-        setPriorities(sps);
-      });
-    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectId]);
+  }, [props.projectId]);
 
   useEffect(() => {
-    if (!projectId) {
+    if (!props.projectId) {
       setDemands([]);
       return;
     }
-    pageDemand({ ...pageParams, project_id: projectId })
+    pageDemand({ ...pageParams, project_id: props.projectId })
       .then((resp) => {
         setHasMoreDemand(!resp.last);
         if (pageParams.current === 1) {
@@ -123,7 +95,7 @@ function DemandPool(props: DemandPoolProps) {
   }, [hasMoreDemand]);
 
   function handleCreateDemand() {
-    if (!projectId) {
+    if (!props.projectId) {
       Message.warning('请选择规划项目～');
       return;
     }
@@ -168,12 +140,12 @@ function DemandPool(props: DemandPoolProps) {
       extra={
         <DemandFilter
           loading={loading}
-          priorities={priorities}
+          priorities={props.priorities}
           onSearch={handleSearchDemands}
         />
       }
     >
-      {priorities?.length > 0 && (
+      {props.priorities?.length > 0 && (
         <List
           hoverable
           dataSource={demands}
@@ -186,8 +158,8 @@ function DemandPool(props: DemandPoolProps) {
               <div style={{ marginBottom: 9, marginRight: 17 }} key={index}>
                 <DemandCard
                   demand={item}
-                  typeKey2Name={typeKey2Name}
-                  priorityId2Color={priorityId2Color}
+                  typeKey2Name={props.typeKey2Name}
+                  priorityId2Color={props.priorityId2Color}
                   afterDelete={() => reloadDemands()}
                 />
               </div>
@@ -195,7 +167,9 @@ function DemandPool(props: DemandPoolProps) {
           }}
         />
       )}
-      {projectId && <DemandForm projectId={projectId} {...demandFormProps} />}
+      {props.projectId && (
+        <DemandForm projectId={props.projectId} {...demandFormProps} />
+      )}
     </Card>
   );
 }
