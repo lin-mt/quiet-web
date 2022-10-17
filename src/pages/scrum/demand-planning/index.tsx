@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Empty, Grid, Select } from '@arco-design/web-react';
+import { Card, Empty, Grid } from '@arco-design/web-react';
 import { getQueryParams } from '@/utils/getUrlParams';
 import ScrumPlanningSelect from '@/components/scrum/ScrumPlanningSelect';
 import DemandPool from '@/pages/scrum/demand-planning/demand-pool';
@@ -7,6 +7,7 @@ import { ScrumPriority } from '@/service/scrum/type';
 import { findEnabledDict } from '@/service/system/quiet-dict';
 import { getProject } from '@/service/scrum/project';
 import { listPriority } from '@/service/scrum/priority';
+import IterationPlanning from '@/pages/scrum/demand-planning/iteration-planning';
 
 const { Row, Col } = Grid;
 
@@ -83,26 +84,12 @@ function DemandPlanning() {
                 />
               </Card>
             ) : (
-              <Card
-                bordered
-                hoverable
-                title={'规划迭代'}
-                extra={
-                  <Select
-                    value={iterationId}
-                    options={iterations}
-                    placeholder={'请选择迭代'}
-                    style={{ width: 300 }}
-                    onChange={(value) => setIterationId(value)}
-                  />
-                }
-              >
-                {!iterationId ? (
-                  <Empty description={'请选择规划迭代'} />
-                ) : (
-                  <>加载迭代+需求信息</>
-                )}
-              </Card>
+              <IterationPlanning
+                iterations={iterations}
+                iterationId={iterationId}
+                priorityId2Color={priorityId2Color}
+                typeKey2Name={typeKey2Name}
+              />
             )}
           </Col>
         </Row>
