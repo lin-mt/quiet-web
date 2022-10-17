@@ -145,7 +145,7 @@ function DemandPool(props: DemandPoolProps) {
         />
       }
     >
-      {props.priorities?.length > 0 && (
+      {Object.keys(props.priorityId2Color).length > 0 && (
         <List
           hoverable
           dataSource={demands}
