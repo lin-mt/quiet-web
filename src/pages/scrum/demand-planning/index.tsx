@@ -1,15 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Empty, Grid } from '@arco-design/web-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Card, Empty, Grid, Message } from '@arco-design/web-react';
 import { getQueryParams } from '@/utils/getUrlParams';
 import ScrumPlanningSelect from '@/components/scrum/ScrumPlanningSelect';
-import DemandPool from '@/pages/scrum/demand-planning/demand-pool';
+import DemandPool, {
+  DemandPoolRefProps,
+} from '@/pages/scrum/demand-planning/demand-pool';
 import { ScrumPriority } from '@/service/scrum/type';
 import { findEnabledDict } from '@/service/system/quiet-dict';
 import { getProject } from '@/service/scrum/project';
 import { listPriority } from '@/service/scrum/priority';
-import IterationPlanning from '@/pages/scrum/demand-planning/iteration-planning';
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
+import IterationPlanning, {
+  IterationPlanningRefProps,
+} from '@/pages/scrum/demand-planning/iteration-planning';
+import { updateDemand } from '@/service/scrum/demand';
 
 const { Row, Col } = Grid;
+
+export enum DroppableId {
+  IterationPlanning = 'IterationPlanning',
+  DemandPool = 'DemandPool',
+}
 
 function DemandPlanning() {
   const query = getQueryParams();
@@ -22,6 +34,8 @@ function DemandPlanning() {
     Record<string, string>
   >({});
   const [typeKey2Name, setTypeKey2Name] = useState<Record<string, string>>({});
+  const demandPoolRef = useRef<DemandPoolRefProps>();
+  const iterationPlanningRef = useRef<IterationPlanningRefProps>();
 
   useEffect(() => {
     findEnabledDict(null, 'quiet-scrum', 'demand-type').then((resp) => {
@@ -45,13 +59,60 @@ function DemandPlanning() {
         setPriorities(sps);
       });
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
   function handleVersionChange(vId, is) {
     setVersionId(vId);
     setIterationId(undefined);
     setIterations(is?.map((i) => ({ value: i.id, label: i.name })));
+  }
+
+  function handleDemandDragEnd(result: DropResult) {
+    const { destination, source, draggableId } = result;
+    if (!destination) {
+      return;
+    }
+    if (destination.droppableId === source.droppableId) {
+      return;
+    }
+    if (destination.droppableId === DroppableId.IterationPlanning) {
+      if (!iterationId) {
+        Message.warning('请选择需求要规划的迭代！');
+        return;
+      }
+      const operationDemand =
+        demandPoolRef.current.getDemandByDraggableId(draggableId);
+      operationDemand.iteration_id = iterationId;
+      updateDemand(operationDemand).then((resp) => {
+        demandPoolRef.current.updateDemand(resp);
+        iterationPlanningRef.current.addDemand(resp, destination.index);
+      });
+    }
+    if (destination.droppableId === DroppableId.DemandPool) {
+      const operationDemand =
+        iterationPlanningRef.current.getDemandByDraggableId(draggableId);
+      operationDemand.iteration_id = undefined;
+      updateDemand(operationDemand).then((resp) => {
+        iterationPlanningRef.current.removeDemand(source.index);
+        demandPoolRef.current.updateDemand(resp);
+      });
+    }
+  }
+
+  function handleDemandPoolUpdateDemand(demand) {
+    iterationPlanningRef.current.updateDemand(demand);
+  }
+
+  function handleDemandPoolDeleteDemand(id) {
+    iterationPlanningRef.current.removeDemandById(id);
+  }
+
+  function handleIterationPlanningUpdateDemand(demand) {
+    demandPoolRef.current.updateDemand(demand);
+  }
+
+  function handleIterationPlanningDeleteDemand(id) {
+    demandPoolRef.current.removeDemandById(id);
   }
 
   return (
@@ -67,31 +128,40 @@ function DemandPlanning() {
         <Empty description={'请选择规划项目'} />
       ) : (
         <Row gutter={15}>
-          <Col span={12}>
-            <DemandPool
-              projectId={projectId}
-              priorities={priorities}
-              priorityId2Color={priorityId2Color}
-              typeKey2Name={typeKey2Name}
-            />
-          </Col>
-          <Col span={12}>
-            {!versionId ? (
-              <Card>
-                <Empty
-                  style={{ paddingTop: 60 }}
-                  description={'请选择规划版本'}
-                />
-              </Card>
-            ) : (
-              <IterationPlanning
-                iterations={iterations}
-                iterationId={iterationId}
+          <DragDropContext onDragEnd={handleDemandDragEnd}>
+            <Col span={12}>
+              <DemandPool
+                ref={demandPoolRef}
+                projectId={projectId}
+                priorities={priorities}
                 priorityId2Color={priorityId2Color}
                 typeKey2Name={typeKey2Name}
+                afterUpdate={handleDemandPoolUpdateDemand}
+                afterDelete={handleDemandPoolDeleteDemand}
               />
-            )}
-          </Col>
+            </Col>
+            <Col span={12}>
+              {!versionId ? (
+                <Card>
+                  <Empty
+                    style={{ paddingTop: 60 }}
+                    description={'请选择规划版本'}
+                  />
+                </Card>
+              ) : (
+                <IterationPlanning
+                  ref={iterationPlanningRef}
+                  iterations={iterations}
+                  iterationId={iterationId}
+                  priorityId2Color={priorityId2Color}
+                  typeKey2Name={typeKey2Name}
+                  handleIterationSelected={(id) => setIterationId(id)}
+                  afterUpdate={handleIterationPlanningUpdateDemand}
+                  afterDelete={handleIterationPlanningDeleteDemand}
+                />
+              )}
+            </Col>
+          </DragDropContext>
         </Row>
       )}
     </Card>

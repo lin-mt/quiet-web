@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import {
   Card,
   Grid,
@@ -20,6 +20,8 @@ export type DemandCardProps = {
   typeKey2Name: Record<string, string>;
   priorityId2Color: Record<string, string>;
   afterDelete?: () => void;
+  afterUpdate?: (demand: ScrumDemand) => void;
+  style?: CSSProperties;
 };
 
 const DemandStyleCard = styled(Card)<{ color: string }>`
@@ -48,7 +50,7 @@ const DemandOperation = styled.div<{ danger: boolean }>`
   &:hover {
     color: ${(props) =>
       props.danger ? 'rgb(var(--danger-6))' : 'rgb(var(--primary-6))'};
-    background-color: var(--color-fill-3);
+    background-color: rgb(var(--gray-3));
   }
 `;
 
@@ -64,6 +66,9 @@ function DemandCard(props: DemandCardProps) {
       formValues: demand,
       onOk: (values) => {
         return updateDemand(values).then((resp) => {
+          if (props.afterUpdate) {
+            props.afterUpdate(resp);
+          }
           setDemand(resp);
           setDemandFormProps({ visible: false });
         });
@@ -75,6 +80,7 @@ function DemandCard(props: DemandCardProps) {
   return (
     <DemandStyleCard
       size={'small'}
+      style={props.style}
       bodyStyle={{ padding: 7 }}
       color={props.priorityId2Color[demand.priority_id]}
     >
