@@ -12,7 +12,7 @@ import { ScrumProjectGroup } from '@/service/scrum/type';
 
 export type ProjectGroupManagerProps = {
   defaultActiveId?: string;
-  onGroupClick?: (projectGroupId?: string) => void;
+  onGroupClick?: (groupId?: string) => void;
 };
 
 export function ProjectGroupManager(props: ProjectGroupManagerProps) {
@@ -45,7 +45,7 @@ export function ProjectGroupManager(props: ProjectGroupManagerProps) {
       props.onGroupClick();
     } else {
       props.onGroupClick(id);
-      replaceUrl = `${replaceUrl}?projectGroupId=${id}`;
+      replaceUrl = `${replaceUrl}?groupId=${id}`;
     }
     window.history.pushState(null, null, replaceUrl);
   }
