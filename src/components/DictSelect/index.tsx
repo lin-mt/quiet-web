@@ -63,14 +63,9 @@ const DictSelect = (
   }, [props.serviceId, props.typeId, props.typeKey]);
 
   return isTree ? (
-    <TreeSelect
-      showSearch
-      placeholder={'请选择'}
-      treeData={dictData}
-      {...props}
-    />
+    <TreeSelect placeholder={'请选择'} treeData={dictData} {...props} />
   ) : (
-    <Select showSearch placeholder={'请选择'} options={dictData} {...props} />
+    <Select placeholder={'请选择'} options={dictData} {...props} />
   );
 };
 
