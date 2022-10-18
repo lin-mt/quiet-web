@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, Empty, Grid, Message } from '@arco-design/web-react';
-import { getQueryParams } from '@/utils/getUrlParams';
-import ScrumPlanningSelect from '@/components/scrum/ScrumPlanningSelect';
+import ScrumPlanningSelect, {
+  LocalParamKeys,
+} from '@/components/scrum/ScrumPlanningSelect';
 import DemandPool, {
   DemandPoolRefProps,
 } from '@/pages/scrum/demand-planning/demand-pool';
@@ -24,10 +25,9 @@ export enum DroppableId {
 }
 
 function DemandPlanning() {
-  const query = getQueryParams();
-  const [projectId, setProjectId] = useState(query.projectId);
-  const [versionId, setVersionId] = useState(query.versionId);
-  const [iterationId, setIterationId] = useState(query.iterationId);
+  const [projectId, setProjectId] = useState<string>();
+  const [versionId, setVersionId] = useState<string>();
+  const [iterationId, setIterationId] = useState<string>();
   const [iterations, setIterations] = useState([]);
   const [priorities, setPriorities] = useState<ScrumPriority[]>([]);
   const [priorityId2Color, setPriorityId2Color] = useState<
@@ -46,7 +46,6 @@ function DemandPlanning() {
   }, []);
 
   useEffect(() => {
-    setProjectId(projectId);
     if (!projectId) {
       setPriorities([]);
       return;
@@ -84,7 +83,7 @@ function DemandPlanning() {
         demandPoolRef.current.getDemandByDraggableId(draggableId);
       operationDemand.iteration_id = iterationId;
       updateDemand(operationDemand).then((resp) => {
-        demandPoolRef.current.updateDemand(resp);
+        demandPoolRef.current.updateDemand(resp, source.index);
         iterationPlanningRef.current.addDemand(resp, destination.index);
       });
     }
@@ -94,7 +93,7 @@ function DemandPlanning() {
       operationDemand.iteration_id = undefined;
       updateDemand(operationDemand).then((resp) => {
         iterationPlanningRef.current.removeDemand(source.index);
-        demandPoolRef.current.updateDemand(resp);
+        demandPoolRef.current.updateDemand(resp, destination.index);
       });
     }
   }
@@ -108,7 +107,7 @@ function DemandPlanning() {
   }
 
   function handleIterationPlanningUpdateDemand(demand) {
-    demandPoolRef.current.updateDemand(demand);
+    demandPoolRef.current.updateDemand(demand, -1);
   }
 
   function handleIterationPlanningDeleteDemand(id) {
@@ -118,6 +117,11 @@ function DemandPlanning() {
   return (
     <Card>
       <ScrumPlanningSelect
+        localParamKey={LocalParamKeys.DEMAND_PLANNING}
+        localParams={(params) => {
+          setProjectId(params.projectId);
+          setVersionId(params.versionId);
+        }}
         onProjectChange={(id) => setProjectId(id)}
         onVersionIdChange={handleVersionChange}
         handleIterationsChange={(is) => {

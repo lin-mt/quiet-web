@@ -42,7 +42,7 @@ export type DemandPoolRefProps = {
   removeDemand: (index: number) => void;
   addDemand: (demand: ScrumDemand, index: number) => void;
   removeDemandById: (id: string) => void;
-  updateDemand: (demand: ScrumDemand) => void;
+  updateDemand: (demand: ScrumDemand, index: number) => void;
 };
 
 // 必须大于 164
@@ -91,10 +91,8 @@ export default forwardRef(
         setDemands(newDemands);
       },
       addDemand: (newDemand, index) => {
-        const demandForAdd = newDemand;
-        demandForAdd.iteration_id = undefined;
         const newDemands = Array.from(demands);
-        newDemands.splice(index, 0, demandForAdd);
+        newDemands.splice(index, 0, newDemand);
         setDemands([]);
         setDemands(newDemands);
       },
@@ -108,15 +106,21 @@ export default forwardRef(
         setDemands([]);
         setDemands(newDemands);
       },
-      updateDemand: (demand) => {
-        const index = demands.findIndex((d) => d.id === demand.id);
-        if (index < 0) {
-          return;
-        }
+      updateDemand: (demand, index) => {
+        const existIndex = demands.findIndex((d) => d.id === demand.id);
         const newDemands = Array.from(demands);
-        newDemands.splice(index, 1, demand);
-        setDemands([]);
-        setDemands(newDemands);
+        if (existIndex < 0) {
+          if (index < 0) {
+            return;
+          }
+          newDemands.splice(index, 0, demand);
+          setDemands([]);
+          setDemands(newDemands);
+        } else {
+          newDemands.splice(index, 1, demand);
+          setDemands([]);
+          setDemands(newDemands);
+        }
       },
     }));
 

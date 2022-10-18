@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { getQueryParams } from '@/utils/getUrlParams';
 import { Card, Empty } from '@arco-design/web-react';
 import VersionPlanningContent from '@/pages/scrum/version-planning/version-planning-content';
-import ScrumPlanningSelect from '@/components/scrum/ScrumPlanningSelect';
+import ScrumPlanningSelect, {
+  LocalParamKeys,
+} from '@/components/scrum/ScrumPlanningSelect';
 
 function VersionPlanning() {
-  const query = getQueryParams();
-
-  const [projectId, setProjectId] = useState(query.projectId);
+  const [projectId, setProjectId] = useState<string>();
 
   return (
     <Card>
       <ScrumPlanningSelect
         hideVersionSelect={true}
+        localParams={(params) => setProjectId(params.projectId)}
+        localParamKey={LocalParamKeys.VERSION_PLANNING}
         onProjectChange={(id) => setProjectId(id)}
       />
       {projectId ? (

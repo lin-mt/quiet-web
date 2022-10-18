@@ -112,22 +112,17 @@ export default forwardRef(
     }));
 
     useEffect(() => {
-      if (props.handleIterationSelected) {
-        props.handleIterationSelected(iterationId);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [iterationId]);
-
-    useEffect(() => {
       setIterationId(props.iterationId);
     }, [props.iterationId]);
 
     useEffect(() => {
       setIterationId(undefined);
-      setDemands([]);
     }, [props.iterations]);
 
     useEffect(() => {
+      if (props.handleIterationSelected) {
+        props.handleIterationSelected(iterationId);
+      }
       if (!iterationId) {
         return;
       }

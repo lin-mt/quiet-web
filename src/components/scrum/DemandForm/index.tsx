@@ -57,7 +57,7 @@ function DemandForm(props: DemandFormProps) {
 
   return (
     <Modal
-      style={{ width: 600 }}
+      style={{ width: 700 }}
       title={props.title}
       visible={props.visible}
       onOk={handleOk}
@@ -85,6 +85,9 @@ function DemandForm(props: DemandFormProps) {
             </Form.Item>
           </>
         )}
+        <Form.Item hidden field="iteration_id">
+          <Input />
+        </Form.Item>
         <Form.Item
           label="标题"
           field="title"
