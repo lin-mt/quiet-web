@@ -16,7 +16,7 @@ import Navbar from './components/NavBar';
 import Footer from './components/Footer';
 import useRoute, { IRoute } from '@/routes';
 import useLocale from './utils/useLocale';
-import getUrlParams from './utils/getUrlParams';
+import getUrlParams from './utils/urlParams';
 import lazyload from './utils/lazyload';
 import { GlobalState } from './store';
 import styles from './style/layout.module.less';
