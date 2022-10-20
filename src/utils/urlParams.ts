@@ -9,6 +9,25 @@ export function getQueryParams(): ParamsType {
   return qs.parseUrl(!isSSR ? window.location.href : '').query;
 }
 
+export function updateUrlParam(params) {
+  if (!params) {
+    return;
+  }
+  const searchParams = new URLSearchParams(window.location.search);
+  for (const key in params) {
+    if (params[key]) {
+      searchParams.set(key, params[key]);
+    } else {
+      searchParams.delete(key);
+    }
+  }
+  let url = window.location.pathname;
+  if (searchParams.toString().length > 0) {
+    url = url + '?' + searchParams.toString();
+  }
+  window.history.pushState(null, null, url);
+}
+
 export default function getUrlParams(): ParamsType {
   const params = qs.parseUrl(!isSSR ? window.location.href : '').query;
   const returnParams: ParamsType = {};

@@ -11,9 +11,14 @@ export async function pageDict(
 
 export async function findEnabledDict(
   type_id?: string,
+  service_id?: string,
   type_key?: string
 ): Promise<QuietDict[]> {
-  return GET<QuietDict[]>(`${base_path}/enabled`, { type_id, type_key });
+  return GET<QuietDict[]>(`${base_path}/enabled`, {
+    type_id,
+    service_id,
+    type_key,
+  });
 }
 
 export async function saveDict(save: QuietDict): Promise<QuietDict> {
