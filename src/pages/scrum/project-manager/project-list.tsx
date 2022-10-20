@@ -177,9 +177,9 @@ function ProjectList(props: ProjectGroupProjectProps) {
                           <IconSelectAll
                             onClick={() => {
                               NProgress.start();
-                              let url = `/scrum/version-planning?projectId=${project.id}`;
+                              let url = `/scrum/version-planning?project_id=${project.id}`;
                               if (project.group_id) {
-                                url = url + `&groupId=${project.group_id}`;
+                                url = url + `&group_id=${project.group_id}`;
                               }
                               history.push(url);
                               NProgress.done();

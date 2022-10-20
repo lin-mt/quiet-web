@@ -119,8 +119,8 @@ function DemandPlanning() {
       <ScrumPlanningSelect
         localParamKey={LocalParamKeys.DEMAND_PLANNING}
         localParams={(params) => {
-          setProjectId(params.projectId);
-          setVersionId(params.versionId);
+          setProjectId(params.project_id);
+          setVersionId(params.version_id);
         }}
         onProjectChange={(id) => setProjectId(id)}
         onVersionIdChange={handleVersionChange}

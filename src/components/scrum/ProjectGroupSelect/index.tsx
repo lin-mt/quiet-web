@@ -38,7 +38,6 @@ export function ProjectGroupSelect(
 
   return (
     <Select
-      showSearch
       loading={loading}
       options={options}
       filterOption={(value, option) =>

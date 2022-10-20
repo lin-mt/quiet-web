@@ -36,7 +36,6 @@ export function ProjectSelect(
   return (
     <Select
       loading={loading}
-      showSearch
       options={options}
       filterOption={false}
       notFoundContent={

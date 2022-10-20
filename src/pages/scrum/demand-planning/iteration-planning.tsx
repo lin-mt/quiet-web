@@ -10,11 +10,14 @@ import React, {
 import { ScrumDemand } from '@/service/scrum/type';
 import { getIteration } from '@/service/scrum/iteration';
 import {
+  Button,
   Card,
   Descriptions,
   Empty,
   List,
+  Message,
   Select,
+  Space,
   Typography,
 } from '@arco-design/web-react';
 import styles from '@/pages/scrum/demand-planning/style/index.module.less';
@@ -23,6 +26,9 @@ import { listDemand } from '@/service/scrum/demand';
 import { DroppableId } from '@/pages/scrum/demand-planning/index';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { DemandContainerHeight } from '@/pages/scrum/demand-planning/demand-pool';
+import { IconSend } from '@arco-design/web-react/icon';
+import NProgress from 'nprogress';
+import { useHistory } from 'react-router';
 
 export type IterationPlanningProps = {
   iterationId: string;
@@ -55,6 +61,7 @@ export default forwardRef(
     props: PropsWithChildren<IterationPlanningProps>,
     ref: ForwardedRef<IterationPlanningRefProps>
   ) => {
+    const history = useHistory();
     const [iterationId, setIterationId] = useState<string>(props.iterationId);
     const [demands, setDemands] = useState<ScrumDemand[]>([]);
     const [description, setDescription] = useState([]);
@@ -169,19 +176,40 @@ export default forwardRef(
       });
     }
 
+    function handleClickKanban() {
+      if (!iterationId) {
+        Message.warning('请选择迭代');
+        return;
+      }
+      NProgress.start();
+      history.push(
+        '/scrum/iteration-kanban' +
+          window.location.search +
+          '&iteration_id=' +
+          iterationId
+      );
+      NProgress.done();
+    }
+
     return (
       <Card
         bordered
         title={'规划迭代'}
         bodyStyle={{ paddingTop: 10, paddingRight: 3 }}
         extra={
-          <Select
-            value={iterationId}
-            options={props.iterations}
-            placeholder={'请选择迭代'}
-            style={{ width: 300 }}
-            onChange={(value) => setIterationId(value)}
-          />
+          <Space>
+            <Select
+              value={iterationId}
+              options={props.iterations}
+              placeholder={'请选择迭代'}
+              style={{ width: 300 }}
+              onChange={(value) => setIterationId(value)}
+            />
+            <Button onClick={handleClickKanban}>
+              Kanban
+              <IconSend />
+            </Button>
+          </Space>
         }
       >
         {!iterationId ? (

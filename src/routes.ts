@@ -39,6 +39,10 @@ export const routes: IRoute[] = [
         key: 'scrum/demand-planning',
       },
       {
+        name: 'menu.scrum.iterationKanban',
+        key: 'scrum/iteration-kanban',
+      },
+      {
         name: 'menu.scrum.templateManager',
         key: 'scrum/template-manager',
       },

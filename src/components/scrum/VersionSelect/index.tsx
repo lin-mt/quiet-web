@@ -16,13 +16,15 @@ export function VersionSelect(
     React.RefAttributes<SelectHandle> & {
       projectId: string;
       value?: string;
+      versionSelectable?: boolean;
+      iterationSelectable?: boolean;
       iterationAsChildren?: boolean;
       handleIterationsChange?: (iterations: ScrumIteration[]) => void;
     }
 ) {
   const [loading, setLoading] = useState(false);
   const [treeData, setTreeData] = useState([]);
-
+  const { versionSelectable = true, iterationSelectable = true } = props;
   const getIds = (vs: ScrumVersion[]) => {
     const ids: string[] = [];
     if (vs && vs.length > 0) {
@@ -46,6 +48,9 @@ export function VersionSelect(
     vsClone.forEach((vs: any) => {
       vs.type = PlanningType.VERSION;
       vs.key = vs.id;
+      if (!versionSelectable) {
+        vs.selectable = false;
+      }
       vs.title = (
         <Space>
           {props.iterationAsChildren && (
@@ -63,6 +68,9 @@ export function VersionSelect(
           const iClone = _.clone(i);
           iClone.type = PlanningType.ITERATION;
           iClone.key = i.id;
+          if (!iterationSelectable) {
+            iClone.selectable = false;
+          }
           iClone.title = (
             <Space>
               {props.iterationAsChildren && (

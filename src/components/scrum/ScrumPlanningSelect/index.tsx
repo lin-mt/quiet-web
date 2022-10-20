@@ -5,7 +5,7 @@ import ProjectGroupSelect, {
   PERSONAL_SPACE_VALUE,
 } from '@/components/scrum/ProjectGroupSelect';
 import ProjectSelect from '@/components/scrum/ProjectSelect';
-import { getQueryParams } from '@/utils/getUrlParams';
+import { getQueryParams, updateUrlParam } from '@/utils/urlParams';
 import VersionSelect from '@/components/scrum/VersionSelect';
 import { ScrumIteration } from '@/service/scrum/type';
 import { LocalStorage } from '@/constant/scrum';
@@ -14,9 +14,9 @@ import _ from 'lodash';
 const { Row, Col } = Grid;
 
 export type Params = {
-  groupId?: string;
-  projectId?: string;
-  versionId?: string;
+  group_id?: string;
+  project_id?: string;
+  version_id?: string;
 };
 
 export enum LocalParamKeys {
@@ -24,28 +24,9 @@ export enum LocalParamKeys {
   VERSION_PLANNING = 'version_planning',
 }
 
-function updateUrlParam(params: Params) {
-  const searchParams = new URLSearchParams(window.location.search);
-  function updateSearchParams(name: string, value) {
-    if (value) {
-      searchParams.set(name, value);
-    } else {
-      searchParams.delete(name);
-    }
-  }
-  updateSearchParams('groupId', params.groupId);
-  updateSearchParams('projectId', params.projectId);
-  updateSearchParams('versionId', params.versionId);
-  let url = window.location.pathname;
-  if (searchParams.toString().length > 0) {
-    url = url + '?' + searchParams.toString();
-  }
-  window.history.pushState(null, null, url);
-}
-
 function getParams(key?: LocalParamKeys): Params {
   const query = getQueryParams();
-  if (query.groupId || query.projectId) {
+  if (query.group_id || query.project_id) {
     if (key) {
       updateParams(key, query);
     }
@@ -102,9 +83,9 @@ function ScrumPlanningSelect(props: ScrumPlanningSelectProps) {
 
   useEffect(() => {
     const params = getParams(props.localParamKey);
-    setGroupId(params.groupId);
-    setProjectId(params.projectId);
-    setVersionId(params.versionId);
+    setGroupId(params.group_id);
+    setProjectId(params.project_id);
+    setVersionId(params.version_id);
     if (props.localParams) {
       props.localParams(params);
     }
@@ -118,7 +99,7 @@ function ScrumPlanningSelect(props: ScrumPlanningSelectProps) {
       props.onProjectChange(val);
     }
     if (props.localParamKey) {
-      updateParams(props.localParamKey, { projectId: val });
+      updateParams(props.localParamKey, { project_id: val });
     }
   }
 
@@ -130,7 +111,7 @@ function ScrumPlanningSelect(props: ScrumPlanningSelectProps) {
       props.onGroupChange(newVal);
     }
     if (props.localParamKey) {
-      updateParams(props.localParamKey, { groupId: newVal });
+      updateParams(props.localParamKey, { group_id: newVal });
     }
   }
 
@@ -140,7 +121,7 @@ function ScrumPlanningSelect(props: ScrumPlanningSelectProps) {
       props.onVersionIdChange(val, node?.trigger?.dataRef.iterations);
     }
     if (props.localParamKey) {
-      updateParams(props.localParamKey, { versionId: val });
+      updateParams(props.localParamKey, { version_id: val });
     }
   }
 

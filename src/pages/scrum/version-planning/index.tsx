@@ -12,7 +12,7 @@ function VersionPlanning() {
     <Card>
       <ScrumPlanningSelect
         hideVersionSelect={true}
-        localParams={(params) => setProjectId(params.projectId)}
+        localParams={(params) => setProjectId(params.project_id)}
         localParamKey={LocalParamKeys.VERSION_PLANNING}
         onProjectChange={(id) => setProjectId(id)}
       />
