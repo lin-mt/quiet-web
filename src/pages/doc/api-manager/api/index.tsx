@@ -14,7 +14,7 @@ import ApiGroupManager, {
 } from '@/pages/doc/api-manager/api/api-group-manager';
 import ApiGroupListApi from '@/pages/doc/api-manager/api/api-group-list-api';
 import ApiDetail from '@/pages/doc/api-manager/api/api-detail';
-import { getQueryParams } from '@/utils/getUrlParams';
+import { getQueryParams } from '@/utils/urlParams';
 import {
   ApiManagerContext,
   ApiManagerContextProps,

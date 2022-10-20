@@ -26,7 +26,7 @@ import {
 } from '@/service/doc/api-group';
 import { TreeDataType } from '@arco-design/web-react/es/Tree/interface';
 import { listApi } from '@/service/doc/api';
-import { getQueryParams } from '@/utils/getUrlParams';
+import { getQueryParams } from '@/utils/urlParams';
 import { QuietFormProps } from '@/components/type';
 import { DocApiGroup } from '@/service/doc/type';
 import {

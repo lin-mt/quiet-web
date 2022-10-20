@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Grid } from '@arco-design/web-react';
 import ProjectGroupManager from '@/pages/doc/doc-manager/project-group-manager';
 import ProjectGroupContent from '@/pages/doc/doc-manager/project-group-content';
-import { getQueryParams } from '@/utils/getUrlParams';
+import { getQueryParams } from '@/utils/urlParams';
 
 const { Row, Col } = Grid;
 
