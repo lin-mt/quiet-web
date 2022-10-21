@@ -64,6 +64,7 @@ function SearchForm(props: {
   const [iteration, setIteration] = useState<ScrumIteration>();
   const [priorities, setPriorities] = useState<ScrumPriority[]>([]);
   const [visible, setVisible] = useState<boolean>();
+  const [searchParam, setSearchParam] = useState<Record<string, any>>({});
 
   useEffect(() => {
     iterationForm.setFieldsValue({
@@ -79,51 +80,49 @@ function SearchForm(props: {
   }, [projectId]);
 
   useEffect(() => {
-    const localParams = getParams();
-    updateUrlParam(localParams);
-    searchForm.setFieldValue('iteration_id', localParams.iteration_id);
-    if (localParams.iteration_id) {
-      getIteration(localParams.iteration_id).then((resp) => setIteration(resp));
-    }
-    if (localParams.project_id) {
-      getProject(localParams.project_id).then((project) => {
-        listPriority(project.template_id).then((resp) => setPriorities(resp));
-      });
-    }
-    localStorage.setItem(
-      LocalStorage.IterationKanban,
-      JSON.stringify(localParams)
-    );
-    if (props.onSearch) {
-      props.onSearch(localParams);
-    }
+    setSearchParam(getParams());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSearchSubmit = () => {
-    const values = searchForm.getFieldsValue();
-    if (props.onSearch) {
-      props.onSearch({ ...values, ...iterationForm.getFieldsValue() });
+  useEffect(() => {
+    const params: Params = {
+      ...searchParam,
+      group_id:
+        PERSONAL_SPACE_VALUE === searchParam.group_id
+          ? undefined
+          : searchParam.group_id,
+    };
+    if (params.iteration_id) {
+      getIteration(params.iteration_id).then((resp) => setIteration(resp));
     }
+    if (params.project_id) {
+      getProject(params.project_id).then((project) => {
+        listPriority(project.template_id).then((resp) => setPriorities(resp));
+      });
+    }
+    if (props.onSearch) {
+      props.onSearch(params);
+    }
+    searchForm.setFieldsValue(params);
+    updateUrlParam(params);
+    localStorage.setItem(LocalStorage.IterationKanban, JSON.stringify(params));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(searchParam)]);
+
+  const handleSearchSubmit = () => {
+    setSearchParam((prevState) => {
+      return { ...prevState, ...searchForm.getFieldsValue() };
+    });
   };
 
   const handleStartEndIteration = () => {
     console.log('TODO');
   };
 
-  function handleIterationSubmit(values) {
-    searchForm.resetFields();
-    handleSearchSubmit();
-    updateUrlParam({
-      ...values,
-      group_id:
-        PERSONAL_SPACE_VALUE === values.group_id ? undefined : values.group_id,
-    });
-    getIteration(values.iteration_id).then((resp) => setIteration(resp));
-    getProject(values.project_id).then((project) => {
-      listPriority(project.template_id).then((resp) => setPriorities(resp));
-    });
+  function handleIterationSubmit() {
     setVisible(false);
+    searchForm.resetFields();
+    setSearchParam({ ...iterationForm.getFieldsValue() });
   }
 
   const colSpan = 6;
@@ -160,9 +159,6 @@ function SearchForm(props: {
             </Form.Item>
           </Col>
           <Col span={colSpan}>
-            <Form.Item hidden field={'iteration_id'}>
-              <Input />
-            </Form.Item>
             <Form.Item label={'当前迭代'}>
               <Trigger
                 popupAlign={{
@@ -237,14 +233,18 @@ function SearchForm(props: {
                 }}
               >
                 <Button
+                  status={iteration ? 'default' : 'danger'}
                   style={{ width: '100%', textAlign: 'left' }}
                   onClick={() => {
                     setVisible(!visible);
                   }}
                 >
                   <Typography.Text
+                    style={{
+                      marginBottom: 0,
+                      color: iteration ? '' : 'var(--color-text-3)',
+                    }}
                     ellipsis={{ cssEllipsis: true, showTooltip: true }}
-                    style={{ marginBottom: 0 }}
                   >
                     {iteration ? iteration.name : '请选择迭代'}
                   </Typography.Text>
@@ -264,12 +264,24 @@ function SearchForm(props: {
         </Button>
         <Button
           type={'primary'}
+          disabled={!!(iteration?.start_time && iteration?.end_time)}
           status={iteration?.start_time ? 'warning' : 'default'}
           className={styles['start-end-button']}
           onClick={handleStartEndIteration}
         >
-          {iteration?.start_time ? '结束迭代' : '开始迭代'}
-          {iteration?.start_time ? <IconPause /> : <IconPlayArrow />}
+          {!iteration?.start_time && (
+            <>
+              开始迭代
+              <IconPlayArrow />
+            </>
+          )}
+          {iteration?.start_time && !iteration?.end_time && (
+            <>
+              结束迭代
+              <IconPause />
+            </>
+          )}
+          {iteration?.start_time && iteration?.end_time && '迭代已结束'}
         </Button>
       </div>
     </div>
