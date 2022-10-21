@@ -223,10 +223,7 @@ export default forwardRef(
               style={{ paddingRight: 17 }}
             />
             {Object.keys(props.priorityId2Color).length > 0 && (
-              <Droppable
-                droppableId={DroppableId.IterationPlanning}
-                type="TASK"
-              >
+              <Droppable droppableId={DroppableId.IterationPlanning}>
                 {(droppableProvided) => (
                   <div
                     ref={droppableProvided.innerRef}
@@ -255,8 +252,7 @@ export default forwardRef(
                               >
                                 <div
                                   style={{
-                                    paddingTop: 5,
-                                    paddingBottom: 5,
+                                    marginBottom: 10,
                                     marginRight: 17,
                                   }}
                                 >

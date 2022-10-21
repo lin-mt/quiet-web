@@ -170,12 +170,35 @@ export default forwardRef(
         hasMoreDemand ? (
           <Spin loading={true} />
         ) : (
-          <Typography.Text type={'secondary'} style={{ fontSize: 12 }}>
-            没有更多需求了～
-          </Typography.Text>
+          <Draggable
+            draggableId={'scroll_loading'}
+            index={demands.length}
+            key={demands.length}
+            isDragDisabled={true}
+          >
+            {(draggableProvider) => (
+              <div
+                ref={draggableProvider.innerRef}
+                {...draggableProvider.draggableProps}
+                {...draggableProvider.dragHandleProps}
+              >
+                <div
+                  style={{
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                    marginRight: 17,
+                  }}
+                >
+                  <Typography.Text type={'secondary'} style={{ fontSize: 12 }}>
+                    没有更多需求了～
+                  </Typography.Text>
+                </div>
+              </div>
+            )}
+          </Draggable>
         )
       );
-    }, [hasMoreDemand]);
+    }, [demands.length, hasMoreDemand]);
 
     function handleCreateDemand() {
       if (!props.projectId) {
@@ -218,7 +241,11 @@ export default forwardRef(
     return (
       <Card
         bordered
-        bodyStyle={{ paddingTop: 10, paddingRight: 3 }}
+        bodyStyle={{
+          paddingTop: 10,
+          paddingRight: 3,
+          maxHeight: DemandContainerHeight,
+        }}
         title={CreateDemand}
         extra={
           <DemandFilter
@@ -229,18 +256,10 @@ export default forwardRef(
         }
       >
         {Object.keys(props.priorityId2Color).length > 0 && (
-          <Droppable
-            type="TASK"
-            droppableId={DroppableId.DemandPool}
-            isDropDisabled={false}
-          >
+          <Droppable droppableId={DroppableId.DemandPool}>
             {(droppableProvided) => (
-              <div
-                ref={droppableProvided.innerRef}
-                {...droppableProvided.droppableProps}
-              >
+              <div ref={droppableProvided.innerRef}>
                 <List
-                  hoverable
                   dataSource={demands}
                   style={{ height: DemandContainerHeight }}
                   scrollLoading={scrollLoading}
@@ -263,8 +282,7 @@ export default forwardRef(
                           >
                             <div
                               style={{
-                                paddingTop: 5,
-                                paddingBottom: 5,
+                                marginBottom: 10,
                                 marginRight: 17,
                               }}
                             >
