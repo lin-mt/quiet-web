@@ -54,3 +54,7 @@ export async function updateRoles(
 ): Promise<void> {
   return POST<void>(`${base_path}/update-roles/${user_id}`, role_ids);
 }
+
+export function listTeamUser(id: string): Promise<QuietUser[]> {
+  return GET<QuietUser[]>(`${base_path}/team/${id}`);
+}
