@@ -65,6 +65,7 @@ function TeamManager() {
                   onEdit={(value) => {
                     getTeam(value.id).then((resp) => {
                       setTeamFormProps({
+                        title: '编辑团队',
                         formValues: resp,
                         visible: true,
                         onOk: (newTeam) => {
