@@ -37,6 +37,9 @@ export type Params = {
   project_id?: string;
   version_id?: string;
   iteration_id?: string;
+  demand_title?: string;
+  priority_id?: string;
+  executor_id?: string;
 };
 
 function getParams(): Params {
@@ -53,10 +56,7 @@ function getParams(): Params {
   return local;
 }
 
-function SearchForm(props: {
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  onSearch: (values: Record<string, any>) => void;
-}) {
+function SearchForm(props: { onSearch: (values: Params) => void }) {
   const [searchForm] = useForm();
   const [iterationForm] = useForm();
   const groupId = Form.useWatch('group_id', iterationForm);
@@ -64,7 +64,7 @@ function SearchForm(props: {
   const [iteration, setIteration] = useState<ScrumIteration>();
   const [priorities, setPriorities] = useState<ScrumPriority[]>([]);
   const [visible, setVisible] = useState<boolean>();
-  const [searchParam, setSearchParam] = useState<Record<string, any>>({});
+  const [searchParam, setSearchParam] = useState<Params>({});
 
   useEffect(() => {
     iterationForm.setFieldsValue({
@@ -137,8 +137,8 @@ function SearchForm(props: {
       >
         <Row gutter={24}>
           <Col span={colSpan}>
-            <Form.Item label={'需求名称'} field="demand_name">
-              <Input allowClear placeholder={'请输入需求名称'} />
+            <Form.Item label={'需求标题'} field="demand_title">
+              <Input allowClear placeholder={'请输入需求标题'} />
             </Form.Item>
           </Col>
           <Col span={colSpan}>

@@ -25,8 +25,14 @@ export async function pageDemand(
   return PAGE<ScrumDemand>(`${base_path}/page`, params);
 }
 
-export function listDemand(iteration_id: string): Promise<ScrumDemand[]> {
+export function listDemand(
+  iteration_id: string,
+  title?: string,
+  priority_id?: string
+): Promise<ScrumDemand[]> {
   return GET<ScrumDemand[]>(`${base_path}/list`, {
     iteration_id,
+    title,
+    priority_id,
   });
 }

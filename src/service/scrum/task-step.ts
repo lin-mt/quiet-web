@@ -4,7 +4,7 @@ import { ScrumTaskStep } from '@/service/scrum/type';
 const base_path = '/scrum/task-step';
 
 export function listTaskStep(template_id: string): Promise<ScrumTaskStep[]> {
-  return GET<ScrumTaskStep[]>(`${base_path}/list/`, { template_id });
+  return GET<ScrumTaskStep[]>(`${base_path}/list`, { template_id });
 }
 
 export function batchSaveTaskStep(
