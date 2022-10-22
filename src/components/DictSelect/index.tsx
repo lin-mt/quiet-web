@@ -7,21 +7,15 @@ import {
   TreeSelectProps,
 } from '@arco-design/web-react/es/TreeSelect/interface';
 import { QuietDict } from '@/service/system/type';
-import { findEnabledDict } from '@/service/system/quiet-dict';
+import {
+  findEnabledDict,
+  ServiceId,
+  TypeKey,
+} from '@/service/system/quiet-dict';
 import {
   SelectHandle,
   SelectProps,
 } from '@arco-design/web-react/es/Select/interface';
-
-// env: 部署环境
-// demand-type：需求类型
-// task-type：任务类型
-export type TypeKey = 'env' | 'demand-type' | 'task-type';
-
-// quiet-system 系统服务
-// quiet-doc 文档服务
-// quiet-scrum 敏捷管理服务
-export type ServiceId = 'quiet-system' | 'quiet-doc' | 'quiet-scrum';
 
 const DictSelect = (
   props: TreeSelectProps & {

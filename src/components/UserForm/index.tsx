@@ -177,7 +177,9 @@ function UserForm(props: UserFormProps) {
                   labelCol={{ span: 3 }}
                   wrapperCol={{ span: 21 }}
                   formatter={(value) => {
-                    return value.map((u) => (typeof u === 'string' ? u : u.id));
+                    return value?.map((u) =>
+                      typeof u === 'string' ? u : u.id
+                    );
                   }}
                 >
                   <RoleTreeSelect

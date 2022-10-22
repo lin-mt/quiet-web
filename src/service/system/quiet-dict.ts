@@ -3,6 +3,16 @@ import { DELETE, GET, PAGE, PageResult, POST, PUT } from '@/utils/request';
 
 const base_path = '/system/dict';
 
+// env: 部署环境
+// demand-type：需求类型
+// task-type：任务类型
+export type TypeKey = 'env' | 'demand-type' | 'task-type';
+
+// quiet-system 系统服务
+// quiet-doc 文档服务
+// quiet-scrum 敏捷管理服务
+export type ServiceId = 'quiet-system' | 'quiet-doc' | 'quiet-scrum';
+
 export async function pageDict(
   params?: Record<string, unknown>
 ): Promise<PageResult<QuietDict>> {
@@ -11,8 +21,8 @@ export async function pageDict(
 
 export async function findEnabledDict(
   type_id?: string,
-  service_id?: string,
-  type_key?: string
+  service_id?: string | ServiceId,
+  type_key?: string | TypeKey
 ): Promise<QuietDict[]> {
   return GET<QuietDict[]>(`${base_path}/enabled`, {
     type_id,
