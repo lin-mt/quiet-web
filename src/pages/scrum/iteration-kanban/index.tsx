@@ -91,7 +91,7 @@ function IterationPlanning() {
           const id2info: Record<string, ScrumDemand> = {};
           demands.forEach((d) => (id2info[d.id] = d));
           setDemandId2info(id2info);
-          listTask(Object.keys(id2info)).then((tasks) => {
+          listTask(Object.keys(id2info), [values.executor_id]).then((tasks) => {
             const datum: Record<string, Record<string, ScrumTask[]>> = {};
             tasks.forEach((task) => {
               if (!datum[task.demand_id]) {

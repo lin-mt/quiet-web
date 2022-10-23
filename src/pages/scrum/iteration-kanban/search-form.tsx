@@ -28,6 +28,8 @@ import { ScrumIteration, ScrumPriority } from '@/service/scrum/type';
 import { getIteration } from '@/service/scrum/iteration';
 import { getProject } from '@/service/scrum/project';
 import { listPriority } from '@/service/scrum/priority';
+import { QuietUser } from '@/service/system/type';
+import { listTeamUser } from '@/service/system/quiet-user';
 
 const { Row, Col } = Grid;
 const { useForm } = Form;
@@ -63,6 +65,7 @@ function SearchForm(props: { onSearch: (values: Params) => void }) {
   const projectId = Form.useWatch('project_id', iterationForm);
   const [iteration, setIteration] = useState<ScrumIteration>();
   const [priorities, setPriorities] = useState<ScrumPriority[]>([]);
+  const [teamUsers, setTeamUsers] = useState<QuietUser[]>([]);
   const [visible, setVisible] = useState<boolean>();
   const [searchParam, setSearchParam] = useState<Params>({});
 
@@ -98,6 +101,7 @@ function SearchForm(props: { onSearch: (values: Params) => void }) {
     if (params.project_id) {
       getProject(params.project_id).then((project) => {
         listPriority(project.template_id).then((resp) => setPriorities(resp));
+        listTeamUser(project.team_id).then((resp) => setTeamUsers(resp));
       });
     }
     if (props.onSearch) {
@@ -155,7 +159,14 @@ function SearchForm(props: { onSearch: (values: Params) => void }) {
           </Col>
           <Col span={colSpan}>
             <Form.Item label={'执行者'} field="executor_id">
-              <Input allowClear placeholder={'请选择执行者'} />
+              <Select
+                allowClear
+                placeholder={'请选择执行者'}
+                options={teamUsers.map((u) => ({
+                  value: u.id,
+                  label: u.full_name,
+                }))}
+              />
             </Form.Item>
           </Col>
           <Col span={colSpan}>

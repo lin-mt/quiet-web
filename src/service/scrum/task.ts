@@ -3,9 +3,13 @@ import { DELETE, GET, POST, PUT } from '@/utils/request';
 
 const base_path = '/scrum/task';
 
-export function listTask(demand_ids: string[]): Promise<ScrumTask[]> {
+export function listTask(
+  demand_ids: string[],
+  executor_ids?: string[]
+): Promise<ScrumTask[]> {
   return GET<ScrumTask[]>(`${base_path}/list`, {
     demand_ids,
+    executor_ids,
   });
 }
 
