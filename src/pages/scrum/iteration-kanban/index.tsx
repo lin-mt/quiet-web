@@ -9,9 +9,10 @@ import { listPriority } from '@/service/scrum/priority';
 import { listDemand } from '@/service/scrum/demand';
 import { listTaskStep } from '@/service/scrum/task-step';
 import { listTeamUser } from '@/service/system/quiet-user';
-import { listTask } from '@/service/scrum/task';
+import { listTask, updateTask } from '@/service/scrum/task';
 import _ from 'lodash';
 import Kanban from '@/pages/scrum/iteration-kanban/kanban';
+import { MoveTask } from '@/pages/scrum/iteration-kanban/kanban-row';
 
 function IterationPlanning() {
   const [params, setParams] = useState<Params>({});
@@ -74,7 +75,6 @@ function IterationPlanning() {
   }
 
   function handleSearch(values) {
-    console.log(values);
     setParams((prevState) => {
       if (!values.project_id || !values.iteration_id) {
         return {};
@@ -112,7 +112,14 @@ function IterationPlanning() {
 
   function handleNewTask(task) {
     const demandTasks = _.clone(demandId2TaskStepTasks);
-    const tasks = demandTasks[task.demand_id][task.task_step_id];
+    if (!demandTasks[task.demand_id]) {
+      demandTasks[task.demand_id] = {};
+    }
+    if (!demandTasks[task.demand_id][task.task_step_id]) {
+      demandTasks[task.demand_id][task.task_step_id] = [];
+    }
+    const taskStepId2tasks = demandTasks[task.demand_id];
+    const tasks = taskStepId2tasks[task.task_step_id];
     demandTasks[task.demand_id][task.task_step_id] = [].concat(...tasks, task);
     setDemandId2TaskStepTasks(demandTasks);
   }
@@ -124,6 +131,25 @@ function IterationPlanning() {
     tasks.splice(index, 1);
     demandTasks[task.demand_id][task.task_step_id] = tasks;
     setDemandId2TaskStepTasks(demandTasks);
+  }
+
+  function handleTaskMove(params: MoveTask) {
+    const { demandId, fromTaskStepId, fromIndex, toTaskStepId, toIndex } =
+      params;
+    const demandTasks = _.clone(demandId2TaskStepTasks);
+    const fromTasks = demandTasks[demandId][fromTaskStepId];
+    let toTasks = demandTasks[demandId][toTaskStepId];
+    const taskMoved = fromTasks.splice(fromIndex, 1)[0];
+    taskMoved.task_step_id = toTaskStepId;
+    updateTask(taskMoved).then((resp) => {
+      if (!toTasks) {
+        toTasks = [];
+      }
+      toTasks.splice(toIndex, 0, resp);
+      demandTasks[demandId][fromTaskStepId] = fromTasks;
+      demandTasks[demandId][toTaskStepId] = toTasks;
+      setDemandId2TaskStepTasks(demandTasks);
+    });
   }
 
   return (
@@ -143,6 +169,7 @@ function IterationPlanning() {
             userId2fullName={userIdId2fullName}
             handleNewTask={handleNewTask}
             handleDeleteTask={handleDeleteTask}
+            handleMoveTask={handleTaskMove}
           />
         )}
       </Card>

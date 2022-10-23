@@ -6,6 +6,12 @@ import { ScrumDemand, ScrumTask, ScrumTaskStep } from '@/service/scrum/type';
 import { saveTask } from '@/service/scrum/task';
 import TaskForm, { TaskFormProps } from '@/components/scrum/TaskForm';
 import styled from 'styled-components';
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from 'react-beautiful-dnd';
 
 const { Row, Col } = Grid;
 
@@ -24,6 +30,15 @@ const CardWrapper = styled.div`
   padding: 7px 10px;
 `;
 
+export type MoveTask = {
+  demandId: string;
+  taskId: string;
+  fromTaskStepId: string;
+  fromIndex: number;
+  toTaskStepId: string;
+  toIndex: number;
+};
+
 export type KanbanRowProps = {
   demandId: string;
   rowWidth: number;
@@ -40,6 +55,7 @@ export type KanbanRowProps = {
   demandId2TaskStepTasks: Record<string, Record<string, ScrumTask[]>>;
   handleNewTask: (task: ScrumTask) => void;
   handleDeleteTask: (task: ScrumTask) => void;
+  handleMoveTask: (params: MoveTask) => void;
 };
 
 function KanbanRow(props: KanbanRowProps) {
@@ -59,6 +75,7 @@ function KanbanRow(props: KanbanRowProps) {
     demandId2TaskStepTasks,
     handleNewTask,
     handleDeleteTask,
+    handleMoveTask,
   } = props;
 
   const [columnBgc, setColumnBgc] = useState<string>();
@@ -72,9 +89,9 @@ function KanbanRow(props: KanbanRowProps) {
     const taskStepId = Object.keys(taskStepId2info)[0];
     setTaskFormProps({
       demandId,
+      taskStepId,
       title: '创建任务',
       visible: true,
-      taskStepId: taskStepId2info[taskStepId].id,
       userOptions: Object.keys(userId2fullName).map((key) => ({
         label: userId2fullName[key],
         value: key,
@@ -89,69 +106,118 @@ function KanbanRow(props: KanbanRowProps) {
     });
   }
 
+  function handleDragEnd(result: DropResult) {
+    const { destination, source, draggableId } = result;
+    const ignore =
+      !destination || destination.droppableId === source.droppableId;
+    if (!ignore) {
+      handleMoveTask({
+        demandId,
+        taskId: draggableId,
+        fromTaskStepId: source.droppableId,
+        fromIndex: source.index,
+        toTaskStepId: destination.droppableId,
+        toIndex: destination.index,
+      });
+    }
+    setColumnBgc(columnDefaultBc);
+  }
+
+  function handleDragStart() {
+    setColumnBgc('var(--color-fill-3)');
+  }
+
   return (
-    <div key={demandId} style={{ width: rowWidth }}>
-      <Row gutter={columnGutter} align={'stretch'}>
-        <Col flex={1}>
-          <div
-            style={{
-              height: '100%',
-              width: columnWidth,
-              backgroundColor: columnBgc,
-              borderEndStartRadius: blockRadius,
-              borderEndEndRadius: blockRadius,
-            }}
-          >
-            <CardWrapper>
-              <DemandCard
-                demand={demandId2info[demandId]}
-                typeKey2Name={demandTypeKey2name}
-                priorityId2Color={priorityId2color}
-              />
-              <OptionContainer>
-                <CreateTask onClick={() => handleCreateTask(demandId)}>
-                  + 创建任务
-                </CreateTask>
-              </OptionContainer>
-            </CardWrapper>
-          </div>
-        </Col>
-        {Object.keys(taskStepId2info).map((tsId) => {
-          const tasks =
-            demandId2TaskStepTasks[demandId] &&
-            demandId2TaskStepTasks[demandId][tsId];
-          return (
-            <Col flex={1} key={tsId}>
-              <div
-                style={{
-                  height: '100%',
-                  width: columnWidth,
-                  backgroundColor: columnBgc,
-                  borderEndStartRadius: blockRadius,
-                  borderEndEndRadius: blockRadius,
-                }}
-              >
-                {tasks?.map((task) => {
-                  return (
-                    <CardWrapper key={task.id}>
-                      <TaskCard
-                        task={task}
-                        typeKey2name={taskTypeKey2name}
-                        userId2fullName={userId2fullName}
-                        afterDelete={() => {
-                          if (handleDeleteTask) {
-                            handleDeleteTask(task);
-                          }
-                        }}
-                      />
-                    </CardWrapper>
-                  );
-                })}
-              </div>
-            </Col>
-          );
-        })}
-      </Row>
+    <div style={{ width: rowWidth }}>
+      <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+        <Row gutter={columnGutter} align={'stretch'}>
+          <Col flex={1}>
+            <div
+              style={{
+                height: '100%',
+                width: columnWidth,
+                backgroundColor: columnDefaultBc,
+                borderEndStartRadius: blockRadius,
+                borderEndEndRadius: blockRadius,
+              }}
+            >
+              <CardWrapper>
+                <DemandCard
+                  demand={demandId2info[demandId]}
+                  typeKey2Name={demandTypeKey2name}
+                  priorityId2Color={priorityId2color}
+                />
+                <OptionContainer>
+                  <CreateTask onClick={() => handleCreateTask(demandId)}>
+                    + 创建任务
+                  </CreateTask>
+                </OptionContainer>
+              </CardWrapper>
+            </div>
+          </Col>
+          {Object.keys(taskStepId2info).map((tsId) => {
+            const tasks =
+              demandId2TaskStepTasks[demandId] &&
+              demandId2TaskStepTasks[demandId][tsId];
+            return (
+              <Col flex={1} key={tsId}>
+                <div
+                  style={{
+                    height: '100%',
+                    width: columnWidth,
+                    backgroundColor: columnBgc,
+                    borderEndStartRadius: blockRadius,
+                    borderEndEndRadius: blockRadius,
+                  }}
+                >
+                  <Droppable droppableId={tsId}>
+                    {(droppableProvided) => (
+                      <div
+                        style={{ width: '100%', height: '100%' }}
+                        ref={droppableProvided.innerRef}
+                        {...droppableProvided.droppableProps}
+                      >
+                        {tasks?.map((task, index) => {
+                          return (
+                            <CardWrapper key={task.id}>
+                              <Draggable
+                                draggableId={task.id}
+                                index={index}
+                                key={index}
+                              >
+                                {(draggableProvider) => (
+                                  <div
+                                    {...draggableProvider.draggableProps}
+                                    {...draggableProvider.dragHandleProps}
+                                    ref={draggableProvider.innerRef}
+                                  >
+                                    <TaskCard
+                                      task={task}
+                                      typeKey2name={taskTypeKey2name}
+                                      userId2fullName={userId2fullName}
+                                      afterDelete={() => {
+                                        if (handleDeleteTask) {
+                                          handleDeleteTask(task);
+                                        }
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                              </Draggable>
+                            </CardWrapper>
+                          );
+                        })}
+                        {droppableProvided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </div>
+              </Col>
+            );
+          })}
+        </Row>
+      </DragDropContext>
+
       <TaskForm {...taskFormProps} />
     </div>
   );

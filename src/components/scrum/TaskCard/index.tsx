@@ -27,7 +27,7 @@ const TaskStyleCard = styled(Card)<{ color: string }>`
   font-size: 12px;
   border-width: 1px 1px 1px 9px;
   border-style: solid;
-  border-color: ${(props) => props.color};
+  border-color: var(--color-neutral-7);
   border-image: initial;
   border-radius: 3px;
   transition: box-shadow 0.3s, border-color 0.3s;

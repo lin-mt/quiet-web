@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrumDemand, ScrumTask, ScrumTaskStep } from '@/service/scrum/type';
 import { Grid } from '@arco-design/web-react';
 import styled from 'styled-components';
-import KanbanRow from '@/pages/scrum/iteration-kanban/kanban-row';
+import KanbanRow, { MoveTask } from '@/pages/scrum/iteration-kanban/kanban-row';
 
 const { Row, Col } = Grid;
 
@@ -36,6 +36,7 @@ export type KanbanRowProps = {
   demandId2TaskStepTasks: Record<string, Record<string, ScrumTask[]>>;
   handleNewTask: (task: ScrumTask) => void;
   handleDeleteTask: (task: ScrumTask) => void;
+  handleMoveTask: (param: MoveTask) => void;
 };
 
 function Kanban(props: KanbanRowProps) {
@@ -47,6 +48,9 @@ function Kanban(props: KanbanRowProps) {
     taskStepId2info,
     demandId2info,
     priorityId2color,
+    handleNewTask,
+    handleDeleteTask,
+    handleMoveTask,
   } = props;
 
   const rowWidth =
@@ -96,8 +100,8 @@ function Kanban(props: KanbanRowProps) {
           <KanbanRow
             key={demandId}
             demandId={demandId}
-            handleNewTask={props.handleNewTask}
-            handleDeleteTask={props.handleDeleteTask}
+            handleNewTask={handleNewTask}
+            handleDeleteTask={handleDeleteTask}
             blockRadius={blockRadius}
             columnDefaultBc={columnDefaultBc}
             columnWidth={columnWidth}
@@ -110,6 +114,7 @@ function Kanban(props: KanbanRowProps) {
             columnGutter={columnGutter}
             demandId2info={demandId2info}
             userId2fullName={userId2fullName}
+            handleMoveTask={handleMoveTask}
           />
         );
       })}
