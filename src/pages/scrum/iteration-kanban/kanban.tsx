@@ -22,6 +22,7 @@ export type KanbanRowProps = {
   demandId2info: Record<string, ScrumDemand>;
   demandId2TaskStepTasks: Record<string, Record<string, ScrumTask[]>>;
   handleNewTask: (task: ScrumTask) => void;
+  handleDeleteTask: (task: ScrumTask) => void;
 };
 
 function Kanban(props: KanbanRowProps) {
@@ -172,7 +173,13 @@ function Kanban(props: KanbanRowProps) {
                           >
                             <TaskCard
                               task={task}
-                              typeKey2Name={taskTypeKey2name}
+                              typeKey2name={taskTypeKey2name}
+                              userId2fullName={userId2fullName}
+                              afterDelete={() => {
+                                if (props.handleDeleteTask) {
+                                  props.handleDeleteTask(task);
+                                }
+                              }}
                             />
                           </div>
                         );

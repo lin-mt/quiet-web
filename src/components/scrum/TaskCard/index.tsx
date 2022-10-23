@@ -16,7 +16,8 @@ const { Row, Col } = Grid;
 
 export type TaskCardProps = {
   task: ScrumTask;
-  typeKey2Name: Record<string, string>;
+  typeKey2name: Record<string, string>;
+  userId2fullName: Record<string, string>;
   afterDelete?: () => void;
   afterUpdate?: (task: ScrumTask) => void;
   style?: CSSProperties;
@@ -116,13 +117,13 @@ function TaskCard(props: TaskCardProps) {
         </Row>
         <Typography.Text>
           类型：
-          {props.typeKey2Name[task.type]}
+          {props.typeKey2name[task.type]}
         </Typography.Text>
         <Typography.Text
           ellipsis={{ rows: 1, showTooltip: true }}
           style={{ marginBottom: 4 }}
         >
-          备注：{task.remark}
+          执行者：{props.userId2fullName[task.executor_id]}
         </Typography.Text>
       </Space>
       <TaskForm {...taskFormProps} />

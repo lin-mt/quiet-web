@@ -117,6 +117,15 @@ function IterationPlanning() {
     setDemandId2TaskStepTasks(demandTasks);
   }
 
+  function handleDeleteTask(task: ScrumTask) {
+    const demandTasks = _.clone(demandId2TaskStepTasks);
+    const tasks = demandTasks[task.demand_id][task.task_step_id];
+    const index = tasks.findIndex((t) => t.id === task.id);
+    tasks.splice(index, 1);
+    demandTasks[task.demand_id][task.task_step_id] = tasks;
+    setDemandId2TaskStepTasks(demandTasks);
+  }
+
   return (
     <div className={styles['container']}>
       <Card>
@@ -133,6 +142,7 @@ function IterationPlanning() {
             demandTypeKey2name={demandTypeKey2name}
             userId2fullName={userIdId2fullName}
             handleNewTask={handleNewTask}
+            handleDeleteTask={handleDeleteTask}
           />
         )}
       </Card>
