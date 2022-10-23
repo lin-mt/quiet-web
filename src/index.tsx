@@ -21,8 +21,12 @@ import { QuietUser } from '@/service/system/type';
 const store = createStore(rootReducer);
 
 function Index() {
+  const isDark =
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches;
+
   const [lang, setLang] = useStorage('arco-lang', 'en-US');
-  const [theme, setTheme] = useStorage('arco-theme', 'light');
+  const [theme, setTheme] = useStorage('arco-theme', isDark ? 'dark' : 'light');
 
   function getArcoLocale() {
     switch (lang) {
