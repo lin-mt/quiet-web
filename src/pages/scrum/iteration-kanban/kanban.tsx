@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '@/pages/scrum/iteration-kanban/style/index.module.less';
 import { ScrumDemand, ScrumTask, ScrumTaskStep } from '@/service/scrum/type';
+import { Grid } from '@arco-design/web-react';
 import DemandCard from '@/components/scrum/DemandCard';
+import { saveTask } from '@/service/scrum/task';
+import TaskForm, { TaskFormProps } from '@/components/scrum/TaskForm';
+import TaskCard from '@/components/scrum/TaskCard';
 
-const columnWidth = 320;
-const columnMargin = 10;
-const containerWidth = columnWidth + columnMargin * 2;
-const rowHeight = 110;
-const rowMarginTop = 3;
-const rowPaddingTop = 5;
-const kanbanTitleHeight = 38;
+const { Row, Col } = Grid;
 
-export type KanbanProps = {
+const columnWidth = 300;
+const columnGutter = 10;
+const columnRadius = 4;
+
+export type KanbanRowProps = {
   userId2fullName: Record<string, string>;
   taskTypeKey2name: Record<string, string>;
   demandTypeKey2name: Record<string, string>;
@@ -19,9 +21,10 @@ export type KanbanProps = {
   priorityId2color: Record<string, string>;
   demandId2info: Record<string, ScrumDemand>;
   demandId2TaskStepTasks: Record<string, Record<string, ScrumTask[]>>;
+  handleNewTask: (task: ScrumTask) => void;
 };
 
-function Kanban(props: KanbanProps) {
+function Kanban(props: KanbanRowProps) {
   const {
     userId2fullName,
     taskTypeKey2name,
@@ -32,153 +35,157 @@ function Kanban(props: KanbanProps) {
     priorityId2color,
   } = props;
 
-  function getBackGroundHeight() {
-    const demandIds = Object.keys(demandId2info);
-    let max = demandIds.length;
-    const taskStepId2TaskCount: Record<string, number> = {};
-    demandIds.forEach((id) => {
-      const tsId2tasks = demandId2TaskStepTasks[id];
-      Object.keys(taskStepId2info).forEach((tsId) => {
-        if (!taskStepId2TaskCount[tsId]) {
-          taskStepId2TaskCount[tsId] = 0;
-        }
-        if (!tsId2tasks) {
-          taskStepId2TaskCount[tsId] = taskStepId2TaskCount[tsId] + 1;
-          return;
-        }
-        if (!tsId2tasks[tsId] || tsId2tasks[tsId]?.length == 0) {
-          taskStepId2TaskCount[tsId] = taskStepId2TaskCount[tsId] + 1;
-        } else {
-          taskStepId2TaskCount[tsId] =
-            taskStepId2TaskCount[tsId] + tsId2tasks[tsId].length;
-        }
-      });
+  const rowWidth =
+    (Object.keys(taskStepId2info).length + 1) * (columnWidth + columnGutter) -
+    columnGutter;
+
+  const [taskFormProps, setTaskFormProps] = useState<TaskFormProps>();
+
+  function handleCreateTask(demandId: string) {
+    const taskStepId = Object.keys(taskStepId2info)[0];
+    setTaskFormProps({
+      title: '创建任务',
+      visible: true,
+      demandId,
+      taskStepId: taskStepId2info[taskStepId].id,
+      userOptions: Object.keys(userId2fullName).map((key) => ({
+        label: userId2fullName[key],
+        value: key,
+      })),
+      onOk: (values) => {
+        return saveTask(values).then((resp) => {
+          props.handleNewTask(resp);
+          setTaskFormProps({ visible: false });
+        });
+      },
+      onCancel: () => setTaskFormProps({ visible: false }),
     });
-    Object.keys(taskStepId2TaskCount).forEach((tsId) => {
-      max = Math.max(taskStepId2TaskCount[tsId], max);
-    });
-    return (
-      max * (rowHeight + rowMarginTop + rowPaddingTop) +
-      kanbanTitleHeight -
-      rowMarginTop
-    );
   }
 
   return (
     <div
-      className={styles['container']}
-      style={{ height: getBackGroundHeight() }}
+      style={{
+        width: '100%',
+        overflow: 'scroll',
+        paddingLeft: 5,
+        paddingRight: 5,
+      }}
     >
-      {Object.keys(demandId2info).map((id, index) => {
-        return (
-          <div
-            key={id}
-            style={{
-              width: (Object.keys(taskStepId2info).length + 1) * containerWidth,
-              height: rowHeight,
-              paddingTop: rowPaddingTop,
-              marginTop: index === 0 ? kanbanTitleHeight : rowMarginTop,
-              // backgroundColor: '#b7c9ea',
-              // opacity: 0.6,
-            }}
-          >
+      <div style={{ width: rowWidth }}>
+        <Row gutter={columnGutter}>
+          <Col flex={1}>
             <div
+              className={styles['block']}
               style={{
-                position: 'absolute',
-                left: 0,
                 width: columnWidth,
-                marginLeft: columnMargin,
-                marginRight: columnMargin,
+                borderStartStartRadius: columnRadius,
+                borderStartEndRadius: columnRadius,
               }}
             >
-              <div
-                style={{
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                }}
-              >
-                <DemandCard
-                  demand={demandId2info[id]}
-                  typeKey2Name={demandTypeKey2name}
-                  priorityId2Color={priorityId2color}
-                />
-                <div
-                  style={{
-                    float: 'right',
-                    fontSize: 12,
-                    cursor: 'pointer',
-                    color: 'rgb(var(--primary-6))',
-                    marginTop: 3,
-                  }}
-                >
-                  + 创建任务
-                </div>
-              </div>
+              <h4 className={styles['title']}>迭代需求</h4>
             </div>
-            {Object.keys(taskStepId2info).map((tsId, tsIndex) => {
-              return (
+          </Col>
+          {Object.keys(taskStepId2info).map((id) => {
+            return (
+              <Col flex={1} key={id}>
                 <div
-                  key={tsId}
+                  className={styles['block']}
                   style={{
-                    position: 'absolute',
                     width: columnWidth,
-                    height: rowHeight,
-                    left: (tsIndex + 1) * containerWidth + columnMargin,
-                    top:
-                      index * (rowHeight + rowMarginTop + rowPaddingTop) +
-                      kanbanTitleHeight +
-                      rowPaddingTop,
+                    borderStartStartRadius: columnRadius,
+                    borderStartEndRadius: columnRadius,
                   }}
                 >
-                  <div style={{ paddingLeft: 10, paddingRight: 10 }}>
-                    {tsId}
+                  <h4 className={styles['title']}>
+                    {taskStepId2info[id].name}
+                  </h4>
+                </div>
+              </Col>
+            );
+          })}
+        </Row>
+      </div>
+      {Object.keys(demandId2info).map((demandId, index) => {
+        const blockRadius =
+          Object.keys(demandId2info).length === index + 1
+            ? columnRadius
+            : 'unset';
+        return (
+          <div key={demandId} style={{ width: rowWidth }}>
+            <Row gutter={columnGutter} align={'stretch'}>
+              <Col flex={1}>
+                <div
+                  className={styles['block']}
+                  style={{
+                    width: columnWidth,
+                    height: '100%',
+                    borderEndStartRadius: blockRadius,
+                    borderEndEndRadius: blockRadius,
+                  }}
+                >
+                  <div style={{ padding: '0 10px 10px 10px' }}>
+                    <DemandCard
+                      demand={demandId2info[demandId]}
+                      typeKey2Name={demandTypeKey2name}
+                      priorityId2Color={priorityId2color}
+                    />
+                    <div
+                      style={{
+                        marginTop: 3,
+                        textAlign: 'right',
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 12,
+                          cursor: 'pointer',
+                          color: 'rgb(var(--primary-6))',
+                        }}
+                        onClick={() => handleCreateTask(demandId)}
+                      >
+                        + 创建任务
+                      </span>
+                    </div>
                   </div>
                 </div>
-              );
-            })}
+              </Col>
+              {Object.keys(taskStepId2info).map((tsId) => {
+                const tasks =
+                  demandId2TaskStepTasks[demandId] &&
+                  demandId2TaskStepTasks[demandId][tsId];
+                return (
+                  <Col flex={1} key={tsId}>
+                    <div
+                      className={styles['block']}
+                      style={{
+                        width: columnWidth,
+                        height: '100%',
+                        borderEndStartRadius: blockRadius,
+                        borderEndEndRadius: blockRadius,
+                      }}
+                    >
+                      {tasks?.map((task) => {
+                        return (
+                          <div
+                            key={task.id}
+                            style={{ padding: '0 10px 10px 10px' }}
+                          >
+                            <TaskCard
+                              task={task}
+                              typeKey2Name={taskTypeKey2name}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </Col>
+                );
+              })}
+            </Row>
           </div>
         );
       })}
-      <div
-        className={styles['kanban-background']}
-        style={{
-          width: (Object.keys(taskStepId2info).length + 1) * containerWidth,
-        }}
-      >
-        <div
-          style={{
-            left: 0,
-            width: columnWidth,
-            marginLeft: columnMargin,
-            marginRight: columnMargin,
-          }}
-          className={styles['demand-column']}
-        />
-        <h4 className={styles['kanban-title']} style={{ left: columnMargin }}>
-          迭代需求
-        </h4>
-        {Object.keys(taskStepId2info).map((id, index) => {
-          return (
-            <div key={id}>
-              <div
-                style={{
-                  left: (index + 1) * containerWidth,
-                  width: columnWidth,
-                  marginLeft: columnMargin,
-                  marginRight: columnMargin,
-                }}
-                className={styles['task-step-column']}
-              />
-              <h4
-                className={styles['kanban-title']}
-                style={{ left: (index + 1) * containerWidth + columnMargin }}
-              >
-                {taskStepId2info[id].name}
-              </h4>
-            </div>
-          );
-        })}
-      </div>
+      <TaskForm {...taskFormProps} />
     </div>
   );
 }

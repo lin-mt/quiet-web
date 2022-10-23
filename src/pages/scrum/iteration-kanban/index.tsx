@@ -10,6 +10,7 @@ import { listDemand } from '@/service/scrum/demand';
 import { listTaskStep } from '@/service/scrum/task-step';
 import { listTeamUser } from '@/service/system/quiet-user';
 import { listTask } from '@/service/scrum/task';
+import _ from 'lodash';
 import Kanban from '@/pages/scrum/iteration-kanban/kanban';
 
 function IterationPlanning() {
@@ -109,6 +110,13 @@ function IterationPlanning() {
     });
   }
 
+  function handleNewTask(task) {
+    const demandTasks = _.clone(demandId2TaskStepTasks);
+    const tasks = demandTasks[task.demand_id][task.task_step_id];
+    demandTasks[task.demand_id][task.task_step_id] = [].concat(...tasks, task);
+    setDemandId2TaskStepTasks(demandTasks);
+  }
+
   return (
     <div className={styles['container']}>
       <Card>
@@ -124,6 +132,7 @@ function IterationPlanning() {
             taskTypeKey2name={taskTypeKey2name}
             demandTypeKey2name={demandTypeKey2name}
             userId2fullName={userIdId2fullName}
+            handleNewTask={handleNewTask}
           />
         )}
       </Card>

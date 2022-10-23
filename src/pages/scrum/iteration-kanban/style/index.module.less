@@ -33,38 +33,13 @@
   }
 }
 
-.container {
-  width: 100%;
-  position: relative;
-  opacity: 0.999;
-  overflow-x: scroll;
-
-  .kanban-background {
-    z-index: -1;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    .demand-column,
-    .task-step-column {
-      background-color: var(--color-fill-2);
-      height: 100%;
-      border-radius: 3px;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    .kanban-title {
-      position: absolute;
-      left: 0;
-      top: 0;
-      padding: 9px;
-      margin: 0;
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 1.25;
-    }
+.block {
+  background-color: var(--color-fill-2);
+  .title {
+    padding: 9px;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.25;
   }
 }
