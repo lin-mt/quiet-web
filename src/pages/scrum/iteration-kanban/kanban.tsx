@@ -1,17 +1,30 @@
-import React, { useState } from 'react';
-import styles from '@/pages/scrum/iteration-kanban/style/index.module.less';
+import React from 'react';
 import { ScrumDemand, ScrumTask, ScrumTaskStep } from '@/service/scrum/type';
 import { Grid } from '@arco-design/web-react';
-import DemandCard from '@/components/scrum/DemandCard';
-import { saveTask } from '@/service/scrum/task';
-import TaskForm, { TaskFormProps } from '@/components/scrum/TaskForm';
-import TaskCard from '@/components/scrum/TaskCard';
+import styled from 'styled-components';
+import KanbanRow from '@/pages/scrum/iteration-kanban/kanban-row';
 
 const { Row, Col } = Grid;
 
 const columnWidth = 300;
 const columnGutter = 10;
 const columnRadius = 4;
+const columnDefaultBc = 'var(--color-fill-2)';
+
+const ColumnTitle = styled.h4`
+  padding: 9px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+`;
+
+const KanbanContainer = styled.div`
+  width: 100%;
+  overflow: scroll;
+  padding-left: 5px;
+  padding-right: 5px;
+`;
 
 export type KanbanRowProps = {
   userId2fullName: Record<string, string>;
@@ -40,66 +53,34 @@ function Kanban(props: KanbanRowProps) {
     (Object.keys(taskStepId2info).length + 1) * (columnWidth + columnGutter) -
     columnGutter;
 
-  const [taskFormProps, setTaskFormProps] = useState<TaskFormProps>();
-
-  function handleCreateTask(demandId: string) {
-    const taskStepId = Object.keys(taskStepId2info)[0];
-    setTaskFormProps({
-      title: '创建任务',
-      visible: true,
-      demandId,
-      taskStepId: taskStepId2info[taskStepId].id,
-      userOptions: Object.keys(userId2fullName).map((key) => ({
-        label: userId2fullName[key],
-        value: key,
-      })),
-      onOk: (values) => {
-        return saveTask(values).then((resp) => {
-          props.handleNewTask(resp);
-          setTaskFormProps({ visible: false });
-        });
-      },
-      onCancel: () => setTaskFormProps({ visible: false }),
-    });
-  }
-
   return (
-    <div
-      style={{
-        width: '100%',
-        overflow: 'scroll',
-        paddingLeft: 5,
-        paddingRight: 5,
-      }}
-    >
+    <KanbanContainer>
       <div style={{ width: rowWidth }}>
         <Row gutter={columnGutter}>
           <Col flex={1}>
             <div
-              className={styles['block']}
               style={{
                 width: columnWidth,
+                backgroundColor: columnDefaultBc,
                 borderStartStartRadius: columnRadius,
                 borderStartEndRadius: columnRadius,
               }}
             >
-              <h4 className={styles['title']}>迭代需求</h4>
+              <ColumnTitle>迭代需求</ColumnTitle>
             </div>
           </Col>
           {Object.keys(taskStepId2info).map((id) => {
             return (
               <Col flex={1} key={id}>
                 <div
-                  className={styles['block']}
                   style={{
                     width: columnWidth,
+                    backgroundColor: columnDefaultBc,
                     borderStartStartRadius: columnRadius,
                     borderStartEndRadius: columnRadius,
                   }}
                 >
-                  <h4 className={styles['title']}>
-                    {taskStepId2info[id].name}
-                  </h4>
+                  <ColumnTitle>{taskStepId2info[id].name}</ColumnTitle>
                 </div>
               </Col>
             );
@@ -112,88 +93,27 @@ function Kanban(props: KanbanRowProps) {
             ? columnRadius
             : 'unset';
         return (
-          <div key={demandId} style={{ width: rowWidth }}>
-            <Row gutter={columnGutter} align={'stretch'}>
-              <Col flex={1}>
-                <div
-                  className={styles['block']}
-                  style={{
-                    width: columnWidth,
-                    height: '100%',
-                    borderEndStartRadius: blockRadius,
-                    borderEndEndRadius: blockRadius,
-                  }}
-                >
-                  <div style={{ padding: '0 10px 10px 10px' }}>
-                    <DemandCard
-                      demand={demandId2info[demandId]}
-                      typeKey2Name={demandTypeKey2name}
-                      priorityId2Color={priorityId2color}
-                    />
-                    <div
-                      style={{
-                        marginTop: 3,
-                        textAlign: 'right',
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: 12,
-                          cursor: 'pointer',
-                          color: 'rgb(var(--primary-6))',
-                        }}
-                        onClick={() => handleCreateTask(demandId)}
-                      >
-                        + 创建任务
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Col>
-              {Object.keys(taskStepId2info).map((tsId) => {
-                const tasks =
-                  demandId2TaskStepTasks[demandId] &&
-                  demandId2TaskStepTasks[demandId][tsId];
-                return (
-                  <Col flex={1} key={tsId}>
-                    <div
-                      className={styles['block']}
-                      style={{
-                        width: columnWidth,
-                        height: '100%',
-                        borderEndStartRadius: blockRadius,
-                        borderEndEndRadius: blockRadius,
-                      }}
-                    >
-                      {tasks?.map((task) => {
-                        return (
-                          <div
-                            key={task.id}
-                            style={{ padding: '0 10px 10px 10px' }}
-                          >
-                            <TaskCard
-                              task={task}
-                              typeKey2name={taskTypeKey2name}
-                              userId2fullName={userId2fullName}
-                              afterDelete={() => {
-                                if (props.handleDeleteTask) {
-                                  props.handleDeleteTask(task);
-                                }
-                              }}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </Col>
-                );
-              })}
-            </Row>
-          </div>
+          <KanbanRow
+            key={demandId}
+            demandId={demandId}
+            handleNewTask={props.handleNewTask}
+            handleDeleteTask={props.handleDeleteTask}
+            blockRadius={blockRadius}
+            columnDefaultBc={columnDefaultBc}
+            columnWidth={columnWidth}
+            demandTypeKey2name={demandTypeKey2name}
+            taskTypeKey2name={taskTypeKey2name}
+            rowWidth={rowWidth}
+            priorityId2color={priorityId2color}
+            taskStepId2info={taskStepId2info}
+            demandId2TaskStepTasks={demandId2TaskStepTasks}
+            columnGutter={columnGutter}
+            demandId2info={demandId2info}
+            userId2fullName={userId2fullName}
+          />
         );
       })}
-      <TaskForm {...taskFormProps} />
-    </div>
+    </KanbanContainer>
   );
 }
 
