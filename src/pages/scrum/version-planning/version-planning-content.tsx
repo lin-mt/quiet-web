@@ -90,7 +90,7 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
         });
       }
       vs.children = buildTreeData(vs.children, vId2It);
-      vs.children.push(...iChildren);
+      vs.children.unshift(...iChildren);
     });
     return [].concat(...vsClone, ...isClone);
   };
@@ -340,14 +340,22 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
               setSelectedNode(node.props.dataRef);
             }}
             renderTitle={(pro) => {
+              let tagColor;
+              if (!pro.dataRef.start_time) {
+                tagColor = 'arcoblue';
+              } else if (!pro.dataRef.end_time) {
+                tagColor = 'green';
+              } else {
+                tagColor = 'purple';
+              }
               return (
                 <Space>
                   {isVersion(pro.dataRef) ? (
-                    <Tag color={'arcoblue'} size={'small'}>
+                    <Tag color={tagColor} size={'small'}>
                       版本
                     </Tag>
                   ) : (
-                    <Tag color={'green'} size={'small'}>
+                    <Tag color={tagColor} size={'small'}>
                       迭代
                     </Tag>
                   )}

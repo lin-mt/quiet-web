@@ -30,6 +30,17 @@ const CardWrapper = styled.div`
   padding: 7px 10px;
 `;
 
+const Block = styled.div<{
+  width: number;
+  blockRadius: string | number;
+  backgroundColor: string;
+}>`
+  height: 100%;
+  background-color: ${(props) => props.backgroundColor};
+  border-end-end-radius: ${(props) => props.blockRadius}px;
+  border-end-start-radius: ${(props) => props.blockRadius}px;
+`;
+
 export type MoveTask = {
   demandId: string;
   taskId: string;
@@ -43,9 +54,8 @@ export type KanbanRowProps = {
   demandId: string;
   rowWidth: number;
   columnGutter: number;
-  columnWidth: number;
   columnDefaultBc: string;
-  blockRadius: string | number;
+  blockRadius: number;
   userId2fullName: Record<string, string>;
   taskTypeKey2name: Record<string, string>;
   demandTypeKey2name: Record<string, string>;
@@ -63,7 +73,6 @@ function KanbanRow(props: KanbanRowProps) {
     demandId,
     rowWidth,
     columnGutter,
-    columnWidth,
     columnDefaultBc,
     blockRadius,
     userId2fullName,
@@ -124,7 +133,7 @@ function KanbanRow(props: KanbanRowProps) {
   }
 
   function handleDragStart() {
-    setColumnBgc('var(--color-fill-3)');
+    setColumnBgc('var(--color-fill-4)');
   }
 
   return (
@@ -132,15 +141,7 @@ function KanbanRow(props: KanbanRowProps) {
       <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
         <Row gutter={columnGutter} align={'stretch'}>
           <Col flex={1}>
-            <div
-              style={{
-                height: '100%',
-                width: columnWidth,
-                backgroundColor: columnDefaultBc,
-                borderEndStartRadius: blockRadius,
-                borderEndEndRadius: blockRadius,
-              }}
-            >
+            <Block backgroundColor={columnDefaultBc} blockRadius={blockRadius}>
               <CardWrapper>
                 <DemandCard
                   demand={demandId2info[demandId]}
@@ -153,7 +154,7 @@ function KanbanRow(props: KanbanRowProps) {
                   </CreateTask>
                 </OptionContainer>
               </CardWrapper>
-            </div>
+            </Block>
           </Col>
           {Object.keys(taskStepId2info).map((tsId) => {
             const tasks =
@@ -161,15 +162,7 @@ function KanbanRow(props: KanbanRowProps) {
               demandId2TaskStepTasks[demandId][tsId];
             return (
               <Col flex={1} key={tsId}>
-                <div
-                  style={{
-                    height: '100%',
-                    width: columnWidth,
-                    backgroundColor: columnBgc,
-                    borderEndStartRadius: blockRadius,
-                    borderEndEndRadius: blockRadius,
-                  }}
-                >
+                <Block backgroundColor={columnBgc} blockRadius={blockRadius}>
                   <Droppable droppableId={tsId}>
                     {(droppableProvided) => (
                       <div
@@ -211,7 +204,7 @@ function KanbanRow(props: KanbanRowProps) {
                       </div>
                     )}
                   </Droppable>
-                </div>
+                </Block>
               </Col>
             );
           })}

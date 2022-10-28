@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  ForwardedRef,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import {
   Form,
   Input,
@@ -58,7 +64,20 @@ function getParams(): Params {
   return local;
 }
 
-function SearchForm(props: { onSearch: (values: Params) => void }) {
+export type SearchFormProp = {
+  onSearch: (values: Params) => void;
+  startIteration: (iteration: ScrumIteration) => void;
+  endIteration: (iteration: ScrumIteration) => void;
+};
+
+export type SearchFormRefProp = {
+  updateIteration: (iteration: ScrumIteration) => void;
+};
+
+function SearchForm(
+  props: SearchFormProp,
+  ref: ForwardedRef<SearchFormRefProp>
+) {
   const [searchForm] = useForm();
   const [iterationForm] = useForm();
   const groupId = Form.useWatch('group_id', iterationForm);
@@ -68,6 +87,12 @@ function SearchForm(props: { onSearch: (values: Params) => void }) {
   const [teamUsers, setTeamUsers] = useState<QuietUser[]>([]);
   const [visible, setVisible] = useState<boolean>();
   const [searchParam, setSearchParam] = useState<Params>({});
+
+  useImperativeHandle(ref, () => ({
+    updateIteration: (newIteration) => {
+      setIteration(newIteration);
+    },
+  }));
 
   useEffect(() => {
     iterationForm.setFieldsValue({
@@ -120,7 +145,15 @@ function SearchForm(props: { onSearch: (values: Params) => void }) {
   };
 
   const handleStartEndIteration = () => {
-    console.log('TODO');
+    if (!iteration) {
+      return;
+    }
+    if (!iteration.start_time) {
+      props.startIteration(iteration);
+    }
+    if (iteration.start_time && !iteration.end_time) {
+      props.endIteration(iteration);
+    }
   };
 
   function handleIterationSubmit() {
@@ -219,6 +252,7 @@ function SearchForm(props: { onSearch: (values: Params) => void }) {
                           <VersionSelect
                             iterationAsChildren
                             versionSelectable={false}
+                            iterationEndSelectable={true}
                             placeholder={'请选择迭代'}
                             projectId={projectId}
                           />
@@ -299,4 +333,4 @@ function SearchForm(props: { onSearch: (values: Params) => void }) {
   );
 }
 
-export default SearchForm;
+export default forwardRef(SearchForm);

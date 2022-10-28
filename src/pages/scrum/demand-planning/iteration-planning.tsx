@@ -237,6 +237,9 @@ export default forwardRef(
                         height: DemandContainerHeight - 164,
                       }}
                       className={styles['demand-pool-card']}
+                      noDataElement={
+                        <Empty description={'请拖拽待规划的需求到当前迭代'} />
+                      }
                       render={(demand, index) => {
                         return (
                           <Draggable

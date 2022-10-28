@@ -93,9 +93,7 @@ function Kanban(props: KanbanRowProps) {
       </div>
       {Object.keys(demandId2info).map((demandId, index) => {
         const blockRadius =
-          Object.keys(demandId2info).length === index + 1
-            ? columnRadius
-            : 'unset';
+          Object.keys(demandId2info).length === index + 1 ? columnRadius : 0;
         return (
           <KanbanRow
             key={demandId}
@@ -104,7 +102,6 @@ function Kanban(props: KanbanRowProps) {
             handleDeleteTask={handleDeleteTask}
             blockRadius={blockRadius}
             columnDefaultBc={columnDefaultBc}
-            columnWidth={columnWidth}
             demandTypeKey2name={demandTypeKey2name}
             taskTypeKey2name={taskTypeKey2name}
             rowWidth={rowWidth}

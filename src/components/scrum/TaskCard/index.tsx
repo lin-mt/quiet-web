@@ -62,6 +62,10 @@ function TaskCard(props: TaskCardProps) {
       visible: true,
       title: '编辑任务',
       formValues: task,
+      userOptions: Object.keys(props.userId2fullName).map((id) => ({
+        value: id,
+        label: props.userId2fullName[id],
+      })),
       onOk: (values) => {
         return updateTask(values).then((resp) => {
           if (props.afterUpdate) {

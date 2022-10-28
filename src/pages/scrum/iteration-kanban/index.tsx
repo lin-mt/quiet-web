@@ -1,8 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Empty } from '@arco-design/web-react';
-import SearchForm, { Params } from '@/pages/scrum/iteration-kanban/search-form';
+import React, { useEffect, useRef, useState } from 'react';
+import { Card, Empty, Modal } from '@arco-design/web-react';
+import SearchForm, {
+  Params,
+  SearchFormRefProp,
+} from '@/pages/scrum/iteration-kanban/search-form';
 import styles from '@/pages/scrum/iteration-kanban/style/index.module.less';
-import { ScrumDemand, ScrumTask, ScrumTaskStep } from '@/service/scrum/type';
+import {
+  ScrumDemand,
+  ScrumIteration,
+  ScrumTask,
+  ScrumTaskStep,
+} from '@/service/scrum/type';
 import { findEnabledDict } from '@/service/system/quiet-dict';
 import { getProject } from '@/service/scrum/project';
 import { listPriority } from '@/service/scrum/priority';
@@ -13,6 +21,10 @@ import { listTask, updateTask } from '@/service/scrum/task';
 import _ from 'lodash';
 import Kanban from '@/pages/scrum/iteration-kanban/kanban';
 import { MoveTask } from '@/pages/scrum/iteration-kanban/kanban-row';
+import { end, start } from '@/service/scrum/iteration';
+import NextIterationModal, {
+  NextIterationModalProp,
+} from '@/pages/scrum/iteration-kanban/next-iteration-modal';
 
 function IterationPlanning() {
   const [params, setParams] = useState<Params>({});
@@ -38,6 +50,9 @@ function IterationPlanning() {
   const [demandId2TaskStepTasks, setDemandId2TaskStepTasks] = useState<
     Record<string, Record<string, ScrumTask[]>>
   >({});
+  const [nextIterationModalProps, setNextIterationModalProps] =
+    useState<NextIterationModalProp>();
+  const searchFormRef = useRef<SearchFormRefProp>();
 
   useEffect(() => {
     findEnabledDict(undefined, 'quiet-scrum', 'task-type').then((resp) => {
@@ -83,30 +98,34 @@ function IterationPlanning() {
         initProjectConfig(values.project_id);
       }
       if (JSON.stringify(prevState) != JSON.stringify(values)) {
-        listDemand(
-          values.iteration_id,
-          values.demand_title,
-          values.priority_id
-        ).then((demands) => {
-          const id2info: Record<string, ScrumDemand> = {};
-          demands.forEach((d) => (id2info[d.id] = d));
-          setDemandId2info(id2info);
-          listTask(Object.keys(id2info), [values.executor_id]).then((tasks) => {
-            const datum: Record<string, Record<string, ScrumTask[]>> = {};
-            tasks.forEach((task) => {
-              if (!datum[task.demand_id]) {
-                datum[task.demand_id] = {};
-              }
-              if (!datum[task.demand_id][task.task_step_id]) {
-                datum[task.demand_id][task.task_step_id] = [];
-              }
-              datum[task.demand_id][task.task_step_id].push(task);
-            });
-            setDemandId2TaskStepTasks(datum);
-          });
-        });
+        loadDemandTask(values);
       }
       return values;
+    });
+  }
+
+  function loadDemandTask(params) {
+    listDemand(
+      params.iteration_id,
+      params.demand_title,
+      params.priority_id
+    ).then((demands) => {
+      const id2info: Record<string, ScrumDemand> = {};
+      demands.forEach((d) => (id2info[d.id] = d));
+      setDemandId2info(id2info);
+      listTask(Object.keys(id2info), [params.executor_id]).then((tasks) => {
+        const datum: Record<string, Record<string, ScrumTask[]>> = {};
+        tasks.forEach((task) => {
+          if (!datum[task.demand_id]) {
+            datum[task.demand_id] = {};
+          }
+          if (!datum[task.demand_id][task.task_step_id]) {
+            datum[task.demand_id][task.task_step_id] = [];
+          }
+          datum[task.demand_id][task.task_step_id].push(task);
+        });
+        setDemandId2TaskStepTasks(datum);
+      });
     });
   }
 
@@ -152,10 +171,80 @@ function IterationPlanning() {
     });
   }
 
+  function handleStartIteration(iteration: ScrumIteration) {
+    Modal.confirm({
+      title: '开始迭代',
+      content: `确认开始当前迭代 ${iteration.name} 吗？`,
+      onConfirm: () =>
+        start(iteration.id).then((resp) =>
+          searchFormRef.current.updateIteration(resp)
+        ),
+    });
+  }
+
+  function handleEndIteration(iteration: ScrumIteration) {
+    const demandIds = Object.keys(demandId2info);
+    const taskStepIds = Object.keys(taskStepId2info);
+    const lastStep = taskStepIds[taskStepIds.length - 1];
+    let allDemandFinish = true;
+    demandIds.every((id) => {
+      const taskStep2tasks = demandId2TaskStepTasks[id];
+      if (!taskStep2tasks) {
+        allDemandFinish = false;
+        return false;
+      }
+      taskStepIds.every((tsId) => {
+        if (tsId === lastStep) {
+          if (taskStep2tasks[tsId]?.length === 0) {
+            allDemandFinish = false;
+          }
+          return true;
+        }
+        if (taskStep2tasks[tsId]?.length !== 0) {
+          allDemandFinish = false;
+          return false;
+        }
+        return true;
+      });
+      return allDemandFinish;
+    });
+    if (allDemandFinish) {
+      Modal.confirm({
+        title: '结束迭代',
+        content: `确认结束当前迭代（${iteration.name}）吗？`,
+        onConfirm: () =>
+          end(iteration.id).then((resp) =>
+            searchFormRef.current.updateIteration(resp)
+          ),
+      });
+    } else {
+      setNextIterationModalProps({
+        visible: true,
+        title: '结束迭代',
+        currentId: params.iteration_id,
+        projectId: params.project_id,
+        onOk: (id) =>
+          end(iteration.id, id).then((resp) => {
+            loadDemandTask(params);
+            searchFormRef.current.updateIteration(resp);
+            setNextIterationModalProps({ visible: false });
+          }),
+        onCancel: () => {
+          setNextIterationModalProps({ visible: false });
+        },
+      });
+    }
+  }
+
   return (
     <div className={styles['container']}>
       <Card>
-        <SearchForm onSearch={handleSearch} />
+        <SearchForm
+          ref={searchFormRef}
+          onSearch={handleSearch}
+          startIteration={handleStartIteration}
+          endIteration={handleEndIteration}
+        />
         {!params.iteration_id && !params.project_id ? (
           <Empty description={'请选择项目迭代'} />
         ) : (
@@ -173,6 +262,8 @@ function IterationPlanning() {
           />
         )}
       </Card>
+
+      <NextIterationModal {...nextIterationModalProps} />
     </div>
   );
 }

@@ -3,12 +3,12 @@ import { ScrumIteration } from '@/service/scrum/type';
 
 const base_path = '/scrum/iteration';
 
-export function end(id: string) {
-  return POST(`${base_path}/end`, { id });
+export function end(id: string, next_id?: string): Promise<ScrumIteration> {
+  return POST<ScrumIteration>(`${base_path}/end`, null, { id, next_id });
 }
 
-export function start(id: string) {
-  return POST(`${base_path}/start`, { id });
+export function start(id: string): Promise<ScrumIteration> {
+  return POST<ScrumIteration>(`${base_path}/start`, null, { id });
 }
 
 export function deleteIteration(id: string): Promise<void> {
