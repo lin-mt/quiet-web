@@ -46,7 +46,7 @@ export type DemandPoolRefProps = {
 };
 
 // 必须大于 164
-export const DemandContainerHeight = 830;
+export const DemandContainerHeight = 780;
 
 export default forwardRef(
   (
