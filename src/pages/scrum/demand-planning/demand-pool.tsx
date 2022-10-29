@@ -114,13 +114,11 @@ export default forwardRef(
             return;
           }
           newDemands.splice(index, 0, demand);
-          setDemands([]);
-          setDemands(newDemands);
         } else {
-          newDemands.splice(index, 1, demand);
-          setDemands([]);
-          setDemands(newDemands);
+          newDemands.splice(existIndex, 1, demand);
         }
+        setDemands([]);
+        setDemands(newDemands);
       },
     }));
 

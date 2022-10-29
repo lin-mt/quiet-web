@@ -31,25 +31,34 @@ function TemplateForm(props: TemplateFormProps) {
   useEffect(() => {
     if (props.formValues) {
       form.setFieldsValue(props.formValues);
-      listPriority(props.formValues.id).then((resp) => {
-        form.setFieldValue('priorities', resp);
-      });
-      listTaskStep(props.formValues.id).then((resp) => {
-        form.setFieldValue('task_steps', resp);
-      });
+      fetchPriorityAndTaskStep();
     } else {
       form.setFieldsValue(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.formValues]);
 
+  function fetchPriorityAndTaskStep() {
+    listPriority(props.formValues.id).then((resp) => {
+      form.setFieldValue('priorities', resp);
+    });
+    listTaskStep(props.formValues.id).then((resp) => {
+      form.setFieldValue('task_steps', resp);
+    });
+  }
+
   function handleOk() {
     if (props.onOk) {
       form.validate().then(async (values) => {
         setSubmitting(true);
-        props.onOk(values).finally(() => {
-          setSubmitting(false);
-        });
+        props
+          .onOk(values)
+          .catch(() => {
+            fetchPriorityAndTaskStep();
+          })
+          .finally(() => {
+            setSubmitting(false);
+          });
       });
     }
   }

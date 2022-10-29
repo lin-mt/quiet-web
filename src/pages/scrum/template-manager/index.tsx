@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Grid, Notification } from '@arco-design/web-react';
+import { Card, Grid } from '@arco-design/web-react';
 import SearchForm from '@/pages/scrum/template-manager/search-form';
 import styles from '@/pages/scrum/template-manager/style/index.module.less';
 import { ScrumTemplate } from '@/service/scrum/type';
@@ -64,26 +64,25 @@ function TemplateManager() {
         visible: true,
         onOk: (values) => {
           return updateTemplate(values).then(async (resp) => {
+            let updateSuccess = true;
             if (values.priorities) {
               values.priorities.forEach((v) => (v.template_id = resp.id));
               await batchSavePriorities(resp.id, values.priorities).catch(
-                () => {
-                  Notification.error({
-                    content: '优先级信息保存失败，请重试或者联系管理员',
-                  });
-                }
+                () => (updateSuccess = false)
               );
             }
             if (values.task_steps) {
               values.task_steps.forEach((v) => (v.template_id = resp.id));
-              await batchSaveTaskStep(resp.id, values.task_steps).catch(() => {
-                Notification.error({
-                  content: '任务步骤信息保存失败，请重试或者联系管理员',
-                });
-              });
+              await batchSaveTaskStep(resp.id, values.task_steps).catch(
+                () => (updateSuccess = false)
+              );
             }
             fetchData();
-            setTemplateFormProps({ visible: false });
+            if (updateSuccess) {
+              setTemplateFormProps({ visible: false });
+            } else {
+              return Promise.reject();
+            }
           });
         },
       });
