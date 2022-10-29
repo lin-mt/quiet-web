@@ -133,7 +133,7 @@ function KanbanRow(props: KanbanRowProps) {
   }
 
   function handleDragStart() {
-    setColumnBgc('var(--color-fill-4)');
+    setColumnBgc('var(--color-fill-3)');
   }
 
   return (
@@ -164,9 +164,15 @@ function KanbanRow(props: KanbanRowProps) {
               <Col flex={1} key={tsId}>
                 <Block backgroundColor={columnBgc} blockRadius={blockRadius}>
                   <Droppable droppableId={tsId}>
-                    {(droppableProvided) => (
+                    {(droppableProvided, snapshot) => (
                       <div
-                        style={{ width: '100%', height: '100%' }}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          backgroundColor: snapshot.isDraggingOver
+                            ? 'var(--color-fill-4)'
+                            : 'unset',
+                        }}
                         ref={droppableProvided.innerRef}
                         {...droppableProvided.droppableProps}
                       >
