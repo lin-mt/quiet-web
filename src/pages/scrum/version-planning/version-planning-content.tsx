@@ -330,27 +330,25 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
             </Space>
           }
         >
-          <div>
-            <Space
-              size={0}
-              style={{ padding: '5px 5px', float: 'right' }}
-              split={<Divider type="vertical" />}
-            >
-              <div style={{ fontSize: 12, color: 'var(--color-text-2)' }}>
-                版本状态 / 迭代状态
-              </div>
-              <Tag color={'arcoblue'} size={'small'}>
-                未开始
-              </Tag>
-              <Tag color={'green'} size={'small'}>
-                进行中
-              </Tag>
-              <Tag color={'purple'} size={'small'}>
-                已结束
-              </Tag>
-            </Space>
-            <Divider style={{ margin: 0 }} />
-          </div>
+          <Space
+            size={0}
+            style={{ padding: 5, float: 'right' }}
+            split={<Divider type="vertical" />}
+          >
+            <div style={{ fontSize: 12, color: 'var(--color-text-2)' }}>
+              版本状态 / 迭代状态
+            </div>
+            <Tag color={'arcoblue'} size={'small'}>
+              未开始
+            </Tag>
+            <Tag color={'green'} size={'small'}>
+              进行中
+            </Tag>
+            <Tag color={'purple'} size={'small'}>
+              已结束
+            </Tag>
+          </Space>
+          <Divider style={{ margin: '5px 0' }} />
           <Tree
             blockNode
             treeData={treeData}
