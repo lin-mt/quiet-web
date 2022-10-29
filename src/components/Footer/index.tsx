@@ -1,42 +1,24 @@
-import { useIntl } from 'umi';
-import { GithubOutlined } from '@ant-design/icons';
-import { DefaultFooter } from '@ant-design/pro-layout';
 import React from 'react';
+import { Layout, Space } from '@arco-design/web-react';
+import { FooterProps } from '@arco-design/web-react/es/Layout/interface';
+import cs from 'classnames';
+import styles from './style/index.module.less';
+import { IconGithub } from '@arco-design/web-react/icon';
 
-const Footer: React.FC = () => {
-  const intl = useIntl();
-  const defaultMessage = intl.formatMessage({
-    id: 'app.copyright.produced',
-    defaultMessage: '蚂蚁集团体验技术部出品',
-  });
-
+function Footer(props: FooterProps = {}) {
   const currentYear = new Date().getFullYear();
 
+  const { className, ...restProps } = props;
   return (
-    <DefaultFooter
-      copyright={`${currentYear} ${defaultMessage}`}
-      links={[
-        {
-          key: 'Ant Design Pro',
-          title: 'Ant Design Pro',
-          href: 'https://pro.ant.design',
-          blankTarget: true,
-        },
-        {
-          key: 'github',
-          title: <GithubOutlined />,
-          href: 'https://github.com/ant-design/ant-design-pro',
-          blankTarget: true,
-        },
-        {
-          key: 'Ant Design',
-          title: 'Ant Design',
-          href: 'https://ant.design',
-          blankTarget: true,
-        },
-      ]}
-    />
+    <Layout.Footer className={cs(styles.footer, className)} {...restProps}>
+      <Space direction={'vertical'}>
+        <a className="arco-icon" href={'https://github.com/lin-mt/quiet-web'}>
+          <IconGithub />
+        </a>
+        <div>ⓒ Copyright Quiet 2020-{currentYear}</div>
+      </Space>
+    </Layout.Footer>
   );
-};
+}
 
 export default Footer;
