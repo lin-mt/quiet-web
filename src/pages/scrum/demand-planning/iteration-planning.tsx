@@ -236,7 +236,7 @@ export default forwardRef(
                         marginTop: 15,
                         height: DemandContainerHeight - 164,
                       }}
-                      className={styles['demand-pool-card']}
+                      className={styles['demand-list']}
                       noDataElement={
                         <Empty description={'请拖拽待规划的需求到当前迭代'} />
                       }

@@ -261,7 +261,7 @@ export default forwardRef(
                   dataSource={demands}
                   style={{ height: DemandContainerHeight }}
                   scrollLoading={scrollLoading}
-                  className={styles['demand-pool-card']}
+                  className={styles['demand-list']}
                   onReachBottom={loadMoreDemands}
                   render={(demand, index) => {
                     const isDragDisabled = !!demand.iteration_id;

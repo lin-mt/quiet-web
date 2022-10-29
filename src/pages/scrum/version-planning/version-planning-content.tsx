@@ -7,6 +7,7 @@ import {
   Empty,
   Grid,
   Link,
+  List,
   Modal,
   Space,
   Table,
@@ -24,6 +25,7 @@ import {
 } from '@/service/scrum/version';
 import {
   PlanningType,
+  ScrumDemand,
   ScrumIteration,
   ScrumVersion,
 } from '@/service/scrum/type';
@@ -44,6 +46,13 @@ import {
 import VersionForm from '@/components/scrum/VersionForm';
 import { QuietFormProps } from '@/components/type';
 import IterationForm from '@/components/scrum/IterationForm';
+import { listDemand } from '@/service/scrum/demand';
+import { DemandContainerHeight } from '@/pages/scrum/demand-planning/demand-pool';
+import styles from '@/pages/scrum/version-planning/style/index.module.less';
+import DemandCard from '@/components/scrum/DemandCard';
+import { findEnabledDict } from '@/service/system/quiet-dict';
+import { getProject } from '@/service/scrum/project';
+import { listPriority } from '@/service/scrum/priority';
 
 const { Row, Col } = Grid;
 
@@ -60,6 +69,11 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
     useState<QuietFormProps<ScrumIteration>>();
   const [planningDescription, setPlanningDescription] = useState([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [demands, setDemands] = useState<ScrumDemand[]>([]);
+  const [priorityId2Color, setPriorityId2Color] = useState<
+    Record<string, string>
+  >({});
+  const [typeKey2Name, setTypeKey2Name] = useState<Record<string, string>>({});
 
   const getIds = (vs: ScrumVersion[]) => {
     const ids: string[] = [];
@@ -98,6 +112,18 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
 
   useEffect(() => {
     loadVersionTree();
+    findEnabledDict(null, 'quiet-scrum', 'demand-type').then((resp) => {
+      const key2Name: Record<string, string> = {};
+      resp.forEach((p) => (key2Name[p.key] = p.name));
+      setTypeKey2Name(key2Name);
+    });
+    getProject(props.projectId).then((resp) => {
+      listPriority(resp.template_id).then((sps) => {
+        const id2Color: Record<string, string> = {};
+        sps.forEach((p) => (id2Color[p.id] = p.color_hex));
+        setPriorityId2Color(id2Color);
+      });
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.projectId]);
 
@@ -135,8 +161,20 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
         value: selectedNode.remark,
       },
     ]);
+    if (!isVersion(selectedNode)) {
+      loadDemands();
+    } else {
+      setDemands([]);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(selectedNode)]);
+
+  function loadDemands() {
+    listDemand(selectedNode.id).then((resp) => {
+      setDemands([]);
+      setDemands(resp);
+    });
+  }
 
   const loadVersionTree = () => {
     treeVersion(props.projectId).then((vs) => {
@@ -389,7 +427,7 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
       <Col span={12}>
         {selectedNode ? (
           <Card
-            bodyStyle={{ paddingTop: 0 }}
+            bodyStyle={{ padding: 5 }}
             title={isVersion(selectedNode) ? '版本信息' : '迭代信息'}
             extra={
               <Space>
@@ -429,7 +467,12 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
               </Space>
             }
           >
-            <Descriptions border column={2} data={planningDescription} />
+            <Descriptions
+              border
+              column={2}
+              data={planningDescription}
+              style={{ paddingRight: 17 }}
+            />
             <div style={{ marginTop: 15 }}>
               {isVersion(selectedNode) ? (
                 <Table
@@ -440,7 +483,36 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
                   data={selectedNode.children.filter((c) => !isVersion(c))}
                 />
               ) : (
-                <Empty description={'无规划的需求信息'} />
+                <List
+                  hoverable
+                  dataSource={demands}
+                  style={{
+                    marginTop: 15,
+                    height: DemandContainerHeight - 164,
+                  }}
+                  className={styles['demand-list']}
+                  noDataElement={<Empty description={'无规划的需求信息'} />}
+                  render={(demand) => {
+                    return (
+                      <div
+                        key={demand.id}
+                        style={{
+                          marginBottom: 10,
+                          marginRight: 17,
+                        }}
+                      >
+                        <DemandCard
+                          demand={demand}
+                          typeKey2Name={typeKey2Name}
+                          priorityId2Color={priorityId2Color}
+                          afterDelete={() => {
+                            loadDemands();
+                          }}
+                        />
+                      </div>
+                    );
+                  }}
+                />
               )}
             </div>
           </Card>
