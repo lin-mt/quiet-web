@@ -2,7 +2,7 @@
 
 import { Affix, Anchor, Button, Checkbox, Col, Form, Input, Row, Select, Upload } from 'antd';
 import type {
-  ApiDetail,
+  DocApi,
   DocProject,
   DocProjectEnvironment,
   FormParam,
@@ -37,12 +37,13 @@ const DisabledInput = styled(Input)`
 `;
 
 interface ApiRunProps {
-  apiDetail: ApiDetail;
+  apiDetail: DocApi;
   projectInfo: DocProject;
 }
 
 export default function ApiRun(props: ApiRunProps) {
   const { apiDetail, projectInfo } = props;
+  console.log(apiDetail);
   const [environments, setEnvironments] = useState<DocProjectEnvironment[]>([]);
   const [selectEnvIndex, setSelectEnvIndex] = useState<number>(0);
   const [formDataFiles, setFormDataFiles] = useState<Record<string, RcFile[]>>({});
@@ -179,7 +180,7 @@ export default function ApiRun(props: ApiRunProps) {
     if (projectInfo.base_path) {
       path = `${path}/${removePathSeparator(projectInfo.base_path)}`;
     }
-    path = `${path}/${removePathSeparator(apiDetail.api.path)}`;
+    path = `${path}/${removePathSeparator(apiDetail.path)}`;
     // 添加 Header
     let headers: Record<string, string> | undefined = undefined;
     if (values.headers) {
@@ -242,7 +243,7 @@ export default function ApiRun(props: ApiRunProps) {
       }
     }
     request(`/api/doc/request/${path}`, {
-      method: apiDetail.api.method,
+      method: apiDetail.method,
       headers,
       params,
       data,
@@ -272,7 +273,7 @@ export default function ApiRun(props: ApiRunProps) {
             </PartTitle>
             <Input.Group compact={true}>
               <Input
-                value={apiDetail.api.method}
+                value={apiDetail.method}
                 disabled={true}
                 style={{ color: 'rgba(0, 0, 0, 0.69)', width: '8%', textAlign: 'center' }}
               />
@@ -304,7 +305,7 @@ export default function ApiRun(props: ApiRunProps) {
                 />
               )}
               <Input
-                value={`${projectInfo.base_path ? projectInfo.base_path : ''}${apiDetail.api.path}`}
+                value={`${projectInfo.base_path ? projectInfo.base_path : ''}${apiDetail.path}`}
                 disabled={true}
                 style={{ color: 'rgba(0, 0, 0, 0.69)', width: '50%' }}
               />

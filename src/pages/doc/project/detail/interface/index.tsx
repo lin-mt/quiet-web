@@ -3,7 +3,7 @@ import ApiPreview from '@/pages/doc/project/detail/interface/components/ApiPrevi
 import ApiEdit from '@/pages/doc/project/detail/interface/components/ApiEdit';
 import type { Key } from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import type { ApiDetail, DocProject } from '@/services/doc/EntityType';
+import type { DocProject } from '@/services/doc/EntityType';
 import { getApiDetail } from '@/services/doc/DocApi';
 import ApiRun from '@/pages/doc/project/detail/interface/components/ApiRun';
 import {
@@ -40,7 +40,7 @@ export default (props: ApiDetailProps) => {
   const { projectInfo } = props;
   const unGroupKey = 'ungroup';
 
-  const [apiDetail, setApiDetail] = useState<ApiDetail>();
+  const [apiDetail, setApiDetail] = useState<DocApi>();
   const [apiGroupFormVisible, setApiGroupFormVisible] = useState<boolean>(false);
   const [apiGroupCreateFormVisible, setApiGroupCreateFormVisible] = useState<boolean>(false);
   const [apiFormVisible, setApiFormVisible] = useState<boolean>(false);

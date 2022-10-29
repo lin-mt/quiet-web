@@ -16,7 +16,7 @@ import {
   Space,
   Tooltip,
 } from 'antd';
-import type { ApiDetail, DocApiGroup, DocProject } from '@/services/doc/EntityType';
+import type { DocApi, DocApiGroup, DocProject } from '@/services/doc/EntityType';
 import styled from 'styled-components';
 import { DebounceSelect } from '@/pages/components/DebounceSelect';
 import { listApiGroupByProjectIdAndName } from '@/services/doc/DocApiGroup';
@@ -34,7 +34,7 @@ import JsonSchemaEditor from '@quiet-front-end/json-schema-editor-antd';
 import '@quiet-front-end/json-schema-editor-antd/dist/css/index.css';
 
 interface ApiEditProps {
-  apiDetail: ApiDetail;
+  apiDetail: DocApi;
   projectInfo: DocProject;
   afterUpdate?: () => void;
 }
@@ -93,29 +93,29 @@ export default (props: ApiEditProps) => {
 
   useEffect(() => {
     apiEditForm.setFieldsValue({
-      name: apiDetail.api.name,
-      api_state: ApiState[apiDetail.api.api_state],
-      method: HttpMethod[apiDetail.api.method],
-      path: apiDetail.api.path,
-      remark: apiDetail.api.remark,
-      api_group_id: apiDetail.api.api_group
+      name: apiDetail.name,
+      api_state: ApiState[apiDetail.api_state],
+      method: HttpMethod[apiDetail.method],
+      path: apiDetail.path,
+      remark: apiDetail.remark,
+      api_group_id: apiDetail.api_group
         ? {
-            value: apiDetail.api.api_group.id,
-            label: apiDetail.api.api_group.name,
+            value: apiDetail.api_group.id,
+            label: apiDetail.api_group.name,
           }
         : undefined,
       ...apiDetail.api_info,
     });
-    const options = getReqParamSettingOptionsByMethod(apiDetail.api.method);
+    const options = getReqParamSettingOptionsByMethod(apiDetail.method);
     setReqParamSettingOptions(options);
     setReqParamSetting(options[0]);
   }, [
-    apiDetail.api.api_group,
-    apiDetail.api.api_state,
-    apiDetail.api.method,
-    apiDetail.api.name,
-    apiDetail.api.path,
-    apiDetail.api.remark,
+    apiDetail.api_group,
+    apiDetail.api_state,
+    apiDetail.method,
+    apiDetail.name,
+    apiDetail.path,
+    apiDetail.remark,
     apiDetail.api_info,
     apiEditForm,
   ]);
@@ -140,7 +140,7 @@ export default (props: ApiEditProps) => {
       setRespTypeSetting('RAW');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiDetail.api.id]);
+  }, [apiDetail.id]);
 
   function listApiGroupByName(name: string) {
     if (projectInfo.id) {
@@ -199,7 +199,7 @@ export default (props: ApiEditProps) => {
     setSubmitting(true);
     try {
       const values = await apiEditForm.validateFields();
-      values.id = apiDetail.api.id;
+      values.id = apiDetail.id;
       values.api_group_id = values.api_group_id?.value;
       const cloneValues = _.clone(values);
       values.req_json_body = null;
@@ -224,12 +224,12 @@ export default (props: ApiEditProps) => {
       if (reqBodyTypeSetting === 'raw') {
         values.req_raw = cloneValues.req_raw;
       }
-      await updateApi({ ...apiDetail.api, ...values });
+      await updateApi({ ...apiDetail, ...values });
       delete values.id;
       if (apiDetail.api_info) {
         await updateApiInfo({ ...apiDetail.api_info, ...values });
       } else {
-        await saveApiInfo({ ...values, api_id: apiDetail.api.id });
+        await saveApiInfo({ ...values, api_id: apiDetail.id });
       }
       if (afterUpdate) {
         afterUpdate();
@@ -808,7 +808,7 @@ export default (props: ApiEditProps) => {
           name={'remark'}
           rules={[{ max: 300, message: '备注信息不能超过 300' }]}
         >
-          <MarkdownEditor maxLength={300} value={apiDetail.api.remark} />
+          <MarkdownEditor maxLength={300} value={apiDetail.remark} />
         </FieldFormItem>
         <Affix offsetBottom={0} onChange={(af) => setAffixed(af)} style={{ marginTop: 30 }}>
           <SaveContainer style={{ backgroundColor: affixed ? 'rgb(230, 233, 236)' : undefined }}>

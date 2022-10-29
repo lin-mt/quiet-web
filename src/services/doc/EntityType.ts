@@ -20,6 +20,7 @@ export interface DocApi extends SerialEntity, DataNode {
   author_full_name?: string;
   creator_full_name?: string;
   updater_full_name?: string;
+  api_info?: DocApiInfo;
 }
 
 export interface FormParam {

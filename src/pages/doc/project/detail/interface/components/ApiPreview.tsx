@@ -1,12 +1,6 @@
 import { ApiTitle } from '@/pages/doc/project/detail';
 import { Badge, Descriptions, Empty, Space, Table, Tag, Typography } from 'antd';
-import type {
-  ApiDetail,
-  DocProject,
-  FormParam,
-  Header,
-  PathParam,
-} from '@/services/doc/EntityType';
+import type { DocApi, DocProject, FormParam, Header, PathParam } from '@/services/doc/EntityType';
 import { getMethodTagColor } from '@/utils/doc/utils';
 import { ApiState, HttpMethod } from '@/services/doc/Enums';
 import styled from 'styled-components';
@@ -27,7 +21,7 @@ const ReqTitle = styled.h3`
 `;
 
 interface ApiPreviewProps {
-  apiDetail: ApiDetail;
+  apiDetail: DocApi;
   projectInfo: DocProject;
 }
 
@@ -130,23 +124,23 @@ export default (props: ApiPreviewProps) => {
       <ApiTitle>基本信息</ApiTitle>
       <ContentContainer>
         <Descriptions bordered={true} size={'middle'} column={2}>
-          <Descriptions.Item label={'接口名称'}>{apiDetail.api.name}</Descriptions.Item>
-          <Descriptions.Item label={'作者'}>{apiDetail.api.author_full_name}</Descriptions.Item>
-          <Descriptions.Item label={'创建人'}>{apiDetail.api.creator_full_name}</Descriptions.Item>
-          <Descriptions.Item label={'更新人'}>{apiDetail.api.updater_full_name}</Descriptions.Item>
+          <Descriptions.Item label={'接口名称'}>{apiDetail.name}</Descriptions.Item>
+          <Descriptions.Item label={'作者'}>{apiDetail.author_full_name}</Descriptions.Item>
+          <Descriptions.Item label={'创建人'}>{apiDetail.creator_full_name}</Descriptions.Item>
+          <Descriptions.Item label={'更新人'}>{apiDetail.updater_full_name}</Descriptions.Item>
           <Descriptions.Item label={'状态'}>
             <Badge
-              status={apiDetail.api.api_state === ApiState.FINISHED ? 'success' : 'processing'}
-              text={apiDetail.api.api_state === ApiState.FINISHED ? '已完成' : '未完成'}
+              status={apiDetail.api_state === ApiState.FINISHED ? 'success' : 'processing'}
+              text={apiDetail.api_state === ApiState.FINISHED ? '已完成' : '未完成'}
             />
           </Descriptions.Item>
-          <Descriptions.Item label={'更新时间'}>{apiDetail.api.gmt_update}</Descriptions.Item>
+          <Descriptions.Item label={'更新时间'}>{apiDetail.gmt_update}</Descriptions.Item>
           <Descriptions.Item label={'接口路径'}>
             <Space direction={'horizontal'}>
-              <Tag color={getMethodTagColor(apiDetail.api.method)}>{apiDetail.api.method}</Tag>
+              <Tag color={getMethodTagColor(apiDetail.method)}>{apiDetail.method}</Tag>
               <Typography.Text copyable={true}>
                 {projectInfo.base_path}
-                {apiDetail.api.path}
+                {apiDetail.path}
               </Typography.Text>
             </Space>
           </Descriptions.Item>
@@ -159,8 +153,8 @@ export default (props: ApiPreviewProps) => {
           marginRight: 10,
         }}
       >
-        {apiDetail.api.remark ? (
-          <MarkdownViewer value={apiDetail.api.remark} />
+        {apiDetail.remark ? (
+          <MarkdownViewer value={apiDetail.remark} />
         ) : (
           <Empty description={'无备注信息'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
@@ -199,7 +193,7 @@ export default (props: ApiPreviewProps) => {
           columns={queryColumns}
         />
         {[HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.POST].includes(
-          HttpMethod[apiDetail.api.method],
+          HttpMethod[apiDetail.method],
         ) && <ReqTitle style={{ marginTop: 20 }}>Body:</ReqTitle>}
         {apiDetail.api_info?.req_form && (
           <Table
@@ -217,7 +211,7 @@ export default (props: ApiPreviewProps) => {
         {apiDetail.api_info?.req_file && apiDetail.api_info.req_file}
         {apiDetail.api_info?.req_raw && apiDetail.api_info.req_raw}
         {[HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.POST].includes(
-          HttpMethod[apiDetail.api.method],
+          HttpMethod[apiDetail.method],
         ) &&
           !apiDetail.api_info?.req_form &&
           !apiDetail.api_info?.req_json_body &&

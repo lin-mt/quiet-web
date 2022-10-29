@@ -1,4 +1,4 @@
-import type { ApiDetail, DocApi } from '@/services/doc/EntityType';
+import type { DocApi } from '@/services/doc/EntityType';
 import { DELETE, GET, POST, PUT } from '@/utils/HttpUtils';
 
 const base_path = '/api/doc/api';
@@ -15,6 +15,6 @@ export async function deleteApi(id: string) {
   await DELETE(`${base_path}/${id}`);
 }
 
-export async function getApiDetail(id: string): Promise<ApiDetail> {
-  return GET<ApiDetail>(`${base_path}/detail/${id}`);
+export async function getApiDetail(id: string): Promise<DocApi> {
+  return GET<DocApi>(`${base_path}/detail/${id}`);
 }
