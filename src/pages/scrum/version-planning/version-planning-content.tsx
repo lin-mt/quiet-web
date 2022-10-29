@@ -47,7 +47,6 @@ import VersionForm from '@/components/scrum/VersionForm';
 import { QuietFormProps } from '@/components/type';
 import IterationForm from '@/components/scrum/IterationForm';
 import { listDemand } from '@/service/scrum/demand';
-import { DemandContainerHeight } from '@/pages/scrum/demand-planning/demand-pool';
 import styles from '@/pages/scrum/version-planning/style/index.module.less';
 import DemandCard from '@/components/scrum/DemandCard';
 import { findEnabledDict } from '@/service/system/quiet-dict';
@@ -486,10 +485,7 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
                 <List
                   hoverable
                   dataSource={demands}
-                  style={{
-                    marginTop: 15,
-                    height: DemandContainerHeight - 164,
-                  }}
+                  style={{ marginTop: 15, maxHeight: 630 }}
                   className={styles['demand-list']}
                   noDataElement={<Empty description={'无规划的需求信息'} />}
                   render={(demand) => {
