@@ -1,0 +1,52 @@
+.scrum-project-list {
+  .card-with-icon-hover .icon-hover,
+  .icon-disable,
+  .icon-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    transition: all 0.1s;
+  }
+
+  .card-with-icon-hover:hover {
+    background-color: rgb(var(--gray-1));
+  }
+
+  .card-with-icon-hover .icon-hover:hover {
+    cursor: pointer;
+    font-weight: bold;
+    color: rgb(var(--arcoblue-6));
+    background-color: rgb(var(--gray-3));
+  }
+
+  .card-with-icon-hover .icon-disable:hover {
+    cursor: not-allowed;
+    font-weight: lighter;
+    color: rgb(var(--gray-5));
+    background-color: rgb(var(--gray-3));
+  }
+
+  .card-with-icon-hover .icon-delete:hover {
+    cursor: pointer;
+    font-weight: bold;
+    color: rgb(var(--danger-6));
+    background-color: rgb(var(--gray-3));
+  }
+
+  .add-card {
+    text-align: center;
+    cursor: pointer;
+
+    .add-icon {
+      font-size: 22px;
+    }
+
+    .description {
+      color: var(--color-text-3);
+      font-weight: 400;
+    }
+  }
+}

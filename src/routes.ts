@@ -23,6 +23,32 @@ export const routes: IRoute[] = [
     ],
   },
   {
+    name: 'menu.scrum',
+    key: 'scrum',
+    children: [
+      {
+        name: 'menu.scrum.projectManager',
+        key: 'scrum/project-manager',
+      },
+      {
+        name: 'menu.scrum.versionPlanning',
+        key: 'scrum/version-planning',
+      },
+      {
+        name: 'menu.scrum.demandPlanning',
+        key: 'scrum/demand-planning',
+      },
+      {
+        name: 'menu.scrum.iterationKanban',
+        key: 'scrum/iteration-kanban',
+      },
+      {
+        name: 'menu.scrum.templateManager',
+        key: 'scrum/template-manager',
+      },
+    ],
+  },
+  {
     name: 'menu.doc',
     key: 'doc',
     children: [

@@ -3,6 +3,7 @@ import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import { Layout, Menu, Breadcrumb, Spin } from '@arco-design/web-react';
 import cs from 'classnames';
 import {
+  IconApps,
   IconDashboard,
   IconFile,
   IconMenuFold,
@@ -35,6 +36,8 @@ function getIconFromKey(key) {
       return <IconSettings className={styles.icon} />;
     case 'doc':
       return <IconFile className={styles.icon} />;
+    case 'scrum':
+      return <IconApps className={styles.icon} />;
     default:
       return <div className={styles['icon-empty']} />;
   }
