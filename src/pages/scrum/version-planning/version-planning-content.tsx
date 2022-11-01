@@ -119,7 +119,7 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
     getProject(props.projectId).then((resp) => {
       listPriority(resp.template_id).then((sps) => {
         const id2Color: Record<string, string> = {};
-        sps.forEach((p) => (id2Color[p.id] = p.color_hex));
+        sps.forEach((p) => (id2Color[p.id] = p.color));
         setPriorityId2Color(id2Color);
       });
     });

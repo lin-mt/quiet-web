@@ -72,7 +72,7 @@ function IterationPlanning() {
       .then((project) => {
         listPriority(project.template_id).then((priorities) => {
           const id2color = {};
-          priorities.forEach((p) => (id2color[p.id] = p.color_hex));
+          priorities.forEach((p) => (id2color[p.id] = p.color));
           setPriorityId2color(id2color);
         });
         listTaskStep(project.template_id).then((steps) => {

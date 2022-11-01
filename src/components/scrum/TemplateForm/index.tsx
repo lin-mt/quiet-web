@@ -19,6 +19,7 @@ import {
 import ColorPicker from '@/components/ColorPicker';
 import { listPriority } from '@/service/scrum/priority';
 import { listTaskStep } from '@/service/scrum/task-step';
+
 const { Row, Col } = Grid;
 const { useForm } = Form;
 
@@ -213,10 +214,10 @@ function TemplateForm(props: TemplateFormProps) {
                               <Form.Item
                                 field={item.field + '.name'}
                                 rules={[
-                                  // {
-                                  //   required: true,
-                                  //   message: '优先级名称不能为空',
-                                  // },
+                                  {
+                                    required: true,
+                                    message: '优先级名称不能为空',
+                                  },
                                   {
                                     maxLength: 10,
                                     message: '优先级名称的长度不能超过 10',
@@ -245,7 +246,7 @@ function TemplateForm(props: TemplateFormProps) {
                           </Row>
                         </Col>
                         <Col flex={'32px'}>
-                          <Form.Item field={item.field + '.color_hex'}>
+                          <Form.Item field={item.field + '.color'}>
                             <ColorPicker />
                           </Form.Item>
                         </Col>
@@ -277,7 +278,7 @@ function TemplateForm(props: TemplateFormProps) {
                   <Button
                     icon={<IconPlus />}
                     onClick={() => {
-                      add({ color_hex: '#3491FA' });
+                      add({ color: '#3491FA' });
                     }}
                   >
                     添加优先级
