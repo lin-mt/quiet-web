@@ -1,5 +1,5 @@
 import qs from 'qs';
-import axios, { AxiosPromise, AxiosResponse } from 'axios';
+import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Message } from '@arco-design/web-react';
 import { BasicCode, LocalStorage, Security } from '@/constant/system';
 
@@ -119,11 +119,13 @@ req.interceptors.response.use((response) => {
       if (data.result && data.message) {
         switch (data.result) {
           case ResultType.SUCCESS:
-            successMsg.add(data.message);
-            setTimeout(() => {
-              successMsg.forEach((msg) => Message.success(msg));
-              successMsg.clear();
-            }, successMsg.size * 500);
+            if (response.config.headers['Ignore-Success-Msg'] !== 'true') {
+              successMsg.add(data.message);
+              setTimeout(() => {
+                successMsg.forEach((msg) => Message.success(msg));
+                successMsg.clear();
+              }, successMsg.size * 500);
+            }
             break;
           case ResultType.WARNING:
             warningMsg.add(data.message);
@@ -176,13 +178,15 @@ function PAGE<T>(
 function POST<T>(
   url: string,
   data?,
-  params?: Record<string, unknown> | URLSearchParams
+  params?: Record<string, unknown> | URLSearchParams,
+  config?: AxiosRequestConfig
 ): Promise<T> {
   return req
     .post<Result<T>>(url, data, {
       params: new URLSearchParams(
         qs.stringify(params, { allowDots: true, arrayFormat: 'comma' })
       ),
+      ...config,
     })
     .then((resp) => resp.data.data);
 }
@@ -200,8 +204,8 @@ function DELETE<T>(
     .then((resp) => resp.data.data);
 }
 
-function PUT<T>(url: string, data?): Promise<T> {
-  return req.put<Result<T>>(url, data).then((resp) => resp.data.data);
+function PUT<T>(url: string, data?, config?: AxiosRequestConfig): Promise<T> {
+  return req.put<Result<T>>(url, data, config).then((resp) => resp.data.data);
 }
 
 export { GET, PAGE, POST, DELETE, PUT };
