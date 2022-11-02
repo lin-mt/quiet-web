@@ -522,7 +522,7 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
       <VersionForm projectId={props.projectId} {...versionFormProps} />
       <IterationForm
         versionId={
-          isVersion(selectedNode) ? selectedNode.id : selectedNode.version_id
+          isVersion(selectedNode) ? selectedNode?.id : selectedNode?.version_id
         }
         {...iterationFormProps}
       />
