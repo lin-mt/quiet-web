@@ -1,20 +1,14 @@
-import React, {
-  ForwardedRef,
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Form,
-  Input,
   Button,
-  Grid,
-  Space,
   Card,
-  Typography,
-  Trigger,
+  Form,
+  Grid,
+  Input,
   Select,
+  Space,
+  Trigger,
+  Typography,
 } from '@arco-design/web-react';
 import {
   IconPause,
@@ -31,11 +25,7 @@ import ProjectGroupSelect, {
 import ProjectSelect from '@/components/scrum/ProjectSelect';
 import VersionSelect from '@/components/scrum/VersionSelect';
 import { ScrumIteration, ScrumPriority } from '@/service/scrum/type';
-import { getIteration } from '@/service/scrum/iteration';
-import { getProject } from '@/service/scrum/project';
-import { listPriority } from '@/service/scrum/priority';
 import { QuietUser } from '@/service/system/type';
-import { listTeamUser } from '@/service/system/quiet-user';
 
 const { Row, Col } = Grid;
 const { useForm } = Form;
@@ -66,6 +56,9 @@ function getParams(): Params {
 
 export type SearchFormProp = {
   onSearch: (values: Params) => void;
+  iteration: ScrumIteration;
+  priorities: ScrumPriority[];
+  teamUsers: QuietUser[];
   startIteration: (iteration: ScrumIteration) => void;
   endIteration: (iteration: ScrumIteration) => void;
 };
@@ -74,25 +67,14 @@ export type SearchFormRefProp = {
   updateIteration: (iteration: ScrumIteration) => void;
 };
 
-function SearchForm(
-  props: SearchFormProp,
-  ref: ForwardedRef<SearchFormRefProp>
-) {
+function SearchForm(props: SearchFormProp) {
+  const { iteration, priorities, teamUsers } = props;
   const [searchForm] = useForm();
   const [iterationForm] = useForm();
   const groupId = Form.useWatch('group_id', iterationForm);
   const projectId = Form.useWatch('project_id', iterationForm);
-  const [iteration, setIteration] = useState<ScrumIteration>();
-  const [priorities, setPriorities] = useState<ScrumPriority[]>([]);
-  const [teamUsers, setTeamUsers] = useState<QuietUser[]>([]);
   const [visible, setVisible] = useState<boolean>();
   const [searchParam, setSearchParam] = useState<Params>({});
-
-  useImperativeHandle(ref, () => ({
-    updateIteration: (newIteration) => {
-      setIteration(newIteration);
-    },
-  }));
 
   useEffect(() => {
     iterationForm.setFieldsValue({
@@ -120,15 +102,6 @@ function SearchForm(
           ? undefined
           : searchParam.group_id,
     };
-    if (params.iteration_id) {
-      getIteration(params.iteration_id).then((resp) => setIteration(resp));
-    }
-    if (params.project_id) {
-      getProject(params.project_id).then((project) => {
-        listPriority(project.template_id).then((resp) => setPriorities(resp));
-        listTeamUser(project.team_id).then((resp) => setTeamUsers(resp));
-      });
-    }
     if (props.onSearch) {
       props.onSearch(params);
     }
@@ -333,4 +306,4 @@ function SearchForm(
   );
 }
 
-export default forwardRef(SearchForm);
+export default SearchForm;

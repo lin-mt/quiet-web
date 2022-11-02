@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DemandCard from '@/components/scrum/DemandCard';
 import TaskCard from '@/components/scrum/TaskCard';
-import { Grid } from '@arco-design/web-react';
+import { Grid, Message } from '@arco-design/web-react';
 import { ScrumDemand, ScrumTask, ScrumTaskStep } from '@/service/scrum/type';
 import { saveTask } from '@/service/scrum/task';
 import TaskForm, { TaskFormProps } from '@/components/scrum/TaskForm';
@@ -56,6 +56,7 @@ export type KanbanRowProps = {
   columnGutter: number;
   columnDefaultBc: string;
   blockRadius: number;
+  isDropDisabled: boolean;
   userId2fullName: Record<string, string>;
   taskTypeKey2name: Record<string, string>;
   demandTypeKey2name: Record<string, string>;
@@ -75,6 +76,7 @@ function KanbanRow(props: KanbanRowProps) {
     columnGutter,
     columnDefaultBc,
     blockRadius,
+    isDropDisabled,
     userId2fullName,
     taskTypeKey2name,
     demandTypeKey2name,
@@ -116,6 +118,9 @@ function KanbanRow(props: KanbanRowProps) {
   }
 
   function handleDragEnd(result: DropResult) {
+    if (isDropDisabled) {
+      Message.info('迭代未开始或已结束，无法变更任务状态～');
+    }
     const { destination, source, draggableId } = result;
     const ignore =
       !destination || destination.droppableId === source.droppableId;
@@ -163,7 +168,7 @@ function KanbanRow(props: KanbanRowProps) {
             return (
               <Col flex={1} key={tsId}>
                 <Block backgroundColor={columnBgc} blockRadius={blockRadius}>
-                  <Droppable droppableId={tsId}>
+                  <Droppable droppableId={tsId} isDropDisabled={isDropDisabled}>
                     {(droppableProvided, snapshot) => (
                       <div
                         style={{
