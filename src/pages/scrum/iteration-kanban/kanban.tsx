@@ -27,6 +27,7 @@ const KanbanContainer = styled.div`
 `;
 
 export type KanbanRowProps = {
+  isDropDisabled: boolean;
   userId2fullName: Record<string, string>;
   taskTypeKey2name: Record<string, string>;
   demandTypeKey2name: Record<string, string>;
@@ -41,6 +42,7 @@ export type KanbanRowProps = {
 
 function Kanban(props: KanbanRowProps) {
   const {
+    isDropDisabled,
     userId2fullName,
     taskTypeKey2name,
     demandTypeKey2name,
@@ -98,6 +100,7 @@ function Kanban(props: KanbanRowProps) {
           <KanbanRow
             key={demandId}
             demandId={demandId}
+            isDropDisabled={isDropDisabled}
             handleNewTask={handleNewTask}
             handleDeleteTask={handleDeleteTask}
             blockRadius={blockRadius}

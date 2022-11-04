@@ -1,13 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Empty, Modal } from '@arco-design/web-react';
-import SearchForm, {
-  Params,
-  SearchFormRefProp,
-} from '@/pages/scrum/iteration-kanban/search-form';
+import SearchForm, { Params } from '@/pages/scrum/iteration-kanban/search-form';
 import styles from '@/pages/scrum/iteration-kanban/style/index.module.less';
 import {
   ScrumDemand,
   ScrumIteration,
+  ScrumPriority,
   ScrumTask,
   ScrumTaskStep,
 } from '@/service/scrum/type';
@@ -21,14 +19,19 @@ import { listTask, updateTask } from '@/service/scrum/task';
 import _ from 'lodash';
 import Kanban from '@/pages/scrum/iteration-kanban/kanban';
 import { MoveTask } from '@/pages/scrum/iteration-kanban/kanban-row';
-import { end, start } from '@/service/scrum/iteration';
+import { end, getIteration, start } from '@/service/scrum/iteration';
 import NextIterationModal, {
   NextIterationModalProp,
 } from '@/pages/scrum/iteration-kanban/next-iteration-modal';
+import { QuietUser } from '@/service/system/type';
 
 function IterationPlanning() {
   const [params, setParams] = useState<Params>({});
   const [initConfig, setInitConfig] = useState<boolean>();
+  const [isDropDisabled, setIsDropDisabled] = useState<boolean>();
+  const [iteration, setIteration] = useState<ScrumIteration>();
+  const [priorities, setPriorities] = useState<ScrumPriority[]>([]);
+  const [teamUsers, setTeamUsers] = useState<QuietUser[]>([]);
   const [userIdId2fullName, setUserId2fullName] = useState<
     Record<string, string>
   >({});
@@ -52,7 +55,6 @@ function IterationPlanning() {
   >({});
   const [nextIterationModalProps, setNextIterationModalProps] =
     useState<NextIterationModalProp>();
-  const searchFormRef = useRef<SearchFormRefProp>();
 
   useEffect(() => {
     findEnabledDict(undefined, 'quiet-scrum', 'task-type').then((resp) => {
@@ -67,12 +69,17 @@ function IterationPlanning() {
     });
   }, []);
 
+  useEffect(() => {
+    setIsDropDisabled(!(iteration?.start_time && !iteration?.end_time));
+  }, [iteration]);
+
   function initProjectConfig(projectId: string) {
     getProject(projectId)
       .then((project) => {
         listPriority(project.template_id).then((priorities) => {
+          setPriorities(priorities);
           const id2color = {};
-          priorities.forEach((p) => (id2color[p.id] = p.color_hex));
+          priorities.forEach((p) => (id2color[p.id] = p.color));
           setPriorityId2color(id2color);
         });
         listTaskStep(project.template_id).then((steps) => {
@@ -81,6 +88,7 @@ function IterationPlanning() {
           setTaskStepId2info(id2info);
         });
         listTeamUser(project.team_id).then((users) => {
+          setTeamUsers(users);
           const id2name = {};
           users.forEach((u) => (id2name[u.id] = u.full_name));
           setUserId2fullName(id2name);
@@ -96,6 +104,11 @@ function IterationPlanning() {
       }
       if (!initConfig || prevState.project_id !== values.project_id) {
         initProjectConfig(values.project_id);
+      }
+      if (prevState.iteration_id !== values.iteration_id) {
+        getIteration(values.iteration_id).then((resp) => {
+          setIteration(resp);
+        });
       }
       if (JSON.stringify(prevState) != JSON.stringify(values)) {
         loadDemandTask(values);
@@ -175,10 +188,7 @@ function IterationPlanning() {
     Modal.confirm({
       title: '开始迭代',
       content: `确认开始当前迭代 ${iteration.name} 吗？`,
-      onConfirm: () =>
-        start(iteration.id).then((resp) =>
-          searchFormRef.current.updateIteration(resp)
-        ),
+      onConfirm: () => start(iteration.id).then((resp) => setIteration(resp)),
     });
   }
 
@@ -212,10 +222,7 @@ function IterationPlanning() {
       Modal.confirm({
         title: '结束迭代',
         content: `确认结束当前迭代（${iteration.name}）吗？`,
-        onConfirm: () =>
-          end(iteration.id).then((resp) =>
-            searchFormRef.current.updateIteration(resp)
-          ),
+        onConfirm: () => end(iteration.id).then((resp) => setIteration(resp)),
       });
     } else {
       setNextIterationModalProps({
@@ -226,7 +233,7 @@ function IterationPlanning() {
         onOk: (id) =>
           end(iteration.id, id).then((resp) => {
             loadDemandTask(params);
-            searchFormRef.current.updateIteration(resp);
+            setIteration(resp);
             setNextIterationModalProps({ visible: false });
           }),
         onCancel: () => {
@@ -240,7 +247,9 @@ function IterationPlanning() {
     <div className={styles['container']}>
       <Card>
         <SearchForm
-          ref={searchFormRef}
+          iteration={iteration}
+          priorities={priorities}
+          teamUsers={teamUsers}
           onSearch={handleSearch}
           startIteration={handleStartIteration}
           endIteration={handleEndIteration}
@@ -249,6 +258,7 @@ function IterationPlanning() {
           <Empty description={'请选择项目迭代'} />
         ) : (
           <Kanban
+            isDropDisabled={isDropDisabled}
             demandId2TaskStepTasks={demandId2TaskStepTasks}
             demandId2info={demandId2info}
             taskStepId2info={taskStepId2info}

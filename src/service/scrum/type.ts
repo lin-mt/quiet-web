@@ -38,7 +38,7 @@ export interface ScrumTaskStep extends SortableEntity {
 
 export interface ScrumPriority extends SortableEntity {
   name: string;
-  color_hex: string;
+  color: string;
   template_id: string;
   remark?: string;
 }

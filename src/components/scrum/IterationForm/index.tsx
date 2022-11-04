@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Modal, Typography } from '@arco-design/web-react';
+import {
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Typography,
+} from '@arco-design/web-react';
 import { QuietFormProps } from '@/components/type';
 import { ScrumIteration } from '@/service/scrum/type';
-import { DatePicker } from '@arco-design/web-react';
 
 const { useForm } = Form;
 
@@ -31,7 +36,7 @@ function VersionForm(props: IterationFormProps) {
       form.validate().then(async (values) => {
         values.plan_start_date = values.plan_date[0];
         values.plan_end_date = values.plan_date[1];
-        if (props.versionId) {
+        if (!values.version_id && props.versionId) {
           values.version_id = props.versionId;
         }
         setSubmitting(true);
