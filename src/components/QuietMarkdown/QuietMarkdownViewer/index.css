@@ -1,0 +1,25 @@
+textarea,
+code,
+pre,
+kbd {
+  font-family: Menlo, Monaco, 'Courier New', monospace;
+  font-size: small;
+}
+
+.markdown-body a {
+  color: rgb(var(--link-6));
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.markdown-body a:hover {
+  color: rgb(var(--link-8));
+}
+
+.hljs {
+  color: var(--color-text-2);
+}
+
+pre code.hljs {
+  padding: 6px;
+}
