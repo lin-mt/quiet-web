@@ -28,6 +28,13 @@ function QuietMarkdown(props: QuietMarkdownProp) {
     setValue(props.value);
   }, [props.value]);
 
+  useEffect(() => {
+    if (props.onChange) {
+      props.onChange(value);
+    }
+    // eslint-disable-next-line
+  }, [value]);
+
   function handleEditorDidMount(editor, monaco) {
     monaco.languages.setLanguageConfiguration('markdown', {
       onEnterRules: [
