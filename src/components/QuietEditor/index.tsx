@@ -1,8 +1,8 @@
+import type { CSSProperties } from 'react';
 import React, { useContext, useEffect, useState } from 'react';
 import type { OnChange, OnMount } from '@monaco-editor/react';
 import Editor, { loader } from '@monaco-editor/react';
-import type { CSSProperties } from 'react';
-import { Xcode_default } from '@/components/QuietEditor/themes';
+import { Night_Owl, Xcode_default } from '@/components/QuietEditor/themes';
 import { GlobalContext } from '@/context';
 import * as monaco from 'monaco-editor';
 
@@ -24,6 +24,9 @@ interface QuietEditorProp {
   paddingBottom?: number;
   paddingTop?: number;
   renderLineHighlight?: 'all' | 'line' | 'none' | 'gutter';
+  minimapEnabled?: boolean;
+  lineDecorationsWidth?: number;
+  scrollBeyondLastLine?: boolean;
 }
 
 export function QuietEditor(props: QuietEditorProp) {
@@ -43,6 +46,9 @@ export function QuietEditor(props: QuietEditorProp) {
     paddingBottom,
     paddingTop,
     renderLineHighlight = 'all',
+    minimapEnabled,
+    lineDecorationsWidth = 19,
+    scrollBeyondLastLine = false,
   } = props;
 
   const { theme } = useContext(GlobalContext);
@@ -72,9 +78,10 @@ export function QuietEditor(props: QuietEditorProp) {
         value={editorValue}
         defaultLanguage={defaultLanguage}
         language={language}
-        theme={theme === 'light' ? 'x-code-default' : 'vs-dark'}
+        theme={theme === 'light' ? 'x-code-default' : 'Night-Owl'}
         beforeMount={(monaco) => {
           monaco.editor.defineTheme('x-code-default', Xcode_default);
+          monaco.editor.defineTheme('Night-Owl', Night_Owl);
         }}
         onMount={(editor, monaco) => {
           if (onMount) {
@@ -95,13 +102,22 @@ export function QuietEditor(props: QuietEditorProp) {
           // 编辑器中字体大小
           fontSize: 13,
           // 是否可以滚动到最后一行，可以往上滚动超出内容范围
-          scrollBeyondLastLine: false,
+          scrollBeyondLastLine: scrollBeyondLastLine,
           // 左边空出来的宽度
-          lineDecorationsWidth: 19,
+          lineDecorationsWidth: lineDecorationsWidth,
           // 关闭选中行的渲染
           renderLineHighlight: renderLineHighlight,
           // 是否折叠
           folding: folding,
+          minimap: { enabled: minimapEnabled },
+          scrollbar: {
+            verticalScrollbarSize: 6,
+            horizontalScrollbarSize: 6,
+            alwaysConsumeMouseWheel: false,
+          },
+          overviewRulerBorder: false,
+          hideCursorInOverviewRuler: true,
+          overviewRulerLanes: 0,
         }}
       />
     </div>
