@@ -22,18 +22,19 @@ import { BlockTitle } from '@/components/doc/styled';
 import styled from 'styled-components';
 import { getMethodTagColor } from '@/utils/doc/render';
 import { SchemaTable } from '@/pages/doc/api-manager/api/api-detail/schema-table';
-import MarkdownViewer from '@/components/Markdown/MarkdownViewer';
 import { DataType } from '@arco-design/web-react/es/Descriptions/interface';
 import {
   ApiManagerContext,
   ApiManagerContextProps,
 } from '@/pages/doc/api-manager';
+import QuietMarkdownViewer from '@/components/QuietMarkdown/QuietMarkdownViewer';
 
 const ReqTitle = styled.div`
   padding: 10px 0;
   font-size: 15px;
   font-weight: 420;
   line-height: 23px;
+
   :first-child {
     padding-top: 2px;
   }
@@ -210,7 +211,7 @@ export default (props: PreviewProps) => {
         }}
       >
         {api.remark ? (
-          <MarkdownViewer value={api.remark} />
+          <QuietMarkdownViewer value={api.remark} />
         ) : (
           <Empty description={'无备注信息'} />
         )}

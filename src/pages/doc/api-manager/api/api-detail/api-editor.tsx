@@ -39,7 +39,6 @@ import {
   CONTENT_TYPE,
   REQUEST_HEADER,
 } from '@/pages/doc/api-manager/api/api-detail/constent';
-import MarkdownEditor from '@/components/Markdown/MarkdownEditor';
 import { updateApi } from '@/service/doc/api';
 import { saveApiInfo, updateApiInfo } from '@/service/doc/api-info';
 import QuietJsonSchemaEditor from '@/components/QuietJsonSchemaEditor';
@@ -48,6 +47,7 @@ import {
   ApiManagerContext,
   ApiManagerContextProps,
 } from '@/pages/doc/api-manager';
+import QuietMarkdown from '@/components/QuietMarkdown';
 
 const { Row, Col } = Grid;
 const { Item } = Form;
@@ -876,7 +876,7 @@ function ApiEditor(props: ApiEditorProps) {
           field={'remark'}
           rules={[{ max: 300, message: '备注信息不能超过 300' }]}
         >
-          <MarkdownEditor maxLength={300} value={props.api.remark} />
+          <QuietMarkdown />
         </Item>
         <Affix
           offsetBottom={0}
