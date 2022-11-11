@@ -42,14 +42,11 @@ export function ProjectGroupManager(props: ProjectGroupManagerProps) {
 
   function handleProjectGroupSelect(id: string) {
     setSelectKeys([id]);
-    let replaceUrl = '/doc/project-manager';
     if (defaultId === id) {
       props.onGroupClick();
     } else {
       props.onGroupClick(id);
-      replaceUrl = `${replaceUrl}?projectGroupId=${id}`;
     }
-    window.history.pushState(null, null, replaceUrl);
   }
 
   return (
