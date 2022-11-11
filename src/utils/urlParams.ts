@@ -13,7 +13,9 @@ export function updateUrlParam(params) {
   const searchParams = new URLSearchParams();
   if (params) {
     for (const key in params) {
-      searchParams.set(key, params[key]);
+      if (params[key]) {
+        searchParams.set(key, params[key]);
+      }
     }
   }
   let url = window.location.pathname;
