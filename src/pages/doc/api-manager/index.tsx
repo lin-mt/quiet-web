@@ -119,7 +119,14 @@ function ApiManager() {
         defaultActiveTab={'api'}
         renderTabHeader={renderTabHeader}
         extra={
-          <Row style={{ paddingRight: 16, width: 600 }} gutter={15}>
+          <Row
+            gutter={15}
+            style={{
+              width: 600,
+              paddingRight: 16,
+              color: 'var(--color-text-2)',
+            }}
+          >
             <Col flex={1}>
               <Row gutter={5}>
                 <Col flex={'50px'}>项目组</Col>
