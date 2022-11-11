@@ -28,13 +28,6 @@ function QuietMarkdown(props: QuietMarkdownProp) {
     setValue(props.value);
   }, [props.value]);
 
-  useEffect(() => {
-    if (props.onChange) {
-      props.onChange(value);
-    }
-    // eslint-disable-next-line
-  }, [value]);
-
   function handleEditorDidMount(editor, monaco) {
     monaco.languages.setLanguageConfiguration('markdown', {
       onEnterRules: [
@@ -134,7 +127,12 @@ function QuietMarkdown(props: QuietMarkdownProp) {
                 minimapEnabled={false}
                 lineDecorationsWidth={0}
                 onMount={handleEditorDidMount}
-                onChange={(val) => setValue(val)}
+                onChange={(val) => {
+                  setValue(val);
+                  if (props.onChange) {
+                    props.onChange(val);
+                  }
+                }}
                 style={{
                   width: '100%',
                   height: '100%',
