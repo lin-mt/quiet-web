@@ -1,7 +1,7 @@
 const i18n = {
   'en-US': {
-    'menu.doc': 'Api Information',
-    'menu.doc.docManager': 'DocManager',
+    'menu.doc': 'Document Manager',
+    'menu.doc.projectManager': 'ProjectManager',
     'menu.doc.apiManager': 'ApiManager',
     'menu.system': 'System Manager',
     'menu.system.userManager': 'User Manager',
@@ -48,8 +48,8 @@ const i18n = {
     'navbar.search.placeholder': 'Please search',
   },
   'zh-CN': {
-    'menu.doc': '接口信息',
-    'menu.doc.docManager': '文档管理',
+    'menu.doc': '文档管理',
+    'menu.doc.projectManager': '项目管理',
     'menu.doc.apiManager': '接口管理',
     'menu.system': '系统管理',
     'menu.system.userManager': '用户管理',

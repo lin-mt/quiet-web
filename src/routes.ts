@@ -27,13 +27,12 @@ export const routes: IRoute[] = [
     key: 'doc',
     children: [
       {
-        name: 'menu.doc.docManager',
-        key: 'doc/doc-manager',
+        name: 'menu.doc.projectManager',
+        key: 'doc/project-manager',
       },
       {
         name: 'menu.doc.apiManager',
         key: 'doc/api-manager',
-        ignore: true,
       },
     ],
   },

@@ -295,7 +295,7 @@ function ApiEditor(props: ApiEditorProps) {
           </Item>
           <Item label={'分组'} field={'api_group_id'}>
             <ApiGroupSelect
-              projectId={apiManagerContext.projectId}
+              projectId={apiManagerContext.queryParams.project_id}
               allowClear
               placeholder="请输入分组名称"
             />

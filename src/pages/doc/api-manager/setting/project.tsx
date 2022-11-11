@@ -12,7 +12,7 @@ import { updateProject } from '@/service/doc/project';
 const { useForm } = Form;
 
 function Project() {
-  const { setLoading, projectId, projectInfo, setProjectInfo } =
+  const { setLoading, queryParams, projectInfo, setProjectInfo } =
     useContext<ApiManagerContextProps>(ApiManagerContext);
   const [form] = useForm();
 
@@ -46,7 +46,7 @@ function Project() {
         <Input />
       </Form.Item>
       <Form.Item label={'项目ID'}>
-        <Typography.Text copyable>{projectId}</Typography.Text>
+        <Typography.Text copyable>{queryParams.project_id}</Typography.Text>
       </Form.Item>
       <Form.Item
         label="项目名称"

@@ -128,7 +128,7 @@ function ApiGroupListApi(props: ApiGroupListApiProps) {
     pageApi({
       current: pagination.current,
       page_size: pagination.pageSize,
-      project_id: apiManagerContext.projectId,
+      project_id: apiManagerContext.queryParams.project_id,
       api_group_id: props.groupId ? props.groupId : 0,
     })
       .then((res) => {
@@ -180,7 +180,7 @@ function ApiGroupListApi(props: ApiGroupListApiProps) {
         />
       </Space>
       <ApiForm
-        projectId={apiManagerContext.projectId}
+        projectId={apiManagerContext.queryParams.project_id}
         groupId={props.groupId}
         {...apiFormProps}
       />

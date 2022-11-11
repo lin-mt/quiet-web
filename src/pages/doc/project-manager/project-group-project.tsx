@@ -171,7 +171,7 @@ function ProjectGroupProject(props: ProjectGroupProjectProps) {
                           onClick={() => {
                             NProgress.start();
                             history.push(
-                              `/doc/api-manager?projectId=${project.id}`
+                              `/doc/api-manager?group_id=${project.group_id}&project_id=${project.id}`
                             );
                             NProgress.done();
                           }}

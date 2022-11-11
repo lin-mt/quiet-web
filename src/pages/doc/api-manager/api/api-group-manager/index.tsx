@@ -26,7 +26,6 @@ import {
 } from '@/service/doc/api-group';
 import { TreeDataType } from '@arco-design/web-react/es/Tree/interface';
 import { listApi } from '@/service/doc/api';
-import { getQueryParams } from '@/utils/urlParams';
 import { QuietFormProps } from '@/components/type';
 import { DocApiGroup } from '@/service/doc/type';
 import {
@@ -43,10 +42,11 @@ export type ClickNode = {
   id?: string;
   type: NodeType;
   name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
 };
 
 export type ApiGroupManagerProps = {
-  activeId?: string;
   onTreeNodeClick?: (node: ClickNode) => void;
 };
 
@@ -63,35 +63,31 @@ export function ApiGroupManager(
       fetchData();
     },
   }));
-  const apiManagerContext =
-    useContext<ApiManagerContextProps>(ApiManagerContext);
+  const { queryParams } = useContext<ApiManagerContextProps>(ApiManagerContext);
   const defaultId = 'default';
   const [apiGroupFormProps, setApiGroupFormProps] =
     useState<QuietFormProps<DocApiGroup>>();
   const [apiGroupTreeData, setApiGroupTreeData] = useState<TreeDataType[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>();
-  const query = getQueryParams();
 
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiManagerContext.projectId]);
+  }, [queryParams.project_id]);
 
   useEffect(() => {
-    const selected = props.activeId
-      ? props.activeId
-      : query.apiId
-      ? query.apiId
-      : query.apiGroupId;
+    const selected = queryParams.api_id
+      ? queryParams.api_id
+      : queryParams.api_group_id;
     if (selected) {
       setSelectedKeys([selected]);
     }
-  }, [props.activeId, query.apiId, query.apiGroupId]);
+  }, [queryParams.api_id, queryParams.api_group_id]);
 
   function fetchData(name?: string) {
     setLoading(true);
-    listApi(apiManagerContext.projectId, name)
+    listApi(queryParams.project_id, name)
       .then((apis) => {
         const apiGroupId2Apis: Record<string, TreeDataType[]> = {};
         apis.forEach((api) => {
@@ -104,7 +100,7 @@ export function ApiGroupManager(
             ...api,
           });
         });
-        listApiGroup(apiManagerContext.projectId).then((groups) => {
+        listApiGroup(queryParams.project_id).then((groups) => {
           const treeData: TreeDataType[] = [
             {
               key: defaultId,
@@ -255,15 +251,16 @@ export function ApiGroupManager(
                 type: nodeData.nodeType,
                 id: nodeData.key === defaultId ? undefined : nodeData.id,
                 name: nodeData.name,
+                api_group_id:
+                  NodeType.API === nodeData.nodeType
+                    ? nodeData.api_group_id
+                    : undefined,
               });
             }
           }}
         />
       </Space>
-      <ApiGroupForm
-        projectId={apiManagerContext.projectId}
-        {...apiGroupFormProps}
-      />
+      <ApiGroupForm projectId={queryParams.project_id} {...apiGroupFormProps} />
     </Card>
   );
 }
