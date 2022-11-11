@@ -1,5 +1,11 @@
 import React from 'react';
-import { Divider, Dropdown, Space, Tooltip } from '@arco-design/web-react';
+import {
+  Divider,
+  Dropdown,
+  Menu,
+  Space,
+  Tooltip,
+} from '@arco-design/web-react';
 import {
   IconBold,
   IconBranch,
@@ -28,6 +34,7 @@ import {
   IconSubscript,
   IconSuperscript,
 } from '@/components/icon';
+import styles from '@/components/QuietMarkdown/style/index.module.less';
 import styled from 'styled-components';
 
 export const Option = styled.div`
@@ -43,31 +50,6 @@ export const Option = styled.div`
   :hover {
     background-color: rgb(var(--gray-3));
   }
-`;
-
-const DropdownOption = styled.div`
-  background-color: rgb(var(--gray-2));
-  border-radius: var(--border-radius-small);
-  color: var(--color-text-1);
-  padding: 0 8px;
-  line-height: 26px;
-  height: 26px;
-  cursor: pointer;
-  margin-left: 5px;
-  margin-right: 5px;
-
-  :hover {
-    background-color: rgb(var(--gray-3));
-  }
-`;
-
-const DropdownContainer = styled(Space)`
-  margin-top: 3px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  font-size: 13px;
-  background-color: rgb(var(--gray-2));
-  border: 1px solid var(--color-border);
 `;
 
 export type ToolbarProp = {
@@ -223,60 +205,64 @@ function Toolbar(props: ToolbarProp) {
     editorRef.current.focus();
   }
 
-  const HeadingList = (
-    <DropdownContainer direction={'vertical'} size={3}>
-      <DropdownOption onClick={() => changeHeading(1)}>
-        <IconH1 /> 一级标题
-      </DropdownOption>
-      <DropdownOption onClick={() => changeHeading(2)}>
-        <IconH2 /> 二级标题
-      </DropdownOption>
-      <DropdownOption onClick={() => changeHeading(3)}>
-        <IconH3 /> 三级标题
-      </DropdownOption>
-      <DropdownOption onClick={() => changeHeading(4)}>
-        <IconH4 /> 四级标题
-      </DropdownOption>
-      <DropdownOption onClick={() => changeHeading(5)}>
-        <IconH5 /> 五级标题
-      </DropdownOption>
-      <DropdownOption onClick={() => changeHeading(6)}>
-        <IconH6 /> 六级标题
-      </DropdownOption>
-    </DropdownContainer>
-  );
-
   const FormulaList = (
-    <DropdownContainer direction={'vertical'} size={3}>
-      <DropdownOption onClick={() => setStartAndEndCharacters('$', '$')}>
+    <Menu className={styles['dropdown']}>
+      <Menu.Item key="1" onClick={() => setStartAndEndCharacters('$', '$')}>
         <IconInlineFormula /> 行内公式
-      </DropdownOption>
-      <DropdownOption
+      </Menu.Item>
+      <Menu.Item
+        key="2"
         onClick={() => addBlockValue('$$\n' + '\\TeX\n' + '$$\n', 3)}
       >
         <IconBlockFormula /> 块级公式
-      </DropdownOption>
-    </DropdownContainer>
+      </Menu.Item>
+    </Menu>
   );
 
   const MermaidList = (
-    <DropdownContainer direction={'vertical'} size={3}>
+    <Menu className={styles['dropdown']}>
       <div style={{ marginLeft: 5, marginRight: 5 }}>Mermaid 图表</div>
       <Divider style={{ marginTop: 2, marginBottom: 2 }} />
-      <DropdownOption>类图</DropdownOption>
-      <DropdownOption>流程图</DropdownOption>
-      <DropdownOption>时序图</DropdownOption>
-      <DropdownOption>状态图</DropdownOption>
-      <DropdownOption>关系图</DropdownOption>
-      <DropdownOption>旅程图</DropdownOption>
-      <DropdownOption>甘特图</DropdownOption>
-      <DropdownOption>饼状图</DropdownOption>
-    </DropdownContainer>
+      <Menu.Item key="1">类图</Menu.Item>
+      <Menu.Item key="2">流程图</Menu.Item>
+      <Menu.Item key="3">时序图</Menu.Item>
+      <Menu.Item key="4">状态图</Menu.Item>
+      <Menu.Item key="5">关系图</Menu.Item>
+      <Menu.Item key="6">旅程图</Menu.Item>
+      <Menu.Item key="7">甘特图</Menu.Item>
+      <Menu.Item key="8">饼状图</Menu.Item>
+    </Menu>
+  );
+
+  const headingList = (
+    <Menu className={styles['dropdown']}>
+      <Menu.Item key="1" onClick={() => changeHeading(1)}>
+        <IconH1 /> 一级标题
+      </Menu.Item>
+      <Menu.Item key="2" onClick={() => changeHeading(2)}>
+        <IconH2 /> 二级标题
+      </Menu.Item>
+      <Menu.Item key="3" onClick={() => changeHeading(3)}>
+        <IconH3 /> 三级标题
+      </Menu.Item>
+      <Menu.Item key="4" onClick={() => changeHeading(4)}>
+        <IconH4 /> 四级标题
+      </Menu.Item>
+      <Menu.Item key="5" onClick={() => changeHeading(5)}>
+        <IconH5 /> 五级标题
+      </Menu.Item>
+      <Menu.Item key="6" onClick={() => changeHeading(6)}>
+        <IconH6 /> 六级标题
+      </Menu.Item>
+    </Menu>
   );
 
   return (
     <Space align="center" size={3}>
-      <Dropdown droplist={HeadingList}>
+      <Dropdown
+        droplist={headingList}
+        triggerProps={{ style: { zIndex: tooltipZIndex } }}
+      >
         <Option>H</Option>
       </Dropdown>
       <Tooltip mini content={'粗体'} style={{ zIndex: tooltipZIndex }}>
@@ -356,13 +342,20 @@ function Toolbar(props: ToolbarProp) {
           <IconInsertTable />
         </Option>
       </Tooltip>
-      <Dropdown droplist={FormulaList}>
-        <Option style={{ zIndex: tooltipZIndex }}>
+      <Dropdown
+        droplist={FormulaList}
+        triggerProps={{ style: { zIndex: tooltipZIndex } }}
+      >
+        <Option>
           <IconFormula />
         </Option>
       </Dropdown>
       <Tooltip mini content={'暂不支持'} style={{ zIndex: tooltipZIndex }}>
-        <Dropdown droplist={MermaidList} disabled>
+        <Dropdown
+          disabled
+          droplist={MermaidList}
+          triggerProps={{ style: { zIndex: tooltipZIndex } }}
+        >
           <Option>
             <IconBranch />
           </Option>
