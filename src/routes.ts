@@ -31,8 +31,8 @@ export const routes: IRoute[] = [
         key: 'doc/project-manager',
       },
       {
-        name: 'menu.doc.apiManager',
-        key: 'doc/api-manager',
+        name: 'menu.doc.apiDocument',
+        key: 'doc/api-document',
       },
     ],
   },

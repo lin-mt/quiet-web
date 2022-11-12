@@ -21,12 +21,12 @@ import {
 import { BlockTitle } from '@/components/doc/styled';
 import styled from 'styled-components';
 import { getMethodTagColor } from '@/utils/doc/render';
-import { SchemaTable } from '@/pages/doc/api-manager/api/api-detail/schema-table';
+import { SchemaTable } from '@/pages/doc/api-document/api/api-detail/schema-table';
 import { DataType } from '@arco-design/web-react/es/Descriptions/interface';
 import {
   ApiManagerContext,
   ApiManagerContextProps,
-} from '@/pages/doc/api-manager';
+} from '@/pages/doc/api-document';
 import QuietMarkdownViewer from '@/components/QuietMarkdown/QuietMarkdownViewer';
 
 const ReqTitle = styled.div`

@@ -2,8 +2,8 @@ import React, { createContext, ReactNode, useEffect, useState } from 'react';
 import { Empty, Grid, Tabs } from '@arco-design/web-react';
 import styles from './style/index.module.less';
 import { getQueryParams, updateUrlParam } from '@/utils/urlParams';
-import Api from '@/pages/doc/api-manager/api';
-import Setting from '@/pages/doc/api-manager/setting';
+import Api from '@/pages/doc/api-document/api';
+import Setting from '@/pages/doc/api-document/setting';
 import { DocProject } from '@/service/doc/type';
 import { getProjectInfo } from '@/service/doc/project';
 import ProjectSelect from '@/components/doc/ProjectSelect';
@@ -81,7 +81,7 @@ function ApiManager() {
 
   const renderTabHeader = (props, DefaultTabBar) => {
     return (
-      <div className={styles['api-manager-tab-header']}>
+      <div className={styles['api-document-tab-header']}>
         <DefaultTabBar {...props}>
           {(node) => {
             return <span>{node}</span>;

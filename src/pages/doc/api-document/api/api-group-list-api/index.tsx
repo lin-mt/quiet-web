@@ -20,7 +20,7 @@ import { QuietFormProps } from '@/components/type';
 import {
   ApiManagerContext,
   ApiManagerContextProps,
-} from '@/pages/doc/api-manager';
+} from '@/pages/doc/api-document';
 
 export type ApiGroupListApiProps = {
   groupId?: string;

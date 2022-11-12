@@ -9,8 +9,8 @@ import {
   Select,
 } from '@arco-design/web-react';
 import { enumToSelectOptions } from '@/utils/render';
-import { REQUEST_HEADER } from '@/pages/doc/api-manager/api/api-detail/constent';
 import { IconDelete, IconPlus, IconSave } from '@arco-design/web-react/icon';
+import { REQUEST_HEADER } from '@/constant/doc';
 
 const { useForm } = Form;
 const { Row, Col } = Grid;

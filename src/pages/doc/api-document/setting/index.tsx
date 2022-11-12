@@ -1,8 +1,9 @@
 import React from 'react';
 import { Card, Tabs } from '@arco-design/web-react';
 import styles from './style/index.module.less';
-import Env from '@/pages/doc/api-manager/setting/env';
-import Project from '@/pages/doc/api-manager/setting/project';
+import Env from '@/pages/doc/api-document/setting/env';
+import Project from '@/pages/doc/api-document/setting/project';
+
 const TabPane = Tabs.TabPane;
 
 const renderTabHeader = (props, DefaultTabBar) => {

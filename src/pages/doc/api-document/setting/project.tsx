@@ -5,7 +5,7 @@ import ProjectGroupSelect from '@/components/doc/ProjectGroupSelect';
 import {
   ApiManagerContext,
   ApiManagerContextProps,
-} from '@/pages/doc/api-manager';
+} from '@/pages/doc/api-document';
 import { IconSave } from '@arco-design/web-react/icon';
 import { updateProject } from '@/service/doc/project';
 

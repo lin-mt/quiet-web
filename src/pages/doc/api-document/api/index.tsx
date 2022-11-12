@@ -11,13 +11,13 @@ import ApiGroupManager, {
   ApiGroupManagerRefProps,
   ClickNode,
   NodeType,
-} from '@/pages/doc/api-manager/api/api-group-manager';
-import ApiGroupListApi from '@/pages/doc/api-manager/api/api-group-list-api';
-import ApiDetail from '@/pages/doc/api-manager/api/api-detail';
+} from '@/pages/doc/api-document/api/api-group-manager';
+import ApiGroupListApi from '@/pages/doc/api-document/api/api-group-list-api';
+import ApiDetail from '@/pages/doc/api-document/api/api-detail';
 import {
   ApiManagerContext,
   ApiManagerContextProps,
-} from '@/pages/doc/api-manager';
+} from '@/pages/doc/api-document';
 
 const { Row, Col } = Grid;
 

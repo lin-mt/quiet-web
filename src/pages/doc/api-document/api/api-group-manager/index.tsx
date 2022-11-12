@@ -31,7 +31,7 @@ import { DocApiGroup } from '@/service/doc/type';
 import {
   ApiManagerContext,
   ApiManagerContextProps,
-} from '@/pages/doc/api-manager';
+} from '@/pages/doc/api-document';
 
 export enum NodeType {
   API_GROUP,

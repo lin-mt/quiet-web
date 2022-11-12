@@ -35,19 +35,16 @@ import {
   IconPlus,
   IconSave,
 } from '@arco-design/web-react/icon';
-import {
-  CONTENT_TYPE,
-  REQUEST_HEADER,
-} from '@/pages/doc/api-manager/api/api-detail/constent';
 import { updateApi } from '@/service/doc/api';
 import { saveApiInfo, updateApiInfo } from '@/service/doc/api-info';
 import QuietJsonSchemaEditor from '@/components/QuietJsonSchemaEditor';
-import { ApiContext, ApiContextProps } from '@/pages/doc/api-manager/api';
+import { ApiContext, ApiContextProps } from '@/pages/doc/api-document/api';
 import {
   ApiManagerContext,
   ApiManagerContextProps,
-} from '@/pages/doc/api-manager';
+} from '@/pages/doc/api-document';
 import QuietMarkdown from '@/components/QuietMarkdown';
+import { CONTENT_TYPE, REQUEST_HEADER } from '@/constant/doc';
 
 const { Row, Col } = Grid;
 const { Item } = Form;

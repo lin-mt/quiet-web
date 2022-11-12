@@ -2,7 +2,7 @@ const i18n = {
   'en-US': {
     'menu.doc': 'Document Manager',
     'menu.doc.projectManager': 'ProjectManager',
-    'menu.doc.apiManager': 'ApiManager',
+    'menu.doc.apiDocument': 'ApiDocument',
     'menu.system': 'System Manager',
     'menu.system.userManager': 'User Manager',
     'menu.system.deptManager': 'Dept Manager',
@@ -50,7 +50,7 @@ const i18n = {
   'zh-CN': {
     'menu.doc': '文档管理',
     'menu.doc.projectManager': '项目管理',
-    'menu.doc.apiManager': '接口管理',
+    'menu.doc.apiDocument': '接口文档',
     'menu.system': '系统管理',
     'menu.system.userManager': '用户管理',
     'menu.system.deptManager': '部门管理',

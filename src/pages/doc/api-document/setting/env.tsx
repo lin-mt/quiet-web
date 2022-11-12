@@ -13,7 +13,7 @@ import EnvForm from '@/components/doc/EnvForm';
 import {
   ApiManagerContext,
   ApiManagerContextProps,
-} from '@/pages/doc/api-manager';
+} from '@/pages/doc/api-document';
 
 const TabPane = Tabs.TabPane;
 

@@ -33,7 +33,7 @@ import { getMethodTagColor } from '@/utils/doc/render';
 import {
   ApiManagerContext,
   ApiManagerContextProps,
-} from '@/pages/doc/api-manager';
+} from '@/pages/doc/api-document';
 
 const AnchorLink = Anchor.Link;
 const { Row, Col } = Grid;
