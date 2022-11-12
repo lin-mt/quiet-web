@@ -103,7 +103,7 @@ export function ApiGroupManager(
         listApiGroup(queryParams.project_id).then((groups) => {
           const treeData: TreeDataType[] = [
             {
-              key: defaultId,
+              id: defaultId,
               name: '未分组',
               nodeType: NodeType.API_GROUP,
             },
@@ -195,10 +195,7 @@ export function ApiGroupManager(
           selectedKeys={selectedKeys}
           renderExtra={(node) => {
             const dataRef = node.dataRef;
-            if (
-              dataRef.key === defaultId ||
-              NodeType.API === dataRef.nodeType
-            ) {
+            if (dataRef.id === defaultId || NodeType.API === dataRef.nodeType) {
               return <></>;
             }
             return (
@@ -208,7 +205,7 @@ export function ApiGroupManager(
                     type={'text'}
                     size={'small'}
                     icon={<IconEdit />}
-                    onClick={() => handleEditApiGroup(dataRef.key)}
+                    onClick={() => handleEditApiGroup(dataRef.id)}
                   />
                 </Tooltip>
                 <Tooltip mini content={'删除分组'}>
@@ -249,7 +246,7 @@ export function ApiGroupManager(
               const nodeData = extra.node.props.dataRef;
               props.onTreeNodeClick({
                 type: nodeData.nodeType,
-                id: nodeData.key === defaultId ? undefined : nodeData.id,
+                id: nodeData.id === defaultId ? undefined : nodeData.id,
                 name: nodeData.name,
                 api_group_id:
                   NodeType.API === nodeData.nodeType

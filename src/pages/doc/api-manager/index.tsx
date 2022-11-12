@@ -74,7 +74,6 @@ function ApiManager() {
           ? undefined
           : queryParams.group_id,
     };
-    console.log(params);
     updateUrlParam(params);
     localStorage.setItem(LocalStorage.ApiManager, JSON.stringify(params));
     // eslint-disable-next-line
