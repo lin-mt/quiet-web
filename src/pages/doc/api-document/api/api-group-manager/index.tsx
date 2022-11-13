@@ -82,6 +82,8 @@ export function ApiGroupManager(
       : queryParams.api_group_id;
     if (selected) {
       setSelectedKeys([selected]);
+    } else {
+      setSelectedKeys([defaultId]);
     }
   }, [queryParams.api_id, queryParams.api_group_id]);
 
@@ -187,12 +189,13 @@ export function ApiGroupManager(
         />
         <Tree
           blockNode
+          actionOnClick={['select', 'expand']}
+          treeData={apiGroupTreeData}
+          selectedKeys={selectedKeys}
           fieldNames={{
             key: 'id',
             title: 'name',
           }}
-          treeData={apiGroupTreeData}
-          selectedKeys={selectedKeys}
           renderExtra={(node) => {
             const dataRef = node.dataRef;
             if (dataRef.id === defaultId || NodeType.API === dataRef.nodeType) {
@@ -241,7 +244,6 @@ export function ApiGroupManager(
             );
           }}
           onSelect={(keys, extra) => {
-            setSelectedKeys(keys);
             if (props.onTreeNodeClick) {
               const nodeData = extra.node.props.dataRef;
               props.onTreeNodeClick({
