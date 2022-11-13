@@ -12,6 +12,12 @@
       {
         "ignorePseudoClasses": ["global"]
       }
+    ],
+    "selector-pseudo-element-no-unknown": [
+      true,
+      {
+        "ignorePseudoElements": ["input-placeholder"]
+      }
     ]
   }
 }
