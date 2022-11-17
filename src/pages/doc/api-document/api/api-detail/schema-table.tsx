@@ -78,7 +78,6 @@ const columns: ColumnProps[] = [
     key: 'sub',
     render: (text, record) => {
       const result = text || record;
-
       return Object.keys(result).map((item, index) => {
         const name = messageMap[item];
         const value = result[item];
@@ -91,7 +90,7 @@ const columns: ColumnProps[] = [
 
         return (
           isShow && (
-            <p key={key}>
+            <p key={key} style={{ margin: 0 }}>
               <span style={{ fontWeight: 700 }}>{name}: </span>
               <span>{value?.toString()}</span>
             </p>
