@@ -11,6 +11,7 @@ import ProjectGroupSelect, {
   PERSONAL_VALUE,
 } from '@/components/doc/ProjectGroupSelect';
 import { LocalStorage } from '@/constant/doc';
+import Data from '@/pages/doc/api-document/data';
 
 const TabPane = Tabs.TabPane;
 const { Row, Col } = Grid;
@@ -173,6 +174,9 @@ function ApiManager() {
       >
         <TabPane key={'api'} title={'接 口'}>
           {buildTabContent(<Api />)}
+        </TabPane>
+        <TabPane key={'data'} title={'数据管理'}>
+          {buildTabContent(<Data />)}
         </TabPane>
         <TabPane key={'setting'} title={'设 置'}>
           {buildTabContent(<Setting />)}

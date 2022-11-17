@@ -33,3 +33,14 @@ export async function deleteProject(id: string) {
 export function getProjectInfo(id: string): Promise<DocProject> {
   return GET<DocProject>(`${base_path}/${id}`);
 }
+
+export function updateSwaggerConfig(
+  id: string,
+  enabled: boolean,
+  url: string,
+  cron: string
+): Promise<DocProject> {
+  return PUT<DocProject>(`${base_path}/swagger/${id}`, null, {
+    params: { enabled, url, cron },
+  });
+}
