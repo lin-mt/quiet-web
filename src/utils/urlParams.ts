@@ -10,15 +10,12 @@ export function getQueryParams(): ParamsType {
 }
 
 export function updateUrlParam(params) {
-  if (!params) {
-    return;
-  }
-  const searchParams = new URLSearchParams(window.location.search);
-  for (const key in params) {
-    if (params[key]) {
-      searchParams.set(key, params[key]);
-    } else {
-      searchParams.delete(key);
+  const searchParams = new URLSearchParams();
+  if (params) {
+    for (const key in params) {
+      if (params[key]) {
+        searchParams.set(key, params[key]);
+      }
     }
   }
   let url = window.location.pathname;
