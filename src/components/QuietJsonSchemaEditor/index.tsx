@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import JsonSchemaEditor from '@quiet-front-end/json-schema-editor-arco';
 import '@quiet-front-end/json-schema-editor-arco/dist/css/index.css';
 import * as monaco from 'monaco-editor';
@@ -12,18 +12,21 @@ export type QuietJsonSchemaEditorProps = {
 };
 
 function QuietJsonSchemaEditor(props: QuietJsonSchemaEditorProps) {
-  const handleChange = (newValue) => {
-    props.onChange && props.onChange(newValue);
+  const [value, setValue] = useState();
+
+  const Fresh = (prop) => {
+    return (
+      <>
+        <JsonSchemaEditor data={prop.data} mock onChange={prop.onChange} />
+      </>
+    );
   };
 
-  return (
-    <JsonSchemaEditor
-      data={props.value}
-      onChange={(v) => {
-        handleChange(v);
-      }}
-    />
-  );
+  useEffect(() => {
+    setValue(props.value);
+  }, [props.value]);
+
+  return <Fresh data={value} onChange={props.onChange} />;
 }
 
 export default QuietJsonSchemaEditor;
