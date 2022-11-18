@@ -142,9 +142,7 @@ function ApiEditor(props: ApiEditorProps) {
         }
         resp.api_info = apiInfo;
         props.handleUpdate && props.handleUpdate(resp);
-        if (resp.api_group_id !== props.api.api_group_id) {
-          apiContext.reloadApiGroupInfo();
-        }
+        apiContext.reloadApiGroupInfo();
       });
     } catch (e) {
       throw e;

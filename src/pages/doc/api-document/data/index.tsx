@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -20,6 +20,7 @@ const { Row, Col } = Grid;
 function Data() {
   const { projectInfo, setProjectInfo } =
     useContext<ApiManagerContextProps>(ApiManagerContext);
+  const [loading, setLoading] = useState<boolean>();
   const [dataFrom] = Form.useForm();
   const swaggerEnabled = Form.useWatch('enabled', dataFrom);
 
@@ -37,12 +38,10 @@ function Data() {
   }
 
   function handleSubmit(values) {
-    updateSwaggerConfig(
-      projectInfo.id,
-      values.enabled,
-      values.url,
-      values.cron
-    ).then((resp) => setProjectInfo(resp));
+    setLoading(true);
+    updateSwaggerConfig(projectInfo.id, values.enabled, values.url, values.cron)
+      .then((resp) => setProjectInfo(resp))
+      .finally(() => setLoading(false));
   }
 
   return (
@@ -88,7 +87,7 @@ function Data() {
               <Input placeholder={'请输入同步表达式'} />
             </Form.Item>
             <Form.Item label={' '}>
-              <Button type="primary" htmlType={'submit'}>
+              <Button type="primary" htmlType={'submit'} loading={loading}>
                 保 存
               </Button>
               <Button

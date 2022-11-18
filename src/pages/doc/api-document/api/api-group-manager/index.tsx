@@ -14,6 +14,7 @@ import {
   Space,
   Tooltip,
   Tree,
+  Typography,
 } from '@arco-design/web-react';
 import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
 import ApiGroupForm from '@/components/doc/ApiGroupForm';
@@ -25,7 +26,7 @@ import {
   updateApiGroup,
 } from '@/service/doc/api-group';
 import { TreeDataType } from '@arco-design/web-react/es/Tree/interface';
-import { listApi } from '@/service/doc/api';
+import { deleteApi, listApi } from '@/service/doc/api';
 import { QuietFormProps } from '@/components/type';
 import { DocApiGroup } from '@/service/doc/type';
 import {
@@ -107,6 +108,7 @@ export function ApiGroupManager(
             {
               id: defaultId,
               name: '未分组',
+              children: apiGroupId2Apis[defaultId],
               nodeType: NodeType.API_GROUP,
             },
           ];
@@ -164,6 +166,17 @@ export function ApiGroupManager(
     });
   }
 
+  function getGroupNameById(api_group_id: string) {
+    let name: '未知分组';
+    apiGroupTreeData.every((group) => {
+      if (group.id === api_group_id) {
+        name = group.name;
+      }
+      return true;
+    });
+    return name;
+  }
+
   return (
     <Card
       title={'接口分组'}
@@ -196,10 +209,58 @@ export function ApiGroupManager(
             key: 'id',
             title: 'name',
           }}
+          renderTitle={(node) => {
+            return (
+              <Typography.Text
+                ellipsis={{ rows: 1, showTooltip: true }}
+                style={{
+                  color: node.selected ? 'rgb(var(--primary-6))' : '',
+                  marginBottom: 0,
+                }}
+              >
+                {node.title}
+              </Typography.Text>
+            );
+          }}
           renderExtra={(node) => {
             const dataRef = node.dataRef;
-            if (dataRef.id === defaultId || NodeType.API === dataRef.nodeType) {
+            if (dataRef.id === defaultId) {
               return <></>;
+            }
+            if (NodeType.API === dataRef.nodeType) {
+              return (
+                <Tooltip mini content={'删除接口'}>
+                  <Button
+                    type={'text'}
+                    size={'small'}
+                    status={'danger'}
+                    icon={<IconDelete />}
+                    onClick={() => {
+                      const apiGroupId = dataRef.api_group_id
+                        ? dataRef.api_group_id
+                        : defaultId;
+                      Modal.confirm({
+                        title: `确认删除接口 ${dataRef.name} 吗？`,
+                        onConfirm: () => {
+                          deleteApi(dataRef.id)
+                            .then(() => {
+                              if (props.onTreeNodeClick) {
+                                props.onTreeNodeClick({
+                                  type: NodeType.API_GROUP,
+                                  id: dataRef.api_group_id,
+                                  name: getGroupNameById(apiGroupId),
+                                  refreshContent: true,
+                                });
+                              }
+                              setSelectedKeys([apiGroupId]);
+                            })
+                            .finally(() => fetchData());
+                        },
+                      });
+                    }}
+                  />
+                </Tooltip>
+              );
             }
             return (
               <div>
@@ -222,19 +283,21 @@ export function ApiGroupManager(
                         title: `确认删除分组 ${dataRef.name} 吗？`,
                         content: '温馨提示：该分组的所有接口将归入【未分组】',
                         onConfirm: () => {
-                          deleteApiGroup(dataRef.id).then(() => {
-                            if (selectedKeys[0] === dataRef.id) {
-                              if (props.onTreeNodeClick) {
-                                props.onTreeNodeClick({
-                                  type: NodeType.API_GROUP,
-                                  id: undefined,
-                                  name: '未分组',
-                                });
+                          deleteApiGroup(dataRef.id)
+                            .then(() => {
+                              if (selectedKeys[0] === dataRef.id) {
+                                if (props.onTreeNodeClick) {
+                                  props.onTreeNodeClick({
+                                    type: NodeType.API_GROUP,
+                                    id: undefined,
+                                    name: getGroupNameById(defaultId),
+                                  });
+                                }
+                                setSelectedKeys([defaultId]);
                               }
-                              setSelectedKeys([defaultId]);
-                            }
-                            fetchData();
-                          });
+                              fetchData();
+                            })
+                            .finally(() => fetchData());
                         },
                       });
                     }}

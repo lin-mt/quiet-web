@@ -69,6 +69,7 @@ function Api() {
       result = (
         <ApiGroupListApi
           groupId={apiGroupId}
+          tableDataVersion={node?.refreshContent ? Math.random() : undefined}
           onClickApi={(api) => {
             buildContent({
               type: NodeType.API,

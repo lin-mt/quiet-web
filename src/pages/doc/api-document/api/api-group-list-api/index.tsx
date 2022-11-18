@@ -26,6 +26,7 @@ export type ApiGroupListApiProps = {
   groupId?: string;
   onClickApi?: (api: DocApi) => void;
   name?: string;
+  tableDataVersion?: number;
 };
 
 function ApiGroupListApi(props: ApiGroupListApiProps) {
@@ -58,7 +59,12 @@ function ApiGroupListApi(props: ApiGroupListApiProps) {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination.current, pagination.pageSize, props.groupId]);
+  }, [
+    pagination.current,
+    pagination.pageSize,
+    props.groupId,
+    props.tableDataVersion,
+  ]);
 
   function onChangeTable({ current, pageSize }) {
     setPagination({
