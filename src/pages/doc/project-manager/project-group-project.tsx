@@ -171,7 +171,11 @@ function ProjectGroupProject(props: ProjectGroupProjectProps) {
                           onClick={() => {
                             NProgress.start();
                             history.push(
-                              `/doc/api-manager?projectId=${project.id}`
+                              `/doc/api-document?project_id=${project.id}${
+                                project.group_id
+                                  ? '&group_id=' + project.group_id
+                                  : ''
+                              }`
                             );
                             NProgress.done();
                           }}

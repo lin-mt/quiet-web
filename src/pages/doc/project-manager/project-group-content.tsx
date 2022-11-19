@@ -6,8 +6,8 @@ import {
   IconSettings,
   IconUserGroup,
 } from '@arco-design/web-react/icon';
-import ProjectGroupProject from '@/pages/doc/doc-manager/project-group-project';
-import ProjectGroupMember from '@/pages/doc/doc-manager/project-group-member';
+import ProjectGroupProject from '@/pages/doc/project-manager/project-group-project';
+import ProjectGroupMember from '@/pages/doc/project-manager/project-group-member';
 
 const TabPane = Tabs.TabPane;
 

@@ -35,19 +35,16 @@ import {
   IconPlus,
   IconSave,
 } from '@arco-design/web-react/icon';
-import {
-  CONTENT_TYPE,
-  REQUEST_HEADER,
-} from '@/pages/doc/api-manager/api/api-detail/constent';
-import MarkdownEditor from '@/components/Markdown/MarkdownEditor';
 import { updateApi } from '@/service/doc/api';
 import { saveApiInfo, updateApiInfo } from '@/service/doc/api-info';
 import QuietJsonSchemaEditor from '@/components/QuietJsonSchemaEditor';
-import { ApiContext, ApiContextProps } from '@/pages/doc/api-manager/api';
+import { ApiContext, ApiContextProps } from '@/pages/doc/api-document/api';
 import {
   ApiManagerContext,
   ApiManagerContextProps,
-} from '@/pages/doc/api-manager';
+} from '@/pages/doc/api-document';
+import QuietMarkdown from '@/components/QuietMarkdown';
+import { CONTENT_TYPE, REQUEST_HEADER } from '@/constant/doc';
 
 const { Row, Col } = Grid;
 const { Item } = Form;
@@ -145,9 +142,7 @@ function ApiEditor(props: ApiEditorProps) {
         }
         resp.api_info = apiInfo;
         props.handleUpdate && props.handleUpdate(resp);
-        if (resp.api_group_id !== props.api.api_group_id) {
-          apiContext.reloadApiGroupInfo();
-        }
+        apiContext.reloadApiGroupInfo();
       });
     } catch (e) {
       throw e;
@@ -295,7 +290,7 @@ function ApiEditor(props: ApiEditorProps) {
           </Item>
           <Item label={'分组'} field={'api_group_id'}>
             <ApiGroupSelect
-              projectId={apiManagerContext.projectId}
+              projectId={apiManagerContext.queryParams.project_id}
               allowClear
               placeholder="请输入分组名称"
             />
@@ -876,7 +871,7 @@ function ApiEditor(props: ApiEditorProps) {
           field={'remark'}
           rules={[{ max: 300, message: '备注信息不能超过 300' }]}
         >
-          <MarkdownEditor maxLength={300} value={props.api.remark} />
+          <QuietMarkdown />
         </Item>
         <Affix
           offsetBottom={0}

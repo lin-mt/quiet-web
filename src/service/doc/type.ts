@@ -25,6 +25,8 @@ export enum QueryParamType {
   STRING = 'string',
   INTEGER = 'integer',
   NUMBER = 'number',
+  ARRAY = 'array',
+  OBJECT = 'object',
 }
 
 export enum HttpProtocol {
@@ -130,6 +132,9 @@ export interface DocProject extends SortableEntity {
   group_id?: string;
   visitor_ids: string[];
   principal_name?: string;
+  swagger_url?: string;
+  swagger_cron?: string;
+  swagger_enabled?: boolean;
   remark?: string;
   visitors: QuietUser[];
 }

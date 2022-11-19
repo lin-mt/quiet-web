@@ -13,7 +13,7 @@ import EnvForm from '@/components/doc/EnvForm';
 import {
   ApiManagerContext,
   ApiManagerContextProps,
-} from '@/pages/doc/api-manager';
+} from '@/pages/doc/api-document';
 
 const TabPane = Tabs.TabPane;
 
@@ -25,7 +25,7 @@ function Env() {
   const [activeTab, setActiveTab] = useState<string>();
 
   function fetchEnvs(newActiveTabKey?: string) {
-    listEnv(apiManagerContext.projectId).then((resp) => {
+    listEnv(apiManagerContext.queryParams.project_id).then((resp) => {
       const envsTemp = [];
       resp.forEach((env) => {
         envsTemp.push({
@@ -46,7 +46,7 @@ function Env() {
   useEffect(() => {
     fetchEnvs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiManagerContext.projectId]);
+  }, [apiManagerContext.queryParams.project_id]);
 
   const handleAddTab = () => {
     const newEnv = {
@@ -54,7 +54,7 @@ function Env() {
       key: newEnvId,
       env: {
         name: '新环境',
-        project_id: apiManagerContext.projectId,
+        project_id: apiManagerContext.queryParams.project_id,
       },
     };
     for (const tab of tabs) {

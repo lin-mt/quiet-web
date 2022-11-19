@@ -20,12 +20,13 @@ import { QuietFormProps } from '@/components/type';
 import {
   ApiManagerContext,
   ApiManagerContextProps,
-} from '@/pages/doc/api-manager';
+} from '@/pages/doc/api-document';
 
 export type ApiGroupListApiProps = {
   groupId?: string;
   onClickApi?: (api: DocApi) => void;
   name?: string;
+  tableDataVersion?: number;
 };
 
 function ApiGroupListApi(props: ApiGroupListApiProps) {
@@ -58,7 +59,12 @@ function ApiGroupListApi(props: ApiGroupListApiProps) {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination.current, pagination.pageSize, props.groupId]);
+  }, [
+    pagination.current,
+    pagination.pageSize,
+    props.groupId,
+    props.tableDataVersion,
+  ]);
 
   function onChangeTable({ current, pageSize }) {
     setPagination({
@@ -128,7 +134,7 @@ function ApiGroupListApi(props: ApiGroupListApiProps) {
     pageApi({
       current: pagination.current,
       page_size: pagination.pageSize,
-      project_id: apiManagerContext.projectId,
+      project_id: apiManagerContext.queryParams.project_id,
       api_group_id: props.groupId ? props.groupId : 0,
     })
       .then((res) => {
@@ -180,7 +186,7 @@ function ApiGroupListApi(props: ApiGroupListApiProps) {
         />
       </Space>
       <ApiForm
-        projectId={apiManagerContext.projectId}
+        projectId={apiManagerContext.queryParams.project_id}
         groupId={props.groupId}
         {...apiFormProps}
       />

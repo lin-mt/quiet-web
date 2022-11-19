@@ -5,9 +5,9 @@ import { IconEdit, IconEye, IconPlayArrow } from '@arco-design/web-react/icon';
 import styled from 'styled-components';
 import { DocApi } from '@/service/doc/type';
 import { getApiDetail } from '@/service/doc/api';
-import Preview from '@/pages/doc/api-manager/api/api-detail/api-preview';
-import ApiEditor from '@/pages/doc/api-manager/api/api-detail/api-editor';
-import ApiRun from '@/pages/doc/api-manager/api/api-detail/api-run';
+import Preview from '@/pages/doc/api-document/api/api-detail/api-preview';
+import ApiEditor from '@/pages/doc/api-document/api/api-detail/api-editor';
+import ApiRun from '@/pages/doc/api-document/api/api-detail/api-run';
 
 const { TabPane } = Tabs;
 

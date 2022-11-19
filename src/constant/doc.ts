@@ -1,3 +1,6 @@
+export const LocalStorage = {
+  ApiManager: 'api_manager',
+};
 export const REQUEST_HEADER: string[] = [
   'Accept',
   'Accept-Charset',
