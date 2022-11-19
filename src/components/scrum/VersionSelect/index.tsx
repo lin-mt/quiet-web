@@ -166,7 +166,7 @@ export function VersionSelect(
       dropdownRender={(menu) => (
         <>
           {props.iterationAsChildren && (
-            <div>
+            <>
               <Space
                 size={0}
                 style={{ padding: '5px 5px', float: 'right' }}
@@ -186,9 +186,9 @@ export function VersionSelect(
                 </Tag>
               </Space>
               <Divider style={{ margin: 0 }} />
-            </div>
+            </>
           )}
-          <div style={{ flex: 1, overflow: 'auto' }}>{menu}</div>
+          {menu}
         </>
       )}
       {...props}
