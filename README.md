@@ -23,7 +23,9 @@ npm run build
 
 前端：Arco Design Pro 等
 
-[项目示例](EXAMPLE.md)
+[项目图片示例](EXAMPLE.md)
+
+![example](https://user-images.githubusercontent.com/58337359/203343775-d3d38dd8-a433-468a-9cd1-42318026ae9b.gif)
 
 ## 功能简介
 
