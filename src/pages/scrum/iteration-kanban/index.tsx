@@ -169,18 +169,20 @@ function IterationPlanning() {
     const { demandId, fromTaskStepId, fromIndex, toTaskStepId, toIndex } =
       params;
     const demandTasks = _.clone(demandId2TaskStepTasks);
+    const backDemandTasks = _.clone(demandId2TaskStepTasks);
     const fromTasks = demandTasks[demandId][fromTaskStepId];
     let toTasks = demandTasks[demandId][toTaskStepId];
     const taskMoved = fromTasks.splice(fromIndex, 1)[0];
     taskMoved.task_step_id = toTaskStepId;
-    updateTask(taskMoved).then((resp) => {
-      if (!toTasks) {
-        toTasks = [];
-      }
-      toTasks.splice(toIndex, 0, resp);
-      demandTasks[demandId][fromTaskStepId] = fromTasks;
-      demandTasks[demandId][toTaskStepId] = toTasks;
-      setDemandId2TaskStepTasks(demandTasks);
+    if (!toTasks) {
+      toTasks = [];
+    }
+    toTasks.splice(toIndex, 0, taskMoved);
+    demandTasks[demandId][fromTaskStepId] = fromTasks;
+    demandTasks[demandId][toTaskStepId] = toTasks;
+    setDemandId2TaskStepTasks(demandTasks);
+    updateTask(taskMoved).catch(() => {
+      setDemandId2TaskStepTasks(backDemandTasks);
     });
   }
 
