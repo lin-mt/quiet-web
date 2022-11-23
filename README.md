@@ -1,6 +1,6 @@
 # Quiet Web
 
-Quiet 是一个关注于管理项目迭代项目相关文档的开源项目。
+Quiet 是一个关注于管理项目迭代以及项目文档的开源项目。
 
 后端：https://github.com/lin-mt/quiet
 
