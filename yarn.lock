@@ -3430,10 +3430,10 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
   integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
 
-"@quiet-front-end/json-schema-editor-arco@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@quiet-front-end/json-schema-editor-arco/-/json-schema-editor-arco-0.1.12.tgz#f8cdc26dfed8ae044bea99ca736bdb1a11d5ee51"
-  integrity sha512-2v2DJAy4kUyMzD4dRDiU2t6H56nUfRiQvCCTBZ38aSi0M72qRwX0veMHPgECZMzSUXS9JVDE6QUDrFfK5alj1w==
+"@quiet-front-end/json-schema-editor-arco@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@quiet-front-end/json-schema-editor-arco/-/json-schema-editor-arco-0.2.2.tgz#c02c33a9c5884d1f2ca8699836029a6acb7017de"
+  integrity sha512-ZCTfwwhW4Sevtw1dEKiNhXLBFW5VMzFIEMhzTKGi0MEG8ZhiIc/bwKzvS8S3ZfXLpzY43jevAZqV4NBh3FyAEA==
   dependencies:
     "@arco-design/web-react" "^2.40.0"
     "@babel/runtime" "^7.5.5"
