@@ -64,6 +64,8 @@ ReactDOM.render(
 
 Pretty neat, eh?
 
+## Mermaid
+
 \`\`\`mermaid
 pie title Pets adopted by volunteers
 "Dogs" : 386

@@ -36,6 +36,7 @@ import {
 } from '@/components/icon';
 import styles from '@/components/QuietMarkdown/style/index.module.less';
 import styled from 'styled-components';
+import { MermaidDefaults } from '@/components/QuietMarkdown/mermaid';
 
 export const Option = styled.div`
   background-color: rgb(var(--gray-2));
@@ -223,14 +224,22 @@ function Toolbar(props: ToolbarProp) {
     <Menu className={styles['dropdown']}>
       <div style={{ marginLeft: 5, marginRight: 5 }}>Mermaid 图表</div>
       <Divider style={{ marginTop: 2, marginBottom: 2 }} />
-      <Menu.Item key="1">类图</Menu.Item>
-      <Menu.Item key="2">流程图</Menu.Item>
-      <Menu.Item key="3">时序图</Menu.Item>
-      <Menu.Item key="4">状态图</Menu.Item>
-      <Menu.Item key="5">关系图</Menu.Item>
-      <Menu.Item key="6">旅程图</Menu.Item>
-      <Menu.Item key="7">甘特图</Menu.Item>
-      <Menu.Item key="8">饼状图</Menu.Item>
+      {Object.keys(MermaidDefaults).map((key) => {
+        return (
+          <Menu.Item
+            key={key}
+            onClick={() =>
+              addBlockValue(
+                MermaidDefaults[key].value,
+                MermaidDefaults[key].newColumnPos,
+                MermaidDefaults[key].newLineNum
+              )
+            }
+          >
+            {MermaidDefaults[key].name}
+          </Menu.Item>
+        );
+      })}
     </Menu>
   );
 
@@ -350,17 +359,14 @@ function Toolbar(props: ToolbarProp) {
           <IconFormula />
         </Option>
       </Dropdown>
-      <Tooltip mini content={'暂不支持'} style={{ zIndex: tooltipZIndex }}>
-        <Dropdown
-          disabled
-          droplist={MermaidList}
-          triggerProps={{ style: { zIndex: tooltipZIndex } }}
-        >
-          <Option>
-            <IconBranch />
-          </Option>
-        </Dropdown>
-      </Tooltip>
+      <Dropdown
+        droplist={MermaidList}
+        triggerProps={{ style: { zIndex: tooltipZIndex } }}
+      >
+        <Option>
+          <IconBranch />
+        </Option>
+      </Dropdown>
     </Space>
   );
 }

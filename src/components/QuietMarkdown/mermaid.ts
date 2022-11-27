@@ -1,7 +1,16 @@
-export default function (name: string) {
-  switch (name) {
-    case 'class-diagrams':
-      return `
+type MermaidDefault = {
+  name: string;
+  value: string;
+  newColumnPos: number;
+  newLineNum: number;
+};
+
+export const MermaidDefaults: Record<string, MermaidDefault> = {
+  classDiagrams: {
+    name: '类图',
+    newColumnPos: 0,
+    newLineNum: 2,
+    value: `
 \`\`\`mermaid
 classDiagram
 Animal <|-- Duck
@@ -25,25 +34,37 @@ class Zebra{
 +run()
 }
 \`\`\`
-      `;
-    case 'flowchart':
-      return `
+`,
+  },
+  flowChart: {
+    name: '流程图',
+    newColumnPos: 0,
+    newLineNum: 2,
+    value: `
 \`\`\`mermaid
 graph TD
 Start --> Stop
 \`\`\`
-      `;
-    case 'sequence-diagrams':
-      return `
+`,
+  },
+  sequenceDiagrams: {
+    name: '时序图',
+    newColumnPos: 0,
+    newLineNum: 2,
+    value: `
 \`\`\`mermaid
 sequenceDiagram
 Alice->>John: Hello John, how are you?
 John-->>Alice: Great!
 Alice-)John: See you later!
 \`\`\`
-      `;
-    case 'gantt':
-      return `
+`,
+  },
+  gantt: {
+    name: '甘特图',
+    newColumnPos: 0,
+    newLineNum: 2,
+    value: `
 \`\`\`mermaid
 gantt
 title A Gantt Diagram
@@ -55,9 +76,13 @@ section Another
 Task in sec      :2014-01-12  , 12d
 another task      : 24d
 \`\`\`
-      `;
-    case 'user-journey-diagrams':
-      return `
+`,
+  },
+  userJourneyDiagrams: {
+    name: '旅程图',
+    newColumnPos: 0,
+    newLineNum: 2,
+    value: `
 \`\`\`mermaid
 journey
 title My working day
@@ -69,27 +94,39 @@ section Go home
 Go downstairs: 5: Me
 Sit down: 5: Me
 \`\`\`
-      `;
-    case 'pie-chart':
-      return `
+`,
+  },
+  pieChart: {
+    name: '饼状图',
+    newColumnPos: 0,
+    newLineNum: 2,
+    value: `
 \`\`\`mermaid
 pie title Pets adopted by volunteers
 "Dogs" : 386
 "Cats" : 85
 "Rats" : 15
 \`\`\`
-      `;
-    case 'entity-relationship-diagrams':
-      return `
+`,
+  },
+  entityRelationshipDiagrams: {
+    name: '关系图',
+    newColumnPos: 0,
+    newLineNum: 2,
+    value: `
 \`\`\`mermaid
 erDiagram
 CUSTOMER ||--o{ ORDER : places
 ORDER ||--|{ LINE-ITEM : contains
 CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
 \`\`\`
-      `;
-    case 'state-diagrams':
-      return `
+`,
+  },
+  stateDiagrams: {
+    name: '状态图',
+    newColumnPos: 0,
+    newLineNum: 2,
+    value: `
 \`\`\`mermaid
 stateDiagram-v2
 [*] --> Still
@@ -100,6 +137,6 @@ Moving --> Still
 Moving --> Crash
 Crash --> [*]
 \`\`\`
-      `;
-  }
-}
+`,
+  },
+};
