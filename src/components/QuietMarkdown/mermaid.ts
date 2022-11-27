@@ -139,4 +139,23 @@ Crash --> [*]
 \`\`\`
 `,
   },
+  gitGraph: {
+    name: 'Git 分支图',
+    newColumnPos: 0,
+    newLineNum: 2,
+    value: `
+\`\`\`mermaid
+gitGraph
+   commit
+   commit
+   branch develop
+   commit
+   commit
+   commit
+   checkout main
+   commit
+   commit
+\`\`\`
+`,
+  },
 };
