@@ -204,12 +204,7 @@ export default (props: PreviewProps) => {
         <Descriptions border data={description} />
       </ContentContainer>
       <BlockTitle>备注</BlockTitle>
-      <ContentContainer
-        style={{
-          marginLeft: 10,
-          marginRight: 10,
-        }}
-      >
+      <ContentContainer>
         {api.remark ? (
           <QuietMarkdownViewer value={api.remark} />
         ) : (
