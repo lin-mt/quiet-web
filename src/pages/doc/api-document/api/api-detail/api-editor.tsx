@@ -68,7 +68,7 @@ const SaveContainer = styled.div.attrs((props) => props)`
   padding-top: 16px;
   padding-bottom: 16px;
   background-color: ${(props) =>
-    props.affixed ? 'rgb(var(--gray-3))' : undefined};
+    props.affixed ? 'rgb(var(--gray-1))' : undefined};
 `;
 
 function ApiEditor(props: ApiEditorProps) {
