@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Divider,
-  Dropdown,
-  Menu,
-  Space,
-  Tooltip,
-} from '@arco-design/web-react';
+import { Dropdown, Menu, Space, Tooltip } from '@arco-design/web-react';
 import {
   IconBold,
   IconBranch,
@@ -222,24 +216,24 @@ function Toolbar(props: ToolbarProp) {
 
   const MermaidList = (
     <Menu className={styles['dropdown']}>
-      <div style={{ marginLeft: 5, marginRight: 5 }}>Mermaid 图表</div>
-      <Divider style={{ marginTop: 2, marginBottom: 2 }} />
-      {Object.keys(MermaidDefaults).map((key) => {
-        return (
-          <Menu.Item
-            key={key}
-            onClick={() =>
-              addBlockValue(
-                MermaidDefaults[key].value,
-                MermaidDefaults[key].newColumnPos,
-                MermaidDefaults[key].newLineNum
-              )
-            }
-          >
-            {MermaidDefaults[key].name}
-          </Menu.Item>
-        );
-      })}
+      <Menu.ItemGroup title="mermaid 图表">
+        {Object.keys(MermaidDefaults).map((key) => {
+          return (
+            <Menu.Item
+              key={key}
+              onClick={() =>
+                addBlockValue(
+                  MermaidDefaults[key].value,
+                  MermaidDefaults[key].newColumnPos,
+                  MermaidDefaults[key].newLineNum
+                )
+              }
+            >
+              {MermaidDefaults[key].name}
+            </Menu.Item>
+          );
+        })}
+      </Menu.ItemGroup>
     </Menu>
   );
 
