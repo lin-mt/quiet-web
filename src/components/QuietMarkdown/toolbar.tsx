@@ -29,23 +29,8 @@ import {
   IconSuperscript,
 } from '@/components/icon';
 import styles from '@/components/QuietMarkdown/style/index.module.less';
-import styled from 'styled-components';
 import { MermaidDefaults } from '@/components/QuietMarkdown/mermaid';
-
-export const Option = styled.div`
-  background-color: rgb(var(--gray-2));
-  border-radius: var(--border-radius-small);
-  color: var(--color-text-1);
-  padding: 0 8px;
-  line-height: 26px;
-  height: 26px;
-  font-size: 14px;
-  cursor: pointer;
-
-  :hover {
-    background-color: rgb(var(--gray-3));
-  }
-`;
+import { Option } from '@/components/QuietMarkdown/index';
 
 export type ToolbarProp = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -202,11 +187,14 @@ function Toolbar(props: ToolbarProp) {
 
   const FormulaList = (
     <Menu className={styles['dropdown']}>
-      <Menu.Item key="1" onClick={() => setStartAndEndCharacters('$', '$')}>
+      <Menu.Item
+        key="inlineFormula"
+        onClick={() => setStartAndEndCharacters('$', '$')}
+      >
         <IconInlineFormula /> 行内公式
       </Menu.Item>
       <Menu.Item
-        key="2"
+        key="blockFormula"
         onClick={() => addBlockValue('$$\n' + '\\TeX\n' + '$$\n', 3)}
       >
         <IconBlockFormula /> 块级公式
