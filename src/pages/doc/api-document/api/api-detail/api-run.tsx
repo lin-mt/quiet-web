@@ -23,7 +23,7 @@ import {
 } from '@arco-design/web-react';
 import { BlockTitle, SecondTitle } from '@/components/doc/styled';
 import styles from './style/index.module.less';
-import jsf from 'json-schema-faker';
+import { JSONSchemaFaker } from 'json-schema-faker';
 import { IconEraser, IconUpload } from '@arco-design/web-react/icon';
 import { UploadItem } from '@arco-design/web-react/es/Upload';
 import { QuietEditor } from '@/components/QuietEditor';
@@ -64,7 +64,7 @@ function ApiRun(props: ApiRunProps) {
     if (apiInfo?.req_json_body) {
       form.setFieldValue(
         'req_json_body',
-        JSON.stringify(jsf.generate(apiInfo.req_json_body), null, 2)
+        JSON.stringify(JSONSchemaFaker.generate(apiInfo.req_json_body), null, 2)
       );
     }
     listEnv(projectInfo.id).then((resp) => {
