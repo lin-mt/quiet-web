@@ -113,7 +113,11 @@ function QuietMarkdown(props: QuietMarkdownProp) {
 
   const Preview = {
     collapsible: true,
-    content: <QuietMarkdownViewer value={value} />,
+    content: (
+      <div style={{ height: '100%', backgroundColor: 'var(--color-bg-3)' }}>
+        <QuietMarkdownViewer value={value} />
+      </div>
+    ),
   };
 
   function getPanes() {
