@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, Menu, Space, Tooltip } from '@arco-design/web-react';
+import { Dropdown, Menu, Space, Tooltip, Upload } from '@arco-design/web-react';
 import {
   IconBold,
   IconBranch,
@@ -31,6 +31,9 @@ import {
 import styles from '@/components/QuietMarkdown/style/index.module.less';
 import { MermaidDefaults } from '@/components/QuietMarkdown/mermaid';
 import { Option } from '@/components/QuietMarkdown/index';
+import { RequestOptions } from '@arco-design/web-react/es/Upload/interface';
+import req from '@/utils/request';
+import { UploadResult } from '@/service/system/type';
 
 export type ToolbarProp = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -248,6 +251,24 @@ function Toolbar(props: ToolbarProp) {
     </Menu>
   );
 
+  function handleUploadImage(options: RequestOptions) {
+    const data = new FormData();
+    data.append('files', options.file);
+    data.append('classification', 'api/remark');
+    req(`/doc/minio`, {
+      method: 'POST',
+      data,
+    }).then((resp) => {
+      const result: UploadResult[] = resp.data;
+      result.every((value) => {
+        setStartAndEndCharacters(
+          `![${value.user_metadata.original_file_name}](${value.view_path})`,
+          ''
+        );
+      });
+    });
+  }
+
   return (
     <Space align="center" size={3}>
       <Dropdown
@@ -286,10 +307,17 @@ function Toolbar(props: ToolbarProp) {
           <IconLink />
         </Option>
       </Tooltip>
-      <Tooltip mini content={'暂不支持'} style={{ zIndex: tooltipZIndex }}>
-        <Option>
-          <IconImage />
-        </Option>
+      <Tooltip mini content={'图片'} style={{ zIndex: tooltipZIndex }}>
+        <Upload
+          accept={'image/*'}
+          customRequest={handleUploadImage}
+          renderUploadList={() => <></>}
+          renderUploadItem={() => <></>}
+        >
+          <Option>
+            <IconImage />
+          </Option>
+        </Upload>
       </Tooltip>
       <Tooltip mini content={'代码'} style={{ zIndex: tooltipZIndex }}>
         <Option onClick={() => setStartAndEndCharacters('`', '`')}>
