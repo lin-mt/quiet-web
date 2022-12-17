@@ -130,6 +130,30 @@ export interface QuietDept extends ParentEntity<QuietDept> {
   remark?: string;
 }
 
+export interface Header {
+  first: string;
+  second: string;
+}
+
+export interface UserMetadata {
+  original_file_name: string;
+}
+
+export interface UploadResult {
+  content_type: string;
+  delete_path: string;
+  detail_path: string;
+  download_path: string;
+  view_path: string;
+  file_size: number;
+  filename: string;
+  headers: Header[];
+  last_modified: string;
+  tags: Record<string, string>;
+  user_metadata: UserMetadata;
+  object: string;
+}
+
 // enums
 export enum Gender {
   MALE = '男',
