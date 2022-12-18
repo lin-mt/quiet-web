@@ -8,13 +8,13 @@ import remarkSlug from 'remark-slug';
 import remarkMath from 'remark-math';
 import remarkImages from 'remark-images';
 import remarkGemoji from 'remark-gemoji';
-import remarkMermaid from 'remark-mermaidjs';
 import emoji from 'remark-emoji';
 import ReactMarkdown from 'react-markdown';
 import './index.css';
 import './github.css';
 import './markdown.css';
 import 'katex/dist/katex.min.css';
+import rehypeMermaid from '@/components/QuietMarkdown/QuietMarkdownViewer/plugin/mermaid';
 
 export type QuietMarkdownViewerProp = {
   value: string;
@@ -29,6 +29,7 @@ function QuietMarkdownViewer(props: QuietMarkdownViewerProp) {
       rehypePlugins={[
         rehypeKatex,
         rehypeRaw,
+        rehypeMermaid,
         [rehypeHighlight, { ignoreMissing: true }],
       ]}
       remarkPlugins={[
@@ -38,7 +39,6 @@ function QuietMarkdownViewer(props: QuietMarkdownViewerProp) {
         remarkMath,
         remarkImages,
         remarkGemoji,
-        remarkMermaid,
         [emoji, { emoticon: true }],
       ]}
     >

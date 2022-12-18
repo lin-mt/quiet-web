@@ -121,6 +121,7 @@ export function QuietEditor(props: QuietEditorProp) {
           overviewRulerBorder: false,
           hideCursorInOverviewRuler: true,
           overviewRulerLanes: 0,
+          quickSuggestions: false,
         }}
       />
     </div>

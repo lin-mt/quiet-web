@@ -10,6 +10,8 @@ import {
 import QuietMarkdownViewer from '@/components/QuietMarkdown/QuietMarkdownViewer';
 import styled from 'styled-components';
 import { IconLeftExpand, IconRightExpand } from '@/components/icon';
+import req from '@/utils/request';
+import { UploadResult } from '@/service/system/type';
 
 export const Option = styled.div`
   background-color: rgb(var(--gray-2));
@@ -40,6 +42,7 @@ function QuietMarkdown(props: QuietMarkdownProp) {
   const [fsTtVisible, setFsTtVisible] = useState<boolean>(false);
   const [onlyEditor, setOnlyEditor] = useState<boolean>(false);
   const [onlyPreview, setOnlyPreview] = useState<boolean>(false);
+  const [isFocus, setIsFocus] = useState<boolean>(false);
   const editorRef = useRef(null);
   const monacoRef = useRef(null);
 
@@ -73,15 +76,64 @@ function QuietMarkdown(props: QuietMarkdownProp) {
         },
       ],
     });
+    editor.onDidFocusEditorWidget(() => {
+      setIsFocus(true);
+    });
+    editor.onDidBlurEditorWidget(() => {
+      setIsFocus(false);
+    });
     editorRef.current = editor;
     monacoRef.current = monaco;
   }
 
-  document.onpaste = (evt) => {
-    const dT = evt.clipboardData;
-    const file = dT.files[0];
-    console.log(file);
+  document.onpaste = (event) => {
+    if (!isFocus) {
+      return;
+    }
+    const clipboardData = event.clipboardData;
+    const file = clipboardData.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const data = new FormData();
+      data.append('files', file);
+      data.append('classification', 'api/remark');
+      req(`/doc/minio`, {
+        method: 'POST',
+        data,
+      }).then((resp) => {
+        const result: UploadResult[] = resp.data;
+        result.every((value) => {
+          addImage(value.user_metadata.original_file_name, value.view_path);
+        });
+      });
+    }
   };
+
+  function addImage(original_file_name: string, view_path: string) {
+    const selection = editorRef.current.getSelection();
+    const imageVal = `![${original_file_name}](${view_path})`;
+    const newStartColumn = selection.startColumn - original_file_name.length;
+    const newEndColumn = newStartColumn + imageVal.length;
+    editorRef.current.getModel().pushEditOperations(
+      [],
+      [
+        {
+          forceMoveMarkers: true,
+          range: {
+            ...selection,
+            startColumn: newStartColumn,
+            endColumn: newEndColumn,
+          },
+          text: imageVal,
+        },
+      ],
+      () => []
+    );
+    editorRef.current.setPosition({
+      lineNumber: selection.endLineNumber,
+      column: newEndColumn,
+    });
+    editorRef.current.focus();
+  }
 
   const Editor = {
     collapsible: true,
@@ -139,8 +191,9 @@ function QuietMarkdown(props: QuietMarkdownProp) {
           ? {
               position: 'fixed',
               inset: 0,
+              border: 0,
               zIndex: zIndex,
-              height: '100vh!important',
+              overflow: 'auto',
             }
           : {}
       }
@@ -206,7 +259,7 @@ function QuietMarkdown(props: QuietMarkdownProp) {
     >
       <ResizeBox.SplitGroup
         direction={'horizontal'}
-        style={{ height: isFullscreen ? '100vh' : height }}
+        style={{ height: isFullscreen ? 'calc(100vh - 32px)' : height }}
         panes={getPanes()}
       />
     </Card>
