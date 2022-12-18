@@ -8,6 +8,8 @@ import Table from './table.svg';
 import InsertTable from './insert-table.svg';
 import LeftExpand from './left-expand.svg';
 import RightExpand from './right-expand.svg';
+import Scale from './scale.svg';
+import TitleLevel from './title-level.svg';
 
 interface IconProps extends React.SVGAttributes<SVGElement> {
   style?: React.CSSProperties;
@@ -118,6 +120,34 @@ export class IconRightExpand extends React.Component<
     const className = this.props.className;
     return (
       <RightExpand
+        {...this.props}
+        className={`arco-icon ${className ? className : ''}`}
+      />
+    );
+  }
+}
+
+export class IconScale extends React.Component<
+  IconProps & React.RefAttributes<unknown>
+> {
+  render() {
+    const className = this.props.className;
+    return (
+      <Scale
+        {...this.props}
+        className={`arco-icon ${className ? className : ''}`}
+      />
+    );
+  }
+}
+
+export class IconTitleLevel extends React.Component<
+  IconProps & React.RefAttributes<unknown>
+> {
+  render() {
+    const className = this.props.className;
+    return (
+      <TitleLevel
         {...this.props}
         className={`arco-icon ${className ? className : ''}`}
       />
