@@ -248,15 +248,14 @@ function Toolbar(props: ToolbarProp) {
     const lineContent = editorRef.current.getModel().getLineContent(linePos);
     const markdownPattern = /!\[(.*?)]\((.*?)\)/gm;
     const htmlPattern = /<img([^>]*)(width="([1-9][0-9]*)%")([^>]*) +\/>/gm;
-    let htmlMatcher: RegExpExecArray;
-    let htmlAppendPos = 0;
-    while ((htmlMatcher = htmlPattern.exec(lineContent)) !== null) {
-      const startColumn = htmlMatcher.index + 1 + htmlAppendPos;
-      const endColumn = startColumn + htmlMatcher[0].length;
-      const newText = htmlMatcher[0].replace(
-        htmlMatcher[2],
-        `width="${value}%"`
-      );
+    let matcher: RegExpExecArray;
+    let appendPos = 0;
+    let matched = false;
+    while ((matcher = htmlPattern.exec(lineContent)) !== null) {
+      matched = true;
+      const startColumn = matcher.index + 1 + appendPos;
+      const endColumn = startColumn + matcher[0].length;
+      const newText = matcher[0].replace(matcher[2], `width="${value}%"`);
       setEditorValue(
         {
           startLineNumber: linePos,
@@ -266,11 +265,11 @@ function Toolbar(props: ToolbarProp) {
         },
         newText
       );
-      htmlAppendPos += newText.length - htmlMatcher[0].length;
+      appendPos += newText.length - matcher[0].length;
     }
-    let matcher: RegExpExecArray;
-    let appendPos = 0;
+    appendPos = 0;
     while ((matcher = markdownPattern.exec(lineContent)) !== null) {
+      matched = true;
       const startColumn = matcher.index + 1 + appendPos;
       const endColumn = startColumn + matcher[0].length;
       const newText = `<img src="${matcher[2]}" alt="${matcher[1]}" width="${value}%" />`;
@@ -284,6 +283,10 @@ function Toolbar(props: ToolbarProp) {
         newText
       );
       appendPos += newText.length - matcher[0].length;
+    }
+    if (!matched) {
+      setEditorValue(position, `<img src="" alt="" width="${value}%" />`);
+      setEditorFocusPosition(position.endLineNumber, position.endColumn + 10);
     }
   }
 
