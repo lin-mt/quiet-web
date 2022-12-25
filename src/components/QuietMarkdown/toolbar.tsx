@@ -146,22 +146,11 @@ function Toolbar(props: ToolbarProp) {
     const linePos = position.lineNumber;
     let newValue = blockValue;
     const lineValue = editorRef.current.getModel().getLineContent(linePos);
-    let next = 0;
+    let addLineNumber = linePos;
     if (lineValue.length !== 0) {
-      newValue = '\r\n' + newValue;
-      next = 1;
-    } else {
-      let preLineNoContent = position.lineNumber === 1;
-      if (!preLineNoContent) {
-        preLineNoContent =
-          editorRef.current.getModel().getLineContent(position.lineNumber - 1)
-            .length === 0;
-      }
-      if (!preLineNoContent) {
-        newValue = '\r\n' + newValue;
-      }
+      newValue = '\n' + newValue;
+      addLineNumber = addLineNumber + 1;
     }
-    const addLineNumber = linePos + next;
     setEditorValue(
       {
         startLineNumber: addLineNumber,
@@ -171,10 +160,7 @@ function Toolbar(props: ToolbarProp) {
       },
       newValue
     );
-    setEditorFocusPosition(
-      addLineNumber + (newValue.startsWith('\r\n') ? 1 : 0) + newLineNum,
-      newColumnPos
-    );
+    setEditorFocusPosition(addLineNumber + newLineNum, newColumnPos);
   }
 
   const FormulaList = (
