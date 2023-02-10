@@ -1,7 +1,7 @@
 import { DELETE, GET, POST, PUT } from '@/utils/request';
 import { ScrumVersion } from '@/service/scrum/type';
 
-const base_path = '/scrum/version';
+const base_path = '/version';
 
 export function deleteVersion(id: string): Promise<void> {
   return DELETE<void>(`${base_path}/${id}`);

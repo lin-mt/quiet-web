@@ -1,7 +1,7 @@
 import { ScrumDemand } from './type';
 import { DELETE, GET, PAGE, PageResult, POST, PUT } from '@/utils/request';
 
-const base_path = '/scrum/demand';
+const base_path = '/demand';
 
 export function findAllByIterationId(id: string): Promise<ScrumDemand[]> {
   return GET<ScrumDemand[]>(`${base_path}/all/${id}`);

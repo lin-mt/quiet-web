@@ -1,7 +1,7 @@
 import { DELETE, GET, POST, PUT } from '@/utils/request';
 import { ScrumIteration } from '@/service/scrum/type';
 
-const base_path = '/scrum/iteration';
+const base_path = '/iteration';
 
 export function end(id: string, next_id?: string): Promise<ScrumIteration> {
   return POST<ScrumIteration>(`${base_path}/end`, null, { id, next_id });

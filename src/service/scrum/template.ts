@@ -2,7 +2,7 @@ import { ScrumTemplate } from '@/service/scrum/type';
 import { DELETE, GET, POST, PUT } from '@/utils/request';
 import { AxiosRequestConfig } from 'axios';
 
-const base_path = '/scrum/template';
+const base_path = '/template';
 
 export function saveTemplate(
   save: ScrumTemplate,

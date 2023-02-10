@@ -1,7 +1,7 @@
 import { DELETE, GET, POST, PUT } from '@/utils/request';
 import { ScrumProjectGroup } from '@/service/scrum/type';
 
-const base_path = '/scrum/project-group';
+const base_path = '/project-group';
 
 export async function listProjectGroup(
   name?: string,

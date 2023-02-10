@@ -1,7 +1,7 @@
 import { ScrumTask } from '@/service/scrum/type';
 import { DELETE, GET, POST, PUT } from '@/utils/request';
 
-const base_path = '/scrum/task';
+const base_path = '/task';
 
 export function listTask(
   demand_ids: string[],
