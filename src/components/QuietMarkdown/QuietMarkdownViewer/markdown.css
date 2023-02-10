@@ -9,7 +9,6 @@
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
   font-size: 16px;
   line-height: 1.5;
-  height: 100%;
   word-wrap: break-word;
 }
 
@@ -297,7 +296,6 @@
   margin: 0;
   padding: 0 1em;
   color: rgb(var(--gray-6));
-  background-color: rgb(var(--gray-2));
   border-left: 0.25em solid rgb(var(--gray-4));
 }
 

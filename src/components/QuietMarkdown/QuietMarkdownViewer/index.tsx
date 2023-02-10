@@ -1,5 +1,6 @@
 import React from 'react';
 import rehypeKatex from 'rehype-katex';
+import rehypeRaw from 'rehype-raw';
 import rehypeHighlight from 'rehype-highlight';
 import remarkGfm from 'remark-gfm';
 import remarkToc from 'remark-toc';
@@ -26,8 +27,9 @@ function QuietMarkdownViewer(props: QuietMarkdownViewerProp) {
     <ReactMarkdown
       className="markdown-body"
       rehypePlugins={[
-        rehypeMermaid,
         rehypeKatex,
+        rehypeRaw,
+        rehypeMermaid,
         [rehypeHighlight, { ignoreMissing: true }],
       ]}
       remarkPlugins={[

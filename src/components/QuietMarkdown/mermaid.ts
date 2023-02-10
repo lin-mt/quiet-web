@@ -9,7 +9,7 @@ export const MermaidDefaults: Record<string, MermaidDefault> = {
   classDiagrams: {
     name: '类图',
     newColumnPos: 0,
-    newLineNum: 2,
+    newLineNum: 3,
     value: `
 \`\`\`mermaid
 classDiagram
@@ -39,7 +39,7 @@ class Zebra{
   flowChart: {
     name: '流程图',
     newColumnPos: 0,
-    newLineNum: 2,
+    newLineNum: 3,
     value: `
 \`\`\`mermaid
 graph TD
@@ -50,7 +50,7 @@ Start --> Stop
   sequenceDiagrams: {
     name: '时序图',
     newColumnPos: 0,
-    newLineNum: 2,
+    newLineNum: 3,
     value: `
 \`\`\`mermaid
 sequenceDiagram
@@ -63,7 +63,7 @@ Alice-)John: See you later!
   gantt: {
     name: '甘特图',
     newColumnPos: 0,
-    newLineNum: 2,
+    newLineNum: 3,
     value: `
 \`\`\`mermaid
 gantt
@@ -81,7 +81,7 @@ another task      : 24d
   userJourneyDiagrams: {
     name: '旅程图',
     newColumnPos: 0,
-    newLineNum: 2,
+    newLineNum: 3,
     value: `
 \`\`\`mermaid
 journey
@@ -99,7 +99,7 @@ Sit down: 5: Me
   pieChart: {
     name: '饼状图',
     newColumnPos: 0,
-    newLineNum: 2,
+    newLineNum: 3,
     value: `
 \`\`\`mermaid
 pie title Pets adopted by volunteers
@@ -112,7 +112,7 @@ pie title Pets adopted by volunteers
   entityRelationshipDiagrams: {
     name: '关系图',
     newColumnPos: 0,
-    newLineNum: 2,
+    newLineNum: 3,
     value: `
 \`\`\`mermaid
 erDiagram
@@ -125,7 +125,7 @@ CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
   stateDiagrams: {
     name: '状态图',
     newColumnPos: 0,
-    newLineNum: 2,
+    newLineNum: 3,
     value: `
 \`\`\`mermaid
 stateDiagram-v2
@@ -142,7 +142,7 @@ Crash --> [*]
   gitGraph: {
     name: 'Git 分支图',
     newColumnPos: 0,
-    newLineNum: 2,
+    newLineNum: 3,
     value: `
 \`\`\`mermaid
 gitGraph

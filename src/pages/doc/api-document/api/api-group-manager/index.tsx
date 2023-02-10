@@ -177,6 +177,52 @@ export function ApiGroupManager(
     return name;
   }
 
+  function handleDeleteApi(dataRef) {
+    const apiGroupId = dataRef.api_group_id ? dataRef.api_group_id : defaultId;
+    Modal.confirm({
+      title: `确认删除接口 ${dataRef.name} 吗？`,
+      onConfirm: () => {
+        deleteApi(dataRef.id)
+          .then(() => {
+            if (props.onTreeNodeClick) {
+              props.onTreeNodeClick({
+                type: NodeType.API_GROUP,
+                id: dataRef.api_group_id,
+                name: getGroupNameById(apiGroupId),
+                refreshContent: true,
+              });
+            }
+            setSelectedKeys([apiGroupId]);
+          })
+          .finally(() => fetchData());
+      },
+    });
+  }
+
+  function handleDeleteApiGroup(dataRef) {
+    Modal.confirm({
+      title: `确认删除分组 ${dataRef.name} 吗？`,
+      content: '温馨提示：该分组的所有接口将归入【未分组】',
+      onConfirm: () => {
+        deleteApiGroup(dataRef.id)
+          .then(() => {
+            if (selectedKeys[0] === dataRef.id) {
+              if (props.onTreeNodeClick) {
+                props.onTreeNodeClick({
+                  type: NodeType.API_GROUP,
+                  id: undefined,
+                  name: getGroupNameById(defaultId),
+                });
+              }
+              setSelectedKeys([defaultId]);
+            }
+            fetchData();
+          })
+          .finally(() => fetchData());
+      },
+    });
+  }
+
   return (
     <Card
       title={'接口分组'}
@@ -235,29 +281,7 @@ export function ApiGroupManager(
                     size={'small'}
                     status={'danger'}
                     icon={<IconDelete />}
-                    onClick={() => {
-                      const apiGroupId = dataRef.api_group_id
-                        ? dataRef.api_group_id
-                        : defaultId;
-                      Modal.confirm({
-                        title: `确认删除接口 ${dataRef.name} 吗？`,
-                        onConfirm: () => {
-                          deleteApi(dataRef.id)
-                            .then(() => {
-                              if (props.onTreeNodeClick) {
-                                props.onTreeNodeClick({
-                                  type: NodeType.API_GROUP,
-                                  id: dataRef.api_group_id,
-                                  name: getGroupNameById(apiGroupId),
-                                  refreshContent: true,
-                                });
-                              }
-                              setSelectedKeys([apiGroupId]);
-                            })
-                            .finally(() => fetchData());
-                        },
-                      });
-                    }}
+                    onClick={() => handleDeleteApi(dataRef)}
                   />
                 </Tooltip>
               );
@@ -278,29 +302,7 @@ export function ApiGroupManager(
                     size={'small'}
                     status={'danger'}
                     icon={<IconDelete />}
-                    onClick={() => {
-                      Modal.confirm({
-                        title: `确认删除分组 ${dataRef.name} 吗？`,
-                        content: '温馨提示：该分组的所有接口将归入【未分组】',
-                        onConfirm: () => {
-                          deleteApiGroup(dataRef.id)
-                            .then(() => {
-                              if (selectedKeys[0] === dataRef.id) {
-                                if (props.onTreeNodeClick) {
-                                  props.onTreeNodeClick({
-                                    type: NodeType.API_GROUP,
-                                    id: undefined,
-                                    name: getGroupNameById(defaultId),
-                                  });
-                                }
-                                setSelectedKeys([defaultId]);
-                              }
-                              fetchData();
-                            })
-                            .finally(() => fetchData());
-                        },
-                      });
-                    }}
+                    onClick={() => handleDeleteApiGroup(dataRef)}
                   />
                 </Tooltip>
               </div>
