@@ -1,7 +1,7 @@
 import { QuietDictType } from '@/service/system/type';
 import { DELETE, GET, PAGE, PageResult, POST, PUT } from '@/utils/request';
 
-const base_path = '/system/dict-type';
+const base_path = '/dict-type';
 
 export async function pageDictType(
   params?: Record<string, unknown>

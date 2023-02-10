@@ -1,7 +1,7 @@
 import { DELETE, GET, PAGE, PageResult, POST, PUT } from '@/utils/request';
 import { QuietDept, QuietUser } from '@/service/system/type';
 
-const base_path = '/system/dept';
+const base_path = '/dept';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function pageDeptUser(params?: any): Promise<PageResult<QuietUser>> {

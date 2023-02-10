@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Modal, Typography } from '@arco-design/web-react';
+import {
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Typography,
+} from '@arco-design/web-react';
 import { QuietFormProps } from '@/components/type';
 import { ScrumVersion } from '@/service/scrum/type';
-import { DatePicker } from '@arco-design/web-react';
 
 const { useForm } = Form;
 
@@ -102,9 +107,13 @@ function VersionForm(props: VersionFormProps) {
           field="plan_date"
           rules={[{ required: true, message: '请选择计划日期' }]}
         >
-          <DatePicker.RangePicker
-            placeholder={['请选择计划开始日期', '请选择计划结束日期']}
-          />
+          {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            <DatePicker.RangePicker
+              placeholder={['请选择计划开始日期', '请选择计划结束日期']}
+            />
+          }
         </Form.Item>
         <Form.Item
           label="备注"

@@ -1,9 +1,9 @@
 import {
+  Button,
+  Checkbox,
   Form,
   Input,
-  Checkbox,
   Link,
-  Button,
   Space,
 } from '@arco-design/web-react';
 import { FormInstance } from '@arco-design/web-react/es/Form';
@@ -14,12 +14,7 @@ import useStorage from '@/utils/useStorage';
 import useLocale from '@/utils/useLocale';
 import locale from './locale';
 import styles from './style/index.module.less';
-import {
-  BasicCode,
-  LocalStorage,
-  Security,
-  UserStatus,
-} from '@/constant/system';
+import { LocalStorage, UserStatus } from '@/constant/system';
 
 export default function LoginForm() {
   const formRef = useRef<FormInstance>();
@@ -50,19 +45,12 @@ export default function LoginForm() {
     setErrorMessage('');
     setLoading(true);
     axios
-      .post('/api/system/oauth/token', null, {
-        params: {
-          ...params,
-          grant_type: Security.GrantType.Password,
-        },
-        headers: {
-          Authorization: BasicCode,
-        },
-      })
+      .post('/api/login', params)
       .then((res) => {
-        const tokenInfo = res.data;
+        const tokenInfo = res.data.data;
+        console.log(tokenInfo);
         tokenInfo.token_expire_time =
-          Date.parse(new Date().toString()) + tokenInfo.expires_in * 1000;
+          Date.parse(new Date().toString()) + tokenInfo.expires_in;
         localStorage.setItem(LocalStorage.TokenInfo, JSON.stringify(tokenInfo));
         afterLoginSuccess(params);
       })

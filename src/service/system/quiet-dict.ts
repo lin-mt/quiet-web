@@ -1,7 +1,7 @@
 import { QuietDict } from '@/service/system/type';
 import { DELETE, GET, PAGE, PageResult, POST, PUT } from '@/utils/request';
 
-const base_path = '/system/dict';
+const base_path = '/dict';
 
 // env: 部署环境
 // demand-type：需求类型

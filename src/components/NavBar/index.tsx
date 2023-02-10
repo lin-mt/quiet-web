@@ -1,28 +1,28 @@
 import React, { useContext, useEffect } from 'react';
 import {
-  Tooltip,
-  Input,
   Avatar,
-  Select,
-  Dropdown,
-  Menu,
-  Divider,
-  Message,
   Button,
+  Divider,
+  Dropdown,
+  Input,
+  Menu,
+  Message,
+  Select,
+  Tooltip,
 } from '@arco-design/web-react';
 import {
-  IconLanguage,
-  IconNotification,
-  IconSunFill,
-  IconMoonFill,
-  IconUser,
-  IconSettings,
-  IconPoweroff,
-  IconExperiment,
   IconDashboard,
+  IconExperiment,
+  IconLanguage,
+  IconMoonFill,
+  IconNotification,
+  IconPoweroff,
+  IconSettings,
+  IconSunFill,
   IconTag,
+  IconUser,
 } from '@arco-design/web-react/icon';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { GlobalState } from '@/store';
 import { GlobalContext } from '@/context';
 import useLocale from '@/utils/useLocale';
@@ -56,7 +56,7 @@ function Navbar({ show }: { show: boolean }) {
       axios
         .request({
           method: 'post',
-          url: '/api/system/oauth/logout',
+          url: '/api/logout',
           params: {
             access_token: tokenInfo.access_token,
           },

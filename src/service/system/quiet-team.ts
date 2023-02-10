@@ -1,7 +1,7 @@
 import { DELETE, GET, PAGE, PageResult, POST, PUT } from '@/utils/request';
 import { QuietTeam } from '@/service/system/type';
 
-const base_path = '/system/team';
+const base_path = '/team';
 
 export function listTeams(parmas: {
   id?: string;

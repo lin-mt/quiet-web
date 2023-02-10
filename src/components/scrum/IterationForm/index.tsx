@@ -105,9 +105,13 @@ function VersionForm(props: IterationFormProps) {
           field="plan_date"
           rules={[{ required: true, message: '请选择计划日期' }]}
         >
-          <DatePicker.RangePicker
-            placeholder={['请选择计划开始日期', '请选择计划结束日期']}
-          />
+          {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            <DatePicker.RangePicker
+              placeholder={['请选择计划开始日期', '请选择计划结束日期']}
+            />
+          }
         </Form.Item>
         <Form.Item
           label="备注"

@@ -1,7 +1,7 @@
 import { QuietRole } from '@/service/system/type';
 import { DELETE, GET, PAGE, PageResult, POST, PUT } from '@/utils/request';
 
-const base_path = '/system/role';
+const base_path = '/role';
 
 export async function treeRole(): Promise<QuietRole[]> {
   return GET<QuietRole[]>(`${base_path}/tree`);

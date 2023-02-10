@@ -1,7 +1,7 @@
 import { QuietUser, QuietUserRole } from '@/service/system/type';
 import { DELETE, GET, PAGE, PageResult, POST, PUT } from '@/utils/request';
 
-const base_path = '/system/user';
+const base_path = '/user';
 
 export function listUsers(
   keyword?: string,

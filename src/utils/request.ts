@@ -1,7 +1,7 @@
 import qs from 'qs';
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Message } from '@arco-design/web-react';
-import { BasicCode, LocalStorage, Security } from '@/constant/system';
+import { LocalStorage, Security } from '@/constant/system';
 
 enum ResultType {
   SUCCESS = 'SUCCESS',
@@ -34,7 +34,7 @@ const req = axios.create();
 
 req.defaults.baseURL = '/api';
 
-const refreshToken = (): Promise<{ token_expire_time }> => {
+const refreshToken = (): Promise<unknown> => {
   const tokenInfoItem = localStorage.getItem(LocalStorage.TokenInfo);
   if (tokenInfoItem) {
     const tokenInfo = JSON.parse(tokenInfoItem);
@@ -42,11 +42,8 @@ const refreshToken = (): Promise<{ token_expire_time }> => {
       grant_type: Security.RefreshToken,
       refresh_token: tokenInfo.refresh_token,
     };
-    return axios.post('/api/system/oauth/token', {
+    return axios.get('/api/token/refresh', {
       params: refreshTokenData,
-      headers: {
-        Authorization: BasicCode,
-      },
     });
   }
   return Promise.reject('No refresh token information');
@@ -66,7 +63,7 @@ req.interceptors.request.use((config) => {
       headers: {
         ...config.headers,
         'Accept-Language': lang ? lang : 'en-US',
-        Authorization: `${tokenInfo.token_type} ${tokenInfo.access_token}`,
+        Authorization: `Bearer ${tokenInfo.access_token}`,
       },
     };
   }
@@ -86,10 +83,13 @@ req.interceptors.response.use(
           tokenInfo.refresh_token &&
           tokenInfo.token_expire_time < Date.parse(new Date().toString());
         if (needRefreshToken) {
-          const newTokenInfo = await refreshToken();
+          const response = await refreshToken();
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          const newTokenInfo = response.data.data;
           if (newTokenInfo) {
             newTokenInfo.token_expire_time =
-              Date.parse(new Date().toString()) + tokenInfo.expires_in * 1000;
+              Date.parse(new Date().toString()) + tokenInfo.expires_in;
             localStorage.setItem(
               LocalStorage.TokenInfo,
               JSON.stringify(newTokenInfo)
