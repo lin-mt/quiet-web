@@ -48,7 +48,10 @@ export function VersionSelect(
     vs: ScrumVersion[],
     vId2It: Record<string, ScrumIteration[]>
   ) => {
-    const vsClone: ScrumVersion[] = _.cloneDeep(vs);
+    let vsClone: ScrumVersion[] = _.cloneDeep(vs);
+    if (!vsClone) {
+      vsClone = [];
+    }
     const isClone: ScrumIteration[] = [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     vsClone.forEach((vs: any) => {

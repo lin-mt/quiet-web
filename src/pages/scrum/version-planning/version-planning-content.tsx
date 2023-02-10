@@ -91,7 +91,10 @@ function VersionPlanningContent(props: VersionPlanningContentProps) {
     vs: ScrumVersion[],
     vId2It: Record<string, ScrumIteration[]>
   ) => {
-    const vsClone: ScrumVersion[] = _.cloneDeep(vs);
+    let vsClone: ScrumVersion[] = _.cloneDeep(vs);
+    if (!vsClone) {
+      vsClone = [];
+    }
     const isClone: ScrumIteration[] = [];
     vsClone.forEach((vs) => {
       vs.type = PlanningType.VERSION;
