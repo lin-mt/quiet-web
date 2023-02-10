@@ -1,7 +1,7 @@
 import { DocApiGroup } from '@/service/doc/type';
 import { DELETE, GET, POST, PUT } from '@/utils/request';
 
-const base_path = '/doc/api-group';
+const base_path = '/api-group';
 
 export function getApiGroup(id: string): Promise<DocApiGroup> {
   return GET<DocApiGroup>(`${base_path}/${id}`);

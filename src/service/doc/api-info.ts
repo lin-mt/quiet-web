@@ -1,7 +1,7 @@
 import { DocApiInfo } from '@/service/doc/type';
 import { POST, PUT } from '@/utils/request';
 
-const base_path = '/doc/api-info';
+const base_path = '/api-info';
 
 export function saveApiInfo(save: DocApiInfo): Promise<DocApiInfo> {
   return POST<DocApiInfo>(`${base_path}`, save);

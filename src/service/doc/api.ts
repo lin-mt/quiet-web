@@ -1,7 +1,7 @@
 import { DocApi } from '@/service/doc/type';
 import { DELETE, GET, PAGE, PageResult, POST, PUT } from '@/utils/request';
 
-const base_path = '/doc/api';
+const base_path = '/api';
 
 export async function pageApi(
   params?: Record<string, unknown>

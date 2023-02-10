@@ -1,7 +1,7 @@
 import { DELETE, GET, POST, PUT } from '@/utils/request';
 import { DocProjectEnv } from './type';
 
-const base_path = '/doc/project-env';
+const base_path = '/project-env';
 
 export function saveProjectEnv(save: DocProjectEnv): Promise<DocProjectEnv> {
   return POST<DocProjectEnv>(`${base_path}`, save);

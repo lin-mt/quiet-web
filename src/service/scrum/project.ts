@@ -1,7 +1,7 @@
 import { ScrumProject } from './type';
 import { DELETE, GET, POST, PUT } from '@/utils/request';
 
-const base_path = '/project';
+const base_path = '/scrum/project';
 
 export function listProject(
   group_id?: string,
