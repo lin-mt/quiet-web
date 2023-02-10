@@ -29,7 +29,7 @@ export function getMethodTagColor(method: string | HttpMethod): string {
       color = 'orange';
       break;
     default:
-      throw new Error('Error HttpMethod');
+      color = 'orange';
   }
   return color;
 }
