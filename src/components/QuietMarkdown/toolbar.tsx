@@ -291,8 +291,8 @@ function Toolbar(props: ToolbarProp) {
   function handleUploadImage(options: RequestOptions) {
     const data = new FormData();
     data.append('files', options.file);
-    data.append('classification', 'api/remark');
-    req(`/doc/minio`, {
+    data.append('classification', 'doc/api/remark');
+    req(`/minio`, {
       method: 'POST',
       data,
     }).then((resp) => {

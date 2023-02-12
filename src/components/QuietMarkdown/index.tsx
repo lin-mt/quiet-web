@@ -95,8 +95,8 @@ function QuietMarkdown(props: QuietMarkdownProp) {
     if (file && file.type.startsWith('image/')) {
       const data = new FormData();
       data.append('files', file);
-      data.append('classification', 'api/remark');
-      req(`/doc/minio`, {
+      data.append('classification', 'doc/api/remark');
+      req(`/minio`, {
         method: 'POST',
         data,
       }).then((resp) => {
