@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Card, Tabs } from '@arco-design/web-react';
 import styles from './style/index.module.less';
 import { IconEdit, IconEye, IconPlayArrow } from '@arco-design/web-react/icon';
-import styled from 'styled-components';
 import { DocApi } from '@/service/doc/type';
 import { getApiDetail } from '@/service/doc/api';
 import Preview from '@/pages/doc/api-document/api/api-detail/api-preview';
@@ -15,9 +14,17 @@ export type ApiDetailProps = {
   apiId: string;
 };
 
-const ApiDetailTabPane = styled(TabPane)`
-  padding: 5px 21px 21px 21px;
-`;
+const ApiDetailTabPane = (props) => {
+  return (
+    <TabPane
+      key={props.key}
+      title={props.title}
+      style={{ padding: '5px 21px 21px 21px' }}
+    >
+      {props.children}
+    </TabPane>
+  );
+};
 
 function ApiDetail(props: ApiDetailProps) {
   const [apiDetail, setApiDetail] = useState<DocApi>();
