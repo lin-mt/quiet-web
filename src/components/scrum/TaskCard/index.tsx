@@ -7,10 +7,10 @@ import {
   Typography,
 } from '@arco-design/web-react';
 import { ScrumTask } from '@/service/scrum/type';
-import styled from 'styled-components';
 import { IconDelete, IconEdit } from '@arco-design/web-react/icon';
 import TaskForm, { TaskFormProps } from '@/components/scrum/TaskForm';
 import { deleteTask, updateTask } from '@/service/scrum/task';
+import styles from '@/components/scrum/TaskCard/style/index.module.less';
 
 const { Row, Col } = Grid;
 
@@ -22,36 +22,6 @@ export type TaskCardProps = {
   afterUpdate?: (task: ScrumTask) => void;
   style?: CSSProperties;
 };
-
-const TaskStyleCard = styled(Card)<{ color: string }>`
-  font-size: 12px;
-  border-width: 1px 1px 1px 9px;
-  border-style: solid;
-  border-color: var(--color-neutral-7);
-  border-image: initial;
-  border-radius: 3px;
-  transition: box-shadow 0.3s, border-color 0.3s;
-  &:hover {
-    box-shadow: 0 1px 2px -2px rgb(var(--gray-6)),
-      0 3px 6px 0 rgb(var(--gray-5)), 0 5px 12px 4px rgb(var(--gray-3));
-  }
-`;
-
-const TaskOperation = styled.div<{ danger: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  width: 21px;
-  height: 21px;
-  border-radius: 50%;
-  transition: all 0.1s;
-  &:hover {
-    color: ${(props) =>
-      props.danger ? 'rgb(var(--danger-6))' : 'rgb(var(--primary-6))'};
-    background-color: rgb(var(--gray-3));
-  }
-`;
 
 function TaskCard(props: TaskCardProps) {
   const [task, setTask] = useState<ScrumTask>(props.task);
@@ -80,10 +50,11 @@ function TaskCard(props: TaskCardProps) {
   }
 
   return (
-    <TaskStyleCard
+    <Card
       size={'small'}
       style={props.style}
       bodyStyle={{ padding: 7 }}
+      className={styles['task-card']}
     >
       <Space direction={'vertical'} size={3} style={{ width: '100%' }}>
         <Row>
@@ -99,9 +70,9 @@ function TaskCard(props: TaskCardProps) {
           </Col>
           <Col flex={'39px'}>
             <Space style={{ lineHeight: 1.5, fontSize: 14 }}>
-              <TaskOperation onClick={handleEditDemand}>
+              <div className={styles['task-option']} onClick={handleEditDemand}>
                 <IconEdit />
-              </TaskOperation>
+              </div>
               <Popconfirm
                 title={'确认删除该任务吗？'}
                 onOk={() => {
@@ -112,9 +83,9 @@ function TaskCard(props: TaskCardProps) {
                   });
                 }}
               >
-                <TaskOperation danger>
+                <div className={styles['task-option-danger']}>
                   <IconDelete />
-                </TaskOperation>
+                </div>
               </Popconfirm>
             </Space>
           </Col>
@@ -131,7 +102,7 @@ function TaskCard(props: TaskCardProps) {
         </Typography.Text>
       </Space>
       <TaskForm {...taskFormProps} />
-    </TaskStyleCard>
+    </Card>
   );
 }
 

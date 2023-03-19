@@ -5,41 +5,30 @@ import { Grid, Message } from '@arco-design/web-react';
 import { ScrumDemand, ScrumTask, ScrumTaskStep } from '@/service/scrum/type';
 import { saveTask } from '@/service/scrum/task';
 import TaskForm, { TaskFormProps } from '@/components/scrum/TaskForm';
-import styled from 'styled-components';
 import {
   DragDropContext,
   Draggable,
   Droppable,
   DropResult,
 } from 'react-beautiful-dnd';
+import styles from '@/pages/scrum/iteration-kanban/style/index.module.less';
 
 const { Row, Col } = Grid;
 
-const CreateTask = styled.span`
-  font-size: 12px;
-  cursor: pointer;
-  color: rgb(var(--primary-6));
-`;
-
-const OptionContainer = styled.div`
-  margin-top: 3px;
-  text-align: right;
-`;
-
-const CardWrapper = styled.div`
-  padding: 7px 10px;
-`;
-
-const Block = styled.div<{
-  width: number;
-  blockRadius: string | number;
-  backgroundColor: string;
-}>`
-  height: 100%;
-  background-color: ${(props) => props.backgroundColor};
-  border-end-end-radius: ${(props) => props.blockRadius}px;
-  border-end-start-radius: ${(props) => props.blockRadius}px;
-`;
+const Block = (props) => {
+  return (
+    <div
+      style={{
+        height: '100%',
+        backgroundColor: props.backgroundColor,
+        borderEndEndRadius: `${props.blockRadius}px`,
+        borderEndStartRadius: `${props.blockRadius}px`,
+      }}
+    >
+      {props.children}
+    </div>
+  );
+};
 
 export type MoveTask = {
   demandId: string;
@@ -147,18 +136,21 @@ function KanbanRow(props: KanbanRowProps) {
         <Row gutter={columnGutter} align={'stretch'}>
           <Col flex={1}>
             <Block backgroundColor={columnDefaultBc} blockRadius={blockRadius}>
-              <CardWrapper>
+              <div className={styles['card-wrapper']}>
                 <DemandCard
                   demand={demandId2info[demandId]}
                   typeKey2Name={demandTypeKey2name}
                   priorityId2Color={priorityId2color}
                 />
-                <OptionContainer>
-                  <CreateTask onClick={() => handleCreateTask(demandId)}>
+                <div className={styles['option']}>
+                  <span
+                    className={styles['create-task']}
+                    onClick={() => handleCreateTask(demandId)}
+                  >
                     + 创建任务
-                  </CreateTask>
-                </OptionContainer>
-              </CardWrapper>
+                  </span>
+                </div>
+              </div>
             </Block>
           </Col>
           {Object.keys(taskStepId2info).map((tsId) => {
@@ -183,7 +175,10 @@ function KanbanRow(props: KanbanRowProps) {
                       >
                         {tasks?.map((task, index) => {
                           return (
-                            <CardWrapper key={task.id}>
+                            <div
+                              key={task.id}
+                              className={styles['card-wrapper']}
+                            >
                               <Draggable
                                 draggableId={task.id}
                                 index={index}
@@ -208,7 +203,7 @@ function KanbanRow(props: KanbanRowProps) {
                                   </div>
                                 )}
                               </Draggable>
-                            </CardWrapper>
+                            </div>
                           );
                         })}
                         {droppableProvided.placeholder}

@@ -7,11 +7,11 @@ import {
   Typography,
 } from '@arco-design/web-react';
 import { ScrumDemand } from '@/service/scrum/type';
-import styled from 'styled-components';
 import { IconDelete, IconEdit } from '@arco-design/web-react/icon';
 import DemandForm from '@/components/scrum/DemandForm';
 import { QuietFormProps } from '@/components/type';
 import { deleteDemand, updateDemand } from '@/service/scrum/demand';
+import styles from '@/components/scrum/DemandCard/style/index.module.less';
 
 const { Row, Col } = Grid;
 
@@ -23,36 +23,6 @@ export type DemandCardProps = {
   afterUpdate?: (demand: ScrumDemand) => void;
   style?: CSSProperties;
 };
-
-const DemandStyleCard = styled(Card)<{ color: string }>`
-  font-size: 12px;
-  border-width: 1px 1px 1px 9px;
-  border-style: solid;
-  border-color: ${(props) => props.color};
-  border-image: initial;
-  border-radius: 3px;
-  transition: box-shadow 0.3s, border-color 0.3s;
-  &:hover {
-    box-shadow: 0 1px 2px -2px rgb(var(--gray-6)),
-      0 3px 6px 0 rgb(var(--gray-5)), 0 5px 12px 4px rgb(var(--gray-3));
-  }
-`;
-
-const DemandOperation = styled.div<{ danger: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  width: 21px;
-  height: 21px;
-  border-radius: 50%;
-  transition: all 0.1s;
-  &:hover {
-    color: ${(props) =>
-      props.danger ? 'rgb(var(--danger-6))' : 'rgb(var(--primary-6))'};
-    background-color: rgb(var(--gray-3));
-  }
-`;
 
 function DemandCard(props: DemandCardProps) {
   const [demand, setDemand] = useState<ScrumDemand>(props.demand);
@@ -78,11 +48,14 @@ function DemandCard(props: DemandCardProps) {
   }
 
   return (
-    <DemandStyleCard
+    <Card
       size={'small'}
-      style={props.style}
+      className={styles['demand-card']}
+      style={{
+        borderColor: props.priorityId2Color[demand.priority_id],
+        ...props.style,
+      }}
       bodyStyle={{ padding: 7 }}
-      color={props.priorityId2Color[demand.priority_id]}
     >
       <Space direction={'vertical'} size={3} style={{ width: '100%' }}>
         <Row>
@@ -98,9 +71,12 @@ function DemandCard(props: DemandCardProps) {
           </Col>
           <Col flex={'39px'}>
             <Space style={{ lineHeight: 1.5, fontSize: 14 }}>
-              <DemandOperation onClick={handleEditDemand}>
+              <div
+                className={styles['demand-operation']}
+                onClick={handleEditDemand}
+              >
                 <IconEdit />
-              </DemandOperation>
+              </div>
               <Popconfirm
                 title={'确认删除该需求吗？'}
                 onOk={() => {
@@ -111,9 +87,9 @@ function DemandCard(props: DemandCardProps) {
                   });
                 }}
               >
-                <DemandOperation danger>
+                <div className={styles['demand-operation-danger']}>
                   <IconDelete />
-                </DemandOperation>
+                </div>
               </Popconfirm>
             </Space>
           </Col>
@@ -130,7 +106,7 @@ function DemandCard(props: DemandCardProps) {
         </Typography.Text>
       </Space>
       <DemandForm projectId={demand.project_id} {...demandFormProps} />
-    </DemandStyleCard>
+    </Card>
   );
 }
 
