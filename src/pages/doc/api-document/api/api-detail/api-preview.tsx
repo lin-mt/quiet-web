@@ -18,8 +18,7 @@ import {
   Tag,
   Typography,
 } from '@arco-design/web-react';
-import { BlockTitle } from '@/components/doc/styled';
-import styled from 'styled-components';
+import { BlockTitle } from '@/components/doc/title';
 import { getMethodTagColor } from '@/utils/doc/render';
 import { SchemaTable } from '@/pages/doc/api-document/api/api-detail/schema-table';
 import { DataType } from '@arco-design/web-react/es/Descriptions/interface';
@@ -28,21 +27,11 @@ import {
   ApiManagerContextProps,
 } from '@/pages/doc/api-document';
 import QuietMarkdownViewer from '@/components/QuietMarkdown/QuietMarkdownViewer';
+import styles from '@/pages/doc/api-document/api/api-detail/style/index.module.less';
 
-const ReqTitle = styled.div`
-  padding: 10px 0;
-  font-size: 15px;
-  font-weight: 420;
-  line-height: 23px;
-
-  :first-child {
-    padding-top: 2px;
-  }
-`;
-
-const ContentContainer = styled.div`
-  padding: 0 10px 10px 10px;
-`;
+const ContentContainer = (props) => {
+  return <div style={{ padding: '0 10px 10px 10px' }}>{props.children}</div>;
+};
 
 interface PreviewProps {
   api: DocApi;
@@ -215,7 +204,7 @@ export default (props: PreviewProps) => {
       <ContentContainer>
         {api.api_info?.path_param && (
           <>
-            <ReqTitle>Path</ReqTitle>
+            <div className={styles['req-title']}>Path</div>
             <Table
               border
               pagination={false}
@@ -225,7 +214,7 @@ export default (props: PreviewProps) => {
             />
           </>
         )}
-        <ReqTitle>Headers</ReqTitle>
+        <div className={styles['req-title']}>Headers</div>
         <Table
           border
           pagination={false}
@@ -233,7 +222,7 @@ export default (props: PreviewProps) => {
           data={api.api_info?.headers}
           columns={headerColumns}
         />
-        <ReqTitle>Query</ReqTitle>
+        <div className={styles['req-title']}>Query</div>
         <Table
           border
           pagination={false}
@@ -246,7 +235,9 @@ export default (props: PreviewProps) => {
           HttpMethod.DELETE,
           HttpMethod.PATCH,
           HttpMethod.POST,
-        ].includes(HttpMethod[api.method]) && <ReqTitle>Body</ReqTitle>}
+        ].includes(HttpMethod[api.method]) && (
+          <div className={styles['req-title']}>Body</div>
+        )}
         {api.api_info?.req_form && (
           <Table
             border

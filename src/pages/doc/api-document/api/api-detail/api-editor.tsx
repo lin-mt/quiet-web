@@ -24,8 +24,7 @@ import {
   Space,
   Tooltip,
 } from '@arco-design/web-react';
-import { BlockTitle } from '@/components/doc/styled';
-import styled from 'styled-components';
+import { BlockTitle } from '@/components/doc/title';
 import ApiGroupSelect from '@/components/doc/ApiGroupSelect';
 import { enumToSelectOptions } from '@/utils/render';
 import _ from 'lodash';
@@ -45,6 +44,7 @@ import {
 } from '@/pages/doc/api-document';
 import QuietMarkdown from '@/components/QuietMarkdown';
 import { CONTENT_TYPE, REQUEST_HEADER } from '@/constant/doc';
+import styles from '@/pages/doc/api-document/api/api-detail/style/index.module.less';
 
 const { Row, Col } = Grid;
 const { Item } = Form;
@@ -53,23 +53,6 @@ export type ApiEditorProps = {
   api: DocApi;
   handleUpdate?: (api: DocApi) => void;
 };
-
-const EditContainer = styled.div.attrs((props: { hide: boolean }) => props)`
-  display: ${(props) => (props.hide ? 'none' : undefined)};
-
-  .arco-input-disabled {
-    color: rgb(var(--color-text-1));
-    -webkit-text-fill-color: rgb(var(--color-text-1));
-  }
-`;
-
-const SaveContainer = styled.div.attrs((props) => props)`
-  text-align: center;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  background-color: ${(props) =>
-    props.affixed ? 'rgb(var(--gray-1))' : undefined};
-`;
 
 function ApiEditor(props: ApiEditorProps) {
   const apiManagerContext =
@@ -277,7 +260,7 @@ function ApiEditor(props: ApiEditorProps) {
     <Form name={'api-edit-form'} labelCol={{ span: 4 }} form={form}>
       <Space direction={'vertical'}>
         <BlockTitle>基本设置</BlockTitle>
-        <EditContainer>
+        <div className={styles['edit-container']}>
           <Item
             label={'接口名称'}
             field={'name'}
@@ -415,7 +398,7 @@ function ApiEditor(props: ApiEditorProps) {
               placeholder={'请选择接口状态'}
             />
           </Item>
-        </EditContainer>
+        </div>
         <BlockTitle style={{ marginTop: 30 }}>请求参数设置</BlockTitle>
         <Radio.Group
           style={{ textAlign: 'center', width: '100%' }}
@@ -426,7 +409,10 @@ function ApiEditor(props: ApiEditorProps) {
           onChange={(value) => setReqParamSetting(value)}
         />
         <div>
-          <EditContainer hide={reqParamSetting !== 'Body'}>
+          <div
+            className={styles['edit-container']}
+            style={{ display: reqParamSetting !== 'Body' ? 'none' : undefined }}
+          >
             <Radio.Group
               style={{ textAlign: 'left', paddingBottom: 12 }}
               options={['form', 'json', 'file', 'raw']}
@@ -644,8 +630,13 @@ function ApiEditor(props: ApiEditorProps) {
                 <Input.TextArea rows={3} />
               </Item>
             )}
-          </EditContainer>
-          <EditContainer hide={reqParamSetting !== 'Query'}>
+          </div>
+          <div
+            className={styles['edit-container']}
+            style={{
+              display: reqParamSetting !== 'Query' ? 'none' : undefined,
+            }}
+          >
             <Form.List field="api_info.req_query">
               {(fields, { add, remove }) => (
                 <>
@@ -754,8 +745,13 @@ function ApiEditor(props: ApiEditorProps) {
                 </>
               )}
             </Form.List>
-          </EditContainer>
-          <EditContainer hide={reqParamSetting !== 'Headers'}>
+          </div>
+          <div
+            className={styles['edit-container']}
+            style={{
+              display: reqParamSetting !== 'Headers' ? 'none' : undefined,
+            }}
+          >
             <Form.List field="api_info.headers">
               {(fields, { add, remove }) => (
                 <>
@@ -839,7 +835,7 @@ function ApiEditor(props: ApiEditorProps) {
                 </>
               )}
             </Form.List>
-          </EditContainer>
+          </div>
         </div>
         <BlockTitle style={{ marginTop: 30 }}>返回数据设置</BlockTitle>
         <Radio.Group
@@ -849,7 +845,7 @@ function ApiEditor(props: ApiEditorProps) {
           style={{ textAlign: 'center', width: '100%' }}
           onChange={(value) => setRespTypeSetting(value)}
         />
-        <EditContainer>
+        <div className={styles['edit-container']}>
           {respTypeSetting === 'JSON' && (
             <Item noStyle field={'api_info.resp_json_body'}>
               <QuietJsonSchemaEditor />
@@ -864,7 +860,7 @@ function ApiEditor(props: ApiEditorProps) {
               <Input.TextArea rows={3} />
             </Item>
           )}
-        </EditContainer>
+        </div>
         <BlockTitle style={{ marginTop: 30 }}>备 注</BlockTitle>
         <Item
           noStyle
@@ -878,7 +874,12 @@ function ApiEditor(props: ApiEditorProps) {
           onChange={(af) => setAffixed(af)}
           style={{ marginTop: 30 }}
         >
-          <SaveContainer affixed={affixed}>
+          <div
+            className={styles['save-container']}
+            style={{
+              backgroundColor: affixed ? 'rgb(var(--gray-1))' : undefined,
+            }}
+          >
             <Button
               type="primary"
               loading={submitting}
@@ -889,7 +890,7 @@ function ApiEditor(props: ApiEditorProps) {
             >
               保 存
             </Button>
-          </SaveContainer>
+          </div>
         </Affix>
       </Space>
     </Form>

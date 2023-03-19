@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Card, Tabs } from '@arco-design/web-react';
 import styles from './style/index.module.less';
 import { IconEdit, IconEye, IconPlayArrow } from '@arco-design/web-react/icon';
-import styled from 'styled-components';
 import { DocApi } from '@/service/doc/type';
 import { getApiDetail } from '@/service/doc/api';
 import Preview from '@/pages/doc/api-document/api/api-detail/api-preview';
@@ -14,10 +13,6 @@ const { TabPane } = Tabs;
 export type ApiDetailProps = {
   apiId: string;
 };
-
-const ApiDetailTabPane = styled(TabPane)`
-  padding: 5px 21px 21px 21px;
-`;
 
 function ApiDetail(props: ApiDetailProps) {
   const [apiDetail, setApiDetail] = useState<DocApi>();
@@ -45,36 +40,39 @@ function ApiDetail(props: ApiDetailProps) {
         activeTab={activeTab}
         onChange={(key) => setActiveTab(key)}
       >
-        <ApiDetailTabPane
+        <TabPane
           key={'preview'}
           title={
             <span>
               <IconEye /> 预览
             </span>
           }
+          style={{ padding: '5px 21px 21px 21px' }}
         >
           <Preview api={apiDetail} />
-        </ApiDetailTabPane>
-        <ApiDetailTabPane
+        </TabPane>
+        <TabPane
           key={'edit'}
           title={
             <span>
               <IconEdit /> 编辑
             </span>
           }
+          style={{ padding: '5px 21px 21px 21px' }}
         >
           <ApiEditor api={apiDetail} handleUpdate={() => loadApiDetail()} />
-        </ApiDetailTabPane>
-        <ApiDetailTabPane
+        </TabPane>
+        <TabPane
           key={'run'}
           title={
             <span>
               <IconPlayArrow /> 运行
             </span>
           }
+          style={{ padding: '5px 21px 21px 21px' }}
         >
           <ApiRun apiDetail={apiDetail} />
-        </ApiDetailTabPane>
+        </TabPane>
       </Tabs>
     </Card>
   );

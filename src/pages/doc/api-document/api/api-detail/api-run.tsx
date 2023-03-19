@@ -21,7 +21,7 @@ import {
   Tooltip,
   Upload,
 } from '@arco-design/web-react';
-import { BlockTitle, SecondTitle } from '@/components/doc/styled';
+import { BlockTitle, SecondTitle } from '@/components/doc/title';
 import styles from './style/index.module.less';
 import { JSONSchemaFaker } from 'json-schema-faker';
 import { IconEraser, IconUpload } from '@arco-design/web-react/icon';

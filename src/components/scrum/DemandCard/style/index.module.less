@@ -1,0 +1,45 @@
+.demand-card {
+  font-size: 12px;
+  border-width: 1px 1px 1px 9px;
+  border-style: solid;
+  border-image: initial;
+  border-radius: 3px;
+  transition: box-shadow 0.3s, border-color 0.3s;
+
+  &:hover {
+    box-shadow: 0 1px 2px -2px rgb(var(--gray-6)),
+      0 3px 6px 0 rgb(var(--gray-5)), 0 5px 12px 4px rgb(var(--gray-3));
+  }
+}
+
+.demand-operation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  transition: all 0.1s;
+
+  &:hover {
+    color: rgb(var(--primary-6));
+    background-color: rgb(var(--gray-3));
+  }
+}
+
+.demand-operation-danger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  transition: all 0.1s;
+
+  &:hover {
+    color: rgb(var(--danger-6));
+    background-color: rgb(var(--gray-3));
+  }
+}
