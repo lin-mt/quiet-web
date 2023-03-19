@@ -1,8 +1,8 @@
 import React from 'react';
 import { ScrumDemand, ScrumTask, ScrumTaskStep } from '@/service/scrum/type';
 import { Grid } from '@arco-design/web-react';
-import styled from 'styled-components';
 import KanbanRow, { MoveTask } from '@/pages/scrum/iteration-kanban/kanban-row';
+import styles from '@/pages/scrum/iteration-kanban/style/index.module.less';
 
 const { Row, Col } = Grid;
 
@@ -10,21 +10,6 @@ const columnWidth = 300;
 const columnGutter = 10;
 const columnRadius = 4;
 const columnDefaultBc = 'var(--color-fill-2)';
-
-const ColumnTitle = styled.h4`
-  padding: 9px;
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.25;
-`;
-
-const KanbanContainer = styled.div`
-  width: 100%;
-  overflow: scroll;
-  padding-left: 5px;
-  padding-right: 5px;
-`;
 
 export type KanbanRowProps = {
   isDropDisabled: boolean;
@@ -60,7 +45,7 @@ function Kanban(props: KanbanRowProps) {
     columnGutter;
 
   return (
-    <KanbanContainer>
+    <div className={styles['container']}>
       <div style={{ width: rowWidth }}>
         <Row gutter={columnGutter}>
           <Col flex={1}>
@@ -72,7 +57,7 @@ function Kanban(props: KanbanRowProps) {
                 borderStartEndRadius: columnRadius,
               }}
             >
-              <ColumnTitle>迭代需求</ColumnTitle>
+              <h4 className={styles['column-title']}>迭代需求</h4>
             </div>
           </Col>
           {Object.keys(taskStepId2info).map((id) => {
@@ -86,7 +71,9 @@ function Kanban(props: KanbanRowProps) {
                     borderStartEndRadius: columnRadius,
                   }}
                 >
-                  <ColumnTitle>{taskStepId2info[id].name}</ColumnTitle>
+                  <h4 className={styles['column-title']}>
+                    {taskStepId2info[id].name}
+                  </h4>
                 </div>
               </Col>
             );
@@ -118,7 +105,7 @@ function Kanban(props: KanbanRowProps) {
           />
         );
       })}
-    </KanbanContainer>
+    </div>
   );
 }
 
