@@ -8,25 +8,9 @@ import {
   IconFullscreenExit,
 } from '@arco-design/web-react/icon';
 import QuietMarkdownViewer from '@/components/QuietMarkdown/QuietMarkdownViewer';
-import styled from 'styled-components';
 import { IconLeftExpand, IconRightExpand } from '@/components/icon';
 import req from '@/utils/request';
 import { UploadResult } from '@/service/system/type';
-
-export const Option = styled.div`
-  background-color: rgb(var(--gray-2));
-  border-radius: var(--border-radius-small);
-  color: var(--color-text-1);
-  padding: 0 8px;
-  line-height: 26px;
-  height: 26px;
-  font-size: 14px;
-  cursor: pointer;
-
-  :hover {
-    background-color: rgb(var(--gray-3));
-  }
-`;
 
 export type QuietMarkdownProp = {
   value?: string;
@@ -209,24 +193,26 @@ function QuietMarkdown(props: QuietMarkdownProp) {
       extra={
         <Space align="center" size={3}>
           <Tooltip mini style={{ zIndex: zIndex }} content={'仅编辑区'}>
-            <Option
+            <div
+              className={styles['option']}
               onClick={() => {
                 setOnlyEditor(!onlyEditor);
                 setOnlyPreview(false);
               }}
             >
               <IconLeftExpand />
-            </Option>
+            </div>
           </Tooltip>
           <Tooltip mini style={{ zIndex: zIndex }} content={'仅预览区'}>
-            <Option
+            <div
+              className={styles['option']}
               onClick={() => {
                 setOnlyPreview(!onlyPreview);
                 setOnlyEditor(false);
               }}
             >
               <IconRightExpand />
-            </Option>
+            </div>
           </Tooltip>
           <Tooltip
             mini
@@ -234,7 +220,8 @@ function QuietMarkdown(props: QuietMarkdownProp) {
             popupVisible={fsTtVisible}
             content={isFullscreen ? '退出全屏' : '网页全屏'}
           >
-            <Option
+            <div
+              className={styles['option']}
               onClick={() => {
                 setIsFullscreen(!isFullscreen);
                 setFsTtVisible(!fsTtVisible);
@@ -243,7 +230,7 @@ function QuietMarkdown(props: QuietMarkdownProp) {
               onMouseLeave={() => setFsTtVisible(false)}
             >
               {isFullscreen ? <IconFullscreenExit /> : <IconFullscreen />}
-            </Option>
+            </div>
           </Tooltip>
         </Space>
       }

@@ -66,13 +66,12 @@
     "remark-mermaidjs": "^4.1.1",
     "remark-slug": "^7.0.1",
     "remark-toc": "^8.0.1",
-    "styled-components": "^5.3.5",
     "unist-util-visit": "^4.1.1"
   },
   "devDependencies": {
     "@arco-plugins/webpack-react": "^1.1.1",
     "@svgr/webpack": "^6.5.1",
-    "@types/react": "^17.0.0",
+    "@types/react": "^18.0.28",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
