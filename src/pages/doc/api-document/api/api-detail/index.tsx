@@ -14,18 +14,6 @@ export type ApiDetailProps = {
   apiId: string;
 };
 
-const ApiDetailTabPane = (props) => {
-  return (
-    <TabPane
-      key={props.key}
-      title={props.title}
-      style={{ padding: '5px 21px 21px 21px' }}
-    >
-      {props.children}
-    </TabPane>
-  );
-};
-
 function ApiDetail(props: ApiDetailProps) {
   const [apiDetail, setApiDetail] = useState<DocApi>();
   const [activeTab, setActiveTab] = useState('preview');
@@ -52,36 +40,39 @@ function ApiDetail(props: ApiDetailProps) {
         activeTab={activeTab}
         onChange={(key) => setActiveTab(key)}
       >
-        <ApiDetailTabPane
+        <TabPane
           key={'preview'}
           title={
             <span>
               <IconEye /> 预览
             </span>
           }
+          style={{ padding: '5px 21px 21px 21px' }}
         >
           <Preview api={apiDetail} />
-        </ApiDetailTabPane>
-        <ApiDetailTabPane
+        </TabPane>
+        <TabPane
           key={'edit'}
           title={
             <span>
               <IconEdit /> 编辑
             </span>
           }
+          style={{ padding: '5px 21px 21px 21px' }}
         >
           <ApiEditor api={apiDetail} handleUpdate={() => loadApiDetail()} />
-        </ApiDetailTabPane>
-        <ApiDetailTabPane
+        </TabPane>
+        <TabPane
           key={'run'}
           title={
             <span>
               <IconPlayArrow /> 运行
             </span>
           }
+          style={{ padding: '5px 21px 21px 21px' }}
         >
           <ApiRun apiDetail={apiDetail} />
-        </ApiDetailTabPane>
+        </TabPane>
       </Tabs>
     </Card>
   );
