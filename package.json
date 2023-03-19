@@ -67,7 +67,6 @@
     "remark-mermaidjs": "^4.1.1",
     "remark-slug": "^7.0.1",
     "remark-toc": "^8.0.1",
-    "styled-components": "^5.3.5",
     "unist-util-visit": "^4.1.1"
   },
   "devDependencies": {
