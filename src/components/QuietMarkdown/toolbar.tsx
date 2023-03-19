@@ -32,7 +32,6 @@ import {
 } from '@/components/icon';
 import styles from '@/components/QuietMarkdown/style/index.module.less';
 import { MermaidDefaults } from '@/components/QuietMarkdown/mermaid';
-import { Option } from '@/components/QuietMarkdown/index';
 import { RequestOptions } from '@arco-design/web-react/es/Upload/interface';
 import req from '@/utils/request';
 import { UploadResult } from '@/service/system/type';
@@ -312,39 +311,57 @@ function Toolbar(props: ToolbarProp) {
         droplist={headingList}
         triggerProps={{ style: { zIndex: tooltipZIndex } }}
       >
-        <Option>
+        <div className={styles['option']}>
           <IconTitleLevel />
-        </Option>
+        </div>
       </Dropdown>
       <Tooltip mini content={'粗体'} style={{ zIndex: tooltipZIndex }}>
-        <Option onClick={() => setStartAndEndCharacters('**', '**')}>
+        <div
+          className={styles['option']}
+          onClick={() => setStartAndEndCharacters('**', '**')}
+        >
           <IconBold />
-        </Option>
+        </div>
       </Tooltip>
       <Tooltip mini content={'斜体'} style={{ zIndex: tooltipZIndex }}>
-        <Option onClick={() => setStartAndEndCharacters('*', '*')}>
+        <div
+          className={styles['option']}
+          onClick={() => setStartAndEndCharacters('*', '*')}
+        >
           <IconItalic />
-        </Option>
+        </div>
       </Tooltip>
       <Tooltip mini content={'下标'} style={{ zIndex: tooltipZIndex }}>
-        <Option onClick={() => setStartAndEndCharacters('<sub>', '</sub>')}>
+        <div
+          className={styles['option']}
+          onClick={() => setStartAndEndCharacters('<sub>', '</sub>')}
+        >
           <IconSubscript />
-        </Option>
+        </div>
       </Tooltip>
       <Tooltip mini content={'上标'} style={{ zIndex: tooltipZIndex }}>
-        <Option onClick={() => setStartAndEndCharacters('<sup>', '</sup>')}>
+        <div
+          className={styles['option']}
+          onClick={() => setStartAndEndCharacters('<sup>', '</sup>')}
+        >
           <IconSuperscript />
-        </Option>
+        </div>
       </Tooltip>
       <Tooltip mini content={'引用'} style={{ zIndex: tooltipZIndex }}>
-        <Option onClick={() => addCharactersAtLineStart('> ')}>
+        <div
+          className={styles['option']}
+          onClick={() => addCharactersAtLineStart('> ')}
+        >
           <IconQuote />
-        </Option>
+        </div>
       </Tooltip>
       <Tooltip mini content={'链接'} style={{ zIndex: tooltipZIndex }}>
-        <Option onClick={() => setStartAndEndCharacters('[', ']()', 2)}>
+        <div
+          className={styles['option']}
+          onClick={() => setStartAndEndCharacters('[', ']()', 2)}
+        >
           <IconLink />
-        </Option>
+        </div>
       </Tooltip>
       <Tooltip mini content={'图片'} style={{ zIndex: tooltipZIndex }}>
         <Upload
@@ -353,51 +370,70 @@ function Toolbar(props: ToolbarProp) {
           renderUploadList={() => <></>}
           renderUploadItem={() => <></>}
         >
-          <Option>
+          <div className={styles['option']}>
             <IconImage />
-          </Option>
+          </div>
         </Upload>
       </Tooltip>
       <Dropdown
         droplist={ScaleList}
         triggerProps={{ style: { zIndex: tooltipZIndex } }}
       >
-        <Option>
+        <div className={styles['option']}>
           <IconScale />
-        </Option>
+        </div>
       </Dropdown>
       <Tooltip mini content={'代码'} style={{ zIndex: tooltipZIndex }}>
-        <Option onClick={() => setStartAndEndCharacters('`', '`')}>
+        <div
+          className={styles['option']}
+          onClick={() => setStartAndEndCharacters('`', '`')}
+        >
           <IconCode />
-        </Option>
+        </div>
       </Tooltip>
       <Tooltip mini content={'代码块'} style={{ zIndex: tooltipZIndex }}>
-        <Option onClick={() => addBlockValue('```\r\n```', 4)}>
+        <div
+          className={styles['option']}
+          onClick={() => addBlockValue('```\r\n```', 4)}
+        >
           <IconCodeBlock />
-        </Option>
+        </div>
       </Tooltip>
       <Tooltip mini content={'无序列表'} style={{ zIndex: tooltipZIndex }}>
-        <Option onClick={() => addCharactersAtLineStart('- ')}>
+        <div
+          className={styles['option']}
+          onClick={() => addCharactersAtLineStart('- ')}
+        >
           <IconUnorderedList />
-        </Option>
+        </div>
       </Tooltip>
       <Tooltip mini content={'有序列表'} style={{ zIndex: tooltipZIndex }}>
-        <Option onClick={() => addCharactersAtLineStart('1. ')}>
+        <div
+          className={styles['option']}
+          onClick={() => addCharactersAtLineStart('1. ')}
+        >
           <IconOrderedList />
-        </Option>
+        </div>
       </Tooltip>
       <Tooltip mini content={'删除线'} style={{ zIndex: tooltipZIndex }}>
-        <Option onClick={() => setStartAndEndCharacters('~~', '~~')}>
+        <div
+          className={styles['option']}
+          onClick={() => setStartAndEndCharacters('~~', '~~')}
+        >
           <IconStrikethrough />
-        </Option>
+        </div>
       </Tooltip>
       <Tooltip mini content={'任务列表'} style={{ zIndex: tooltipZIndex }}>
-        <Option onClick={() => addCharactersAtLineStart('- [ ] ')}>
+        <div
+          className={styles['option']}
+          onClick={() => addCharactersAtLineStart('- [ ] ')}
+        >
           <IconCheckSquare />
-        </Option>
+        </div>
       </Tooltip>
       <Tooltip mini content={'表格'} style={{ zIndex: tooltipZIndex }}>
-        <Option
+        <div
+          className={styles['option']}
           onClick={() =>
             addBlockValue(
               '| Heading |  |\n' + '| --- | --- |\n' + '|  |  |\n',
@@ -406,23 +442,23 @@ function Toolbar(props: ToolbarProp) {
           }
         >
           <IconInsertTable />
-        </Option>
+        </div>
       </Tooltip>
       <Dropdown
         droplist={FormulaList}
         triggerProps={{ style: { zIndex: tooltipZIndex } }}
       >
-        <Option>
+        <div className={styles['option']}>
           <IconFormula />
-        </Option>
+        </div>
       </Dropdown>
       <Dropdown
         droplist={MermaidList}
         triggerProps={{ style: { zIndex: tooltipZIndex } }}
       >
-        <Option>
+        <div className={styles['option']}>
           <IconBranch />
-        </Option>
+        </div>
       </Dropdown>
     </Space>
   );

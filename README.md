@@ -4,6 +4,12 @@ Quiet 是一个关注于管理项目迭代以及项目文档的开源项目。
 
 后端：https://github.com/lin-mt/quiet
 
+> Spring Boot 版本：
+>
+> 前端：https://github.com/lin-mt/quiet-web/tree/spring-boot
+>
+> 后端：https://github.com/lin-mt/quiet-server
+
 ## 快速开始
 
 ```shell
