@@ -22,11 +22,29 @@ declare namespace API {
   type AddProject = {
     /** 项目名称 */
     name: string;
+    templateId: string;
+    projectGroupId: string;
     /** 构建工具 */
     buildTool: 'MAVEN' | 'GRADLE';
     /** git地址 */
     gitAddress: string;
     /** 项目描述 */
+    description?: string;
+  };
+
+  type AddProjectGroup = {
+    /** 项目组名称 */
+    name: string;
+    /** 项目组描述 */
+    description?: string;
+  };
+
+  type AddRequirementPriority = {
+    /** 优先级名称 */
+    name: string;
+    /** 卡片颜色 */
+    color: string;
+    /** 优先级描述 */
     description?: string;
   };
 
@@ -42,6 +60,24 @@ declare namespace API {
     code: string;
   };
 
+  type AddTaskStep = {
+    /** 步骤名称 */
+    name: string;
+    /** 步骤描述 */
+    description?: string;
+  };
+
+  type AddTemplate = {
+    /** 模板名称 */
+    name: string;
+    /** 模板描述 */
+    description?: string;
+    /** 任务步骤 */
+    taskSteps: AddTaskStep[];
+    /** 需求优先级 */
+    requirementPriorities: AddRequirementPriority[];
+  };
+
   type CurrentUser = {
     id?: string;
     /** 用户名称 */
@@ -53,6 +89,10 @@ declare namespace API {
 
   type deletePermissionParams = {
     /** 权限ID */
+    id: string;
+  };
+
+  type deleteProjectGroupParams = {
     id: string;
   };
 
@@ -71,6 +111,14 @@ declare namespace API {
   };
 
   type getProjectDetailParams = {
+    id: string;
+  };
+
+  type getProjectGroupDetailParams = {
+    id: string;
+  };
+
+  type getTemplateDetailParams = {
     id: string;
   };
 
@@ -98,10 +146,10 @@ declare namespace API {
   type PageableObject = {
     offset?: number;
     sort?: SortObject;
-    paged?: boolean;
-    unpaged?: boolean;
     pageNumber?: number;
     pageSize?: number;
+    paged?: boolean;
+    unpaged?: boolean;
   };
 
   type PagePermission = {
@@ -157,6 +205,36 @@ declare namespace API {
     gitAddress?: string;
     /** 项目描述 */
     description?: string;
+  };
+
+  type PageProjectGroup = {
+    /** 页数 */
+    current?: number;
+    /** 分页大小 */
+    pageSize?: number;
+    id?: string;
+    /** 项目组名称 */
+    name?: string;
+    /** 项目组描述 */
+    description?: string;
+  };
+
+  type pageProjectGroupParams = {
+    page: PageProjectGroup;
+  };
+
+  type PageProjectGroupVO = {
+    totalPages?: number;
+    totalElements?: number;
+    size?: number;
+    content?: ProjectGroupVO[];
+    number?: number;
+    sort?: SortObject;
+    pageable?: PageableObject;
+    numberOfElements?: number;
+    first?: boolean;
+    last?: boolean;
+    empty?: boolean;
   };
 
   type pageProjectParams = {
@@ -283,6 +361,32 @@ declare namespace API {
     gmtCreate: string;
   };
 
+  type ProjectGroupDetail = {
+    id: string;
+    /** 项目组名称 */
+    name?: string;
+    /** 项目组成员 */
+    members?: Member[];
+    /** 项目组描述 */
+    description?: string;
+    /** 创建时间 */
+    gmtCreate: string;
+  };
+
+  type ProjectGroupMember = {
+    projectGroupId: string;
+    /** 成员用户ID集合 */
+    memberIds?: string[];
+  };
+
+  type ProjectGroupVO = {
+    id: string;
+    /** 项目组名称 */
+    name: string;
+    /** 项目组描述 */
+    description?: string;
+  };
+
   type ProjectMember = {
     projectId: string;
     /** 项目成员ID */
@@ -293,11 +397,23 @@ declare namespace API {
     id: string;
     /** 项目名称 */
     name: string;
+    templateId: string;
+    projectGroupId: string;
     /** 构建工具 */
     buildTool: 'MAVEN' | 'GRADLE';
     /** git地址 */
     gitAddress: string;
     /** 项目描述 */
+    description?: string;
+  };
+
+  type RequirementPriorityVO = {
+    id: string;
+    /** 优先级名称 */
+    name: string;
+    /** 卡片颜色 */
+    color: string;
+    /** 优先级描述 */
     description?: string;
   };
 
@@ -340,8 +456,28 @@ declare namespace API {
 
   type SortObject = {
     empty?: boolean;
-    unsorted?: boolean;
     sorted?: boolean;
+    unsorted?: boolean;
+  };
+
+  type TaskStepVO = {
+    id: string;
+    /** 步骤名称 */
+    name: string;
+    /** 步骤描述 */
+    description?: string;
+  };
+
+  type TemplateDetail = {
+    id: string;
+    /** 模板名称 */
+    name: string;
+    /** 模板描述 */
+    description?: string;
+    /** 任务步骤 */
+    taskSteps: TaskStepVO[];
+    /** 需求优先级 */
+    requirementPriorities: RequirementPriorityVO[];
   };
 
   type TreePermission = {
@@ -401,6 +537,8 @@ declare namespace API {
 
   type UpdateProject = {
     id: string;
+    templateId: string;
+    projectGroupId: string;
     /** 项目名称 */
     name: string;
     /** 构建工具 */
@@ -409,6 +547,24 @@ declare namespace API {
     gitAddress: string;
     /** 项目描述 */
     description?: string;
+  };
+
+  type UpdateProjectGroup = {
+    /** 项目组名称 */
+    name: string;
+    /** 项目组描述 */
+    description?: string;
+    id: string;
+  };
+
+  type UpdateRequirementPriority = {
+    /** 优先级名称 */
+    name: string;
+    /** 卡片颜色 */
+    color: string;
+    /** 优先级描述 */
+    description?: string;
+    id: string;
   };
 
   type UpdateRole = {
@@ -422,6 +578,26 @@ declare namespace API {
     value: string;
     /** 角色编码 */
     code: string;
+  };
+
+  type UpdateTaskStep = {
+    /** 步骤名称 */
+    name: string;
+    /** 步骤描述 */
+    description?: string;
+    id: string;
+  };
+
+  type UpdateTemplate = {
+    /** 模板名称 */
+    name: string;
+    /** 模板描述 */
+    description?: string;
+    /** 任务步骤 */
+    taskSteps: UpdateTaskStep[];
+    /** 需求优先级 */
+    requirementPriorities: UpdateRequirementPriority[];
+    id: string;
   };
 
   type UpdateUser = {

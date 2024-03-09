@@ -39,6 +39,12 @@ export default [
         redirect: '/project-asset/project-management',
       },
       {
+        name: 'project-group-management',
+        access: 'hasRoutePermission',
+        path: '/project-asset/project-group-management',
+        component: './ProjectAsset/ProjectGroupManagement',
+      },
+      {
         name: 'project-management',
         access: 'hasRoutePermission',
         path: '/project-asset/project-management',

@@ -68,7 +68,7 @@ const UserManagement: React.FC = () => {
             message: '请输入用户名',
           },
           {
-            max: 16,
+            max: 30,
             message: '用户名长度不能超过 16',
           },
         ],
@@ -262,7 +262,7 @@ const UserManagement: React.FC = () => {
               })
             }
           >
-            <ProFormText name="username" label="用户名" rules={[{ required: true, max: 16 }]} />
+            <ProFormText name="username" label="用户名" rules={[{ required: true, max: 30 }]} />
             <ProFormText.Password
               name="password"
               label="密码"

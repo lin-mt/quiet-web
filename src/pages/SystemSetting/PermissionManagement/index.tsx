@@ -147,7 +147,7 @@ const PermissionManagement: React.FC = () => {
           }
         >
           <ProFormText hidden name={'id'} />
-          <ProFormText name={'name'} label={'权限名称'} rules={[{ required: true, max: 16 }]} />
+          <ProFormText name={'name'} label={'权限名称'} rules={[{ required: true, max: 30 }]} />
           <ProFormSelect
             name={'type'}
             label={'权限类型'}
@@ -252,7 +252,7 @@ const PermissionManagement: React.FC = () => {
               })
             }
           >
-            <ProFormText name={'name'} label={'权限名称'} rules={[{ required: true, max: 16 }]} />
+            <ProFormText name={'name'} label={'权限名称'} rules={[{ required: true, max: 30 }]} />
             <ProFormSelect
               name={'type'}
               label={'权限类型'}

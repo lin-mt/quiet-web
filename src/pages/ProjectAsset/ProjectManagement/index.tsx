@@ -50,7 +50,7 @@ const ProjectManagement: React.FC = () => {
           },
           {
             max: 30,
-            message: '用户名长度不能超过 30',
+            message: '长度不能超过 30',
           },
         ],
       },

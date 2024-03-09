@@ -1,12 +1,12 @@
 import DebounceSelect from '@/components/DebounceSelect';
 import {
-  addProject,
-  deleteProject,
-  getProjectDetail,
-  pageProject,
-  updateProject,
-  updateProjectMembers,
-} from '@/services/quiet/projectController';
+  addProjectGroup,
+  deleteProjectGroup,
+  getProjectGroupDetail,
+  pageProjectGroup,
+  updateProjectGroup,
+  updateProjectGroupMembers,
+} from '@/services/quiet/projectGroupController';
 import { listUser } from '@/services/quiet/userController';
 import { PlusOutlined } from '@ant-design/icons';
 import {
@@ -15,7 +15,6 @@ import {
   PageContainer,
   ProColumns,
   ProFormField,
-  ProFormSelect,
   ProFormText,
   ProFormTextArea,
   ProTable,
@@ -23,12 +22,12 @@ import {
 import { Button, Form } from 'antd';
 import React, { useRef } from 'react';
 
-const ProjectManagement: React.FC = () => {
+const ProjectGroupManagement: React.FC = () => {
   const ref = useRef<ActionType>();
   const [form] = Form.useForm<API.AddProject>();
   const [editForm] = Form.useForm<API.ProjectDetail>();
 
-  const columns: ProColumns<API.ProjectVO>[] = [
+  const columns: ProColumns<API.ProjectGroupVO>[] = [
     {
       title: 'ID',
       valueType: 'text',
@@ -37,7 +36,7 @@ const ProjectManagement: React.FC = () => {
       editable: false,
     },
     {
-      title: '项目名称',
+      title: '项目组名称',
       valueType: 'text',
       dataIndex: 'name',
       ellipsis: true,
@@ -46,47 +45,11 @@ const ProjectManagement: React.FC = () => {
         rules: [
           {
             required: true,
-            message: '请输入项目名称',
+            message: '请输入项目组名称',
           },
           {
             max: 30,
-            message: '用户名长度不能超过 30',
-          },
-        ],
-      },
-    },
-    {
-      title: '构建工具',
-      valueType: 'select',
-      dataIndex: 'buildTool',
-      valueEnum: {
-        MAVEN: {
-          text: 'Maven',
-        },
-        GRADLE: {
-          text: 'Gradle',
-        },
-      },
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '请选择构建工具',
-          },
-        ],
-      },
-    },
-    {
-      title: 'Git',
-      valueType: 'text',
-      dataIndex: 'gitAddress',
-      ellipsis: true,
-      copyable: true,
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '请输入git地址',
+            message: '长度不能超过 30',
           },
         ],
       },
@@ -122,10 +85,10 @@ const ProjectManagement: React.FC = () => {
         <ModalForm
           key={'editMember'}
           form={editForm}
-          title="编辑项目成员"
+          title="编辑项目组成员"
           onFinish={() =>
-            updateProjectMembers({
-              projectId: record.id,
+            updateProjectGroupMembers({
+              projectGroupId: record.id,
               memberIds: editForm.getFieldValue('members')?.map((m: any) => m.value),
             }).then(() => true)
           }
@@ -133,7 +96,7 @@ const ProjectManagement: React.FC = () => {
             <a
               type="primary"
               onClick={() =>
-                getProjectDetail({ id: record.id }).then((resp) => {
+                getProjectGroupDetail({ id: record.id }).then((resp) => {
                   const formValue = resp as any;
                   formValue.members = resp.members?.map((m) => {
                     return { value: m.id, label: m.username };
@@ -146,8 +109,7 @@ const ProjectManagement: React.FC = () => {
             </a>
           }
         >
-          <ProFormText readonly name={'name'} label={'项目名称'} />
-          <ProFormText readonly name="gitAddress" label="Git" />
+          <ProFormText readonly name={'name'} label={'项目组名称'} />
           <ProFormField name={'members'} label="项目成员">
             <DebounceSelect
               mode="multiple"
@@ -168,17 +130,17 @@ const ProjectManagement: React.FC = () => {
 
   return (
     <PageContainer title={false}>
-      <ProTable<API.ProjectVO>
+      <ProTable<API.ProjectGroupVO>
         bordered
         cardBordered
         rowKey={'id'}
         actionRef={ref}
         columns={columns}
-        request={(params) => pageProject({ pageProjectFilter: params })}
+        request={(params) => pageProjectGroup({ page: params })}
         editable={{
           deleteText: <a style={{ color: 'red' }}>删除</a>,
-          onSave: (_, record) => updateProject(record),
-          onDelete: (_, record) => deleteProject({ id: record.id }),
+          onSave: (_, record) => updateProjectGroup(record),
+          onDelete: (_, record) => deleteProjectGroup({ id: record.id }),
         }}
         columnsState={{
           defaultValue: {
@@ -189,13 +151,13 @@ const ProjectManagement: React.FC = () => {
           <ModalForm<API.AddProject>
             form={form}
             key={'add'}
-            title={'添加项目'}
+            title={'添加项目组'}
             layout={'horizontal'}
             labelCol={{ span: 4 }}
             wrapperCol={{ span: 20 }}
             trigger={
               <Button key={'add'} icon={<PlusOutlined />} type={'primary'}>
-                添加项目
+                添加项目组
               </Button>
             }
             submitter={{
@@ -209,25 +171,15 @@ const ProjectManagement: React.FC = () => {
               },
             }}
             onFinish={(formData) =>
-              addProject(formData).then(() => {
+              addProjectGroup(formData).then(() => {
                 form.resetFields();
                 ref.current?.reload();
                 return true;
               })
             }
           >
-            <ProFormText name="name" label="项目名称" rules={[{ required: true, max: 30 }]} />
-            <ProFormSelect
-              name="buildTool"
-              label="构建工具"
-              valueEnum={{
-                MAVEN: 'Maven',
-                GRADLE: 'Gradle',
-              }}
-              rules={[{ required: true }]}
-            />
-            <ProFormText name="gitAddress" label="Git" rules={[{ required: true, max: 255 }]} />
-            <ProFormTextArea name="description" label="项目描述" rules={[{ max: 255 }]} />
+            <ProFormText name="name" label="项目组名称" rules={[{ required: true, max: 30 }]} />
+            <ProFormTextArea name="description" label="项目组描述" rules={[{ max: 255 }]} />
           </ModalForm>,
         ]}
       />
@@ -235,4 +187,4 @@ const ProjectManagement: React.FC = () => {
   );
 };
 
-export default ProjectManagement;
+export default ProjectGroupManagement;

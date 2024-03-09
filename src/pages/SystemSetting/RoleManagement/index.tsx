@@ -146,7 +146,7 @@ const RoleManagement: React.FC = () => {
           }
         >
           <ProFormText hidden name={'id'} />
-          <ProFormText name={'name'} label={'角色名称'} rules={[{ required: true, max: 16 }]} />
+          <ProFormText name={'name'} label={'角色名称'} rules={[{ required: true, max: 30 }]} />
           <ProFormText name={'value'} label={'角色Value'} rules={[{ required: true, max: 32 }]} />
           <ProFormTreeSelect
             name={'parentId'}
@@ -263,7 +263,7 @@ const RoleManagement: React.FC = () => {
               })
             }
           >
-            <ProFormText name={'name'} label={'角色名称'} rules={[{ required: true, max: 16 }]} />
+            <ProFormText name={'name'} label={'角色名称'} rules={[{ required: true, max: 30 }]} />
             <ProFormText name={'value'} label={'角色Value'} rules={[{ required: true, max: 32 }]} />
             <ProFormTreeSelect
               name={'parentId'}

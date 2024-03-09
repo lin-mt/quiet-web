@@ -29,6 +29,20 @@ export async function addProjectGroup(body: API.AddProjectGroup, options?: { [ke
   });
 }
 
+/** 项目组详情 GET /projectGroup/${param0} */
+export async function getProjectGroupDetail(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getProjectGroupDetailParams,
+  options?: { [key: string]: any },
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<API.ProjectGroupDetail>(`/api/projectGroup/${param0}`, {
+    method: 'GET',
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}
+
 /** 删除项目组信息 DELETE /projectGroup/${param0} */
 export async function deleteProjectGroup(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -45,17 +59,15 @@ export async function deleteProjectGroup(
 
 /** 更新项目组成员 PUT /projectGroup/members */
 export async function updateProjectGroupMembers(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.updateProjectGroupMembersParams,
+  body: API.ProjectGroupMember,
   options?: { [key: string]: any },
 ) {
   return request<any>(`/api/projectGroup/members`, {
     method: 'PUT',
-    params: {
-      ...params,
-      member: undefined,
-      ...params['member'],
+    headers: {
+      'Content-Type': 'application/json',
     },
+    data: body,
     ...(options || {}),
   });
 }
