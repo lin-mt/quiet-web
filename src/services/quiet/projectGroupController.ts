@@ -57,6 +57,29 @@ export async function deleteProjectGroup(
   });
 }
 
+/** 查询当前登录人所属项目组 GET /projectGroup/listCurrentUserProjectGroup */
+export async function listCurrentUserProjectGroup(options?: { [key: string]: any }) {
+  return request<API.SimpleProjectGroup[]>(`/api/projectGroup/listCurrentUserProjectGroup`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** 根据用户名查询用户（10条数据） GET /projectGroup/listProjectGroupUser */
+export async function listProjectGroupUser(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.listProjectGroupUserParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleUser[]>(`/api/projectGroup/listProjectGroupUser`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** 更新项目组成员 PUT /projectGroup/members */
 export async function updateProjectGroupMembers(
   body: API.ProjectGroupMember,

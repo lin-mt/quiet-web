@@ -7,10 +7,15 @@ import {
   updateProject,
   updateProjectMembers,
 } from '@/services/quiet/projectController';
-import { listUser } from '@/services/quiet/userController';
+import {
+  listCurrentUserProjectGroup,
+  listProjectGroupUser,
+} from '@/services/quiet/projectGroupController';
+import { listTemplate } from '@/services/quiet/templateController';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
+  ColumnsState,
   ModalForm,
   PageContainer,
   ProColumns,
@@ -21,12 +26,18 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { Button, Form } from 'antd';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 const ProjectManagement: React.FC = () => {
   const ref = useRef<ActionType>();
   const [form] = Form.useForm<API.AddProject>();
   const [editForm] = Form.useForm<API.ProjectDetail>();
+  const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
+    description: {
+      show: false,
+    },
+    option: { fixed: 'right', disable: true },
+  });
 
   const columns: ProColumns<API.ProjectVO>[] = [
     {
@@ -54,6 +65,28 @@ const ProjectManagement: React.FC = () => {
           },
         ],
       },
+    },
+    {
+      title: '项目组',
+      valueType: 'select',
+      dataIndex: 'projectGroupId',
+      request: () =>
+        listCurrentUserProjectGroup().then((resp) =>
+          resp.map((g) => {
+            return { value: g.id, label: g.name };
+          }),
+        ),
+    },
+    {
+      title: '模板',
+      valueType: 'select',
+      dataIndex: 'templateId',
+      request: () =>
+        listTemplate({}).then((resp) =>
+          resp.map((t) => {
+            return { value: t.id, label: t.name };
+          }),
+        ),
     },
     {
       title: '构建工具',
@@ -153,7 +186,10 @@ const ProjectManagement: React.FC = () => {
               mode="multiple"
               placeholder={'请输入用户名'}
               fetchOptions={(value) =>
-                listUser({ username: value }).then((resp) =>
+                listProjectGroupUser({
+                  projectGroupId: record.projectGroupId,
+                  username: value,
+                }).then((resp) =>
                   resp?.map((u) => {
                     return { value: u.id, label: u.username };
                   }),
@@ -181,9 +217,8 @@ const ProjectManagement: React.FC = () => {
           onDelete: (_, record) => deleteProject({ id: record.id }),
         }}
         columnsState={{
-          defaultValue: {
-            option: { fixed: 'right', disable: true },
-          },
+          value: columnsStateMap,
+          onChange: setColumnsStateMap,
         }}
         toolBarRender={() => [
           <ModalForm<API.AddProject>

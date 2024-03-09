@@ -127,9 +127,20 @@ declare namespace API {
     roleId: string;
   };
 
+  type listProjectGroupUserParams = {
+    projectGroupId: string;
+    /** 用户名 */
+    username: string;
+  };
+
   type listRolesParams = {
     /** 用户ID */
     userId: string;
+  };
+
+  type listTemplateParams = {
+    /** 模板名称 */
+    name?: string;
   };
 
   type listUserParams = {
@@ -184,8 +195,8 @@ declare namespace API {
     content?: PermissionVO[];
     number?: number;
     sort?: SortObject;
-    pageable?: PageableObject;
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -230,8 +241,8 @@ declare namespace API {
     content?: ProjectGroupVO[];
     number?: number;
     sort?: SortObject;
-    pageable?: PageableObject;
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -248,8 +259,8 @@ declare namespace API {
     content?: ProjectVO[];
     number?: number;
     sort?: SortObject;
-    pageable?: PageableObject;
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -281,8 +292,8 @@ declare namespace API {
     content?: RoleVO[];
     number?: number;
     sort?: SortObject;
-    pageable?: PageableObject;
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -317,8 +328,8 @@ declare namespace API {
     content?: UserVO[];
     number?: number;
     sort?: SortObject;
-    pageable?: PageableObject;
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -349,6 +360,8 @@ declare namespace API {
     id: string;
     /** 项目名称 */
     name?: string;
+    projectGroup: SimpleProjectGroup;
+    template: SimpleTemplate;
     /** 构建工具 */
     buildTool: 'MAVEN' | 'GRADLE';
     /** git地址 */
@@ -446,6 +459,18 @@ declare namespace API {
     parentCode?: string;
     /** 创建时间 */
     gmtCreate: string;
+  };
+
+  type SimpleProjectGroup = {
+    id: string;
+    /** 项目组名称 */
+    name: string;
+  };
+
+  type SimpleTemplate = {
+    id: string;
+    /** 模板名称 */
+    name: string;
   };
 
   type SimpleUser = {
