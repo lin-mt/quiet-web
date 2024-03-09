@@ -3,6 +3,7 @@ export default {
   'menu.project-asset': '项目资产',
   'menu.project-asset.project-group-management': '项目组管理',
   'menu.project-asset.project-management': '项目管理',
+  'menu.project-asset.template-management': '模板管理',
   'menu.project-asset.version-planning': '版本规划',
   'menu.project-asset.iteration-planning': '迭代规划',
   'menu.system-setting': '系统设置',

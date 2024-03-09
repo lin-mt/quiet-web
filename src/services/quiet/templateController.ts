@@ -40,6 +40,20 @@ export async function getTemplateDetail(
   });
 }
 
+/** 删除模板 DELETE /template/${param0} */
+export async function deleteTemplate(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.deleteTemplateParams,
+  options?: { [key: string]: any },
+) {
+  const { id: param0, ...queryParams } = params;
+  return request<any>(`/api/template/${param0}`, {
+    method: 'DELETE',
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}
+
 /** 查询模板 GET /template/list */
 export async function listTemplate(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -50,6 +64,23 @@ export async function listTemplate(
     method: 'GET',
     params: {
       ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 分页查询模板 GET /template/page */
+export async function pageTemplate(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.pageTemplateParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.PageTemplateVO>(`/api/template/page`, {
+    method: 'GET',
+    params: {
+      ...params,
+      pageTemplate: undefined,
+      ...params['pageTemplate'],
     },
     ...(options || {}),
   });

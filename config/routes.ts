@@ -51,6 +51,12 @@ export default [
         component: './ProjectAsset/ProjectManagement',
       },
       {
+        name: 'template-management',
+        access: 'hasRoutePermission',
+        path: '/project-asset/template-management',
+        component: './ProjectAsset/TemplateManagement',
+      },
+      {
         name: 'version-planning',
         access: 'hasRoutePermission',
         path: '/project-asset/version-planning',

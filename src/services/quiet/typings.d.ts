@@ -105,6 +105,10 @@ declare namespace API {
     id: string;
   };
 
+  type deleteTemplateParams = {
+    id: string;
+  };
+
   type deleteUserParams = {
     /** 用户ID */
     id: string;
@@ -195,8 +199,8 @@ declare namespace API {
     content?: PermissionVO[];
     number?: number;
     sort?: SortObject;
-    numberOfElements?: number;
     pageable?: PageableObject;
+    numberOfElements?: number;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -241,8 +245,8 @@ declare namespace API {
     content?: ProjectGroupVO[];
     number?: number;
     sort?: SortObject;
-    numberOfElements?: number;
     pageable?: PageableObject;
+    numberOfElements?: number;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -259,8 +263,8 @@ declare namespace API {
     content?: ProjectVO[];
     number?: number;
     sort?: SortObject;
-    numberOfElements?: number;
     pageable?: PageableObject;
+    numberOfElements?: number;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -292,8 +296,38 @@ declare namespace API {
     content?: RoleVO[];
     number?: number;
     sort?: SortObject;
-    numberOfElements?: number;
     pageable?: PageableObject;
+    numberOfElements?: number;
+    first?: boolean;
+    last?: boolean;
+    empty?: boolean;
+  };
+
+  type PageTemplate = {
+    /** 页数 */
+    current?: number;
+    /** 分页大小 */
+    pageSize?: number;
+    id?: string;
+    /** 模板名称 */
+    name?: string;
+    /** 模板描述 */
+    description?: string;
+  };
+
+  type pageTemplateParams = {
+    pageTemplate: PageTemplate;
+  };
+
+  type PageTemplateVO = {
+    totalPages?: number;
+    totalElements?: number;
+    size?: number;
+    content?: TemplateVO[];
+    number?: number;
+    sort?: SortObject;
+    pageable?: PageableObject;
+    numberOfElements?: number;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -328,8 +362,8 @@ declare namespace API {
     content?: UserVO[];
     number?: number;
     sort?: SortObject;
-    numberOfElements?: number;
     pageable?: PageableObject;
+    numberOfElements?: number;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -481,8 +515,8 @@ declare namespace API {
 
   type SortObject = {
     empty?: boolean;
-    sorted?: boolean;
     unsorted?: boolean;
+    sorted?: boolean;
   };
 
   type TaskStepVO = {
@@ -503,6 +537,14 @@ declare namespace API {
     taskSteps: TaskStepVO[];
     /** 需求优先级 */
     requirementPriorities: RequirementPriorityVO[];
+  };
+
+  type TemplateVO = {
+    id: string;
+    /** 模板名称 */
+    name: string;
+    /** 模板描述 */
+    description?: string;
   };
 
   type TreePermission = {

@@ -128,6 +128,7 @@ const ProjectManagement: React.FC = () => {
       title: '描述',
       valueType: 'text',
       ellipsis: true,
+      search: false,
       dataIndex: 'description',
       formItemProps: {
         rules: [
