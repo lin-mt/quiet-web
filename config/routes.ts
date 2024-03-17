@@ -29,9 +29,33 @@ export default [
     component: './Index',
   },
   {
+    path: '/project-development',
+    name: 'project-development',
+    icon: 'Project',
+    access: 'hasRoutePermission',
+    routes: [
+      {
+        path: '/project-development',
+        redirect: '/project-development/project-planning',
+      },
+      {
+        name: 'project-planning',
+        access: 'hasRoutePermission',
+        path: '/project-development/project-planning',
+        component: './ProjectDevelopment/ProjectPlanning',
+      },
+      {
+        name: 'requirement-planning',
+        access: 'hasRoutePermission',
+        path: '/project-development/requirement-planning',
+        component: './ProjectDevelopment/RequirementPlanning',
+      },
+    ],
+  },
+  {
     path: '/project-asset',
     name: 'project-asset',
-    icon: 'Appstore',
+    icon: 'Database',
     access: 'hasRoutePermission',
     routes: [
       {
@@ -55,18 +79,6 @@ export default [
         access: 'hasRoutePermission',
         path: '/project-asset/template-management',
         component: './ProjectAsset/TemplateManagement',
-      },
-      {
-        name: 'version-planning',
-        access: 'hasRoutePermission',
-        path: '/project-asset/version-planning',
-        component: './ProjectAsset/VersionPlanning',
-      },
-      {
-        name: 'iteration-planning',
-        access: 'hasRoutePermission',
-        path: '/project-asset/iteration-planning',
-        component: './ProjectAsset/IterationPlanning',
       },
     ],
   },

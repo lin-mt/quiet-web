@@ -1,4 +1,16 @@
 declare namespace API {
+  type AddIteration = {
+    /** 迭代名称 */
+    name: string;
+    versionId: string;
+    /** 计划开始时间 */
+    plannedStartTime?: string;
+    /** 计划结束时间 */
+    plannedEndTime?: string;
+    /** 迭代描述 */
+    description?: string;
+  };
+
   type AddPermission = {
     /** 排序值 */
     ordinal?: number;
@@ -78,6 +90,19 @@ declare namespace API {
     requirementPriorities: AddRequirementPriority[];
   };
 
+  type AddVersion = {
+    /** 版本名称 */
+    name: string;
+    projectId: string;
+    parentId?: string;
+    /** 计划开始时间 */
+    plannedStartTime?: string;
+    /** 计划结束时间 */
+    plannedEndTime?: string;
+    /** 版本描述 */
+    description?: string;
+  };
+
   type CurrentUser = {
     id?: string;
     /** 用户名称 */
@@ -85,6 +110,10 @@ declare namespace API {
     permission?: UserPermission;
     /** 用户拥有的角色信息 */
     roles?: RoleInfo[];
+  };
+
+  type deleteIterationParams = {
+    id: string;
   };
 
   type deletePermissionParams = {
@@ -114,6 +143,14 @@ declare namespace API {
     id: string;
   };
 
+  type deleteVersionParams = {
+    id: string;
+  };
+
+  type getIterationDetailParams = {
+    id: string;
+  };
+
   type getProjectDetailParams = {
     id: string;
   };
@@ -124,6 +161,46 @@ declare namespace API {
 
   type getTemplateDetailParams = {
     id: string;
+  };
+
+  type getVersionDetailParams = {
+    id: string;
+  };
+
+  type IterationDetail = {
+    id: string;
+    /** 迭代名称 */
+    name: string;
+    /** 迭代状态 */
+    status: 'PLANNED' | 'ONGOING' | 'DONE' | 'ARCHIVED';
+    versionId: string;
+    /** 计划开始时间 */
+    plannedStartTime?: string;
+    /** 计划结束时间 */
+    plannedEndTime?: string;
+    /** 迭代描述 */
+    description?: string;
+    /** 需求信息 */
+    requirements?: string[];
+  };
+
+  type IterationVO = {
+    id: string;
+    /** 迭代名称 */
+    name: string;
+    /** 迭代状态 */
+    status: 'PLANNED' | 'ONGOING' | 'DONE' | 'ARCHIVED';
+    versionId: string;
+    /** 计划开始时间 */
+    plannedStartTime?: string;
+    /** 计划结束时间 */
+    plannedEndTime?: string;
+    /** 迭代描述 */
+    description?: string;
+  };
+
+  type listCurrentUserProjectParams = {
+    projectGroupId: string;
   };
 
   type listPermissionParams = {
@@ -161,10 +238,10 @@ declare namespace API {
   type PageableObject = {
     offset?: number;
     sort?: SortObject;
-    pageNumber?: number;
-    pageSize?: number;
     paged?: boolean;
     unpaged?: boolean;
+    pageNumber?: number;
+    pageSize?: number;
   };
 
   type PagePermission = {
@@ -495,6 +572,20 @@ declare namespace API {
     gmtCreate: string;
   };
 
+  type SimpleIteration = {
+    id: string;
+    /** 迭代名称 */
+    name: string;
+    /** 迭代状态 */
+    status: 'PLANNED' | 'ONGOING' | 'DONE' | 'ARCHIVED';
+  };
+
+  type SimpleProject = {
+    id?: string;
+    /** 项目名称 */
+    name?: string;
+  };
+
   type SimpleProjectGroup = {
     id: string;
     /** 项目组名称 */
@@ -515,8 +606,8 @@ declare namespace API {
 
   type SortObject = {
     empty?: boolean;
-    unsorted?: boolean;
     sorted?: boolean;
+    unsorted?: boolean;
   };
 
   type TaskStepVO = {
@@ -579,6 +670,35 @@ declare namespace API {
     parentId?: string;
     /** 子角色 */
     children?: TreeRole[];
+  };
+
+  type TreeVersionDetail = {
+    id: string;
+    /** 版本名称 */
+    name: string;
+    /** 版本状态 */
+    status: 'PLANNED' | 'ONGOING' | 'DONE' | 'ARCHIVED';
+    /** 子版本信息 */
+    children?: TreeVersionDetail[];
+    /** 迭代信息 */
+    iterations?: SimpleIteration[];
+  };
+
+  type treeVersionDetailParams = {
+    projectId: string;
+  };
+
+  type UpdateIteration = {
+    /** 迭代名称 */
+    name: string;
+    versionId: string;
+    /** 计划开始时间 */
+    plannedStartTime?: string;
+    /** 计划结束时间 */
+    plannedEndTime?: string;
+    /** 迭代描述 */
+    description?: string;
+    id: string;
   };
 
   type UpdatePermission = {
@@ -681,6 +801,20 @@ declare namespace API {
     enabled: 'YES' | 'NO';
   };
 
+  type UpdateVersion = {
+    /** 版本名称 */
+    name: string;
+    projectId: string;
+    parentId?: string;
+    /** 计划开始时间 */
+    plannedStartTime?: string;
+    /** 计划结束时间 */
+    plannedEndTime?: string;
+    /** 版本描述 */
+    description?: string;
+    id: string;
+  };
+
   type UserDTO = {
     /** 用户名 */
     username: string;
@@ -713,5 +847,43 @@ declare namespace API {
     enabled: 'YES' | 'NO';
     /** 注册时间 */
     gmtCreate: string;
+  };
+
+  type VersionDetail = {
+    id: string;
+    /** 版本名称 */
+    name: string;
+    projectId: string;
+    parentId?: string;
+    /** 版本状态 */
+    status: 'PLANNED' | 'ONGOING' | 'DONE' | 'ARCHIVED';
+    /** 计划开始时间 */
+    plannedStartTime?: string;
+    /** 计划结束时间 */
+    plannedEndTime?: string;
+    /** 实际开始时间 */
+    actualStartTime?: string;
+    /** 实际结束时间 */
+    actualEndTime?: string;
+    /** 版本描述 */
+    description?: string;
+    /** 子版本 */
+    children?: VersionVO[];
+    /** 在该版本的迭代信息 */
+    iterations?: IterationVO[];
+  };
+
+  type VersionVO = {
+    id: string;
+    /** 版本名称 */
+    name: string;
+    projectId: string;
+    parentId?: string;
+    /** 版本状态 */
+    status: 'PLANNED' | 'ONGOING' | 'DONE' | 'ARCHIVED';
+    /** 计划开始时间 */
+    plannedStartTime?: string;
+    /** 计划结束时间 */
+    plannedEndTime?: string;
   };
 }

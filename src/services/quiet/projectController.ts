@@ -54,6 +54,21 @@ export async function deleteProject(
   });
 }
 
+/** 获取当前用户的项目 GET /project/listCurrentUserProject */
+export async function listCurrentUserProject(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.listCurrentUserProjectParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleProject[]>(`/api/project/listCurrentUserProject`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** 更新项目成员 PUT /project/members */
 export async function updateProjectMembers(
   body: API.ProjectMember,
