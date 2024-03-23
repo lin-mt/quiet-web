@@ -101,13 +101,10 @@ const ProjectPlanning: React.FC = () => {
   const [updateVersionForm] = Form.useForm();
   const [updateIterationForm] = Form.useForm();
   const [selectedKey, setSelectedkey] = useState<React.Key[]>();
-  const [selectedProject, setSelectedProject] = useState<ProjectSelected>({
-    groupId: '171494521987073',
-    projectId: '169377229840385',
-  });
+  const [selectedProject, setSelectedProject] = useState<ProjectSelected>();
   const [planningSelect, setPlanningSelect] = useState<PlanningSelected>();
-  const [projects, setProjects] = useState<object[]>();
-  const [projectGroups, setProjectGroups] = useState<object[]>();
+  const [projects, setProjects] = useState<API.SimpleProject[]>();
+  const [projectGroups, setProjectGroups] = useState<API.SimpleProjectGroup[]>();
   const [projectVersionDetail, setProjectVersionDetail] = useState<API.TreeVersionDetail[]>();
   const [planningTree, setPlanningTree] = useState<PlanningTreeNode[]>();
   const [versionDetail, setVersionDetail] = useState<API.VersionDetail>();
@@ -213,7 +210,7 @@ const ProjectPlanning: React.FC = () => {
         </Form>
         <Divider style={{ marginTop: token.margin, marginBottom: token.margin }} />
         {selectedProject?.projectId ? (
-          <Row gutter={50}>
+          <Row gutter={30}>
             <Col span={12}>
               <Flex justify={'space-between'} align={'center'} style={{ marginBottom: 10 }}>
                 <Typography.Title level={5} style={{ margin: 0, fontWeight: 500 }}>
@@ -231,9 +228,6 @@ const ProjectPlanning: React.FC = () => {
                 <Flex justify={'space-between'} align={'center'}>
                   <ModalForm<API.AddVersion>
                     title={'新建版本'}
-                    modalProps={{
-                      destroyOnClose: true,
-                    }}
                     trigger={
                       <Button type="text" icon={<PlusOutlined />}>
                         新建版本
@@ -293,9 +287,6 @@ const ProjectPlanning: React.FC = () => {
 
                   <ModalForm<API.AddIteration>
                     title={'新建迭代'}
-                    modalProps={{
-                      destroyOnClose: true,
-                    }}
                     trigger={
                       <Button type="text" icon={<PlusOutlined />}>
                         新建迭代
@@ -385,9 +376,6 @@ const ProjectPlanning: React.FC = () => {
                       <ModalForm<API.UpdateVersion>
                         title={'编辑版本'}
                         form={updateVersionForm}
-                        modalProps={{
-                          destroyOnClose: true,
-                        }}
                         trigger={
                           <Button
                             type="text"
@@ -569,9 +557,6 @@ const ProjectPlanning: React.FC = () => {
                       <ModalForm<API.UpdateIteration>
                         title={'编辑迭代'}
                         form={updateIterationForm}
-                        modalProps={{
-                          destroyOnClose: true,
-                        }}
                         trigger={
                           <Button
                             type="text"

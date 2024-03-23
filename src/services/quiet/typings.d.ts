@@ -60,6 +60,13 @@ declare namespace API {
     description?: string;
   };
 
+  type AddRequirementType = {
+    /** 需求类型名称 */
+    name: string;
+    /** 需求类型描述 */
+    description?: string;
+  };
+
   type AddRole = {
     /** 排序值 */
     ordinal?: number;
@@ -79,6 +86,13 @@ declare namespace API {
     description?: string;
   };
 
+  type AddTaskType = {
+    /** 任务类型名称 */
+    name: string;
+    /** 任务类型描述 */
+    description?: string;
+  };
+
   type AddTemplate = {
     /** 模板名称 */
     name: string;
@@ -86,8 +100,12 @@ declare namespace API {
     description?: string;
     /** 任务步骤 */
     taskSteps: AddTaskStep[];
+    /** 任务类型 */
+    taskTypes: AddTaskType[];
     /** 需求优先级 */
     requirementPriorities: AddRequirementPriority[];
+    /** 需求类型 */
+    requirementTypes: AddRequirementType[];
   };
 
   type AddVersion = {
@@ -238,10 +256,10 @@ declare namespace API {
   type PageableObject = {
     offset?: number;
     sort?: SortObject;
-    paged?: boolean;
-    unpaged?: boolean;
     pageNumber?: number;
     pageSize?: number;
+    paged?: boolean;
+    unpaged?: boolean;
   };
 
   type PagePermission = {
@@ -276,8 +294,8 @@ declare namespace API {
     content?: PermissionVO[];
     number?: number;
     sort?: SortObject;
-    pageable?: PageableObject;
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -322,8 +340,8 @@ declare namespace API {
     content?: ProjectGroupVO[];
     number?: number;
     sort?: SortObject;
-    pageable?: PageableObject;
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -340,8 +358,8 @@ declare namespace API {
     content?: ProjectVO[];
     number?: number;
     sort?: SortObject;
-    pageable?: PageableObject;
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -373,8 +391,8 @@ declare namespace API {
     content?: RoleVO[];
     number?: number;
     sort?: SortObject;
-    pageable?: PageableObject;
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -403,8 +421,8 @@ declare namespace API {
     content?: TemplateVO[];
     number?: number;
     sort?: SortObject;
-    pageable?: PageableObject;
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -439,8 +457,8 @@ declare namespace API {
     content?: UserVO[];
     number?: number;
     sort?: SortObject;
-    pageable?: PageableObject;
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -541,6 +559,14 @@ declare namespace API {
     description?: string;
   };
 
+  type RequirementTypeVO = {
+    id: string;
+    /** 需求类型名称 */
+    name: string;
+    /** 需求类型描述 */
+    description?: string;
+  };
+
   type RoleInfo = {
     id: string;
     /** 角色名称 */
@@ -618,6 +644,14 @@ declare namespace API {
     description?: string;
   };
 
+  type TaskTypeVO = {
+    id: string;
+    /** 任务类型名称 */
+    name: string;
+    /** 任务类型描述 */
+    description?: string;
+  };
+
   type TemplateDetail = {
     id: string;
     /** 模板名称 */
@@ -626,8 +660,12 @@ declare namespace API {
     description?: string;
     /** 任务步骤 */
     taskSteps: TaskStepVO[];
+    /** 任务类型 */
+    taskTypes: TaskTypeVO[];
     /** 需求优先级 */
     requirementPriorities: RequirementPriorityVO[];
+    /** 需求优类型 */
+    requirementTypes: RequirementTypeVO[];
   };
 
   type TemplateVO = {
@@ -754,6 +792,14 @@ declare namespace API {
     id: string;
   };
 
+  type UpdateRequirementType = {
+    /** 需求类型名称 */
+    name: string;
+    /** 需求类型描述 */
+    description?: string;
+    id: string;
+  };
+
   type UpdateRole = {
     id: string;
     /** 排序值 */
@@ -775,6 +821,14 @@ declare namespace API {
     id: string;
   };
 
+  type UpdateTaskType = {
+    /** 任务类型名称 */
+    name: string;
+    /** 任务类型描述 */
+    description?: string;
+    id: string;
+  };
+
   type UpdateTemplate = {
     /** 模板名称 */
     name: string;
@@ -782,8 +836,12 @@ declare namespace API {
     description?: string;
     /** 任务步骤 */
     taskSteps: UpdateTaskStep[];
+    /** 任务类型 */
+    taskTypes: UpdateTaskType[];
     /** 需求优先级 */
     requirementPriorities: UpdateRequirementPriority[];
+    /** 需求类型 */
+    requirementTypes: UpdateRequirementType[];
     id: string;
   };
 

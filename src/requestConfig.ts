@@ -52,10 +52,10 @@ export const requestConfig: RequestConfig = {
             break;
           case MessageType.WARN_MESSAGE:
             message.warning(msg);
-            break;
+            throw new Error(msg);
           case MessageType.ERROR_MESSAGE:
             message.error(msg);
-            break;
+            throw new Error(msg);
           case MessageType.NOTIFICATION:
             notification.open({
               description: msg,
