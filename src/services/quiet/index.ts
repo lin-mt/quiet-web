@@ -6,6 +6,7 @@ import * as iterationController from './iterationController';
 import * as permissionController from './permissionController';
 import * as projectController from './projectController';
 import * as projectGroupController from './projectGroupController';
+import * as requirementController from './requirementController';
 import * as roleController from './roleController';
 import * as templateController from './templateController';
 import * as userController from './userController';
@@ -15,6 +16,7 @@ export default {
   userController,
   templateController,
   roleController,
+  requirementController,
   projectController,
   projectGroupController,
   permissionController,

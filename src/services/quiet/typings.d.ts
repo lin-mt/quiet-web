@@ -51,6 +51,18 @@ declare namespace API {
     description?: string;
   };
 
+  type AddRequirement = {
+    /** 需求标题 */
+    title: string;
+    typeId: string;
+    priorityId: string;
+    projectId: string;
+    reporterId: string;
+    handlerId: string;
+    /** 描述 */
+    description?: string;
+  };
+
   type AddRequirementPriority = {
     /** 优先级名称 */
     name: string;
@@ -147,6 +159,10 @@ declare namespace API {
     id: string;
   };
 
+  type deleteRequirementParams = {
+    id: string;
+  };
+
   type deleteRoleParams = {
     /** 角色ID */
     id: string;
@@ -232,6 +248,26 @@ declare namespace API {
     username: string;
   };
 
+  type ListRequirement = {
+    /** 需求标题 */
+    title?: string;
+    projectId: string;
+    typeId?: string;
+    priorityId?: string;
+    /** 需求状态 */
+    status?: 'TO_BE_PLANNED' | 'PLANNED' | 'PROCESSING' | 'DONE' | 'CLOSED';
+    offset: string;
+    limit: string;
+  };
+
+  type listRequirementByIterationIdParams = {
+    iterationId: string;
+  };
+
+  type listRequirementParams = {
+    listRequirement: ListRequirement;
+  };
+
   type listRolesParams = {
     /** 用户ID */
     userId: string;
@@ -256,10 +292,10 @@ declare namespace API {
   type PageableObject = {
     offset?: number;
     sort?: SortObject;
-    pageNumber?: number;
-    pageSize?: number;
     paged?: boolean;
     unpaged?: boolean;
+    pageNumber?: number;
+    pageSize?: number;
   };
 
   type PagePermission = {
@@ -567,6 +603,22 @@ declare namespace API {
     description?: string;
   };
 
+  type RequirementVO = {
+    id: string;
+    /** 需求标题 */
+    title: string;
+    typeId: string;
+    /** 需求状态 */
+    status: 'TO_BE_PLANNED' | 'PLANNED' | 'PROCESSING' | 'DONE' | 'CLOSED';
+    priorityId: string;
+    projectId: string;
+    iterationId?: string;
+    reporterId: string;
+    handlerId: string;
+    /** 描述 */
+    description?: string;
+  };
+
   type RoleInfo = {
     id: string;
     /** 角色名称 */
@@ -778,6 +830,19 @@ declare namespace API {
     /** 项目组名称 */
     name: string;
     /** 项目组描述 */
+    description?: string;
+    id: string;
+  };
+
+  type UpdateRequirement = {
+    /** 需求标题 */
+    title: string;
+    typeId: string;
+    priorityId: string;
+    projectId: string;
+    reporterId: string;
+    handlerId: string;
+    /** 描述 */
     description?: string;
     id: string;
   };

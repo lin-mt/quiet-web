@@ -36,6 +36,7 @@ import {
   Empty,
   Flex,
   Form,
+  List,
   Popconfirm,
   Row,
   Select,
@@ -500,7 +501,6 @@ const ProjectPlanning: React.FC = () => {
                           );
                         },
                       },
-
                       {
                         title: '状态',
                         dataIndex: 'status',
@@ -649,6 +649,7 @@ const ProjectPlanning: React.FC = () => {
                       { label: '描述', children: iterationDetail.description, span: 2 },
                     ]}
                   />
+                  <List bordered style={{ marginTop: 15 }} />
                 </>
               )}
             </Col>
