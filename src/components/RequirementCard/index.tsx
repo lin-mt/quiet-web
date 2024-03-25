@@ -2,16 +2,18 @@ import { deleteRequirement, updateRequirement } from '@/services/quiet/requireme
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
 import { Button, Card, Flex, Form, Popconfirm, Typography } from 'antd';
-import { useEffect, useState } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
 import styles from './index.less';
 
 const { Text, Title } = Typography;
 
 type RequirementCardProps = {
+  style?: CSSProperties;
   projectDetail: API.ProjectDetail;
   template: API.TemplateDetail;
   requirement: API.RequirementVO;
   afterDelete?: () => void;
+  afterUpdate?: (newReq: API.RequirementVO) => void;
 };
 
 function RequirementCard(props: RequirementCardProps) {
@@ -39,6 +41,7 @@ function RequirementCard(props: RequirementCardProps) {
       style={{
         borderColor: template.requirementPriorities.find((p) => p.id === requirement.priorityId)
           ?.color,
+        ...props.style,
       }}
     >
       <Flex vertical gap={2}>
@@ -83,7 +86,11 @@ function RequirementCard(props: RequirementCardProps) {
               }
               onFinish={async (values) => {
                 const newRequirement = { ...requirement, ...values };
-                await updateRequirement(newRequirement);
+                await updateRequirement(newRequirement).then(() => {
+                  if (props.afterUpdate) {
+                    props.afterUpdate(newRequirement);
+                  }
+                });
                 updateForm.setFieldsValue(values);
                 setRequirement(newRequirement);
                 return true;

@@ -74,3 +74,18 @@ export async function listRequirementByIterationId(
     ...(options || {}),
   });
 }
+
+/** 规划需求 PUT /requirement/planning */
+export async function planningRequirement(
+  body: API.PlanningRequirement,
+  options?: { [key: string]: any },
+) {
+  return request<any>(`/api/requirement/planning`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

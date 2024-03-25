@@ -294,8 +294,8 @@ declare namespace API {
     sort?: SortObject;
     paged?: boolean;
     unpaged?: boolean;
-    pageNumber?: number;
     pageSize?: number;
+    pageNumber?: number;
   };
 
   type PagePermission = {
@@ -519,6 +519,11 @@ declare namespace API {
     /** 序号 */
     ordinal: number;
     parentId?: string;
+  };
+
+  type PlanningRequirement = {
+    requirementId: string;
+    iterationId?: string;
   };
 
   type ProjectDetail = {
