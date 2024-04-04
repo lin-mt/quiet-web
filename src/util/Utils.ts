@@ -34,3 +34,17 @@ export enum PlanningStatus {
   DONE = 'DONE',
   ARCHIVED = 'ARCHIVED',
 }
+
+export const idName = { value: 'id', label: 'name' };
+export const idUsername = { value: 'id', label: 'username' };
+
+export enum ApiMethod {
+  POST = 'POST',
+  GET = 'GET',
+  DELETE = 'DELETE',
+  PUT = 'PUT',
+  HEAD = 'HEAD',
+  PATCH = 'PATCH',
+  OPTIONS = 'OPTIONS',
+  TRACE = 'TRACE',
+}

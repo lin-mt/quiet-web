@@ -3,6 +3,7 @@ export default {
   'menu.project-development': '项目开发',
   'menu.project-development.project-planning': '项目规划',
   'menu.project-development.requirement-planning': '需求规划',
+  'menu.project-development.requirement-board': '需求看板',
   'menu.project-asset': '项目资产',
   'menu.project-asset.project-group-management': '项目组管理',
   'menu.project-asset.project-management': '项目管理',

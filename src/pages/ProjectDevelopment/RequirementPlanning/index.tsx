@@ -10,7 +10,7 @@ import {
 } from '@/services/quiet/requirementController';
 import { getTemplateDetail } from '@/services/quiet/templateController';
 import { treeVersionDetail } from '@/services/quiet/versionController';
-import { planningStatusColor, planningStatusLabel } from '@/util/Utils';
+import { idName, idUsername, planningStatusColor, planningStatusLabel } from '@/util/Utils';
 import { PlusOutlined, SendOutlined } from '@ant-design/icons';
 import {
   ModalForm,
@@ -19,6 +19,7 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
+import { DragDropContext, Draggable, DropResult, Droppable } from '@hello-pangea/dnd';
 import { useModel } from '@umijs/max';
 import {
   Button,
@@ -39,8 +40,6 @@ import {
   theme,
 } from 'antd';
 import React, { CSSProperties, useEffect, useRef, useState } from 'react';
-import type { DropResult } from 'react-beautiful-dnd';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 type PlanningIteration = {
   projectGroupId?: string;
@@ -281,7 +280,7 @@ const RequirementPlanning: React.FC = () => {
               <Select
                 placeholder="请选择项目组"
                 options={projectGroups}
-                fieldNames={{ label: 'name', value: 'id' }}
+                fieldNames={idName}
                 onChange={(val) => setSelectedIteration({ projectGroupId: val })}
               />
             </Form.Item>
@@ -289,7 +288,7 @@ const RequirementPlanning: React.FC = () => {
               <Select
                 placeholder="请选择项目"
                 options={projects}
-                fieldNames={{ label: 'name', value: 'id' }}
+                fieldNames={idName}
                 onChange={(val) => {
                   setSelectedIteration({
                     ...selectedIteration,
@@ -364,28 +363,28 @@ const RequirementPlanning: React.FC = () => {
                     label={'类型'}
                     rules={[{ required: true }]}
                     options={templateDetail?.requirementTypes}
-                    fieldProps={{ fieldNames: { value: 'id', label: 'name' } }}
+                    fieldProps={{ fieldNames: idName }}
                   />
                   <ProFormSelect
                     name={'priorityId'}
                     label={'优先级'}
                     rules={[{ required: true }]}
                     options={templateDetail?.requirementPriorities}
-                    fieldProps={{ fieldNames: { value: 'id', label: 'name' } }}
+                    fieldProps={{ fieldNames: idName }}
                   />
                   <ProFormSelect
                     name={'reporterId'}
                     label={'报告人'}
                     rules={[{ required: true }]}
                     options={projectDetail?.members}
-                    fieldProps={{ fieldNames: { value: 'id', label: 'username' } }}
+                    fieldProps={{ fieldNames: idUsername }}
                   />
                   <ProFormSelect
                     name={'handlerId'}
                     label={'处理人'}
                     rules={[{ required: true }]}
                     options={projectDetail?.members}
-                    fieldProps={{ fieldNames: { value: 'id', label: 'username' } }}
+                    fieldProps={{ fieldNames: idUsername }}
                   />
                   <ProFormTextArea name={'description'} label={'描述'} rules={[{ max: 255 }]} />
                 </ModalForm>
@@ -396,7 +395,7 @@ const RequirementPlanning: React.FC = () => {
                         allowClear
                         placeholder="优先级"
                         options={templateDetail?.requirementPriorities}
-                        fieldNames={{ value: 'id', label: 'name' }}
+                        fieldNames={idName}
                       />
                     </Form.Item>
                     <Form.Item noStyle name={'typeId'}>
@@ -404,7 +403,7 @@ const RequirementPlanning: React.FC = () => {
                         allowClear
                         placeholder="需求类型"
                         options={templateDetail?.requirementTypes}
-                        fieldNames={{ value: 'id', label: 'name' }}
+                        fieldNames={idName}
                       />
                     </Form.Item>
                     <Form.Item noStyle name={'title'}>
@@ -427,68 +426,72 @@ const RequirementPlanning: React.FC = () => {
                 </Form>
               </Flex>
               <Droppable droppableId={DroppableId.RequirementPool}>
-                {(droppableProvided) => (
-                  <div ref={droppableProvided.innerRef}>
-                    <List<API.RequirementVO>
-                      style={containerStyle}
-                      dataSource={requirements}
-                      renderItem={(item, index) => {
-                        const draggableId = IdPrefix.RequirementPool + item.id;
-                        return (
-                          <>
-                            <Draggable draggableId={draggableId} index={index} key={draggableId}>
-                              {(draggableProvider) => {
-                                return (
-                                  <div
-                                    {...draggableProvider.draggableProps}
-                                    {...draggableProvider.dragHandleProps}
-                                    ref={draggableProvider.innerRef}
+                {(droppableProvided, snapshot) => {
+                  const isDraggingOver = snapshot.isDraggingOver;
+                  return (
+                    <div ref={droppableProvided.innerRef}>
+                      <List<API.RequirementVO>
+                        style={containerStyle}
+                        dataSource={requirements}
+                        renderItem={(item, index) => {
+                          const draggableId = IdPrefix.RequirementPool + item.id;
+                          return (
+                            <>
+                              <Draggable draggableId={draggableId} index={index} key={draggableId}>
+                                {(draggableProvider) => {
+                                  return (
+                                    <div
+                                      {...draggableProvider.draggableProps}
+                                      {...draggableProvider.dragHandleProps}
+                                      ref={draggableProvider.innerRef}
+                                    >
+                                      {templateDetail && projectDetail && (
+                                        <div style={{ padding: 5 }}>
+                                          <RequirementCard
+                                            projectDetail={projectDetail}
+                                            template={templateDetail}
+                                            requirement={item}
+                                            afterDelete={() => removeRequirement(item.id)}
+                                            afterUpdate={(newReq) => updateRequirement(newReq)}
+                                          />
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                }}
+                              </Draggable>
+                              {index === requirements.length - 1 &&
+                                !isDraggingOver &&
+                                (hasMore ? (
+                                  <Button
+                                    block
+                                    type="text"
+                                    size="small"
+                                    onClick={() => {
+                                      if (searchParam) {
+                                        setSearchParam({
+                                          ...searchParam,
+                                          offset: (
+                                            Number(searchParam.offset) + Number(limit)
+                                          ).toString(),
+                                        });
+                                      }
+                                    }}
                                   >
-                                    {templateDetail && projectDetail && (
-                                      <div style={{ padding: 5 }}>
-                                        <RequirementCard
-                                          projectDetail={projectDetail}
-                                          template={templateDetail}
-                                          requirement={item}
-                                          afterDelete={() => removeRequirement(item.id)}
-                                          afterUpdate={(newReq) => updateRequirement(newReq)}
-                                        />
-                                      </div>
-                                    )}
-                                  </div>
-                                );
-                              }}
-                            </Draggable>
-                            {index === requirements.length - 1 &&
-                              (hasMore ? (
-                                <Button
-                                  block
-                                  type="text"
-                                  size="small"
-                                  onClick={() => {
-                                    if (searchParam) {
-                                      setSearchParam({
-                                        ...searchParam,
-                                        offset: (
-                                          Number(searchParam.offset) + Number(limit)
-                                        ).toString(),
-                                      });
-                                    }
-                                  }}
-                                >
-                                  加载更多...
-                                </Button>
-                              ) : (
-                                <Divider plain>已无更多待规划的需求</Divider>
-                              ))}
-                          </>
-                        );
-                      }}
-                    />
+                                    加载更多...
+                                  </Button>
+                                ) : (
+                                  <Divider plain>已无更多待规划的需求</Divider>
+                                ))}
+                            </>
+                          );
+                        }}
+                      />
 
-                    {droppableProvided.placeholder}
-                  </div>
-                )}
+                      {droppableProvided.placeholder}
+                    </div>
+                  );
+                }}
               </Droppable>
             </Col>
             <Col span={12}>

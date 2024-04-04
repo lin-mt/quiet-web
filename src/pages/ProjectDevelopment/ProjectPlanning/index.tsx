@@ -12,7 +12,7 @@ import {
   treeVersionDetail,
   updateVersion,
 } from '@/services/quiet/versionController';
-import { PlanningStatus, planningStatusColor, planningStatusLabel } from '@/util/Utils';
+import { PlanningStatus, idName, planningStatusColor, planningStatusLabel } from '@/util/Utils';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -183,7 +183,7 @@ const ProjectPlanning: React.FC = () => {
             <Select
               placeholder="请选择项目组"
               options={projectGroups}
-              fieldNames={{ label: 'name', value: 'id' }}
+              fieldNames={idName}
               onChange={(val) => {
                 setSelectedProject({ groupId: val });
                 listCurrentUserProject({ projectGroupId: val }).then((resp) => {
@@ -196,7 +196,7 @@ const ProjectPlanning: React.FC = () => {
             <Select
               placeholder="请选择项目"
               options={projects}
-              fieldNames={{ label: 'name', value: 'id' }}
+              fieldNames={idName}
               onChange={(val) =>
                 selectedProject && setSelectedProject({ ...selectedProject, projectId: val })
               }
@@ -273,7 +273,7 @@ const ProjectPlanning: React.FC = () => {
                       name="parentId"
                       label={'父版本'}
                       fieldProps={{
-                        fieldNames: { label: 'name', value: 'id' },
+                        fieldNames: idName,
                         treeData: projectVersionDetail,
                       }}
                     />
@@ -329,7 +329,7 @@ const ProjectPlanning: React.FC = () => {
                         treeVersionDetail({ projectId: selectedProject.projectId || '' })
                       }
                       fieldProps={{
-                        fieldNames: { label: 'name', value: 'id' },
+                        fieldNames: idName,
                       }}
                     />
                     <ProFormDateTimePicker name="plannedStartTime" label="计划开始时间" />
@@ -423,7 +423,7 @@ const ProjectPlanning: React.FC = () => {
                           name="parentId"
                           label={'父版本'}
                           fieldProps={{
-                            fieldNames: { label: 'name', value: 'id' },
+                            fieldNames: idName,
                             treeData: projectVersionDetail,
                           }}
                         />
@@ -603,7 +603,7 @@ const ProjectPlanning: React.FC = () => {
                             treeVersionDetail({ projectId: selectedProject.projectId || '' })
                           }
                           fieldProps={{
-                            fieldNames: { label: 'name', value: 'id' },
+                            fieldNames: idName,
                           }}
                         />
                         <ProFormDateTimePicker name="plannedStartTime" label="计划开始时间" />

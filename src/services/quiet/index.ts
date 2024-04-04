@@ -8,6 +8,7 @@ import * as projectController from './projectController';
 import * as projectGroupController from './projectGroupController';
 import * as requirementController from './requirementController';
 import * as roleController from './roleController';
+import * as taskController from './taskController';
 import * as templateController from './templateController';
 import * as userController from './userController';
 import * as versionController from './versionController';
@@ -15,6 +16,7 @@ export default {
   versionController,
   userController,
   templateController,
+  taskController,
   roleController,
   requirementController,
   projectController,

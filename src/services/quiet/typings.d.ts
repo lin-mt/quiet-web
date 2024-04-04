@@ -91,6 +91,19 @@ declare namespace API {
     code: string;
   };
 
+  type AddTask = {
+    /** 任务标题 */
+    title: string;
+    typeId: string;
+    requirementId: string;
+    projectId: string;
+    reporterId: string;
+    handlerId: string;
+    apiInfo?: ApiInfo;
+    /** 描述 */
+    description?: string;
+  };
+
   type AddTaskStep = {
     /** 步骤名称 */
     name: string;
@@ -101,6 +114,8 @@ declare namespace API {
   type AddTaskType = {
     /** 任务类型名称 */
     name: string;
+    /** 是否为后端接口任务 */
+    backendApi?: boolean;
     /** 任务类型描述 */
     description?: string;
   };
@@ -131,6 +146,11 @@ declare namespace API {
     plannedEndTime?: string;
     /** 版本描述 */
     description?: string;
+  };
+
+  type ApiInfo = {
+    method?: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
+    path?: string;
   };
 
   type CurrentUser = {
@@ -165,6 +185,10 @@ declare namespace API {
 
   type deleteRoleParams = {
     /** 角色ID */
+    id: string;
+  };
+
+  type deleteTaskParams = {
     id: string;
   };
 
@@ -268,6 +292,14 @@ declare namespace API {
     listRequirement: ListRequirement;
   };
 
+  type ListRequirementTask = {
+    iterationId: string;
+    /** 标题 */
+    title?: string;
+    priorityId?: string;
+    handlerId?: string;
+  };
+
   type listRolesParams = {
     /** 用户ID */
     userId: string;
@@ -289,13 +321,18 @@ declare namespace API {
     username: string;
   };
 
+  type moveTaskParams = {
+    id: string;
+    taskStepId: string;
+  };
+
   type PageableObject = {
     offset?: number;
     sort?: SortObject;
+    pageNumber?: number;
+    pageSize?: number;
     paged?: boolean;
     unpaged?: boolean;
-    pageSize?: number;
-    pageNumber?: number;
   };
 
   type PagePermission = {
@@ -330,8 +367,8 @@ declare namespace API {
     content?: PermissionVO[];
     number?: number;
     sort?: SortObject;
-    numberOfElements?: number;
     pageable?: PageableObject;
+    numberOfElements?: number;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -376,8 +413,8 @@ declare namespace API {
     content?: ProjectGroupVO[];
     number?: number;
     sort?: SortObject;
-    numberOfElements?: number;
     pageable?: PageableObject;
+    numberOfElements?: number;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -394,8 +431,8 @@ declare namespace API {
     content?: ProjectVO[];
     number?: number;
     sort?: SortObject;
-    numberOfElements?: number;
     pageable?: PageableObject;
+    numberOfElements?: number;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -427,8 +464,8 @@ declare namespace API {
     content?: RoleVO[];
     number?: number;
     sort?: SortObject;
-    numberOfElements?: number;
     pageable?: PageableObject;
+    numberOfElements?: number;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -457,8 +494,8 @@ declare namespace API {
     content?: TemplateVO[];
     number?: number;
     sort?: SortObject;
-    numberOfElements?: number;
     pageable?: PageableObject;
+    numberOfElements?: number;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -493,8 +530,8 @@ declare namespace API {
     content?: UserVO[];
     number?: number;
     sort?: SortObject;
-    numberOfElements?: number;
     pageable?: PageableObject;
+    numberOfElements?: number;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -598,6 +635,28 @@ declare namespace API {
     color: string;
     /** 优先级描述 */
     description?: string;
+  };
+
+  type RequirementTask = {
+    id: string;
+    /** 需求标题 */
+    title: string;
+    typeId: string;
+    /** 需求状态 */
+    status: 'TO_BE_PLANNED' | 'PLANNED' | 'PROCESSING' | 'DONE' | 'CLOSED';
+    priorityId: string;
+    projectId: string;
+    iterationId?: string;
+    reporterId: string;
+    handlerId: string;
+    /** 描述 */
+    description?: string;
+    /** 需求任务 */
+    tasks?: Record<string, any>;
+  };
+
+  type requirementTaskParams = {
+    listRequirementTask: ListRequirementTask;
   };
 
   type RequirementTypeVO = {
@@ -705,7 +764,24 @@ declare namespace API {
     id: string;
     /** 任务类型名称 */
     name: string;
+    /** 是否为后端接口任务 */
+    backendApi?: boolean;
     /** 任务类型描述 */
+    description?: string;
+  };
+
+  type TaskVO = {
+    id: string;
+    /** 任务标题 */
+    title: string;
+    typeId: string;
+    apiInfo?: ApiInfo;
+    taskStepId: string;
+    requirementId: string;
+    projectId: string;
+    reporterId: string;
+    handlerId: string;
+    /** 描述 */
     description?: string;
   };
 
@@ -883,6 +959,20 @@ declare namespace API {
     code: string;
   };
 
+  type UpdateTask = {
+    /** 任务标题 */
+    title: string;
+    typeId: string;
+    requirementId: string;
+    projectId: string;
+    reporterId: string;
+    handlerId: string;
+    apiInfo?: ApiInfo;
+    /** 描述 */
+    description?: string;
+    id: string;
+  };
+
   type UpdateTaskStep = {
     /** 步骤名称 */
     name: string;
@@ -894,6 +984,8 @@ declare namespace API {
   type UpdateTaskType = {
     /** 任务类型名称 */
     name: string;
+    /** 是否为后端接口任务 */
+    backendApi?: boolean;
     /** 任务类型描述 */
     description?: string;
     id: string;

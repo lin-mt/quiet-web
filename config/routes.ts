@@ -50,6 +50,12 @@ export default [
         path: '/project-development/requirement-planning',
         component: './ProjectDevelopment/RequirementPlanning',
       },
+      {
+        name: 'requirement-board',
+        access: 'hasRoutePermission',
+        path: '/project-development/requirement-board',
+        component: './ProjectDevelopment/RequirementBoard',
+      },
     ],
   },
   {

@@ -1,38 +1,55 @@
-import { deleteRequirement, updateRequirement } from '@/services/quiet/requirementController';
-import { idName, idUsername } from '@/util/Utils';
+import { deleteTask, updateTask } from '@/services/quiet/taskController';
+import { ApiMethod, idName, idUsername } from '@/util/Utils';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { ModalForm, ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
+import {
+  ModalForm,
+  ProFormItem,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+} from '@ant-design/pro-components';
 import { Button, Card, Flex, Form, Popconfirm, Typography } from 'antd';
 import { CSSProperties, useEffect, useState } from 'react';
 import styles from './index.less';
 
 const { Text, Title } = Typography;
 
-type RequirementCardProps = {
+type TaskCardProps = {
   style?: CSSProperties;
   projectDetail: API.ProjectDetail;
   template: API.TemplateDetail;
-  requirement: API.RequirementVO;
+  task: API.TaskVO;
   afterDelete?: () => void;
-  afterUpdate?: (newReq: API.RequirementVO) => void;
+  afterUpdate?: (newReq: API.TaskVO) => void;
 };
 
-function RequirementCard(props: RequirementCardProps) {
+function TaskCard(props: TaskCardProps) {
   const [updateForm] = Form.useForm();
 
   const { projectDetail, template } = props;
+  const updateTaskTypeId = Form.useWatch('typeId', updateForm);
+  const [isBackendApi, setIsBackendApi] = useState<boolean>(false);
 
-  const [requirement, setRequirement] = useState<API.RequirementVO>(props.requirement);
+  const [task, setTask] = useState<API.TaskVO>(props.task);
 
   useEffect(() => {
-    setRequirement(props.requirement);
-  }, [props.requirement]);
+    if (!updateTaskTypeId) {
+      setIsBackendApi(false);
+    } else {
+      const taskType = template.taskTypes.find((t) => t.id === updateTaskTypeId);
+      setIsBackendApi(!!taskType?.backendApi);
+    }
+  }, [updateTaskTypeId]);
+
+  useEffect(() => {
+    setTask(props.task);
+  }, [props.task]);
 
   return (
     <Card
       hoverable
       size="small"
-      className={styles.requirementCard}
+      className={styles.taskCard}
       styles={{
         body: {
           padding: 6,
@@ -40,8 +57,7 @@ function RequirementCard(props: RequirementCardProps) {
         },
       }}
       style={{
-        borderColor: template.requirementPriorities.find((p) => p.id === requirement.priorityId)
-          ?.color,
+        borderColor: '#8c8c8c',
         ...props.style,
       }}
     >
@@ -50,15 +66,15 @@ function RequirementCard(props: RequirementCardProps) {
           <Title
             level={5}
             style={{ margin: 0, fontSize: 13, fontWeight: 500 }}
-            ellipsis={{ tooltip: requirement.title }}
+            ellipsis={{ tooltip: task.title }}
           >
-            {requirement.title}
+            {task.title}
           </Title>
           <div>
-            <ModalForm<API.UpdateRequirement>
+            <ModalForm<API.UpdateTask>
               key={'update'}
               form={updateForm}
-              title={'更新需求'}
+              title={'更新任务'}
               layout={'horizontal'}
               labelCol={{ span: 3 }}
               wrapperCol={{ span: 21 }}
@@ -82,18 +98,18 @@ function RequirementCard(props: RequirementCardProps) {
                   size="small"
                   type="text"
                   icon={<EditOutlined />}
-                  onClick={() => updateForm.setFieldsValue({ ...requirement })}
+                  onClick={() => updateForm.setFieldsValue({ ...task })}
                 />
               }
               onFinish={async (values) => {
-                const newRequirement = { ...requirement, ...values };
-                await updateRequirement(newRequirement).then(() => {
+                const newTask = { ...task, ...values };
+                await updateTask(newTask).then(() => {
                   if (props.afterUpdate) {
-                    props.afterUpdate(newRequirement);
+                    props.afterUpdate(newTask);
                   }
                 });
                 updateForm.setFieldsValue(values);
-                setRequirement(newRequirement);
+                setTask(newTask);
                 return true;
               }}
             >
@@ -102,16 +118,30 @@ function RequirementCard(props: RequirementCardProps) {
                 name={'typeId'}
                 label={'类型'}
                 rules={[{ required: true }]}
-                options={template.requirementTypes}
+                options={template.taskTypes}
                 fieldProps={{ fieldNames: idName }}
               />
-              <ProFormSelect
-                name={'priorityId'}
-                label={'优先级'}
-                rules={[{ required: true }]}
-                options={template.requirementPriorities}
-                fieldProps={{ fieldNames: idName }}
-              />
+              {isBackendApi && (
+                <ProFormItem
+                  name={'apiInfo'}
+                  label={'接口信息'}
+                  required
+                  style={{ marginBottom: 0 }}
+                >
+                  <ProFormSelect
+                    name={['apiInfo', 'method']}
+                    options={Object.values(ApiMethod)}
+                    placeholder={'请选择请求方法'}
+                    rules={[{ required: true, message: '请选择请求方法' }]}
+                  />
+                  <ProFormText
+                    required
+                    name={['apiInfo', 'path']}
+                    label={'Path'}
+                    placeholder={'请输入接口请求路径'}
+                  />
+                </ProFormItem>
+              )}
               <ProFormSelect
                 name={'reporterId'}
                 label={'报告人'}
@@ -129,9 +159,9 @@ function RequirementCard(props: RequirementCardProps) {
               <ProFormTextArea name={'description'} label={'描述'} rules={[{ max: 255 }]} />
             </ModalForm>
             <Popconfirm
-              title={'确定删除该需求吗'}
+              title={'确定删除该任务吗'}
               onConfirm={() => {
-                deleteRequirement({ id: requirement.id }).then(() => {
+                deleteTask({ id: task.id }).then(() => {
                   if (props.afterDelete) {
                     props.afterDelete();
                   }
@@ -143,14 +173,14 @@ function RequirementCard(props: RequirementCardProps) {
           </div>
         </Flex>
         <Text style={{ fontSize: 12 }}>
-          类型：{template.requirementTypes.find((t) => t.id === requirement.typeId)?.name}
+          类型：{template.taskTypes.find((t) => t.id === task.typeId)?.name}
         </Text>
-        <Text style={{ fontSize: 12 }} ellipsis={{ tooltip: requirement.description }}>
-          描述：{requirement.description || '-'}
+        <Text style={{ fontSize: 12 }} ellipsis={{ tooltip: task.description }}>
+          描述：{task.description || '-'}
         </Text>
       </Flex>
     </Card>
   );
 }
 
-export default RequirementCard;
+export default TaskCard;
