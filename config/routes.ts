@@ -56,6 +56,12 @@ export default [
         path: '/project-development/requirement-board',
         component: './ProjectDevelopment/RequirementBoard',
       },
+      {
+        name: 'api-docs',
+        access: 'hasRoutePermission',
+        path: '/project-development/api-docs',
+        component: './ProjectDevelopment/ApiDocs',
+      },
     ],
   },
   {

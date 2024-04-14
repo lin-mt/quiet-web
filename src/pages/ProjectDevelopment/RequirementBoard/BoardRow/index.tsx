@@ -2,7 +2,7 @@ import RequirementCard from '@/components/RequirementCard';
 import TaskCard from '@/components/TaskCard';
 import { addTask, moveTask } from '@/services/quiet/taskController';
 import { ApiMethod, idName, idUsername } from '@/util/Utils';
-import { PlusOutlined } from '@ant-design/icons';
+import { DownOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   ModalForm,
   ProFormItem,
@@ -99,120 +99,128 @@ function BoardRow(props: TaskRowProps) {
         }}
       >
         <Col flex={`${colWidth}px`}>
-          <div style={containerStyle}>
+          <div style={{ ...containerStyle, paddingRight: 6 }}>
             {projectDetail && templateDetail && (
-              <RequirementCard
-                projectDetail={projectDetail}
-                template={templateDetail}
-                requirement={requirementTask}
-              />
+              <Flex justify={'space-between'}>
+                <div style={{ width: colWidth - 2 * colGutter - 24 }}>
+                  <RequirementCard
+                    projectDetail={projectDetail}
+                    template={templateDetail}
+                    requirement={requirementTask}
+                  />
+                  <Flex justify="flex-end" align="center">
+                    <ModalForm<API.AddTask>
+                      form={addTaskForm}
+                      title="新建任务"
+                      layout={'horizontal'}
+                      labelCol={{ span: 3 }}
+                      wrapperCol={{ span: 21 }}
+                      submitter={{
+                        render: (_, defaultDom) => {
+                          return [
+                            <Button
+                              key="reset"
+                              onClick={() => {
+                                addTaskForm.resetFields();
+                              }}
+                            >
+                              重置
+                            </Button>,
+                            ...defaultDom,
+                          ];
+                        },
+                      }}
+                      onFinish={async (values) => {
+                        values.projectId = projectDetail?.id || '';
+                        values.requirementId = requirementTask.id;
+                        await addTask(values).then((newTask) => {
+                          const clone = _.clone(requirementTasks ? requirementTasks : {});
+                          let tasks = clone[templateDetail.taskSteps[0].id];
+                          if (!tasks) {
+                            clone[templateDetail.taskSteps[0].id] = [];
+                          }
+                          clone[templateDetail.taskSteps[0].id].push(newTask);
+                          setRequirementTasks(clone);
+                        });
+                        addTaskForm.resetFields();
+                        return true;
+                      }}
+                      trigger={
+                        <Button
+                          size="small"
+                          type="text"
+                          icon={<PlusOutlined />}
+                          style={{
+                            marginTop: 5,
+                            fontSize: 12,
+                            padding: '0 8px',
+                            height: 20,
+                            color: token.colorPrimary,
+                          }}
+                          onClick={() =>
+                            addTaskForm.setFieldValue('reporterId', initialState?.currentUser?.id)
+                          }
+                        >
+                          新建任务
+                        </Button>
+                      }
+                    >
+                      <ProFormText
+                        name={'title'}
+                        label={'标题'}
+                        rules={[{ required: true, max: 30 }]}
+                      />
+                      <ProFormSelect
+                        name={'typeId'}
+                        label={'类型'}
+                        rules={[{ required: true }]}
+                        options={templateDetail?.taskTypes}
+                        fieldProps={{ fieldNames: idName }}
+                      />
+                      {isBackendApi && (
+                        <ProFormItem
+                          name={'apiInfo'}
+                          label={'接口信息'}
+                          required
+                          style={{ marginBottom: 0 }}
+                        >
+                          <ProFormSelect
+                            name={['apiInfo', 'method']}
+                            options={Object.values(ApiMethod)}
+                            placeholder={'请选择请求方法'}
+                            rules={[{ required: true, message: '请选择请求方法' }]}
+                          />
+                          <ProFormText
+                            required
+                            name={['apiInfo', 'path']}
+                            label={'Path'}
+                            placeholder={'请输入接口请求路径'}
+                          />
+                        </ProFormItem>
+                      )}
+                      <ProFormSelect
+                        name={'reporterId'}
+                        label={'报告人'}
+                        rules={[{ required: true }]}
+                        options={projectDetail?.members}
+                        fieldProps={{ fieldNames: idUsername }}
+                      />
+                      <ProFormSelect
+                        name={'handlerId'}
+                        label={'处理人'}
+                        rules={[{ required: true }]}
+                        options={projectDetail?.members}
+                        fieldProps={{ fieldNames: idUsername }}
+                      />
+                      <ProFormTextArea name={'description'} label={'描述'} rules={[{ max: 255 }]} />
+                    </ModalForm>
+                  </Flex>
+                </div>
+                <div style={{ width: 24 }}>
+                  <Button icon={<DownOutlined />} size={'small'} type={'text'} />
+                </div>
+              </Flex>
             )}
-            <Flex justify="flex-end" align="center">
-              <ModalForm<API.AddTask>
-                form={addTaskForm}
-                title="新建任务"
-                layout={'horizontal'}
-                labelCol={{ span: 3 }}
-                wrapperCol={{ span: 21 }}
-                submitter={{
-                  render: (_, defaultDom) => {
-                    return [
-                      <Button
-                        key="reset"
-                        onClick={() => {
-                          addTaskForm.resetFields();
-                        }}
-                      >
-                        重置
-                      </Button>,
-                      ...defaultDom,
-                    ];
-                  },
-                }}
-                onFinish={async (values) => {
-                  values.projectId = projectDetail?.id || '';
-                  values.requirementId = requirementTask.id;
-                  await addTask(values).then(() => {
-                    if (!requirementTasks) {
-                      return;
-                    }
-                    const clone = _.clone(requirementTasks);
-                    let tasks = clone[templateDetail.taskSteps[0].id];
-                    if (!tasks) {
-                      clone[templateDetail.taskSteps[0].id] = [];
-                    }
-                    clone[templateDetail.taskSteps[0].id].push(values);
-                    setRequirementTasks(clone);
-                  });
-                  addTaskForm.resetFields();
-                  return true;
-                }}
-                trigger={
-                  <Button
-                    size="small"
-                    type="text"
-                    icon={<PlusOutlined />}
-                    style={{
-                      marginTop: 5,
-                      fontSize: 12,
-                      padding: '0 8px',
-                      height: 20,
-                      color: token.colorPrimary,
-                    }}
-                    onClick={() =>
-                      addTaskForm.setFieldValue('reporterId', initialState?.currentUser?.id)
-                    }
-                  >
-                    新建任务
-                  </Button>
-                }
-              >
-                <ProFormText name={'title'} label={'标题'} rules={[{ required: true, max: 30 }]} />
-                <ProFormSelect
-                  name={'typeId'}
-                  label={'类型'}
-                  rules={[{ required: true }]}
-                  options={templateDetail?.taskTypes}
-                  fieldProps={{ fieldNames: idName }}
-                />
-                {isBackendApi && (
-                  <ProFormItem
-                    name={'apiInfo'}
-                    label={'接口信息'}
-                    required
-                    style={{ marginBottom: 0 }}
-                  >
-                    <ProFormSelect
-                      name={['apiInfo', 'method']}
-                      options={Object.values(ApiMethod)}
-                      placeholder={'请选择请求方法'}
-                      rules={[{ required: true, message: '请选择请求方法' }]}
-                    />
-                    <ProFormText
-                      required
-                      name={['apiInfo', 'path']}
-                      label={'Path'}
-                      placeholder={'请输入接口请求路径'}
-                    />
-                  </ProFormItem>
-                )}
-                <ProFormSelect
-                  name={'reporterId'}
-                  label={'报告人'}
-                  rules={[{ required: true }]}
-                  options={projectDetail?.members}
-                  fieldProps={{ fieldNames: idUsername }}
-                />
-                <ProFormSelect
-                  name={'handlerId'}
-                  label={'处理人'}
-                  rules={[{ required: true }]}
-                  options={projectDetail?.members}
-                  fieldProps={{ fieldNames: idUsername }}
-                />
-                <ProFormTextArea name={'description'} label={'描述'} rules={[{ max: 255 }]} />
-              </ModalForm>
-            </Flex>
           </div>
         </Col>
         {templateDetail?.taskSteps.map((step) => {
@@ -258,7 +266,7 @@ function BoardRow(props: TaskRowProps) {
                             <Draggable key={task.id} draggableId={task.id} index={index}>
                               {(draggableProvider) => {
                                 return (
-                                  <div style={{ width: '100%', marginTop: index !== 0 ? 8 : 0 }}>
+                                  <div style={{ width: '100%', marginTop: index !== 0 ? 6 : 0 }}>
                                     <div
                                       {...draggableProvider.draggableProps}
                                       {...draggableProvider.dragHandleProps}

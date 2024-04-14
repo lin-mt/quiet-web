@@ -102,11 +102,11 @@ const RequirementBoard: React.FC = () => {
     });
   }, []);
 
-  const colWidth = 300;
+  const colWidth = 330;
   const colGutter = 20;
   const radius = 3;
   const colBackgroundColor = '#ebecf0';
-  const titleContainerStype: CSSProperties = {
+  const titleContainerStyle: CSSProperties = {
     backgroundColor: colBackgroundColor,
     borderTopLeftRadius: radius,
     borderTopRightRadius: radius,
@@ -116,9 +116,9 @@ const RequirementBoard: React.FC = () => {
     width: `${colWidth - colGutter}px`,
     height: '100%',
     backgroundColor: colBackgroundColor,
-    padding: '6px 8px',
+    padding: '4px 8px',
   };
-  const colBottomStype: CSSProperties = {
+  const colBottomStyle: CSSProperties = {
     backgroundColor: colBackgroundColor,
     borderBottomLeftRadius: radius,
     borderBottomRightRadius: radius,
@@ -194,7 +194,6 @@ const RequirementBoard: React.FC = () => {
                         <Button key="cancle" onClick={() => setIterationOpen(false)}>
                           取消
                         </Button>,
-                        dom[1],
                       ];
                     },
                   }}
@@ -248,8 +247,12 @@ const RequirementBoard: React.FC = () => {
                       treeDefaultExpandAll
                       treeData={planningTree}
                       placeholder={'请选择迭代'}
-                      onSelect={(_, node) => {
+                      onSelect={async (_, node) => {
+                        const values = await iterationForm.validateFields();
+                        setIterationOpen(false);
                         setIterationName(node.name);
+                        setBoardIteration({ ...values, iterationName: node.name });
+                        return true;
                       }}
                     />
                   </ProFormItem>
@@ -302,14 +305,14 @@ const RequirementBoard: React.FC = () => {
               }}
             >
               <Col key={'req'} flex={`${colWidth}px`}>
-                <div style={titleContainerStype}>
+                <div style={titleContainerStyle}>
                   <h4 style={titleStyle}>需求</h4>
                 </div>
               </Col>
               {templateDetail?.taskSteps.map((step) => {
                 return (
                   <Col key={step.id} flex={`${colWidth}px`}>
-                    <div style={titleContainerStype}>
+                    <div style={titleContainerStyle}>
                       <h4 style={titleStyle}>{step.name}</h4>
                     </div>
                   </Col>
@@ -342,12 +345,12 @@ const RequirementBoard: React.FC = () => {
               }}
             >
               <Col key={'req_bottom'} flex={`${colWidth}px`}>
-                <div style={colBottomStype}></div>
+                <div style={colBottomStyle}></div>
               </Col>
               {templateDetail?.taskSteps.map((step) => {
                 return (
                   <Col key={step.id + '_bottom'} flex={`${colWidth}px`}>
-                    <div style={colBottomStype}></div>
+                    <div style={colBottomStyle}></div>
                   </Col>
                 );
               })}

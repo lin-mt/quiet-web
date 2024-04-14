@@ -5,6 +5,7 @@ import {
   treePermission,
   updatePermission,
 } from '@/services/quiet/permissionController';
+import { ApiMethod } from '@/util/Utils';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
@@ -281,16 +282,7 @@ const PermissionManagement: React.FC = () => {
             <ProFormSelect
               name={'httpMethod'}
               label={'请求方法'}
-              valueEnum={{
-                GET: { text: 'GET' },
-                POST: { text: 'POST' },
-                PUT: { text: 'PUT' },
-                DELETE: { text: 'DELETE' },
-                HEAD: { text: 'HEAD' },
-                PATCH: { text: 'PATCH' },
-                OPTIONS: { text: 'OPTIONS' },
-                TRACE: { text: 'TRACE' },
-              }}
+              options={Object.values(ApiMethod)}
             />
             <ProFormText name={'httpUrl'} label={'请求地址'} rules={[{ max: 255 }]} />
             <ProFormDigit name={'ordinal'} label={'排序'} min={0} rules={[{ required: true }]} />

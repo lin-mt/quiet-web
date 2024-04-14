@@ -4,6 +4,7 @@ export default {
   'menu.project-development.project-planning': 'Project Planning',
   'menu.project-development.requirement-planning': 'Requirement Planning',
   'menu.project-development.requirement-board': 'Requirement Board',
+  'menu.project-development.api-docs': 'Api Docs',
   'menu.project-asset': 'Project Asset',
   'menu.project-asset.project-group-management': 'Project Group Management',
   'menu.project-asset.project-management': 'Project Management',
