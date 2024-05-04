@@ -2,6 +2,8 @@
 /* eslint-disable */
 // API 更新时间：
 // API 唯一标识：
+import * as apiDocsController from './apiDocsController';
+import * as apiDocsGroupController from './apiDocsGroupController';
 import * as iterationController from './iterationController';
 import * as permissionController from './permissionController';
 import * as projectController from './projectController';
@@ -23,4 +25,6 @@ export default {
   projectGroupController,
   permissionController,
   iterationController,
+  apiDocsController,
+  apiDocsGroupController,
 };

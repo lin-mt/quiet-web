@@ -10,7 +10,7 @@ import {
 } from '@/services/quiet/requirementController';
 import { getTemplateDetail } from '@/services/quiet/templateController';
 import { treeVersionDetail } from '@/services/quiet/versionController';
-import { idName, idUsername, planningStatusColor, planningStatusLabel } from '@/util/Utils';
+import { IdName, IdUsername, planningStatusColor, planningStatusLabel } from '@/util/Utils';
 import { PlusOutlined, SendOutlined } from '@ant-design/icons';
 import {
   ModalForm,
@@ -280,7 +280,7 @@ const RequirementPlanning: React.FC = () => {
               <Select
                 placeholder="请选择项目组"
                 options={projectGroups}
-                fieldNames={idName}
+                fieldNames={IdName}
                 onChange={(val) => setSelectedIteration({ projectGroupId: val })}
               />
             </Form.Item>
@@ -288,7 +288,7 @@ const RequirementPlanning: React.FC = () => {
               <Select
                 placeholder="请选择项目"
                 options={projects}
-                fieldNames={idName}
+                fieldNames={IdName}
                 onChange={(val) => {
                   setSelectedIteration({
                     ...selectedIteration,
@@ -363,28 +363,28 @@ const RequirementPlanning: React.FC = () => {
                     label={'类型'}
                     rules={[{ required: true }]}
                     options={templateDetail?.requirementTypes}
-                    fieldProps={{ fieldNames: idName }}
+                    fieldProps={{ fieldNames: IdName }}
                   />
                   <ProFormSelect
                     name={'priorityId'}
                     label={'优先级'}
                     rules={[{ required: true }]}
                     options={templateDetail?.requirementPriorities}
-                    fieldProps={{ fieldNames: idName }}
+                    fieldProps={{ fieldNames: IdName }}
                   />
                   <ProFormSelect
                     name={'reporterId'}
                     label={'报告人'}
                     rules={[{ required: true }]}
                     options={projectDetail?.members}
-                    fieldProps={{ fieldNames: idUsername }}
+                    fieldProps={{ fieldNames: IdUsername }}
                   />
                   <ProFormSelect
                     name={'handlerId'}
                     label={'处理人'}
                     rules={[{ required: true }]}
                     options={projectDetail?.members}
-                    fieldProps={{ fieldNames: idUsername }}
+                    fieldProps={{ fieldNames: IdUsername }}
                   />
                   <ProFormTextArea name={'description'} label={'描述'} rules={[{ max: 255 }]} />
                 </ModalForm>
@@ -395,7 +395,7 @@ const RequirementPlanning: React.FC = () => {
                         allowClear
                         placeholder="优先级"
                         options={templateDetail?.requirementPriorities}
-                        fieldNames={idName}
+                        fieldNames={IdName}
                       />
                     </Form.Item>
                     <Form.Item noStyle name={'typeId'}>
@@ -403,7 +403,7 @@ const RequirementPlanning: React.FC = () => {
                         allowClear
                         placeholder="需求类型"
                         options={templateDetail?.requirementTypes}
-                        fieldNames={idName}
+                        fieldNames={IdName}
                       />
                     </Form.Item>
                     <Form.Item noStyle name={'title'}>

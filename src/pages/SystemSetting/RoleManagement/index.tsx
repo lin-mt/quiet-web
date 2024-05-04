@@ -8,7 +8,7 @@ import {
   updatePermissions,
   updateRole,
 } from '@/services/quiet/roleController';
-import { idName } from '@/util/Utils';
+import { IdName } from '@/util/Utils';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
@@ -156,7 +156,7 @@ const RoleManagement: React.FC = () => {
             request={() => treeRoles()}
             fieldProps={{
               treeLine: true,
-              fieldNames: idName,
+              fieldNames: IdName,
               onSelect: (_, node) => setParentCode(node.code),
             }}
           />

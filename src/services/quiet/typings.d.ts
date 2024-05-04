@@ -148,9 +148,83 @@ declare namespace API {
     description?: string;
   };
 
+  type ApiBody = {
+    forms?: ApiForm[];
+    queries?: ApiQuery[];
+    body?: string;
+  };
+
+  type ApiDetail = {
+    headers?: ApiHeader[];
+    body?: ApiBody;
+  };
+
+  type ApiDocsGroupDetail = {
+    id: string;
+    /** 分组名称 */
+    name: string;
+    projectId: string;
+    parentId?: string;
+    /** 分组描述 */
+    description?: string;
+    /** 子分组 */
+    children?: ApiDocsGroupVO[];
+    /** 文档详情 */
+    apiDocs?: ApiDocsVO[];
+  };
+
+  type ApiDocsGroupVO = {
+    id: string;
+    /** 分组名称 */
+    name: string;
+    projectId: string;
+    parentId?: string;
+    /** 分组描述 */
+    description?: string;
+    /** 子分组 */
+    children?: ApiDocsGroupVO[];
+  };
+
+  type ApiDocsVO = {
+    id: string;
+    /** 标题 */
+    name?: string;
+    /** 请求方法 */
+    method: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
+    /** 请求路径 */
+    path: string;
+    /** 接口状态 */
+    state: 'DESIGN' | 'DEVELOPING' | 'TESTING' | 'COMPLETED';
+    detail: ApiDetail;
+    groupId: string;
+    /** 描述信息 */
+    description?: string;
+  };
+
+  type ApiForm = {
+    name?: string;
+    example?: string;
+    type?: 'TEXT' | 'FILE';
+    required?: boolean;
+    description?: string;
+  };
+
+  type ApiHeader = {
+    name?: string;
+    example?: string;
+    required?: boolean;
+    description?: string;
+  };
+
   type ApiInfo = {
     method?: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
     path?: string;
+  };
+
+  type ApiQuery = {
+    name?: string;
+    example?: string;
+    required?: boolean;
   };
 
   type CurrentUser = {
@@ -160,6 +234,10 @@ declare namespace API {
     permission?: UserPermission;
     /** 用户拥有的角色信息 */
     roles?: RoleInfo[];
+  };
+
+  type deleteApiDocsGroupParams = {
+    id: string;
   };
 
   type deleteIterationParams = {
@@ -329,10 +407,10 @@ declare namespace API {
   type PageableObject = {
     offset?: number;
     sort?: SortObject;
-    pageNumber?: number;
-    pageSize?: number;
     paged?: boolean;
     unpaged?: boolean;
+    pageNumber?: number;
+    pageSize?: number;
   };
 
   type PagePermission = {
@@ -714,6 +792,28 @@ declare namespace API {
     gmtCreate: string;
   };
 
+  type SaveApiDocs = {
+    /** 标题 */
+    name?: string;
+    /** 请求方法 */
+    method: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
+    /** 请求路径 */
+    path: string;
+    detail?: ApiDetail;
+    groupId: string;
+    /** 描述信息 */
+    description?: string;
+  };
+
+  type SaveApiDocsGroup = {
+    /** 分组名称 */
+    name: string;
+    projectId: string;
+    parentId?: string;
+    /** 项目描述 */
+    description?: string;
+  };
+
   type SimpleIteration = {
     id: string;
     /** 迭代名称 */
@@ -809,6 +909,11 @@ declare namespace API {
     description?: string;
   };
 
+  type treeApiDocsGroupDetailParams = {
+    projectId: string;
+    name?: string;
+  };
+
   type TreePermission = {
     id: string;
     /** 权限名称 */
@@ -857,6 +962,32 @@ declare namespace API {
 
   type treeVersionDetailParams = {
     projectId: string;
+  };
+
+  type UpdateApiDocs = {
+    /** 标题 */
+    name?: string;
+    /** 请求方法 */
+    method: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
+    /** 请求路径 */
+    path: string;
+    detail?: ApiDetail;
+    groupId: string;
+    /** 描述信息 */
+    description?: string;
+    id?: string;
+    /** 接口状态 */
+    state: 'DESIGN' | 'DEVELOPING' | 'TESTING' | 'COMPLETED';
+  };
+
+  type UpdateApiDocsGroup = {
+    /** 分组名称 */
+    name: string;
+    projectId: string;
+    parentId?: string;
+    /** 项目描述 */
+    description?: string;
+    id: string;
   };
 
   type UpdateIteration = {

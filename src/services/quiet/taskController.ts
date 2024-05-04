@@ -16,7 +16,7 @@ export async function updateTask(body: API.UpdateTask, options?: { [key: string]
 
 /** 新建任务 POST /task */
 export async function addTask(body: API.AddTask, options?: { [key: string]: any }) {
-  return request<string>(`/api/task`, {
+  return request<API.TaskVO>(`/api/task`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

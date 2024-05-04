@@ -1,7 +1,7 @@
 import RequirementCard from '@/components/RequirementCard';
 import TaskCard from '@/components/TaskCard';
 import { addTask, moveTask } from '@/services/quiet/taskController';
-import { ApiMethod, idName, idUsername } from '@/util/Utils';
+import { ApiMethod, IdName, IdUsername } from '@/util/Utils';
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   ModalForm,
@@ -175,7 +175,7 @@ function BoardRow(props: TaskRowProps) {
                         label={'类型'}
                         rules={[{ required: true }]}
                         options={templateDetail?.taskTypes}
-                        fieldProps={{ fieldNames: idName }}
+                        fieldProps={{ fieldNames: IdName }}
                       />
                       {isBackendApi && (
                         <ProFormItem
@@ -203,14 +203,14 @@ function BoardRow(props: TaskRowProps) {
                         label={'报告人'}
                         rules={[{ required: true }]}
                         options={projectDetail?.members}
-                        fieldProps={{ fieldNames: idUsername }}
+                        fieldProps={{ fieldNames: IdUsername }}
                       />
                       <ProFormSelect
                         name={'handlerId'}
                         label={'处理人'}
                         rules={[{ required: true }]}
                         options={projectDetail?.members}
-                        fieldProps={{ fieldNames: idUsername }}
+                        fieldProps={{ fieldNames: IdUsername }}
                       />
                       <ProFormTextArea name={'description'} label={'描述'} rules={[{ max: 255 }]} />
                     </ModalForm>

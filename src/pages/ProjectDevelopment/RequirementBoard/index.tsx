@@ -3,7 +3,7 @@ import { listCurrentUserProjectGroup } from '@/services/quiet/projectGroupContro
 import { requirementTask } from '@/services/quiet/requirementController';
 import { getTemplateDetail } from '@/services/quiet/templateController';
 import { treeVersionDetail } from '@/services/quiet/versionController';
-import { idName, idUsername, planningStatusColor } from '@/util/Utils';
+import { IdName, IdUsername, planningStatusColor } from '@/util/Utils';
 import { SearchOutlined } from '@ant-design/icons';
 import {
   PageContainer,
@@ -210,7 +210,7 @@ const RequirementBoard: React.FC = () => {
                     placeholder={'请选择项目组'}
                     options={projectGroups}
                     rules={[{ required: true, message: '请选择项目组' }]}
-                    fieldProps={{ fieldNames: idName }}
+                    fieldProps={{ fieldNames: IdName }}
                     onChange={(groupId) => {
                       listCurrentUserProject({ projectGroupId: groupId }).then((resp) => {
                         setProjects(resp);
@@ -224,7 +224,7 @@ const RequirementBoard: React.FC = () => {
                     placeholder={'请选择项目'}
                     options={projects}
                     rules={[{ required: true, message: '请选择项目' }]}
-                    fieldProps={{ fieldNames: idName }}
+                    fieldProps={{ fieldNames: IdName }}
                     onChange={(projectId) => {
                       getProjectDetail({ id: projectId }).then((resp) => {
                         setProjectDetail(resp);
@@ -280,7 +280,7 @@ const RequirementBoard: React.FC = () => {
               allowClear
               label="优先级"
               options={templateDetail?.requirementPriorities}
-              fieldProps={{ fieldNames: idName }}
+              fieldProps={{ fieldNames: IdName }}
             />
             <ProFormSelect
               width={'sm'}
@@ -288,7 +288,7 @@ const RequirementBoard: React.FC = () => {
               name="handlerId"
               label="处理人"
               options={projectDetail?.members}
-              fieldProps={{ fieldNames: idUsername }}
+              fieldProps={{ fieldNames: IdUsername }}
             />
           </ProForm>
         }

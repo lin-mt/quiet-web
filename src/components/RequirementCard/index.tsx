@@ -1,5 +1,5 @@
 import { deleteRequirement, updateRequirement } from '@/services/quiet/requirementController';
-import { idName, idUsername } from '@/util/Utils';
+import { IdName, IdUsername } from '@/util/Utils';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
 import { Button, Card, Flex, Form, Popconfirm, Typography } from 'antd';
@@ -103,28 +103,28 @@ function RequirementCard(props: RequirementCardProps) {
                 label={'类型'}
                 rules={[{ required: true }]}
                 options={template.requirementTypes}
-                fieldProps={{ fieldNames: idName }}
+                fieldProps={{ fieldNames: IdName }}
               />
               <ProFormSelect
                 name={'priorityId'}
                 label={'优先级'}
                 rules={[{ required: true }]}
                 options={template.requirementPriorities}
-                fieldProps={{ fieldNames: idName }}
+                fieldProps={{ fieldNames: IdName }}
               />
               <ProFormSelect
                 name={'reporterId'}
                 label={'报告人'}
                 rules={[{ required: true }]}
                 options={projectDetail.members}
-                fieldProps={{ fieldNames: idUsername }}
+                fieldProps={{ fieldNames: IdUsername }}
               />
               <ProFormSelect
                 name={'handlerId'}
                 label={'处理人'}
                 rules={[{ required: true }]}
                 options={projectDetail.members}
-                fieldProps={{ fieldNames: idUsername }}
+                fieldProps={{ fieldNames: IdUsername }}
               />
               <ProFormTextArea name={'description'} label={'描述'} rules={[{ max: 255 }]} />
             </ModalForm>

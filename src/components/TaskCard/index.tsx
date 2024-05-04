@@ -1,5 +1,5 @@
 import { deleteTask, updateTask } from '@/services/quiet/taskController';
-import { ApiMethod, idName, idUsername } from '@/util/Utils';
+import { ApiMethod, IdName, IdUsername } from '@/util/Utils';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import {
   ModalForm,
@@ -119,7 +119,7 @@ function TaskCard(props: TaskCardProps) {
                 label={'类型'}
                 rules={[{ required: true }]}
                 options={template.taskTypes}
-                fieldProps={{ fieldNames: idName }}
+                fieldProps={{ fieldNames: IdName }}
               />
               {isBackendApi && (
                 <ProFormItem
@@ -147,14 +147,14 @@ function TaskCard(props: TaskCardProps) {
                 label={'报告人'}
                 rules={[{ required: true }]}
                 options={projectDetail.members}
-                fieldProps={{ fieldNames: idUsername }}
+                fieldProps={{ fieldNames: IdUsername }}
               />
               <ProFormSelect
                 name={'handlerId'}
                 label={'处理人'}
                 rules={[{ required: true }]}
                 options={projectDetail.members}
-                fieldProps={{ fieldNames: idUsername }}
+                fieldProps={{ fieldNames: IdUsername }}
               />
               <ProFormTextArea name={'description'} label={'描述'} rules={[{ max: 255 }]} />
             </ModalForm>

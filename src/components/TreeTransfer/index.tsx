@@ -97,15 +97,15 @@ const TreeTransfer: React.FC<TreeTransferProps> = ({ dataSource, targetKeys, ...
                 treeData={treeData}
                 onCheck={(keys, { checked }) => {
                   const tempKeys = keys as React.Key[];
-                  let clectedKeys: string[] = [];
+                  let selectedKeys: string[] = [];
                   for (let index = 0; index < tempKeys.length; index++) {
-                    clectedKeys.push(tempKeys[index].toString());
+                    selectedKeys.push(tempKeys[index].toString());
                   }
                   if (checked) {
-                    onItemSelectAll(clectedKeys, true);
+                    onItemSelectAll(selectedKeys, true);
                   } else {
                     onItemSelectAll(
-                      checkedKeys.filter((item) => !clectedKeys.includes(item)),
+                      checkedKeys.filter((item) => !selectedKeys.includes(item)),
                       false,
                     );
                   }
@@ -136,15 +136,15 @@ const TreeTransfer: React.FC<TreeTransferProps> = ({ dataSource, targetKeys, ...
                 treeData={rightDataSource}
                 onCheck={(keys, { checked }) => {
                   const tempKeys = keys as React.Key[];
-                  let clectedKeys: string[] = [];
+                  let selectedKeys: string[] = [];
                   for (let index = 0; index < tempKeys.length; index++) {
-                    clectedKeys.push(tempKeys[index].toString());
+                    selectedKeys.push(tempKeys[index].toString());
                   }
                   if (checked) {
-                    onItemSelectAll(clectedKeys, true);
+                    onItemSelectAll(selectedKeys, true);
                   } else {
                     onItemSelectAll(
-                      selectedKeys.filter((item) => !clectedKeys.includes(item)),
+                      selectedKeys.filter((item) => !selectedKeys.includes(item)),
                       false,
                     );
                   }

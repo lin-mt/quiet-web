@@ -1,27 +1,99 @@
+import Api from '@/pages/ProjectDevelopment/ApiDocs/Api';
+import { listCurrentUserProject } from '@/services/quiet/projectController';
+import { listCurrentUserProjectGroup } from '@/services/quiet/projectGroupController';
+import { IdName } from '@/util/Utils';
 import { FileTextOutlined, SettingOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Menu, MenuProps } from 'antd';
-import React from 'react';
+import { Empty, Form, Select, Tabs, theme } from 'antd';
+import React, { useEffect, useState } from 'react';
+
+type SelectedProject = {
+  groupId: string;
+  projectId?: string;
+};
 
 const ApiDocs: React.FC = () => {
-  const [key, setKey] = React.useState<string>('api');
+  const { token } = theme.useToken();
+  const [projectGroups, setProjectGroups] = useState<API.SimpleProjectGroup[]>();
+  const [selectedProject, setSelectedProject] = useState<SelectedProject>();
+  const [projects, setProjects] = useState<API.SimpleProject[]>();
 
-  const items: MenuProps['items'] = [
-    {
-      label: '接 口',
-      key: 'api',
-      icon: <FileTextOutlined />,
-    },
-    {
-      label: '设 置',
-      key: 'setting',
-      icon: <SettingOutlined />,
-    },
-  ];
+  useEffect(() => {
+    listCurrentUserProjectGroup().then((resp) => {
+      setProjectGroups(resp);
+    });
+  }, []);
 
   return (
     <PageContainer title={false}>
-      <Menu selectedKeys={[key]} onClick={(e) => setKey(e.key)} mode="horizontal" items={items} />
+      <Tabs
+        defaultActiveKey="api"
+        style={{ backgroundColor: token.colorBgContainer, padding: token.paddingLG, paddingTop: 0 }}
+        tabBarExtraContent={
+          <Form layout="inline">
+            <Form.Item style={{ width: 300 }} name={'projectGroupId'} label={'项目组'}>
+              <Select
+                placeholder="请选择项目组"
+                options={projectGroups}
+                fieldNames={IdName}
+                onChange={(val) => {
+                  setSelectedProject({ groupId: val });
+                  listCurrentUserProject({ projectGroupId: val }).then((resp) => {
+                    setProjects(resp);
+                  });
+                }}
+              />
+            </Form.Item>
+            <Form.Item style={{ width: 300 }} name={'projectId'} label={'项目'}>
+              <Select
+                placeholder="请选择项目"
+                options={projects}
+                fieldNames={IdName}
+                onChange={(val) => {
+                  if (selectedProject) {
+                    setSelectedProject({
+                      ...selectedProject,
+                      projectId: val,
+                    });
+                  }
+                }}
+                notFoundContent={
+                  <Empty
+                    description={
+                      selectedProject?.groupId ? '该项目组下暂无项目信息' : '请选择项目组'
+                    }
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  />
+                }
+              />
+            </Form.Item>
+          </Form>
+        }
+        items={[
+          {
+            key: 'api',
+            label: (
+              <>
+                <FileTextOutlined /> 接 口
+              </>
+            ),
+            children: selectedProject?.projectId ? (
+              <Api projectId={selectedProject?.projectId} />
+            ) : (
+              <Empty description={'请选择项目'} />
+            ),
+          },
+          {
+            key: 'setting',
+            label: (
+              <>
+                <SettingOutlined /> 设 置
+              </>
+            ),
+            children: '项目设置',
+          },
+        ]}
+      />
     </PageContainer>
   );
 };
