@@ -373,6 +373,7 @@ function Api(props: ApiProps) {
                     if (selectedNode.groupInfo) {
                       deleteApiDocsGroup({ id: selectedNode.groupInfo.id }).then(() => {
                         updateApiDocsGroupDetail();
+                        setSelectedNode(undefined);
                       });
                     }
                   }}
