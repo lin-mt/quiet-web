@@ -12,6 +12,7 @@ import {
   listProjectGroupUser,
 } from '@/services/quiet/projectGroupController';
 import { listTemplate } from '@/services/quiet/templateController';
+import { IdName } from '@/util/Utils';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
@@ -26,12 +27,14 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { Button, Form } from 'antd';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const ProjectManagement: React.FC = () => {
   const ref = useRef<ActionType>();
   const [form] = Form.useForm<API.AddProject>();
   const [editForm] = Form.useForm<API.ProjectDetail>();
+  const [templates, setTemplates] = useState<API.TemplateVO[]>();
+  const [projectGroups, setProjectGroups] = useState<API.ProjectGroupVO[]>();
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
     description: {
       show: false,
@@ -110,21 +113,6 @@ const ProjectManagement: React.FC = () => {
       },
     },
     {
-      title: 'Git',
-      valueType: 'text',
-      dataIndex: 'gitAddress',
-      ellipsis: true,
-      copyable: true,
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '请输入git地址',
-          },
-        ],
-      },
-    },
-    {
       title: '描述',
       valueType: 'text',
       ellipsis: true,
@@ -144,7 +132,7 @@ const ProjectManagement: React.FC = () => {
       disable: true,
       valueType: 'option',
       key: 'option',
-      render: (text, record, _, action) => [
+      render: (_text, record, _, action) => [
         <a
           key="edit"
           onClick={() => {
@@ -181,7 +169,7 @@ const ProjectManagement: React.FC = () => {
           }
         >
           <ProFormText readonly name={'name'} label={'项目名称'} />
-          <ProFormText readonly name="gitAddress" label="Git" />
+          <ProFormText readonly name={['projectGroup', 'name']} label={'所属项目组'} />
           <ProFormField name={'members'} label="项目成员">
             <DebounceSelect
               mode="multiple"
@@ -203,6 +191,11 @@ const ProjectManagement: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    listTemplate({}).then((resp) => setTemplates(resp));
+    listCurrentUserProjectGroup().then((resp) => setProjectGroups(resp));
+  }, []);
+
   return (
     <PageContainer title={false}>
       <ProTable<API.ProjectVO>
@@ -213,7 +206,7 @@ const ProjectManagement: React.FC = () => {
         columns={columns}
         request={(params) => pageProject({ pageProjectFilter: params })}
         editable={{
-          deleteText: <a style={{ color: 'red' }}>删除</a>,
+          deleteText: <span style={{ color: 'red' }}>删除</span>,
           onSave: (_, record) => updateProject(record),
           onDelete: (_, record) => deleteProject({ id: record.id }),
         }}
@@ -254,6 +247,20 @@ const ProjectManagement: React.FC = () => {
           >
             <ProFormText name="name" label="项目名称" rules={[{ required: true, max: 30 }]} />
             <ProFormSelect
+              name="projectGroupId"
+              label="项目组"
+              options={projectGroups}
+              fieldProps={{ fieldNames: IdName }}
+              rules={[{ required: true }]}
+            />
+            <ProFormSelect
+              name="templateId"
+              label="模板"
+              options={templates}
+              fieldProps={{ fieldNames: IdName }}
+              rules={[{ required: true }]}
+            />
+            <ProFormSelect
               name="buildTool"
               label="构建工具"
               valueEnum={{
@@ -262,7 +269,6 @@ const ProjectManagement: React.FC = () => {
               }}
               rules={[{ required: true }]}
             />
-            <ProFormText name="gitAddress" label="Git" rules={[{ required: true, max: 255 }]} />
             <ProFormTextArea name="description" label="项目描述" rules={[{ max: 255 }]} />
           </ModalForm>,
         ]}

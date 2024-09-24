@@ -7,8 +7,10 @@ import {
 } from '@/services/quiet/apiDocsGroupController';
 import { ApiMethod, IdName, apiDocsStateTag, methodTag } from '@/util/Utils';
 import {
+  CodeOutlined,
   DeleteOutlined,
   EditOutlined,
+  EyeOutlined,
   FolderOpenOutlined,
   FolderOutlined,
   PlusOutlined,
@@ -20,7 +22,7 @@ import {
   ProFormTextArea,
   ProFormTreeSelect,
 } from '@ant-design/pro-components';
-import type { TableProps } from 'antd';
+import type { TableProps, TabsProps } from 'antd';
 import {
   Button,
   Card,
@@ -32,7 +34,9 @@ import {
   Popconfirm,
   Row,
   Table,
+  Tabs,
   Tree,
+  Typography,
   theme,
   type TreeDataNode,
 } from 'antd';
@@ -42,32 +46,6 @@ const cardStyles = {
   header: { padding: '0px 16px', minHeight: 50, fontWeight: 500 },
   body: { padding: '10px 5px' },
 };
-
-const apiDocsTableColumns: TableProps<API.ApiDocsVO>['columns'] = [
-  {
-    title: '接口名称',
-    dataIndex: 'name',
-  },
-  {
-    title: '接口路径',
-    render: (_, docs) => (
-      <>
-        {methodTag(docs.method)}
-        {docs.path}
-      </>
-    ),
-  },
-  {
-    title: '状态',
-    dataIndex: 'state',
-    width: 100,
-    render: (state) => apiDocsStateTag(state),
-  },
-  {
-    title: '描述',
-    dataIndex: 'description',
-  },
-];
 
 type ApiProps = {
   projectId: string;
@@ -85,7 +63,7 @@ type SelectedNode = {
   apiDocsInfo?: API.ApiDocsVO;
 };
 
-function Api(props: ApiProps) {
+function Docs(props: ApiProps) {
   const { projectId } = props;
   const { token } = theme.useToken();
   const [addApiGroupForm] = Form.useForm();
@@ -94,6 +72,37 @@ function Api(props: ApiProps) {
   const [apiDocsGroup, setApiDocsGroup] = React.useState<API.ApiDocsGroupDetail[]>([]);
   const [apiDocsGroupDetail, setApiDocsGroupDetail] = React.useState<ApiDocsGroupDetail[]>([]);
   const [selectedNode, setSelectedNode] = React.useState<SelectedNode>();
+
+  const apiDocsTableColumns: TableProps<API.ApiDocsVO>['columns'] = [
+    {
+      title: '接口名称',
+      dataIndex: 'name',
+      render: (_, docs) => (
+        <Typography.Link onClick={() => setSelectedNode({ apiDocsInfo: docs })}>
+          {docs.name}
+        </Typography.Link>
+      ),
+    },
+    {
+      title: '接口路径',
+      render: (_, docs) => (
+        <>
+          {methodTag(docs.method)}
+          {docs.path}
+        </>
+      ),
+    },
+    {
+      title: '状态',
+      dataIndex: 'state',
+      width: 100,
+      render: (state) => apiDocsStateTag(state),
+    },
+    {
+      title: '描述',
+      dataIndex: 'description',
+    },
+  ];
 
   function generateTreeData(data?: API.ApiDocsGroupDetail[]): ApiDocsGroupDetail[] {
     return data
@@ -145,13 +154,34 @@ function Api(props: ApiProps) {
     });
   }
 
+  const items: TabsProps['items'] = [
+    {
+      key: 'preview',
+      icon: <EyeOutlined />,
+      label: '预览',
+      children: 'Content of Tab Pane 1',
+    },
+    {
+      key: 'edit',
+      icon: <EditOutlined />,
+      label: '编辑',
+      children: 'Content of Tab Pane 2',
+    },
+    {
+      key: 'debug',
+      icon: <CodeOutlined />,
+      label: '调试',
+      children: 'Content of Tab Pane 3',
+    },
+  ];
+
   useEffect(() => {
     updateApiDocsGroupDetail();
   }, [projectId]);
 
   return (
     <Row style={{ marginTop: 10 }} gutter={[20, 0]}>
-      <Col flex={'360px'}>
+      <Col span={6}>
         <Card
           title={'接口分组'}
           styles={cardStyles}
@@ -171,7 +201,7 @@ function Api(props: ApiProps) {
                         trigger={
                           <div
                             onClick={() =>
-                              addApiDocsForm.setFieldsValue({
+                              addApiGroupForm.setFieldsValue({
                                 parentId: selectedNode?.groupInfo?.id,
                               })
                             }
@@ -293,6 +323,7 @@ function Api(props: ApiProps) {
           <Tree<ApiDocsGroupDetail>
             showIcon
             blockNode
+            selectedKeys={[selectedNode?.groupInfo?.id || selectedNode?.apiDocsInfo?.id || 0]}
             style={{ paddingTop: 10 }}
             treeData={apiDocsGroupDetail}
             onSelect={(_, { selected, node }) => {
@@ -304,7 +335,7 @@ function Api(props: ApiProps) {
           />
         </Card>
       </Col>
-      <Col flex={'auto'}>
+      <Col span={18}>
         {selectedNode?.groupInfo && (
           <>
             <Flex justify="space-between" align="center">
@@ -395,9 +426,14 @@ function Api(props: ApiProps) {
             />
           </>
         )}
+        {selectedNode?.apiDocsInfo && (
+          <>
+            <Tabs defaultActiveKey="preview" items={items} />
+          </>
+        )}
       </Col>
     </Row>
   );
 }
 
-export default Api;
+export default Docs;

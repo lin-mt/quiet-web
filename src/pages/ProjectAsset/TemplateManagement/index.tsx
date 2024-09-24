@@ -20,7 +20,7 @@ import {
   ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Col, ColorPicker, Form, Input, Popconfirm, Row } from 'antd';
+import { Button, Checkbox, Col, ColorPicker, Form, Input, Popconfirm, Row, Tooltip } from 'antd';
 import React, { useRef } from 'react';
 
 const TemplateManagement: React.FC = () => {
@@ -167,32 +167,39 @@ const TemplateManagement: React.FC = () => {
                 <>
                   {fields.map(({ key, name, ...restField }, index) => (
                     <Row key={key} justify="space-around" align="middle" gutter={10}>
-                      <Col flex={'auto'}>
-                        <Row gutter={10}>
-                          <Col span={8}>
-                            <Form.Item
-                              {...restField}
-                              name={[name, 'name']}
-                              rules={[
-                                { required: true, message: '请输入类型名称' },
-                                { max: 30, message: '类型名称不能超过 30 个字符' },
-                              ]}
-                            >
-                              <Input placeholder="请输入类型名称" />
-                            </Form.Item>
-                          </Col>
-                          <Col span={16}>
-                            <Form.Item
-                              {...restField}
-                              name={[name, 'description']}
-                              rules={[{ max: 255 }]}
-                            >
-                              <Input.TextArea rows={1} placeholder="请输入描述信息" />
-                            </Form.Item>
-                          </Col>
-                        </Row>
+                      <Col flex={'1 1 100px'}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'name']}
+                          rules={[
+                            { required: true, message: '请输入类型名称' },
+                            { max: 30, message: '类型名称不能超过 30 个字符' },
+                          ]}
+                        >
+                          <Input placeholder="请输入类型名称" />
+                        </Form.Item>
                       </Col>
-                      <Col flex={'88px'}>
+                      <Col flex={'0 0 16px'}>
+                        <Tooltip title={'后端接口'}>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'backendApi']}
+                            valuePropName="checked"
+                          >
+                            <Checkbox />
+                          </Form.Item>
+                        </Tooltip>
+                      </Col>
+                      <Col flex={'1 1 300px'}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'description']}
+                          rules={[{ max: 255 }]}
+                        >
+                          <Input.TextArea rows={1} placeholder="请输入描述信息" />
+                        </Form.Item>
+                      </Col>
+                      <Col flex={'0 0 88px'}>
                         <Row gutter={10}>
                           <Col span={12}>
                             <Form.Item>
@@ -506,32 +513,39 @@ const TemplateManagement: React.FC = () => {
                   <>
                     {fields.map(({ key, name, ...restField }, index) => (
                       <Row key={key} justify="space-around" align="middle" gutter={10}>
-                        <Col flex={'auto'}>
-                          <Row gutter={10}>
-                            <Col span={8}>
-                              <Form.Item
-                                {...restField}
-                                name={[name, 'name']}
-                                rules={[
-                                  { required: true, message: '请输入类型名称' },
-                                  { max: 30, message: '类型名称不能超过 30 个字符' },
-                                ]}
-                              >
-                                <Input placeholder="请输入类型名称" />
-                              </Form.Item>
-                            </Col>
-                            <Col span={16}>
-                              <Form.Item
-                                {...restField}
-                                name={[name, 'description']}
-                                rules={[{ max: 255 }]}
-                              >
-                                <Input.TextArea rows={1} placeholder="请输入描述信息" />
-                              </Form.Item>
-                            </Col>
-                          </Row>
+                        <Col flex={'1 1 100px'}>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'name']}
+                            rules={[
+                              { required: true, message: '请输入类型名称' },
+                              { max: 30, message: '类型名称不能超过 30 个字符' },
+                            ]}
+                          >
+                            <Input placeholder="请输入类型名称" />
+                          </Form.Item>
                         </Col>
-                        <Col flex={'88px'}>
+                        <Col flex={'0 0 16px'}>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'backendApi']}
+                            valuePropName={'checked'}
+                          >
+                            <Tooltip title={'后端接口'}>
+                              <Checkbox />
+                            </Tooltip>
+                          </Form.Item>
+                        </Col>
+                        <Col flex={'1 1 300px'}>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'description']}
+                            rules={[{ max: 255 }]}
+                          >
+                            <Input.TextArea rows={1} placeholder="请输入描述信息" />
+                          </Form.Item>
+                        </Col>
+                        <Col flex={'0 0 88px'}>
                           <Row gutter={10}>
                             <Col span={12}>
                               <Form.Item>
@@ -656,8 +670,6 @@ const TemplateManagement: React.FC = () => {
                                   >
                                     <ColorPicker
                                       onChange={(color) => {
-                                        console.log(color.toHexString());
-
                                         form.setFieldValue(
                                           `requirementPriorities[${index}].color`,
                                           color.toHexString(),

@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-/** 此处后端没有提供注释 PUT /apiDocs */
+/** 更新接口文档 PUT /apiDocs */
 export async function updateApiDocs(body: API.UpdateApiDocs, options?: { [key: string]: any }) {
   return request<string>(`/apiDocs`, {
     method: 'PUT',

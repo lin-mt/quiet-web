@@ -34,7 +34,7 @@ const PermissionManagement: React.FC = () => {
     httpUrl: {
       show: false,
     },
-    remark: {
+    description: {
       show: false,
     },
     option: { fixed: 'right', disable: true },
@@ -106,9 +106,9 @@ const PermissionManagement: React.FC = () => {
       dataIndex: 'httpUrl',
     },
     {
-      title: '备注',
+      title: '权限描述',
       valueType: 'text',
-      dataIndex: 'remark',
+      dataIndex: 'description',
       ellipsis: true,
     },
     {
@@ -190,7 +190,7 @@ const PermissionManagement: React.FC = () => {
           />
           <ProFormText name={'httpUrl'} label={'请求地址'} rules={[{ max: 255 }]} />
           <ProFormDigit name={'ordinal'} label={'排序'} min={0} rules={[{ required: true }]} />
-          <ProFormTextArea name={'remark'} label={'备注'} rules={[{ max: 255 }]} />
+          <ProFormTextArea name={'description'} label={'权限描述'} rules={[{ max: 255 }]} />
         </ModalForm>,
         <Popconfirm
           key={'delete'}
@@ -286,7 +286,7 @@ const PermissionManagement: React.FC = () => {
             />
             <ProFormText name={'httpUrl'} label={'请求地址'} rules={[{ max: 255 }]} />
             <ProFormDigit name={'ordinal'} label={'排序'} min={0} rules={[{ required: true }]} />
-            <ProFormTextArea name={'remark'} label={'备注'} rules={[{ max: 255 }]} />
+            <ProFormTextArea name={'description'} label={'权限描述'} rules={[{ max: 255 }]} />
           </ModalForm>,
         ]}
       />

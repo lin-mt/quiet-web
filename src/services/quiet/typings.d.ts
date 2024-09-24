@@ -27,8 +27,8 @@ declare namespace API {
     httpUrl?: string;
     /** 请求方法 */
     httpMethod?: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
-    /** 备注信息 */
-    remark?: string;
+    /** 权限描述 */
+    description?: string;
   };
 
   type AddProject = {
@@ -38,8 +38,6 @@ declare namespace API {
     projectGroupId: string;
     /** 构建工具 */
     buildTool: 'MAVEN' | 'GRADLE';
-    /** git地址 */
-    gitAddress: string;
     /** 项目描述 */
     description?: string;
   };
@@ -99,7 +97,7 @@ declare namespace API {
     projectId: string;
     reporterId: string;
     handlerId: string;
-    apiInfo?: ApiInfo;
+    api?: Api;
     /** 描述 */
     description?: string;
   };
@@ -148,15 +146,9 @@ declare namespace API {
     description?: string;
   };
 
-  type ApiBody = {
-    forms?: ApiForm[];
-    queries?: ApiQuery[];
-    body?: string;
-  };
-
-  type ApiDetail = {
-    headers?: ApiHeader[];
-    body?: ApiBody;
+  type Api = {
+    method?: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
+    uri?: string;
   };
 
   type ApiDocsGroupDetail = {
@@ -195,36 +187,15 @@ declare namespace API {
     path: string;
     /** 接口状态 */
     state: 'DESIGN' | 'DEVELOPING' | 'TESTING' | 'COMPLETED';
-    detail: ApiDetail;
+    apiEndpointSpec: ApiEndpointSpec;
     groupId: string;
     /** 描述信息 */
     description?: string;
   };
 
-  type ApiForm = {
-    name?: string;
-    example?: string;
-    type?: 'TEXT' | 'FILE';
-    required?: boolean;
-    description?: string;
-  };
-
-  type ApiHeader = {
-    name?: string;
-    example?: string;
-    required?: boolean;
-    description?: string;
-  };
-
-  type ApiInfo = {
-    method?: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
-    path?: string;
-  };
-
-  type ApiQuery = {
-    name?: string;
-    example?: string;
-    required?: boolean;
+  type ApiEndpointSpec = {
+    request: Request;
+    responses: Response[];
   };
 
   type CurrentUser = {
@@ -283,6 +254,14 @@ declare namespace API {
     id: string;
   };
 
+  type FormDataParam = {
+    key: string;
+    type: 'TEXT' | 'FILE';
+    value?: string;
+    contentType?: string;
+    description?: string;
+  };
+
   type getIterationDetailParams = {
     id: string;
   };
@@ -301,6 +280,12 @@ declare namespace API {
 
   type getVersionDetailParams = {
     id: string;
+  };
+
+  type HttpHeader = {
+    key: string;
+    values?: string[];
+    description?: string;
   };
 
   type IterationDetail = {
@@ -406,11 +391,11 @@ declare namespace API {
 
   type PageableObject = {
     offset?: number;
-    sort?: SortObject;
+    sort?: SortObject[];
     paged?: boolean;
-    unpaged?: boolean;
     pageNumber?: number;
     pageSize?: number;
+    unpaged?: boolean;
   };
 
   type PagePermission = {
@@ -430,8 +415,8 @@ declare namespace API {
     httpUrl?: string;
     /** 请求方法 */
     httpMethod?: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
-    /** 备注 */
-    remark?: string;
+    /** 权限描述 */
+    description?: string;
   };
 
   type pagePermissionParams = {
@@ -439,14 +424,14 @@ declare namespace API {
   };
 
   type PagePermissionVO = {
-    totalPages?: number;
     totalElements?: number;
+    totalPages?: number;
     size?: number;
     content?: PermissionVO[];
     number?: number;
-    sort?: SortObject;
-    pageable?: PageableObject;
+    sort?: SortObject[];
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -462,8 +447,6 @@ declare namespace API {
     name?: string;
     /** 构建工具 */
     buildTool?: 'MAVEN' | 'GRADLE';
-    /** git地址 */
-    gitAddress?: string;
     /** 项目描述 */
     description?: string;
   };
@@ -485,14 +468,14 @@ declare namespace API {
   };
 
   type PageProjectGroupVO = {
-    totalPages?: number;
     totalElements?: number;
+    totalPages?: number;
     size?: number;
     content?: ProjectGroupVO[];
     number?: number;
-    sort?: SortObject;
-    pageable?: PageableObject;
+    sort?: SortObject[];
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -503,14 +486,14 @@ declare namespace API {
   };
 
   type PageProjectVO = {
-    totalPages?: number;
     totalElements?: number;
+    totalPages?: number;
     size?: number;
     content?: ProjectVO[];
     number?: number;
-    sort?: SortObject;
-    pageable?: PageableObject;
+    sort?: SortObject[];
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -536,14 +519,14 @@ declare namespace API {
   };
 
   type PageRoleVO = {
-    totalPages?: number;
     totalElements?: number;
+    totalPages?: number;
     size?: number;
     content?: RoleVO[];
     number?: number;
-    sort?: SortObject;
-    pageable?: PageableObject;
+    sort?: SortObject[];
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -566,14 +549,14 @@ declare namespace API {
   };
 
   type PageTemplateVO = {
-    totalPages?: number;
     totalElements?: number;
+    totalPages?: number;
     size?: number;
     content?: TemplateVO[];
     number?: number;
-    sort?: SortObject;
-    pageable?: PageableObject;
+    sort?: SortObject[];
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -602,14 +585,14 @@ declare namespace API {
   };
 
   type PageUserVO = {
-    totalPages?: number;
     totalElements?: number;
+    totalPages?: number;
     size?: number;
     content?: UserVO[];
     number?: number;
-    sort?: SortObject;
-    pageable?: PageableObject;
+    sort?: SortObject[];
     numberOfElements?: number;
+    pageable?: PageableObject;
     first?: boolean;
     last?: boolean;
     empty?: boolean;
@@ -627,8 +610,8 @@ declare namespace API {
     path?: string;
     /** 请求方法 */
     httpMethod?: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
-    /** 备注 */
-    remark?: string;
+    /** 权限描述 */
+    description?: string;
     /** 权限值 */
     value: string;
     /** 序号 */
@@ -649,8 +632,6 @@ declare namespace API {
     template: SimpleTemplate;
     /** 构建工具 */
     buildTool: 'MAVEN' | 'GRADLE';
-    /** git地址 */
-    gitAddress: string;
     /** 项目成员 */
     members?: Member[];
     /** 项目描述 */
@@ -699,9 +680,23 @@ declare namespace API {
     projectGroupId: string;
     /** 构建工具 */
     buildTool: 'MAVEN' | 'GRADLE';
-    /** git地址 */
-    gitAddress: string;
     /** 项目描述 */
+    description?: string;
+  };
+
+  type QueryParam = {
+    key: string;
+    value?: string;
+    description?: string;
+  };
+
+  type Request = {
+    headers?: HttpHeader[];
+    formDataParams?: FormDataParam[];
+    queryParams?: QueryParam[];
+    urlEncodeParams?: UrlEncodeParam[];
+    jsonSchema?: string;
+    body?: string;
     description?: string;
   };
 
@@ -761,6 +756,14 @@ declare namespace API {
     description?: string;
   };
 
+  type Response = {
+    statusCode?: number;
+    headers?: HttpHeader[];
+    jsonSchema?: string;
+    body?: string;
+    description?: string;
+  };
+
   type RoleInfo = {
     id: string;
     /** 角色名称 */
@@ -799,7 +802,7 @@ declare namespace API {
     method: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
     /** 请求路径 */
     path: string;
-    detail?: ApiDetail;
+    apiEndpointSpec?: ApiEndpointSpec;
     groupId: string;
     /** 描述信息 */
     description?: string;
@@ -847,9 +850,11 @@ declare namespace API {
   };
 
   type SortObject = {
-    empty?: boolean;
-    sorted?: boolean;
-    unsorted?: boolean;
+    direction?: string;
+    nullHandling?: string;
+    ascending?: boolean;
+    property?: string;
+    ignoreCase?: boolean;
   };
 
   type TaskStepVO = {
@@ -875,7 +880,7 @@ declare namespace API {
     /** 任务标题 */
     title: string;
     typeId: string;
-    apiInfo?: ApiInfo;
+    api?: Api;
     taskStepId: string;
     requirementId: string;
     projectId: string;
@@ -924,8 +929,8 @@ declare namespace API {
     httpUrl?: string;
     /** 请求方法 */
     httpMethod?: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
-    /** 备注 */
-    remark?: string;
+    /** 权限描述 */
+    description?: string;
     /** 权限值 */
     value: string;
     /** 路径 */
@@ -971,7 +976,7 @@ declare namespace API {
     method: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
     /** 请求路径 */
     path: string;
-    detail?: ApiDetail;
+    apiEndpointSpec?: ApiEndpointSpec;
     groupId: string;
     /** 描述信息 */
     description?: string;
@@ -1020,8 +1025,8 @@ declare namespace API {
     httpUrl?: string;
     /** 请求方法 */
     httpMethod?: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'TRACE';
-    /** 备注信息 */
-    remark?: string;
+    /** 权限描述 */
+    description?: string;
   };
 
   type UpdateProject = {
@@ -1032,8 +1037,6 @@ declare namespace API {
     name: string;
     /** 构建工具 */
     buildTool: 'MAVEN' | 'GRADLE';
-    /** git地址 */
-    gitAddress: string;
     /** 项目描述 */
     description?: string;
   };
@@ -1098,7 +1101,7 @@ declare namespace API {
     projectId: string;
     reporterId: string;
     handlerId: string;
-    apiInfo?: ApiInfo;
+    api?: Api;
     /** 描述 */
     description?: string;
     id: string;
@@ -1164,6 +1167,12 @@ declare namespace API {
     /** 版本描述 */
     description?: string;
     id: string;
+  };
+
+  type UrlEncodeParam = {
+    key: string;
+    value?: string;
+    description?: string;
   };
 
   type UserDTO = {

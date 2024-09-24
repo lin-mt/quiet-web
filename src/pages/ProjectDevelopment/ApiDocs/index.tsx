@@ -1,4 +1,4 @@
-import Api from '@/pages/ProjectDevelopment/ApiDocs/Api';
+import Docs from '@/pages/ProjectDevelopment/ApiDocs/Docs';
 import { listCurrentUserProject } from '@/services/quiet/projectController';
 import { listCurrentUserProjectGroup } from '@/services/quiet/projectGroupController';
 import { IdName } from '@/util/Utils';
@@ -72,24 +72,18 @@ const ApiDocs: React.FC = () => {
         items={[
           {
             key: 'api',
-            label: (
-              <>
-                <FileTextOutlined /> 接 口
-              </>
-            ),
+            icon: <FileTextOutlined />,
+            label: '接口文档',
             children: selectedProject?.projectId ? (
-              <Api projectId={selectedProject?.projectId} />
+              <Docs projectId={selectedProject?.projectId} />
             ) : (
               <Empty description={'请选择项目'} />
             ),
           },
           {
             key: 'setting',
-            label: (
-              <>
-                <SettingOutlined /> 设 置
-              </>
-            ),
+            icon: <SettingOutlined />,
+            label: '项目设置',
             children: '项目设置',
           },
         ]}
