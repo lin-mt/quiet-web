@@ -70,11 +70,11 @@ export const requestConfig: RequestConfig = {
         }
       }
       if (data?.success) {
-        if (data.data?.pageable?.paged) {
+        if (data.data.page?.totalElements) {
           response.data = {
             success: true,
             data: data.data.content,
-            total: data.data.totalElements,
+            total: data.data.page.totalElements,
           } as any;
         } else {
           response.data = data.data;

@@ -36,8 +36,8 @@ declare namespace API {
     name: string;
     templateId: string;
     projectGroupId: string;
-    /** 构建工具 */
-    buildTool: 'MAVEN' | 'GRADLE';
+    /** 代码仓库 */
+    repositories?: string[];
     /** 项目描述 */
     description?: string;
   };
@@ -46,6 +46,25 @@ declare namespace API {
     /** 项目组名称 */
     name: string;
     /** 项目组描述 */
+    description?: string;
+  };
+
+  type AddRepository = {
+    /** 仓库名称 */
+    name: string;
+    /** 仓库类型 */
+    type: 'GITLAB' | 'GITHUB';
+    /** 构建工具 */
+    buildTool: 'MAVEN' | 'GRADLE' | 'NPM' | 'YARN' | 'PNPM';
+    /** 访问token */
+    accessToken?: string;
+    /** 用户名 */
+    username?: string;
+    /** 密码 */
+    password?: string;
+    /** 仓库地址 */
+    url: string;
+    /** 仓库描述 */
     description?: string;
   };
 
@@ -152,6 +171,7 @@ declare namespace API {
   };
 
   type ApiDocsGroupDetail = {
+    disabled?: boolean;
     id: string;
     /** 分组名称 */
     name: string;
@@ -166,6 +186,7 @@ declare namespace API {
   };
 
   type ApiDocsGroupVO = {
+    disabled?: boolean;
     id: string;
     /** 分组名称 */
     name: string;
@@ -225,6 +246,10 @@ declare namespace API {
   };
 
   type deleteProjectParams = {
+    id: string;
+  };
+
+  type deleteRepositoryParams = {
     id: string;
   };
 
@@ -335,6 +360,10 @@ declare namespace API {
     username: string;
   };
 
+  type listRepositoryParams = {
+    name?: string;
+  };
+
   type ListRequirement = {
     /** 需求标题 */
     title?: string;
@@ -379,6 +408,7 @@ declare namespace API {
   };
 
   type Member = {
+    disabled?: boolean;
     id: string;
     /** 用户名 */
     username: string;
@@ -389,13 +419,46 @@ declare namespace API {
     taskStepId: string;
   };
 
-  type PageableObject = {
-    offset?: number;
-    sort?: SortObject[];
-    paged?: boolean;
-    pageNumber?: number;
-    pageSize?: number;
-    unpaged?: boolean;
+  type PagedModelPermissionVO = {
+    content?: PermissionVO[];
+    page?: PageMetadata;
+  };
+
+  type PagedModelProjectGroupVO = {
+    content?: ProjectGroupVO[];
+    page?: PageMetadata;
+  };
+
+  type PagedModelProjectVO = {
+    content?: ProjectVO[];
+    page?: PageMetadata;
+  };
+
+  type PagedModelRepositoryVO = {
+    content?: RepositoryVO[];
+    page?: PageMetadata;
+  };
+
+  type PagedModelRoleVO = {
+    content?: RoleVO[];
+    page?: PageMetadata;
+  };
+
+  type PagedModelTemplateVO = {
+    content?: TemplateVO[];
+    page?: PageMetadata;
+  };
+
+  type PagedModelUserVO = {
+    content?: UserVO[];
+    page?: PageMetadata;
+  };
+
+  type PageMetadata = {
+    size?: number;
+    number?: number;
+    totalElements?: number;
+    totalPages?: number;
   };
 
   type PagePermission = {
@@ -423,20 +486,6 @@ declare namespace API {
     pagePermission: PagePermission;
   };
 
-  type PagePermissionVO = {
-    totalElements?: number;
-    totalPages?: number;
-    size?: number;
-    content?: PermissionVO[];
-    number?: number;
-    sort?: SortObject[];
-    numberOfElements?: number;
-    pageable?: PageableObject;
-    first?: boolean;
-    last?: boolean;
-    empty?: boolean;
-  };
-
   type PageProjectFilter = {
     /** 页数 */
     current?: number;
@@ -445,8 +494,6 @@ declare namespace API {
     id?: string;
     /** 项目名称 */
     name?: string;
-    /** 构建工具 */
-    buildTool?: 'MAVEN' | 'GRADLE';
     /** 项目描述 */
     description?: string;
   };
@@ -467,36 +514,26 @@ declare namespace API {
     page: PageProjectGroup;
   };
 
-  type PageProjectGroupVO = {
-    totalElements?: number;
-    totalPages?: number;
-    size?: number;
-    content?: ProjectGroupVO[];
-    number?: number;
-    sort?: SortObject[];
-    numberOfElements?: number;
-    pageable?: PageableObject;
-    first?: boolean;
-    last?: boolean;
-    empty?: boolean;
-  };
-
   type pageProjectParams = {
     pageProjectFilter: PageProjectFilter;
   };
 
-  type PageProjectVO = {
-    totalElements?: number;
-    totalPages?: number;
-    size?: number;
-    content?: ProjectVO[];
-    number?: number;
-    sort?: SortObject[];
-    numberOfElements?: number;
-    pageable?: PageableObject;
-    first?: boolean;
-    last?: boolean;
-    empty?: boolean;
+  type PageRepository = {
+    /** 页数 */
+    current?: number;
+    /** 分页大小 */
+    pageSize?: number;
+    id?: string;
+    /** 仓库类型 */
+    type?: 'GITLAB' | 'GITHUB';
+    /** 仓库名称 */
+    name?: string;
+    /** 构建工具 */
+    buildTool?: 'MAVEN' | 'GRADLE' | 'NPM' | 'YARN' | 'PNPM';
+  };
+
+  type pageRepositoryParams = {
+    pageRepository: PageRepository;
   };
 
   type PageRole = {
@@ -518,20 +555,6 @@ declare namespace API {
     pageRole: PageRole;
   };
 
-  type PageRoleVO = {
-    totalElements?: number;
-    totalPages?: number;
-    size?: number;
-    content?: RoleVO[];
-    number?: number;
-    sort?: SortObject[];
-    numberOfElements?: number;
-    pageable?: PageableObject;
-    first?: boolean;
-    last?: boolean;
-    empty?: boolean;
-  };
-
   type PageTemplate = {
     /** 页数 */
     current?: number;
@@ -546,20 +569,6 @@ declare namespace API {
 
   type pageTemplateParams = {
     pageTemplate: PageTemplate;
-  };
-
-  type PageTemplateVO = {
-    totalElements?: number;
-    totalPages?: number;
-    size?: number;
-    content?: TemplateVO[];
-    number?: number;
-    sort?: SortObject[];
-    numberOfElements?: number;
-    pageable?: PageableObject;
-    first?: boolean;
-    last?: boolean;
-    empty?: boolean;
   };
 
   type PageUser = {
@@ -582,20 +591,6 @@ declare namespace API {
 
   type pageUserParams = {
     pageUser: PageUser;
-  };
-
-  type PageUserVO = {
-    totalElements?: number;
-    totalPages?: number;
-    size?: number;
-    content?: UserVO[];
-    number?: number;
-    sort?: SortObject[];
-    numberOfElements?: number;
-    pageable?: PageableObject;
-    first?: boolean;
-    last?: boolean;
-    empty?: boolean;
   };
 
   type PermissionVO = {
@@ -630,10 +625,10 @@ declare namespace API {
     name?: string;
     projectGroup: SimpleProjectGroup;
     template: SimpleTemplate;
-    /** 构建工具 */
-    buildTool: 'MAVEN' | 'GRADLE';
     /** 项目成员 */
     members?: Member[];
+    /** 项目代码仓库 */
+    repositories?: string[];
     /** 项目描述 */
     description?: string;
     /** 创建时间 */
@@ -659,17 +654,12 @@ declare namespace API {
   };
 
   type ProjectGroupVO = {
+    disabled?: boolean;
     id: string;
     /** 项目组名称 */
     name: string;
     /** 项目组描述 */
     description?: string;
-  };
-
-  type ProjectMember = {
-    projectId: string;
-    /** 项目成员ID */
-    memberIds?: string[];
   };
 
   type ProjectVO = {
@@ -678,8 +668,6 @@ declare namespace API {
     name: string;
     templateId: string;
     projectGroupId: string;
-    /** 构建工具 */
-    buildTool: 'MAVEN' | 'GRADLE';
     /** 项目描述 */
     description?: string;
   };
@@ -687,6 +675,23 @@ declare namespace API {
   type QueryParam = {
     key: string;
     value?: string;
+    description?: string;
+  };
+
+  type RepositoryVO = {
+    disabled?: boolean;
+    id: string;
+    /** 仓库名称 */
+    name: string;
+    /** 仓库类型 */
+    type: 'GITLAB' | 'GITHUB';
+    /** 构建工具 */
+    buildTool: 'MAVEN' | 'GRADLE' | 'NPM' | 'YARN' | 'PNPM';
+    /** 访问token */
+    accessToken?: string;
+    /** 仓库地址 */
+    url: string;
+    /** 仓库描述 */
     description?: string;
   };
 
@@ -701,6 +706,7 @@ declare namespace API {
   };
 
   type RequirementPriorityVO = {
+    disabled?: boolean;
     id: string;
     /** 优先级名称 */
     name: string;
@@ -733,6 +739,7 @@ declare namespace API {
   };
 
   type RequirementTypeVO = {
+    disabled?: boolean;
     id: string;
     /** 需求类型名称 */
     name: string;
@@ -844,17 +851,10 @@ declare namespace API {
   };
 
   type SimpleUser = {
+    disabled?: boolean;
     id: string;
     /** 用户名 */
     username: string;
-  };
-
-  type SortObject = {
-    direction?: string;
-    nullHandling?: string;
-    ascending?: boolean;
-    property?: string;
-    ignoreCase?: boolean;
   };
 
   type TaskStepVO = {
@@ -866,6 +866,7 @@ declare namespace API {
   };
 
   type TaskTypeVO = {
+    disabled?: boolean;
     id: string;
     /** 任务类型名称 */
     name: string;
@@ -907,6 +908,7 @@ declare namespace API {
   };
 
   type TemplateVO = {
+    disabled?: boolean;
     id: string;
     /** 模板名称 */
     name: string;
@@ -1035,8 +1037,10 @@ declare namespace API {
     projectGroupId: string;
     /** 项目名称 */
     name: string;
-    /** 构建工具 */
-    buildTool: 'MAVEN' | 'GRADLE';
+    /** 代码仓库 */
+    repositories?: string[];
+    /** 项目成员ID */
+    memberIds?: string[];
     /** 项目描述 */
     description?: string;
   };
@@ -1045,6 +1049,26 @@ declare namespace API {
     /** 项目组名称 */
     name: string;
     /** 项目组描述 */
+    description?: string;
+    id: string;
+  };
+
+  type UpdateRepository = {
+    /** 仓库名称 */
+    name: string;
+    /** 仓库类型 */
+    type: 'GITLAB' | 'GITHUB';
+    /** 构建工具 */
+    buildTool: 'MAVEN' | 'GRADLE' | 'NPM' | 'YARN' | 'PNPM';
+    /** 访问token */
+    accessToken?: string;
+    /** 用户名 */
+    username?: string;
+    /** 密码 */
+    password?: string;
+    /** 仓库地址 */
+    url: string;
+    /** 仓库描述 */
     description?: string;
     id: string;
   };

@@ -87,6 +87,12 @@ export default [
         component: './ProjectAsset/ProjectManagement',
       },
       {
+        name: 'repository-management',
+        access: 'hasRoutePermission',
+        path: '/project-asset/repository-management',
+        component: './ProjectAsset/RepositoryManagement',
+      },
+      {
         name: 'template-management',
         access: 'hasRoutePermission',
         path: '/project-asset/template-management',

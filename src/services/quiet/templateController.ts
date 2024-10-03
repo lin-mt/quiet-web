@@ -75,7 +75,7 @@ export async function pageTemplate(
   params: API.pageTemplateParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.PageTemplateVO>(`/api/template/page`, {
+  return request<API.PagedModelTemplateVO>(`/api/template/page`, {
     method: 'GET',
     params: {
       ...params,

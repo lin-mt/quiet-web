@@ -8,6 +8,7 @@ export default {
   'menu.project-asset': '项目资产',
   'menu.project-asset.project-group-management': '项目组管理',
   'menu.project-asset.project-management': '项目管理',
+  'menu.project-asset.repository-management': '仓库管理',
   'menu.project-asset.template-management': '模板管理',
   'menu.system-setting': '系统设置',
   'menu.system-setting.role-management': '角色管理',

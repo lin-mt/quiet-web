@@ -62,7 +62,7 @@ export async function pageRole(
   params: API.pageRoleParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.PageRoleVO>(`/api/role/page`, {
+  return request<API.PagedModelRoleVO>(`/api/role/page`, {
     method: 'GET',
     params: {
       ...params,

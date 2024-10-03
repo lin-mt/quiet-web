@@ -85,7 +85,7 @@ export async function pageUser(
   params: API.pageUserParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.PageUserVO>(`/api/user/page`, {
+  return request<API.PagedModelUserVO>(`/api/user/page`, {
     method: 'GET',
     params: {
       ...params,

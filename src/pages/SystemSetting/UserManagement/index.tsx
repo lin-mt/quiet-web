@@ -26,7 +26,7 @@ const UserManagement: React.FC = () => {
   const { treeRoles } = useModel('role');
 
   const [userRoleIds, setUserRoleIds] = useState<string[]>([]);
-  const onChange = (keys: string[]) => {
+  const onChange = (keys: any[]) => {
     setUserRoleIds(keys);
   };
 

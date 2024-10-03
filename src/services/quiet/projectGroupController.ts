@@ -101,7 +101,7 @@ export async function pageProjectGroup(
   params: API.pageProjectGroupParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.PageProjectGroupVO>(`/api/projectGroup/page`, {
+  return request<API.PagedModelProjectGroupVO>(`/api/projectGroup/page`, {
     method: 'GET',
     params: {
       ...params,

@@ -50,7 +50,7 @@ export async function pagePermission(
   params: API.pagePermissionParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.PagePermissionVO>(`/api/permission/page`, {
+  return request<API.PagedModelPermissionVO>(`/api/permission/page`, {
     method: 'GET',
     params: {
       ...params,

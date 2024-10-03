@@ -1,18 +1,17 @@
-import DebounceSelect from '@/components/DebounceSelect';
 import {
   addProject,
   deleteProject,
   getProjectDetail,
   pageProject,
   updateProject,
-  updateProjectMembers,
 } from '@/services/quiet/projectController';
 import {
   listCurrentUserProjectGroup,
   listProjectGroupUser,
 } from '@/services/quiet/projectGroupController';
+import { listRepository } from '@/services/quiet/repositoryController';
 import { listTemplate } from '@/services/quiet/templateController';
-import { IdName } from '@/util/Utils';
+import { IdName, IdUsername } from '@/util/Utils';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
@@ -20,21 +19,22 @@ import {
   ModalForm,
   PageContainer,
   ProColumns,
-  ProFormField,
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Form } from 'antd';
+import { Button, Form, Popconfirm } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 
 const ProjectManagement: React.FC = () => {
   const ref = useRef<ActionType>();
   const [form] = Form.useForm<API.AddProject>();
-  const [editForm] = Form.useForm<API.ProjectDetail>();
+  const [editorForm] = Form.useForm<API.UpdateProject>();
   const [templates, setTemplates] = useState<API.TemplateVO[]>();
+  const [repositories, setRepositories] = useState<API.RepositoryVO[]>();
   const [projectGroups, setProjectGroups] = useState<API.ProjectGroupVO[]>();
+  const [projectMembers, setProjectMembers] = useState<API.SimpleUser[]>();
   const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
     description: {
       show: false,
@@ -92,27 +92,6 @@ const ProjectManagement: React.FC = () => {
         ),
     },
     {
-      title: '构建工具',
-      valueType: 'select',
-      dataIndex: 'buildTool',
-      valueEnum: {
-        MAVEN: {
-          text: 'Maven',
-        },
-        GRADLE: {
-          text: 'Gradle',
-        },
-      },
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '请选择构建工具',
-          },
-        ],
-      },
-    },
-    {
       title: '描述',
       valueType: 'text',
       ellipsis: true,
@@ -132,67 +111,97 @@ const ProjectManagement: React.FC = () => {
       disable: true,
       valueType: 'option',
       key: 'option',
-      render: (_text, record, _, action) => [
-        <a
-          key="edit"
-          onClick={() => {
-            action?.startEditable?.(record.id);
-          }}
-        >
-          编辑
-        </a>,
-        <ModalForm
-          key={'editMember'}
-          form={editForm}
-          title="编辑项目成员"
-          onFinish={() =>
-            updateProjectMembers({
-              projectId: record.id,
-              memberIds: editForm.getFieldValue('members')?.map((m: any) => m.value),
-            }).then(() => true)
-          }
+      render: (_text, record) => [
+        <ModalForm<API.UpdateProject>
+          form={editorForm}
+          key={'edit'}
+          title={'编辑项目'}
+          layout={'horizontal'}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 20 }}
           trigger={
             <a
               type="primary"
               onClick={() =>
                 getProjectDetail({ id: record.id }).then((resp) => {
-                  const formValue = resp as any;
-                  formValue.members = resp.members?.map((m) => {
-                    return { value: m.id, label: m.username };
-                  });
-                  editForm.setFieldsValue(formValue);
+                  listProjectGroupUser({
+                    projectGroupId: record.projectGroupId,
+                    username: '',
+                  }).then((resp) => setProjectMembers(resp));
+                  editorForm.setFieldsValue(resp);
                 })
               }
             >
-              编辑成员
+              编辑
             </a>
           }
+          submitter={{
+            render: (_, defaultDom) => {
+              return [
+                <Button key="reset" onClick={() => editorForm.resetFields()}>
+                  重置
+                </Button>,
+                ...defaultDom,
+              ];
+            },
+          }}
+          onFinish={(formData) =>
+            updateProject(formData).then(() => {
+              editorForm.resetFields();
+              ref.current?.reload();
+              return true;
+            })
+          }
         >
-          <ProFormText readonly name={'name'} label={'项目名称'} />
-          <ProFormText readonly name={['projectGroup', 'name']} label={'所属项目组'} />
-          <ProFormField name={'members'} label="项目成员">
-            <DebounceSelect
-              mode="multiple"
-              placeholder={'请输入用户名'}
-              fetchOptions={(value) =>
-                listProjectGroupUser({
-                  projectGroupId: record.projectGroupId,
-                  username: value,
-                }).then((resp) =>
-                  resp?.map((u) => {
-                    return { value: u.id, label: u.username };
-                  }),
-                )
-              }
-            />
-          </ProFormField>
+          <ProFormText name="id" label="项目ID" readonly />
+          <ProFormText name="name" label="项目名称" rules={[{ required: true, max: 30 }]} />
+          <ProFormSelect
+            name="projectGroupId"
+            label="项目组"
+            options={projectGroups}
+            fieldProps={{ fieldNames: IdName }}
+            rules={[{ required: true }]}
+          />
+          <ProFormSelect
+            label="模板"
+            name="templateId"
+            options={templates}
+            fieldProps={{ fieldNames: IdName }}
+            rules={[{ required: true }]}
+          />
+          <ProFormSelect
+            label="代码仓库"
+            mode="multiple"
+            name="repositories"
+            options={repositories}
+            fieldProps={{ fieldNames: IdName }}
+          />
+          <ProFormSelect
+            label="项目成员"
+            mode="multiple"
+            name={'memberIds'}
+            options={projectMembers}
+            fieldProps={{ fieldNames: IdUsername }}
+          />
+          <ProFormTextArea name="description" label="项目描述" rules={[{ max: 255 }]} />
         </ModalForm>,
+        <Popconfirm
+          key={'delete'}
+          title="删除项目"
+          style={{ width: '100vw' }}
+          onConfirm={() => {
+            deleteProject({ id: record.id }).then(() => ref.current?.reload());
+          }}
+        >
+          <a style={{ color: 'red' }}>删除</a>
+        </Popconfirm>,
       ],
     },
   ];
 
   useEffect(() => {
     listTemplate({}).then((resp) => setTemplates(resp));
+    listRepository({}).then((resp) => setRepositories(resp));
     listCurrentUserProjectGroup().then((resp) => setProjectGroups(resp));
   }, []);
 
@@ -207,8 +216,14 @@ const ProjectManagement: React.FC = () => {
         request={(params) => pageProject({ pageProjectFilter: params })}
         editable={{
           deleteText: <span style={{ color: 'red' }}>删除</span>,
-          onSave: (_, record) => updateProject(record),
-          onDelete: (_, record) => deleteProject({ id: record.id }),
+          onSave: (_, record) =>
+            updateProject(record).then(() => {
+              ref.current?.reload();
+            }),
+          onDelete: (_, record) =>
+            deleteProject({ id: record.id }).then(() => {
+              ref.current?.reload();
+            }),
         }}
         columnsState={{
           value: columnsStateMap,
@@ -261,13 +276,11 @@ const ProjectManagement: React.FC = () => {
               rules={[{ required: true }]}
             />
             <ProFormSelect
-              name="buildTool"
-              label="构建工具"
-              valueEnum={{
-                MAVEN: 'Maven',
-                GRADLE: 'Gradle',
-              }}
-              rules={[{ required: true }]}
+              mode="multiple"
+              name="repositories"
+              label="代码仓库"
+              options={repositories}
+              fieldProps={{ fieldNames: IdName }}
             />
             <ProFormTextArea name="description" label="项目描述" rules={[{ max: 255 }]} />
           </ModalForm>,

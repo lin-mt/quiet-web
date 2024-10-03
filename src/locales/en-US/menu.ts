@@ -8,6 +8,7 @@ export default {
   'menu.project-asset': 'Project Asset',
   'menu.project-asset.project-group-management': 'Project Group Management',
   'menu.project-asset.project-management': 'Project Management',
+  'menu.project-asset.repository-management': 'Repository Management',
   'menu.project-asset.template-management': 'Template Management',
   'menu.system-setting': 'System Setting',
   'menu.system-setting.role-management': 'Role Management',

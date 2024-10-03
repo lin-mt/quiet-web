@@ -670,10 +670,8 @@ const TemplateManagement: React.FC = () => {
                                   >
                                     <ColorPicker
                                       onChange={(color) => {
-                                        form.setFieldValue(
-                                          `requirementPriorities[${index}].color`,
-                                          color.toHexString(),
-                                        );
+                                        const formProp: any = `requirementPriorities[${index}].color`;
+                                        form.setFieldValue(formProp, color.toHexString());
                                       }}
                                     />
                                   </Form.Item>

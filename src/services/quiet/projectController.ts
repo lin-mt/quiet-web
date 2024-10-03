@@ -69,28 +69,13 @@ export async function listCurrentUserProject(
   });
 }
 
-/** 更新项目成员 PUT /project/members */
-export async function updateProjectMembers(
-  body: API.ProjectMember,
-  options?: { [key: string]: any },
-) {
-  return request<any>(`/api/project/members`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-
 /** 分页查询项目信息 GET /project/page */
 export async function pageProject(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.pageProjectParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.PageProjectVO>(`/api/project/page`, {
+  return request<API.PagedModelProjectVO>(`/api/project/page`, {
     method: 'GET',
     params: {
       ...params,

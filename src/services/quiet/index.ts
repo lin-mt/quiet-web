@@ -8,6 +8,7 @@ import * as iterationController from './iterationController';
 import * as permissionController from './permissionController';
 import * as projectController from './projectController';
 import * as projectGroupController from './projectGroupController';
+import * as repositoryController from './repositoryController';
 import * as requirementController from './requirementController';
 import * as roleController from './roleController';
 import * as taskController from './taskController';
@@ -21,6 +22,7 @@ export default {
   taskController,
   roleController,
   requirementController,
+  repositoryController,
   projectController,
   projectGroupController,
   permissionController,

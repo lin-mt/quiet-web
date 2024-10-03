@@ -105,7 +105,7 @@ const TreeTransfer: React.FC<TreeTransferProps> = ({ dataSource, targetKeys, ...
                     onItemSelectAll(selectedKeys, true);
                   } else {
                     onItemSelectAll(
-                      checkedKeys.filter((item) => !selectedKeys.includes(item)),
+                      checkedKeys.filter((item) => !selectedKeys.includes(item.toString())),
                       false,
                     );
                   }

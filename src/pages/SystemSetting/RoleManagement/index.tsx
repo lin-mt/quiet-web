@@ -32,7 +32,7 @@ const RoleManagement: React.FC = () => {
   const [parentCode, setParentCode] = useState<string>();
   const { treePermissions } = useModel('permission');
   const [rolePermissionIds, setRolePermissionIds] = useState<string[]>([]);
-  const onChange = (keys: string[]) => {
+  const onChange = (keys: any[]) => {
     setRolePermissionIds(keys);
   };
 
