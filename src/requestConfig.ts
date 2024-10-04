@@ -70,7 +70,7 @@ export const requestConfig: RequestConfig = {
         }
       }
       if (data?.success) {
-        if (data.data.page?.totalElements) {
+        if (data.data?.page?.totalElements) {
           response.data = {
             success: true,
             data: data.data.content,

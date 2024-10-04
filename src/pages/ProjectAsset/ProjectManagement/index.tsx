@@ -24,13 +24,13 @@ import {
   ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Form, Popconfirm } from 'antd';
+import { Button, Checkbox, Col, Form, Popconfirm, Row } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 
 const ProjectManagement: React.FC = () => {
   const ref = useRef<ActionType>();
   const [form] = Form.useForm<API.AddProject>();
-  const [editorForm] = Form.useForm<API.UpdateProject>();
+  const [editForm] = Form.useForm<API.UpdateProject>();
   const [templates, setTemplates] = useState<API.TemplateVO[]>();
   const [repositories, setRepositories] = useState<API.RepositoryVO[]>();
   const [projectGroups, setProjectGroups] = useState<API.ProjectGroupVO[]>();
@@ -113,7 +113,7 @@ const ProjectManagement: React.FC = () => {
       key: 'option',
       render: (_text, record) => [
         <ModalForm<API.UpdateProject>
-          form={editorForm}
+          form={editForm}
           key={'edit'}
           title={'编辑项目'}
           layout={'horizontal'}
@@ -128,7 +128,7 @@ const ProjectManagement: React.FC = () => {
                     projectGroupId: record.projectGroupId,
                     username: '',
                   }).then((resp) => setProjectMembers(resp));
-                  editorForm.setFieldsValue(resp);
+                  editForm.setFieldsValue(resp);
                 })
               }
             >
@@ -138,7 +138,7 @@ const ProjectManagement: React.FC = () => {
           submitter={{
             render: (_, defaultDom) => {
               return [
-                <Button key="reset" onClick={() => editorForm.resetFields()}>
+                <Button key="reset" onClick={() => editForm.resetFields()}>
                   重置
                 </Button>,
                 ...defaultDom,
@@ -147,7 +147,7 @@ const ProjectManagement: React.FC = () => {
           }}
           onFinish={(formData) =>
             updateProject(formData).then(() => {
-              editorForm.resetFields();
+              editForm.resetFields();
               ref.current?.reload();
               return true;
             })
@@ -170,12 +170,71 @@ const ProjectManagement: React.FC = () => {
             rules={[{ required: true }]}
           />
           <ProFormSelect
-            label="代码仓库"
             mode="multiple"
-            name="repositories"
+            name="repositoryIds"
+            label={'代码仓库'}
             options={repositories}
             fieldProps={{ fieldNames: IdName }}
+            onChange={(_, option) => {
+              const options: API.RepositoryVO[] = Array.isArray(option) ? option : [option];
+              const ids: string[] = options.map((r) => r.id);
+              const selected: API.ProjectRepositoryDTO[] = editForm.getFieldValue('repositories');
+              const filteredSelected =
+                selected?.filter((repo) => ids.includes(repo.repositoryId)) || [];
+              const missingInSelected: API.ProjectRepositoryDTO[] = options
+                .filter((option) => !selected?.some((repo) => repo.repositoryId === option.id))
+                .map((option) => ({
+                  repositoryId: option.id,
+                  autoCreateBranch: false,
+                  autoCreatePullRequest: false,
+                }));
+              const updatedSelected = [...filteredSelected, ...missingInSelected];
+              editForm.setFieldValue('repositories', updatedSelected);
+            }}
           />
+          <Form.List name="repositories">
+            {(fields) => {
+              return (
+                <>
+                  {fields.map(({ name, key }) => {
+                    const fieldValue = editForm.getFieldValue('repositories')[name];
+                    return (
+                      <Row key={key} style={{ marginBottom: 24 }}>
+                        <Col span={6} offset={4}>
+                          <Form.Item noStyle>
+                            {
+                              repositories?.find((repo) => repo.id === fieldValue.repositoryId)
+                                ?.name
+                            }
+                          </Form.Item>
+                        </Col>
+                        <Col span={6}>
+                          自动创建分支：
+                          <Form.Item
+                            noStyle
+                            name={[name, 'autoCreateBranch']}
+                            valuePropName={'checked'}
+                          >
+                            <Checkbox />
+                          </Form.Item>
+                        </Col>
+                        <Col span={6}>
+                          自动创建 PR：
+                          <Form.Item
+                            noStyle
+                            name={[name, 'autoCreatePullRequest']}
+                            valuePropName={'checked'}
+                          >
+                            <Checkbox />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    );
+                  })}
+                </>
+              );
+            }}
+          </Form.List>
           <ProFormSelect
             label="项目成员"
             mode="multiple"
@@ -277,10 +336,77 @@ const ProjectManagement: React.FC = () => {
             />
             <ProFormSelect
               mode="multiple"
-              name="repositories"
-              label="代码仓库"
+              label={'代码仓库'}
+              name="repositoryIds"
               options={repositories}
               fieldProps={{ fieldNames: IdName }}
+              onChange={(_, option) => {
+                const options: API.RepositoryVO[] = Array.isArray(option) ? option : [option];
+                const ids: string[] = options.map((r) => r.id);
+                const selected: API.ProjectRepositoryDTO[] = form.getFieldValue('repositories');
+                console.log(selected);
+                const filteredSelected =
+                  selected?.filter((repo) => ids.includes(repo.repositoryId)) || [];
+                const missingInSelected: API.ProjectRepositoryDTO[] = options
+                  .filter((option) => !selected?.some((repo) => repo.repositoryId === option.id))
+                  .map((option) => ({
+                    repositoryId: option.id,
+                    autoCreateBranch: false,
+                    autoCreatePullRequest: false,
+                  }));
+                const updatedSelected = [...filteredSelected, ...missingInSelected];
+                form.setFieldValue('repositories', updatedSelected);
+              }}
+            />
+            <Form.List name="repositories">
+              {(fields) => {
+                return (
+                  <>
+                    {fields.map(({ name, key }) => {
+                      const fieldValue = form.getFieldValue('repositories')[name];
+                      return (
+                        <Row key={key} style={{ marginBottom: 24 }}>
+                          <Col span={6} offset={4}>
+                            <Form.Item noStyle>
+                              {
+                                repositories?.find((repo) => repo.id === fieldValue.repositoryId)
+                                  ?.name
+                              }
+                            </Form.Item>
+                          </Col>
+                          <Col span={6}>
+                            自动创建分支：
+                            <Form.Item
+                              noStyle
+                              name={[name, 'autoCreateBranch']}
+                              valuePropName={'checked'}
+                            >
+                              <Checkbox />
+                            </Form.Item>
+                          </Col>
+                          <Col span={6}>
+                            自动创建 PR：
+                            <Form.Item
+                              noStyle
+                              name={[name, 'autoCreatePullRequest']}
+                              valuePropName={'checked'}
+                            >
+                              <Checkbox />
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                      );
+                    })}
+                  </>
+                );
+              }}
+            </Form.List>
+            <ProFormSelect
+              label="项目成员"
+              mode="multiple"
+              name={'memberIds'}
+              options={projectMembers}
+              fieldProps={{ fieldNames: IdUsername }}
             />
             <ProFormTextArea name="description" label="项目描述" rules={[{ max: 255 }]} />
           </ModalForm>,

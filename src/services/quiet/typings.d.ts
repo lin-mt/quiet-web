@@ -36,8 +36,10 @@ declare namespace API {
     name: string;
     templateId: string;
     projectGroupId: string;
+    /** 项目成员ID */
+    memberIds?: string[];
     /** 代码仓库 */
-    repositories?: string[];
+    repositories?: ProjectRepositoryDTO[];
     /** 项目描述 */
     description?: string;
   };
@@ -622,17 +624,23 @@ declare namespace API {
   type ProjectDetail = {
     id: string;
     /** 项目名称 */
-    name?: string;
-    projectGroup: SimpleProjectGroup;
-    template: SimpleTemplate;
-    /** 项目成员 */
-    members?: Member[];
-    /** 项目代码仓库 */
-    repositories?: string[];
+    name: string;
+    templateId: string;
+    projectGroupId: string;
     /** 项目描述 */
     description?: string;
     /** 创建时间 */
     gmtCreate: string;
+    projectGroup: SimpleProjectGroup;
+    template: SimpleTemplate;
+    /** 项目成员ID */
+    memberIds?: string[];
+    /** 项目成员 */
+    members?: Member[];
+    /** 项目代码仓库Id集合 */
+    repositoryIds?: string[];
+    /** 项目代码仓库 */
+    repositories?: ProjectRepositoryVO[];
   };
 
   type ProjectGroupDetail = {
@@ -662,6 +670,23 @@ declare namespace API {
     description?: string;
   };
 
+  type ProjectRepositoryDTO = {
+    repositoryId: string;
+    /** 是否自动创建分支 */
+    autoCreateBranch: boolean;
+    /** 是否自动创建PullRequest */
+    autoCreatePullRequest: boolean;
+  };
+
+  type ProjectRepositoryVO = {
+    disabled?: boolean;
+    repositoryId: string;
+    /** 是否自动创建分支 */
+    autoCreateBranch: boolean;
+    /** 是否自动创建PullRequest */
+    autoCreatePullRequest: boolean;
+  };
+
   type ProjectVO = {
     id: string;
     /** 项目名称 */
@@ -670,6 +695,8 @@ declare namespace API {
     projectGroupId: string;
     /** 项目描述 */
     description?: string;
+    /** 创建时间 */
+    gmtCreate: string;
   };
 
   type QueryParam = {
@@ -1032,17 +1059,17 @@ declare namespace API {
   };
 
   type UpdateProject = {
-    id: string;
-    templateId: string;
-    projectGroupId: string;
     /** 项目名称 */
     name: string;
-    /** 代码仓库 */
-    repositories?: string[];
+    templateId: string;
+    projectGroupId: string;
     /** 项目成员ID */
     memberIds?: string[];
+    /** 代码仓库 */
+    repositories?: ProjectRepositoryDTO[];
     /** 项目描述 */
     description?: string;
+    id: string;
   };
 
   type UpdateProjectGroup = {
