@@ -35,6 +35,7 @@ import {
   Row,
   Select,
   Tag,
+  Tooltip,
   TreeSelect,
   message,
   theme,
@@ -334,15 +335,18 @@ const RequirementPlanning: React.FC = () => {
                     },
                   }}
                   trigger={
-                    <Button
-                      type="text"
-                      icon={<PlusOutlined />}
-                      onClick={() =>
-                        addForm.setFieldValue('reporterId', initialState?.currentUser?.id)
-                      }
-                    >
-                      新建需求
-                    </Button>
+                    <Tooltip title={!selectedIteration?.projectId ? '请选择项目' : ''}>
+                      <Button
+                        type="text"
+                        disabled={!selectedIteration?.projectId}
+                        icon={<PlusOutlined />}
+                        onClick={() =>
+                          addForm.setFieldValue('reporterId', initialState?.currentUser?.id)
+                        }
+                      >
+                        新建需求
+                      </Button>
+                    </Tooltip>
                   }
                   onFinish={async (values) => {
                     values.projectId = projectDetail?.id || '';
@@ -413,6 +417,10 @@ const RequirementPlanning: React.FC = () => {
                         placeholder="请输入需求标题"
                         onSearch={() => {
                           const params = searchForm.getFieldsValue(true);
+                          if (!searchParam?.projectId) {
+                            messageApi.info('请选择要规划的项目');
+                            return;
+                          }
                           setSearchParam({
                             ...searchParam,
                             offset,
@@ -525,9 +533,15 @@ const RequirementPlanning: React.FC = () => {
                       }
                     }}
                   />
-                  <Button type="text" icon={<SendOutlined />}>
-                    Kanban
-                  </Button>
+                  <Tooltip title={!selectedIteration?.iterationId ? '请选择要规划的迭代' : ''}>
+                    <Button
+                      type="text"
+                      disabled={!selectedIteration?.iterationId}
+                      icon={<SendOutlined />}
+                    >
+                      Kanban
+                    </Button>
+                  </Tooltip>
                 </Flex>
               </Flex>
               {planningIteration ? (
