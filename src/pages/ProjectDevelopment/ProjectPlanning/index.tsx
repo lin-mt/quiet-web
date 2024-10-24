@@ -4,7 +4,6 @@ import {
   updateIteration,
 } from '@/services/quiet/iterationController';
 import { listCurrentUserProject } from '@/services/quiet/projectController';
-import { listCurrentUserProjectGroup } from '@/services/quiet/projectGroupController';
 import {
   addVersion,
   deleteVersion,
@@ -22,7 +21,7 @@ import {
 import {
   ModalForm,
   PageContainer,
-  ProFormDateTimePicker,
+  ProFormItem,
   ProFormText,
   ProFormTextArea,
   ProFormTreeSelect,
@@ -30,7 +29,9 @@ import {
 import {
   Button,
   Card,
+  Cascader,
   Col,
+  DatePicker,
   Descriptions,
   Divider,
   Empty,
@@ -39,24 +40,19 @@ import {
   List,
   Popconfirm,
   Row,
-  Select,
   Table,
   Tag,
+  theme,
   Tooltip,
   Tree,
   Typography,
-  theme,
 } from 'antd';
+import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 
 type PlanningSelected = {
   versionId?: string;
   iterationId?: string;
-};
-
-type ProjectSelected = {
-  groupId: string;
-  projectId?: string;
 };
 
 type PlanningTreeNode = {
@@ -97,15 +93,21 @@ function buildPlanningTreeData(versions?: API.TreeVersionDetail[]): PlanningTree
   });
 }
 
+function formatPlannedRange(value: any) {
+  if (value.plannedRange) {
+    value.plannedStartTime = dayjs(value.plannedRange[0]).format('YYYY-MM-DD HH:mm');
+    value.plannedEndTime = dayjs(value.plannedRange[1]).format('YYYY-MM-DD HH:mm');
+  }
+}
+
 const ProjectPlanning: React.FC = () => {
   const { token } = theme.useToken();
   const [updateVersionForm] = Form.useForm();
   const [updateIterationForm] = Form.useForm();
-  const [selectedKey, setSelectedkey] = useState<React.Key[]>();
-  const [selectedProject, setSelectedProject] = useState<ProjectSelected>();
+  const [selectedKey, setSelectedKey] = useState<React.Key[]>();
+  const [selectedProject, setSelectedProject] = useState<string>();
   const [planningSelect, setPlanningSelect] = useState<PlanningSelected>();
-  const [projects, setProjects] = useState<API.SimpleProject[]>();
-  const [projectGroups, setProjectGroups] = useState<API.SimpleProjectGroup[]>();
+  const [userProjects, setUserProjects] = useState<API.UserProject[]>([]);
   const [projectVersionDetail, setProjectVersionDetail] = useState<API.TreeVersionDetail[]>();
   const [planningTree, setPlanningTree] = useState<PlanningTreeNode[]>();
   const [versionDetail, setVersionDetail] = useState<API.VersionDetail>();
@@ -127,17 +129,15 @@ const ProjectPlanning: React.FC = () => {
   }
 
   function updateTreeVersionDetail() {
-    if (selectedProject?.projectId) {
-      treeVersionDetail({ projectId: selectedProject?.projectId }).then((resp) =>
+    if (selectedProject) {
+      treeVersionDetail({ projectId: selectedProject }).then((resp) =>
         setProjectVersionDetail(resp),
       );
     }
   }
 
   useEffect(() => {
-    listCurrentUserProjectGroup().then((resp) => {
-      setProjectGroups(resp);
-    });
+    listCurrentUserProject().then((resp) => setUserProjects(resp));
   }, []);
 
   useEffect(() => {
@@ -167,10 +167,10 @@ const ProjectPlanning: React.FC = () => {
 
   function updateSelectedkey(versionId: string | undefined, iterationId: string | undefined) {
     if (versionId) {
-      setSelectedkey([versionId]);
+      setSelectedKey([versionId]);
     }
     if (iterationId) {
-      setSelectedkey([iterationId]);
+      setSelectedKey([iterationId]);
     }
     setPlanningSelect({ versionId, iterationId });
   }
@@ -178,39 +178,20 @@ const ProjectPlanning: React.FC = () => {
   return (
     <PageContainer title={false}>
       <Card>
-        <Form layout="inline">
-          <Form.Item style={{ width: 300 }} name={'projectGroupId'} label={'项目组'}>
-            <Select
-              placeholder="请选择项目组"
-              options={projectGroups}
-              fieldNames={IdName}
-              onChange={(val) => {
-                setSelectedProject({ groupId: val });
-                listCurrentUserProject({ projectGroupId: val }).then((resp) => {
-                  setProjects(resp);
-                });
-              }}
-            />
-          </Form.Item>
-          <Form.Item style={{ width: 300 }} name={'projectId'} label={'项目'}>
-            <Select
-              placeholder="请选择项目"
-              options={projects}
-              fieldNames={IdName}
-              onChange={(val) =>
-                selectedProject && setSelectedProject({ ...selectedProject, projectId: val })
-              }
-              notFoundContent={
-                <Empty
-                  description={selectedProject?.groupId ? '该项目组下暂无项目信息' : '请选择项目组'}
-                  image={Empty.PRESENTED_IMAGE_SIMPLE}
-                />
-              }
-            />
-          </Form.Item>
-        </Form>
+        规划项目：
+        <Cascader
+          placeholder="请选择项目"
+          expandTrigger="hover"
+          allowClear={false}
+          style={{ width: 300 }}
+          fieldNames={{ label: 'name', value: 'id', children: 'projects' }}
+          options={userProjects}
+          onChange={(val) => {
+            setSelectedProject(val[val?.length - 1]);
+          }}
+        />
         <Divider style={{ marginTop: token.margin, marginBottom: token.margin }} />
-        {selectedProject?.projectId ? (
+        {selectedProject ? (
           <Row gutter={30}>
             <Col span={12}>
               <Flex justify={'space-between'} align={'center'} style={{ marginBottom: 10 }}>
@@ -227,7 +208,9 @@ const ProjectPlanning: React.FC = () => {
                   </Row>
                 </Typography.Title>
                 <Flex justify={'space-between'} align={'center'}>
-                  <ModalForm<API.AddVersion>
+                  <ModalForm
+                    layout={'horizontal'}
+                    labelCol={{ span: 3 }}
                     title={'新建版本'}
                     trigger={
                       <Button type="text" icon={<PlusOutlined />}>
@@ -250,16 +233,22 @@ const ProjectPlanning: React.FC = () => {
                       },
                     }}
                     onFinish={async (value) => {
-                      if (selectedProject?.projectId) {
-                        value.projectId = selectedProject.projectId;
-                        await addVersion(value).then(async () => {
-                          if (value.parentId === versionDetail?.id) {
-                            updateVersionDetail();
-                          }
-                          const resp = await treeVersionDetail({ projectId: value.projectId });
-                          return setProjectVersionDetail(resp);
-                        });
+                      value.projectId = selectedProject;
+                      if (value.plannedRange) {
+                        value.plannedStartTime = dayjs(value.plannedRange[0]).format(
+                          'YYYY-MM-DD HH:mm',
+                        );
+                        value.plannedEndTime = dayjs(value.plannedRange[1]).format(
+                          'YYYY-MM-DD HH:mm',
+                        );
                       }
+                      await addVersion(value as API.AddVersion).then(async () => {
+                        if (value.parentId === versionDetail?.id) {
+                          updateVersionDetail();
+                        }
+                        const resp = await treeVersionDetail({ projectId: value.projectId });
+                        return setProjectVersionDetail(resp);
+                      });
                       return true;
                     }}
                   >
@@ -277,8 +266,13 @@ const ProjectPlanning: React.FC = () => {
                         treeData: projectVersionDetail,
                       }}
                     />
-                    <ProFormDateTimePicker name="plannedStartTime" label="计划开始时间" />
-                    <ProFormDateTimePicker name="plannedEndTime" label="计划结束时间" />
+                    <ProFormItem name={'plannedRange'} label="计划时间">
+                      <DatePicker.RangePicker
+                        showTime={{ format: 'HH:mm' }}
+                        format="YYYY-MM-DD HH:mm"
+                        placeholder={['计划开始时间', '计划结束时间']}
+                      />
+                    </ProFormItem>
                     <ProFormTextArea
                       name={'description'}
                       label={'版本描述'}
@@ -286,8 +280,10 @@ const ProjectPlanning: React.FC = () => {
                     />
                   </ModalForm>
 
-                  <ModalForm<API.AddIteration>
+                  <ModalForm
                     title={'新建迭代'}
+                    layout={'horizontal'}
+                    labelCol={{ span: 3 }}
                     trigger={
                       <Button type="text" icon={<PlusOutlined />}>
                         新建迭代
@@ -309,7 +305,15 @@ const ProjectPlanning: React.FC = () => {
                       },
                     }}
                     onFinish={async (value) => {
-                      await addIteration(value).then(async () => {
+                      if (value.plannedRange) {
+                        value.plannedStartTime = dayjs(value.plannedRange[0]).format(
+                          'YYYY-MM-DD HH:mm',
+                        );
+                        value.plannedEndTime = dayjs(value.plannedRange[1]).format(
+                          'YYYY-MM-DD HH:mm',
+                        );
+                      }
+                      await addIteration(value as API.AddIteration).then(async () => {
                         updateTreeVersionDetail();
                         updateVersionDetail();
                       });
@@ -325,15 +329,18 @@ const ProjectPlanning: React.FC = () => {
                       allowClear
                       name="versionId"
                       label={'所属版本'}
-                      request={() =>
-                        treeVersionDetail({ projectId: selectedProject.projectId || '' })
-                      }
+                      request={() => treeVersionDetail({ projectId: selectedProject || '' })}
                       fieldProps={{
                         fieldNames: IdName,
                       }}
                     />
-                    <ProFormDateTimePicker name="plannedStartTime" label="计划开始时间" />
-                    <ProFormDateTimePicker name="plannedEndTime" label="计划结束时间" />
+                    <ProFormItem name={'plannedRange'} label="计划时间">
+                      <DatePicker.RangePicker
+                        showTime={{ format: 'HH:mm' }}
+                        format="YYYY-MM-DD HH:mm"
+                        placeholder={['计划开始时间', '计划结束时间']}
+                      />
+                    </ProFormItem>
                     <ProFormTextArea
                       name={'description'}
                       label={'迭代描述'}
@@ -374,8 +381,10 @@ const ProjectPlanning: React.FC = () => {
                       版本信息
                     </Typography.Title>
                     <div>
-                      <ModalForm<API.UpdateVersion>
+                      <ModalForm
                         title={'编辑版本'}
+                        layout={'horizontal'}
+                        labelCol={{ span: 3 }}
                         form={updateVersionForm}
                         trigger={
                           <Button
@@ -402,6 +411,14 @@ const ProjectPlanning: React.FC = () => {
                           },
                         }}
                         onFinish={async (value) => {
+                          if (value.plannedRange) {
+                            value.plannedStartTime = dayjs(value.plannedRange[0]).format(
+                              'YYYY-MM-DD HH:mm',
+                            );
+                            value.plannedEndTime = dayjs(value.plannedRange[1]).format(
+                              'YYYY-MM-DD HH:mm',
+                            );
+                          }
                           const newVersion = { ...versionDetail, ...value };
                           await updateVersion(newVersion).then(async () => {
                             setVersionDetail(newVersion);
@@ -427,8 +444,13 @@ const ProjectPlanning: React.FC = () => {
                             treeData: projectVersionDetail,
                           }}
                         />
-                        <ProFormDateTimePicker name="plannedStartTime" label="计划开始时间" />
-                        <ProFormDateTimePicker name="plannedEndTime" label="计划结束时间" />
+                        <ProFormItem name={'plannedRange'} label="计划时间">
+                          <DatePicker.RangePicker
+                            showTime={{ format: 'HH:mm' }}
+                            format="YYYY-MM-DD HH:mm"
+                            placeholder={['计划开始时间', '计划结束时间']}
+                          />
+                        </ProFormItem>
                         <ProFormTextArea
                           name={'description'}
                           label={'版本描述'}
@@ -502,7 +524,7 @@ const ProjectPlanning: React.FC = () => {
                         },
                       },
                       {
-                        title: '状态',
+                        title: '类型/状态',
                         dataIndex: 'status',
                         render: (_, record) => {
                           return (
@@ -554,8 +576,10 @@ const ProjectPlanning: React.FC = () => {
                       迭代信息
                     </Typography.Title>
                     <div>
-                      <ModalForm<API.UpdateIteration>
+                      <ModalForm
                         title={'编辑迭代'}
+                        layout={'horizontal'}
+                        labelCol={{ span: 3 }}
                         form={updateIterationForm}
                         trigger={
                           <Button
@@ -582,6 +606,7 @@ const ProjectPlanning: React.FC = () => {
                           },
                         }}
                         onFinish={async (value) => {
+                          formatPlannedRange(value);
                           const newIteration = { ...iterationDetail, ...value };
                           await updateIteration(newIteration).then(() => {
                             setIterationDetail(newIteration);
@@ -599,15 +624,18 @@ const ProjectPlanning: React.FC = () => {
                           allowClear
                           name="versionId"
                           label={'所属版本'}
-                          request={() =>
-                            treeVersionDetail({ projectId: selectedProject.projectId || '' })
-                          }
+                          request={() => treeVersionDetail({ projectId: selectedProject })}
                           fieldProps={{
                             fieldNames: IdName,
                           }}
                         />
-                        <ProFormDateTimePicker name="plannedStartTime" label="计划开始时间" />
-                        <ProFormDateTimePicker name="plannedEndTime" label="计划结束时间" />
+                        <ProFormItem name={'plannedRange'} label="计划时间">
+                          <DatePicker.RangePicker
+                            showTime={{ format: 'HH:mm' }}
+                            format="YYYY-MM-DD HH:mm"
+                            placeholder={['计划开始时间', '计划结束时间']}
+                          />
+                        </ProFormItem>
                         <ProFormTextArea
                           name={'description'}
                           label={'版本描述'}

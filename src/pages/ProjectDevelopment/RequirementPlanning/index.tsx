@@ -1,7 +1,6 @@
 import RequirementCard from '@/components/RequirementCard';
 import { getIterationDetail } from '@/services/quiet/iterationController';
 import { getProjectDetail, listCurrentUserProject } from '@/services/quiet/projectController';
-import { listCurrentUserProjectGroup } from '@/services/quiet/projectGroupController';
 import {
   addRequirement,
   listRequirement,
@@ -19,11 +18,12 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { DragDropContext, Draggable, DropResult, Droppable } from '@hello-pangea/dnd';
+import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { useModel } from '@umijs/max';
 import {
   Button,
   Card,
+  Cascader,
   Col,
   Descriptions,
   Divider,
@@ -32,18 +32,17 @@ import {
   Form,
   Input,
   List,
+  message,
   Row,
   Select,
   Tag,
+  theme,
   Tooltip,
   TreeSelect,
-  message,
-  theme,
 } from 'antd';
 import React, { CSSProperties, useEffect, useRef, useState } from 'react';
 
 type PlanningIteration = {
-  projectGroupId?: string;
   projectId?: string;
   versionId?: string;
   iterationId?: string;
@@ -105,15 +104,14 @@ const RequirementPlanning: React.FC = () => {
   const [searchForm] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const { initialState } = useModel('@@initialState');
-  const [projectGroups, setProjectGroups] = useState<API.SimpleProjectGroup[]>();
   const [searchParam, setSearchParam] = useState<API.ListRequirement>();
   const [requirements, setRequirements] = useState<API.RequirementVO[]>([]);
   const [iterationRequirements, setIterationRequirements] = useState<API.RequirementVO[]>([]);
-  const [projects, setProjects] = useState<API.SimpleProject[]>();
+  const [userProjects, setUserProjects] = useState<API.UserProject[]>([]);
   const [planningTree, setPlanningTree] = useState<PlanningTreeNode[]>();
   const [projectDetail, setProjectDetail] = useState<API.ProjectDetail>();
   const [templateDetail, setTemplateDetail] = useState<API.TemplateDetail>();
-  const [selectedIteration, setSelectedIteration] = useState<PlanningIteration>();
+  const [selectedIteration, setSelectedIteration] = useState<PlanningIteration>({});
   const preSelectedIterationRef = useRef<PlanningIteration>();
   const [planningIteration, setPlanningIteration] = useState<API.IterationDetail>();
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -174,31 +172,11 @@ const RequirementPlanning: React.FC = () => {
   }
 
   useEffect(() => {
-    listCurrentUserProjectGroup().then((resp) => {
-      setProjectGroups(resp);
-    });
+    listCurrentUserProject().then((resp) => setUserProjects(resp));
   }, []);
 
   useEffect(() => {
-    if (!selectedIteration) {
-      setProjects(undefined);
-      setSearchParam(undefined);
-      setPlanningTree(undefined);
-      setProjectDetail(undefined);
-      setTemplateDetail(undefined);
-      setPlanningIteration(undefined);
-      preSelectedIterationRef.current = undefined;
-      return;
-    }
-    const { projectGroupId, projectId, iterationId } = selectedIteration;
-    if (projectGroupId && preSelectedIterationRef.current?.projectGroupId !== projectGroupId) {
-      listCurrentUserProject({ projectGroupId }).then((resp) => {
-        setProjects(resp);
-      });
-    } else if (!projectGroupId) {
-      setProjects(undefined);
-    }
-
+    const { projectId, iterationId } = selectedIteration;
     if (projectId && preSelectedIterationRef.current?.projectId !== projectId) {
       setSearchParam({ projectId, offset, limit });
       getProjectDetail({ id: projectId }).then((resp) => {
@@ -276,38 +254,22 @@ const RequirementPlanning: React.FC = () => {
       {contextHolder}
       <Card>
         <DragDropContext onDragEnd={handleDragEnd}>
-          <Form layout="inline">
-            <Form.Item style={{ width: 300 }} name={'projectGroupId'} label={'项目组'}>
-              <Select
-                placeholder="请选择项目组"
-                options={projectGroups}
-                fieldNames={IdName}
-                onChange={(val) => setSelectedIteration({ projectGroupId: val })}
-              />
-            </Form.Item>
-            <Form.Item style={{ width: 300 }} name={'projectId'} label={'项目'}>
-              <Select
-                placeholder="请选择项目"
-                options={projects}
-                fieldNames={IdName}
-                onChange={(val) => {
-                  setSelectedIteration({
-                    ...selectedIteration,
-                    projectId: val,
-                    versionId: undefined,
-                  });
-                }}
-                notFoundContent={
-                  <Empty
-                    description={
-                      selectedIteration?.projectGroupId ? '该项目组下暂无项目信息' : '请选择项目组'
-                    }
-                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  />
-                }
-              />
-            </Form.Item>
-          </Form>
+          规划项目：
+          <Cascader
+            placeholder="请选择项目"
+            expandTrigger="hover"
+            allowClear={false}
+            style={{ width: 300 }}
+            fieldNames={{ label: 'name', value: 'id', children: 'projects' }}
+            options={userProjects}
+            onChange={(val) => {
+              setSelectedIteration({
+                ...selectedIteration,
+                projectId: val[val?.length - 1],
+                versionId: undefined,
+              });
+            }}
+          />
           <Divider style={{ marginTop: token.margin, marginBottom: token.margin }} />
           <Row gutter={20}>
             <Col span={12}>

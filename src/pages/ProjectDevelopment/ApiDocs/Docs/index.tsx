@@ -5,7 +5,7 @@ import {
   treeApiDocsGroupDetail,
   updateApiDocsGroup,
 } from '@/services/quiet/apiDocsGroupController';
-import { ApiMethod, IdName, apiDocsStateTag, methodTag } from '@/util/Utils';
+import { apiDocsStateTag, ApiMethod, IdName, methodTag } from '@/util/Utils';
 import {
   CodeOutlined,
   DeleteOutlined,
@@ -35,15 +35,15 @@ import {
   Row,
   Table,
   Tabs,
-  Tree,
-  Typography,
   theme,
+  Tree,
   type TreeDataNode,
+  Typography,
 } from 'antd';
 import React, { useEffect } from 'react';
 
 const cardStyles = {
-  header: { padding: '0px 16px', minHeight: 50, fontWeight: 500 },
+  header: { padding: '0px 13px', minHeight: 45, fontWeight: 480 },
   body: { padding: '10px 5px' },
 };
 
@@ -180,10 +180,11 @@ function Docs(props: ApiProps) {
   }, [projectId]);
 
   return (
-    <Row style={{ marginTop: 10 }} gutter={[20, 0]}>
+    <Row gutter={[20, 0]}>
       <Col span={6}>
         <Card
           title={'接口分组'}
+          bordered={false}
           styles={cardStyles}
           extra={
             <Dropdown

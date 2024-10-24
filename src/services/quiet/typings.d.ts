@@ -35,11 +35,11 @@ declare namespace API {
     /** 项目名称 */
     name: string;
     templateId: string;
+    /** 项目自动化 */
+    automations?: ProjectAutomationDTO[];
     projectGroupId: string;
     /** 项目成员ID */
     memberIds?: string[];
-    /** 代码仓库 */
-    repositories?: ProjectRepositoryDTO[];
     /** 项目描述 */
     description?: string;
   };
@@ -347,10 +347,6 @@ declare namespace API {
     description?: string;
   };
 
-  type listCurrentUserProjectParams = {
-    projectGroupId: string;
-  };
-
   type listPermissionParams = {
     /** 角色ID */
     roleId: string;
@@ -621,6 +617,44 @@ declare namespace API {
     iterationId?: string;
   };
 
+  type ProjectAutomationDTO = {
+    /** 触发动作 */
+    triggerAction:
+      | 'CREATE_REQUIREMENT'
+      | 'UPDATE_REQUIREMENT'
+      | 'UPDATE_REQUIREMENT_STATUS'
+      | 'DELETE_REQUIREMENT'
+      | 'CREATE_TASK'
+      | 'UPDATE_TASK'
+      | 'UPDATE_TASK_STEP'
+      | 'DELETE_TASK';
+    /** 需求类型ID集合 */
+    requirementTypeId?: string[];
+    /** 任务类型ID集合 */
+    taskTypeId?: string[];
+    preStepId?: string;
+    afterStepId?: string;
+    /** 前置需求状态 */
+    preStatus?: 'TO_BE_PLANNED' | 'PLANNED' | 'PROCESSING' | 'DONE' | 'CLOSED';
+    /** 后置需求状态 */
+    afterStatus?: 'TO_BE_PLANNED' | 'PLANNED' | 'PROCESSING' | 'DONE' | 'CLOSED';
+    repositoryId?: string;
+    /** 自动化动作 */
+    automationAction:
+      | 'CREATE_BRANCH'
+      | 'DELETE_BRANCH'
+      | 'CREATE_PR'
+      | 'CLOSE_PR'
+      | 'DELETE_PR'
+      | 'CREATE_ISSUE'
+      | 'CLOSE_ISSUE'
+      | 'DELETE_ISSUE'
+      | 'SEND_EMAIL'
+      | 'FEI_SHU_NOTIFY'
+      | 'DING_DING_NOTIFY'
+      | 'WORK_WEI_XIN_NOTIFY';
+  };
+
   type ProjectDetail = {
     id: string;
     /** 项目名称 */
@@ -637,10 +671,6 @@ declare namespace API {
     memberIds?: string[];
     /** 项目成员 */
     members?: Member[];
-    /** 项目代码仓库Id集合 */
-    repositoryIds?: string[];
-    /** 项目代码仓库 */
-    repositories?: ProjectRepositoryVO[];
   };
 
   type ProjectGroupDetail = {
@@ -668,23 +698,6 @@ declare namespace API {
     name: string;
     /** 项目组描述 */
     description?: string;
-  };
-
-  type ProjectRepositoryDTO = {
-    repositoryId: string;
-    /** 是否自动创建分支 */
-    autoCreateBranch: boolean;
-    /** 是否自动创建PullRequest */
-    autoCreatePullRequest: boolean;
-  };
-
-  type ProjectRepositoryVO = {
-    disabled?: boolean;
-    repositoryId: string;
-    /** 是否自动创建分支 */
-    autoCreateBranch: boolean;
-    /** 是否自动创建PullRequest */
-    autoCreatePullRequest: boolean;
   };
 
   type ProjectVO = {
@@ -1062,11 +1075,11 @@ declare namespace API {
     /** 项目名称 */
     name: string;
     templateId: string;
+    /** 项目自动化 */
+    automations?: ProjectAutomationDTO[];
     projectGroupId: string;
     /** 项目成员ID */
     memberIds?: string[];
-    /** 代码仓库 */
-    repositories?: ProjectRepositoryDTO[];
     /** 项目描述 */
     description?: string;
     id: string;
@@ -1236,6 +1249,13 @@ declare namespace API {
   type UserPermission = {
     /** 路由权限 */
     paths?: string[];
+  };
+
+  type UserProject = {
+    id?: string;
+    /** 项目组名 */
+    name?: string;
+    projects?: SimpleProject[];
   };
 
   type UserRoles = {

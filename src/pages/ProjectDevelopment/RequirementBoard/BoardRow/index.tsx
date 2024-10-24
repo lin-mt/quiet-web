@@ -10,7 +10,7 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { DragDropContext, Draggable, DropResult, Droppable } from '@hello-pangea/dnd';
+import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { useModel } from '@umijs/max';
 import { Button, Col, Flex, Form, Row, theme } from 'antd';
 import _ from 'lodash';
@@ -38,10 +38,6 @@ function BoardRow(props: TaskRowProps) {
   const [requirementTasks, setRequirementTasks] = useState<Record<string, any> | undefined>(
     requirementTask.tasks,
   );
-
-  useEffect(() => {
-    setRequirementTasks(requirementTask.tasks);
-  }, [requirementTask.tasks]);
 
   useEffect(() => {
     if (!addTaskTypeId) {
