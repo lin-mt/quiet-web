@@ -97,3 +97,53 @@ export enum ApiMethod {
   OPTIONS = 'OPTIONS',
   TRACE = 'TRACE',
 }
+
+export function toLabelValue<T extends Record<string, string | number>>(
+  enumObj: T,
+  disableFunc?: (key: string) => boolean,
+): { label: string; value: string }[] {
+  return Object.entries(enumObj)
+    .filter(([, value]) => typeof value === 'string') // 过滤掉数字类型的反向映射
+    .map(([key, value]) => ({
+      label: value as string,
+      value: key,
+      disabled: disableFunc ? disableFunc(key) : false,
+    }));
+}
+
+export enum TriggerAction {
+  START_ITERATION = '开始迭代',
+  END_ITERATION = '结束迭代',
+  CREATE_REQUIREMENT = '创建需求',
+  UPDATE_REQUIREMENT = '更新需求',
+  UPDATE_REQUIREMENT_STATUS = '需求状态变更',
+  DELETE_REQUIREMENT = '删除需求',
+  CREATE_TASK = '创建任务',
+  UPDATE_TASK = '更新任务',
+  UPDATE_TASK_STEP = '任务状态变更',
+  DELETE_TASK = '删除任务',
+}
+
+export enum RequirementStatus {
+  TO_BE_PLANNED = '待规划',
+  PLANNED = '规划中',
+  PROCESSING = '处理中',
+  DONE = '完成',
+  CLOSED = '关闭',
+}
+
+export enum AutomationAction {
+  CREATE_BRANCH = '创建分支',
+  DELETE_BRANCH = '删除分支',
+  CREATE_PR = '创建 PR',
+  CLOSE_PR = '关闭 PR',
+  DELETE_PR = '删除 PR',
+  CREATE_ISSUE = '创建 issue',
+  CLOSE_ISSUE = '关闭 issue',
+  DELETE_ISSUE = '删除 issue',
+  SEND_EMAIL = '发送邮件',
+  FEI_SHU_NOTIFY = '发送飞书通知',
+  DING_DING_NOTIFY = '发送钉钉通知',
+  WORK_WEI_XIN_NOTIFY = '发送企业微信通知',
+  INTERNAL_MESSAGE = '发送站内信',
+}

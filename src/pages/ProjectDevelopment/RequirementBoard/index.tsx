@@ -104,8 +104,10 @@ const RequirementBoard: React.FC = () => {
   const [planningTree, setPlanningTree] = useState<PlanningTreeNode[]>();
   const [requirementTasks, setRequirementTasks] = useState<API.RequirementTask[]>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [showBoard, setShowBoard] = useState<boolean>(false);
 
-  function queryRequirementTask() {
+  function handleIterationChange() {
+    setShowBoard(true);
     filterForm.validateFields().then((values) => {
       delete values.projectId;
       setLoading(true);
@@ -134,7 +136,7 @@ const RequirementBoard: React.FC = () => {
             }}
             submitter={{
               render: () => (
-                <Button type="primary" onClick={queryRequirementTask} icon={<SearchOutlined />}>
+                <Button type="primary" onClick={handleIterationChange} icon={<SearchOutlined />}>
                   查询
                 </Button>
               ),
@@ -174,7 +176,7 @@ const RequirementBoard: React.FC = () => {
                 treeDefaultExpandAll: true,
                 treeData: planningTree,
                 placeholder: '请选择迭代',
-                onChange: () => queryRequirementTask(),
+                onChange: () => handleIterationChange(),
               }}
             />
             <ProFormText width={'sm'} allowClear name="title" label="标题" />
@@ -197,7 +199,7 @@ const RequirementBoard: React.FC = () => {
           </ProForm>
         }
       >
-        {filterForm.getFieldValue('iterationId') ? (
+        {showBoard ? (
           <Spin delay={10} spinning={loading}>
             <Row
               gutter={[20, 0]}

@@ -97,6 +97,9 @@ function formatPlannedRange(value: any) {
   if (value.plannedRange) {
     value.plannedStartTime = dayjs(value.plannedRange[0]).format('YYYY-MM-DD HH:mm');
     value.plannedEndTime = dayjs(value.plannedRange[1]).format('YYYY-MM-DD HH:mm');
+  } else {
+    value.plannedStartTime = undefined;
+    value.plannedEndTime = undefined;
   }
 }
 
@@ -326,9 +329,10 @@ const ProjectPlanning: React.FC = () => {
                       rules={[{ required: true }, { max: 30 }]}
                     />
                     <ProFormTreeSelect
-                      allowClear
+                      allowClear={false}
                       name="versionId"
                       label={'所属版本'}
+                      rules={[{ required: true }]}
                       request={() => treeVersionDetail({ projectId: selectedProject || '' })}
                       fieldProps={{
                         fieldNames: IdName,
@@ -390,7 +394,15 @@ const ProjectPlanning: React.FC = () => {
                           <Button
                             type="text"
                             icon={<EditOutlined />}
-                            onClick={() => updateVersionForm.setFieldsValue(versionDetail)}
+                            onClick={() => {
+                              updateVersionForm.setFieldsValue(versionDetail);
+                              if (versionDetail.plannedStartTime && versionDetail.plannedEndTime) {
+                                updateVersionForm.setFieldValue('plannedRange', [
+                                  dayjs(versionDetail.plannedStartTime),
+                                  dayjs(versionDetail.plannedEndTime),
+                                ]);
+                              }
+                            }}
                           >
                             编辑版本
                           </Button>
@@ -411,14 +423,7 @@ const ProjectPlanning: React.FC = () => {
                           },
                         }}
                         onFinish={async (value) => {
-                          if (value.plannedRange) {
-                            value.plannedStartTime = dayjs(value.plannedRange[0]).format(
-                              'YYYY-MM-DD HH:mm',
-                            );
-                            value.plannedEndTime = dayjs(value.plannedRange[1]).format(
-                              'YYYY-MM-DD HH:mm',
-                            );
-                          }
+                          formatPlannedRange(value);
                           const newVersion = { ...versionDetail, ...value };
                           await updateVersion(newVersion).then(async () => {
                             setVersionDetail(newVersion);
@@ -483,8 +488,12 @@ const ProjectPlanning: React.FC = () => {
                     column={2}
                     size="small"
                     items={[
-                      { label: '版本名称', children: versionDetail.name, span: 2 },
-                      { label: '版本ID', children: versionDetail.id },
+                      {
+                        label: '版本名称',
+                        children: (
+                          <Tooltip title={`ID：${versionDetail.id}`}>{versionDetail.name}</Tooltip>
+                        ),
+                      },
                       {
                         label: '版本状态',
                         children: (
@@ -585,7 +594,18 @@ const ProjectPlanning: React.FC = () => {
                           <Button
                             type="text"
                             icon={<EditOutlined />}
-                            onClick={() => updateIterationForm.setFieldsValue(iterationDetail)}
+                            onClick={() => {
+                              updateIterationForm.setFieldsValue(iterationDetail);
+                              if (
+                                iterationDetail.plannedStartTime &&
+                                iterationDetail.plannedEndTime
+                              ) {
+                                updateIterationForm.setFieldValue('plannedRange', [
+                                  dayjs(iterationDetail.plannedStartTime),
+                                  dayjs(iterationDetail.plannedEndTime),
+                                ]);
+                              }
+                            }}
                           >
                             编辑迭代
                           </Button>
@@ -662,8 +682,14 @@ const ProjectPlanning: React.FC = () => {
                     column={2}
                     size="small"
                     items={[
-                      { label: '迭代名称', children: iterationDetail.name, span: 2 },
-                      { label: '迭代ID', children: iterationDetail.id },
+                      {
+                        label: '迭代名称',
+                        children: (
+                          <Tooltip title={`ID：${iterationDetail.id}`}>
+                            {iterationDetail.name}
+                          </Tooltip>
+                        ),
+                      },
                       {
                         label: '迭代状态',
                         children: (

@@ -620,6 +620,8 @@ declare namespace API {
   type ProjectAutomationDTO = {
     /** 触发动作 */
     triggerAction:
+      | 'START_ITERATION'
+      | 'END_ITERATION'
       | 'CREATE_REQUIREMENT'
       | 'UPDATE_REQUIREMENT'
       | 'UPDATE_REQUIREMENT_STATUS'
@@ -629,16 +631,15 @@ declare namespace API {
       | 'UPDATE_TASK_STEP'
       | 'DELETE_TASK';
     /** 需求类型ID集合 */
-    requirementTypeId?: string[];
+    requirementTypeIds?: string[];
     /** 任务类型ID集合 */
-    taskTypeId?: string[];
-    preStepId?: string;
-    afterStepId?: string;
+    taskTypeIds?: string[];
+    preTaskStepId?: string;
+    afterTaskStepId?: string;
     /** 前置需求状态 */
-    preStatus?: 'TO_BE_PLANNED' | 'PLANNED' | 'PROCESSING' | 'DONE' | 'CLOSED';
+    preRequirementStatus?: 'TO_BE_PLANNED' | 'PLANNED' | 'PROCESSING' | 'DONE' | 'CLOSED';
     /** 后置需求状态 */
-    afterStatus?: 'TO_BE_PLANNED' | 'PLANNED' | 'PROCESSING' | 'DONE' | 'CLOSED';
-    repositoryId?: string;
+    afterRequirementStatus?: 'TO_BE_PLANNED' | 'PLANNED' | 'PROCESSING' | 'DONE' | 'CLOSED';
     /** 自动化动作 */
     automationAction:
       | 'CREATE_BRANCH'
@@ -652,7 +653,52 @@ declare namespace API {
       | 'SEND_EMAIL'
       | 'FEI_SHU_NOTIFY'
       | 'DING_DING_NOTIFY'
-      | 'WORK_WEI_XIN_NOTIFY';
+      | 'WORK_WEI_XIN_NOTIFY'
+      | 'INTERNAL_MESSAGE';
+    /** 代码仓库ID */
+    repositoryIds?: string[];
+  };
+
+  type ProjectAutomationVO = {
+    /** 触发动作 */
+    triggerAction:
+      | 'START_ITERATION'
+      | 'END_ITERATION'
+      | 'CREATE_REQUIREMENT'
+      | 'UPDATE_REQUIREMENT'
+      | 'UPDATE_REQUIREMENT_STATUS'
+      | 'DELETE_REQUIREMENT'
+      | 'CREATE_TASK'
+      | 'UPDATE_TASK'
+      | 'UPDATE_TASK_STEP'
+      | 'DELETE_TASK';
+    /** 需求类型ID集合 */
+    requirementTypeIds?: string[];
+    /** 任务类型ID集合 */
+    taskTypeIds?: string[];
+    preTaskStepId?: string;
+    afterTaskStepId?: string;
+    /** 前置需求状态 */
+    preRequirementStatus?: 'TO_BE_PLANNED' | 'PLANNED' | 'PROCESSING' | 'DONE' | 'CLOSED';
+    /** 后置需求状态 */
+    afterRequirementStatus?: 'TO_BE_PLANNED' | 'PLANNED' | 'PROCESSING' | 'DONE' | 'CLOSED';
+    /** 自动化动作 */
+    automationAction:
+      | 'CREATE_BRANCH'
+      | 'DELETE_BRANCH'
+      | 'CREATE_PR'
+      | 'CLOSE_PR'
+      | 'DELETE_PR'
+      | 'CREATE_ISSUE'
+      | 'CLOSE_ISSUE'
+      | 'DELETE_ISSUE'
+      | 'SEND_EMAIL'
+      | 'FEI_SHU_NOTIFY'
+      | 'DING_DING_NOTIFY'
+      | 'WORK_WEI_XIN_NOTIFY'
+      | 'INTERNAL_MESSAGE';
+    /** 代码仓库ID */
+    repositoryIds?: string[];
   };
 
   type ProjectDetail = {
@@ -671,6 +717,8 @@ declare namespace API {
     memberIds?: string[];
     /** 项目成员 */
     members?: Member[];
+    /** 项目自动化配置 */
+    automations?: ProjectAutomationVO[];
   };
 
   type ProjectGroupDetail = {
@@ -898,6 +946,7 @@ declare namespace API {
   };
 
   type TaskStepVO = {
+    disabled?: boolean;
     id: string;
     /** 步骤名称 */
     name: string;
