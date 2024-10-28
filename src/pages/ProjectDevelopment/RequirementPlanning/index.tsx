@@ -181,7 +181,7 @@ const RequirementPlanning: React.FC = () => {
       setSearchParam({ projectId, offset, limit });
       getProjectDetail({ id: projectId }).then((resp) => {
         setProjectDetail(resp);
-        getTemplateDetail({ id: resp.template.id }).then((tem) => setTemplateDetail(tem));
+        getTemplateDetail({ id: resp.templateId }).then((tem) => setTemplateDetail(tem));
       });
       treeVersionDetail({ projectId }).then((resp) => {
         setPlanningTree(buildPlanningTreeData(resp));

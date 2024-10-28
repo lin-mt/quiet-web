@@ -712,7 +712,6 @@ declare namespace API {
     /** 创建时间 */
     gmtCreate: string;
     projectGroup: SimpleProjectGroup;
-    template: SimpleTemplate;
     /** 项目成员ID */
     memberIds?: string[];
     /** 项目成员 */

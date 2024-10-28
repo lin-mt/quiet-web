@@ -156,7 +156,7 @@ const RequirementBoard: React.FC = () => {
                   const projectId = val[val?.length - 1];
                   getProjectDetail({ id: projectId }).then((resp) => {
                     setProjectDetail(resp);
-                    getTemplateDetail({ id: resp.template.id }).then((tem) =>
+                    getTemplateDetail({ id: resp.templateId }).then((tem) =>
                       setTemplateDetail(tem),
                     );
                     treeVersionDetail({ projectId }).then((resp) => {
